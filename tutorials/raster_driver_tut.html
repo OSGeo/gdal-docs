@@ -1,0 +1,920 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Raster driver implementation tutorial &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgtutorials/raster_driver_tut.html"/>
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="GDAL Warp API tutorial (Reprojection, …)" href="warp_tut.html" />
+    <link rel="prev" title="Raster API tutorial" href="raster_api_tut.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorials</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#raster">Raster</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="raster_api_tut.html">Raster API tutorial</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Raster driver implementation tutorial</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overall-approach">Overall Approach</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementing-the-dataset">Implementing the Dataset</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementing-the-rasterband">Implementing the RasterBand</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#the-driver">The Driver</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#adding-driver-to-gdal-tree">Adding Driver to GDAL Tree</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#adding-georeferencing">Adding Georeferencing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#overviews">Overviews</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#file-creation">File Creation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rawdataset-rawrasterband-helper-classes">RawDataset/RawRasterBand Helper Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#metadata-and-other-exotic-extensions">Metadata, and Other Exotic Extensions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="warp_tut.html">GDAL Warp API tutorial (Reprojection, …)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_grid_tut.html">GDAL Grid Tutorial</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#multidimensional-raster">Multidimensional raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#vector">Vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#geographic-network-model">Geographic Network Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#projections-and-spatial-reference-systems-tutorial-osr-ogrspatialreference">Projections and Spatial Reference Systems tutorial (OSR - OGRSpatialReference)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Tutorials</a> &raquo;</li>
+      
+      <li>Raster driver implementation tutorial</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/blob//master/gdal/doc/source/tutorials/raster_driver_tut.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="warp_tut.html" class="btn btn-neutral float-right" title="GDAL Warp API tutorial (Reprojection, …)" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="raster_api_tut.html" class="btn btn-neutral float-left" title="Raster API tutorial" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="raster-driver-implementation-tutorial">
+<span id="raster-driver-tut"></span><h1>Raster driver implementation tutorial<a class="headerlink" href="#raster-driver-implementation-tutorial" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="overall-approach">
+<h2>Overall Approach<a class="headerlink" href="#overall-approach" title="Permalink to this headline">¶</a></h2>
+<p>In general new formats are added to GDAL by implementing format specific drivers as subclasses of <a class="reference internal" href="../api/gdaldataset_cpp.html#_CPPv411GDALDataset" title="GDALDataset"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDataset</span></code></a>, and band accessors as subclasses of <a class="reference internal" href="../api/gdalrasterband_cpp.html#_CPPv414GDALRasterBand" title="GDALRasterBand"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALRasterBand</span></code></a>. As well, a <a class="reference internal" href="../api/gdaldriver_cpp.html#_CPPv410GDALDriver" title="GDALDriver"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDriver</span></code></a> instance is created for the format, and registered with the <a class="reference internal" href="../api/gdaldriver_cpp.html#_CPPv417GDALDriverManager" title="GDALDriverManager"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDriverManager</span></code></a>, to ensure that the system knows about the format.</p>
+<p>This tutorial will start with implementing a simple read-only driver (based on the JDEM driver), and then proceed to utilizing the RawRasterBand helper class, implementing creatable and updatable formats, and some esoteric issues.</p>
+<p>It is strongly advised that the <a class="reference internal" href="../user/raster_data_model.html#raster-data-model"><span class="std std-ref">Raster Data Model</span></a> be reviewed and understood before attempting to implement a GDAL driver.</p>
+</div>
+<div class="section" id="implementing-the-dataset">
+<h2>Implementing the Dataset<a class="headerlink" href="#implementing-the-dataset" title="Permalink to this headline">¶</a></h2>
+<p>We will start showing minimal implementation of a read-only driver for the Japanese DEM format (<a class="reference external" href="https://github.com/OSGeo/gdal/blob/master/gdal/frmts/jdem/jdemdataset.cpp">jdemdataset.cpp</a>). First we declare a format specific dataset class, JDEMDataset in this case.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">JDEMDataset</span> <span class="o">:</span> <span class="k">public</span> <span class="n">GDALPamDataset</span>
+<span class="p">{</span>
+    <span class="k">friend</span> <span class="k">class</span> <span class="nc">JDEMRasterBand</span><span class="p">;</span>
+    <span class="kt">FILE</span>        <span class="o">*</span><span class="n">fp</span><span class="p">;</span>
+    <span class="n">GByte</span>       <span class="n">abyHeader</span><span class="p">[</span><span class="mi">1012</span><span class="p">];</span>
+
+<span class="k">public</span><span class="o">:</span>
+                <span class="o">~</span><span class="n">JDEMDataset</span><span class="p">();</span>
+    <span class="k">static</span> <span class="n">GDALDataset</span> <span class="o">*</span><span class="nf">Open</span><span class="p">(</span> <span class="n">GDALOpenInfo</span> <span class="o">*</span> <span class="p">);</span>
+    <span class="k">static</span> <span class="kt">int</span>          <span class="nf">Identify</span><span class="p">(</span> <span class="n">GDALOpenInfo</span> <span class="o">*</span> <span class="p">);</span>
+    <span class="n">CPLErr</span>      <span class="nf">GetGeoTransform</span><span class="p">(</span> <span class="kt">double</span> <span class="o">*</span> <span class="n">padfTransform</span> <span class="p">);</span>
+    <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="nf">GetProjectionRef</span><span class="p">();</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>In general we provide capabilities for a driver, by overriding the various virtual methods on the GDALDataset base class. However, the Open() method is special. This is not a virtual method on the base class, and we will need a freestanding function for this operation, so we declare it static. Implementing it as a method in the JDEMDataset class is convenient because we have privileged access to modify the contents of the database object.</p>
+<p>The open method itself may look something like this:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">GDALDataset</span> <span class="o">*</span><span class="n">JDEMDataset</span><span class="o">::</span><span class="n">Open</span><span class="p">(</span> <span class="n">GDALOpenInfo</span> <span class="o">*</span><span class="n">poOpenInfo</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// Confirm that the header is compatible with a JDEM dataset.</span>
+    <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="n">Identify</span><span class="p">(</span><span class="n">poOpenInfo</span><span class="p">)</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+
+    <span class="c1">// Confirm the requested access is supported.</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">poOpenInfo</span><span class="o">-&gt;</span><span class="n">eAccess</span> <span class="o">==</span> <span class="n">GA_Update</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">CPLError</span><span class="p">(</span><span class="n">CE_Failure</span><span class="p">,</span> <span class="n">CPLE_NotSupported</span><span class="p">,</span>
+                <span class="s">&quot;The JDEM driver does not support update access to existing &quot;</span>
+                <span class="s">&quot;datasets.&quot;</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Check that the file pointer from GDALOpenInfo* is available</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">poOpenInfo</span><span class="o">-&gt;</span><span class="n">fpL</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Create a corresponding GDALDataset.</span>
+    <span class="n">JDEMDataset</span> <span class="o">*</span><span class="n">poDS</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JDEMDataset</span><span class="p">();</span>
+
+    <span class="c1">// Borrow the file pointer from GDALOpenInfo*.</span>
+    <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">fp</span> <span class="o">=</span> <span class="n">poOpenInfo</span><span class="o">-&gt;</span><span class="n">fpL</span><span class="p">;</span>
+    <span class="n">poOpenInfo</span><span class="o">-&gt;</span><span class="n">fpL</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+
+    <span class="c1">// Read the header.</span>
+    <span class="n">VSIFReadL</span><span class="p">(</span><span class="n">poDS</span><span class="o">-&gt;</span><span class="n">abyHeader</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1012</span><span class="p">,</span> <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">fp</span><span class="p">);</span>
+    <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">nRasterXSize</span> <span class="o">=</span>
+        <span class="n">JDEMGetField</span><span class="p">(</span><span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="kt">char</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">poDS</span><span class="o">-&gt;</span><span class="n">abyHeader</span><span class="p">)</span> <span class="o">+</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+    <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">nRasterYSize</span> <span class="o">=</span>
+        <span class="n">JDEMGetField</span><span class="p">(</span><span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="kt">char</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">poDS</span><span class="o">-&gt;</span><span class="n">abyHeader</span><span class="p">)</span> <span class="o">+</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">nRasterXSize</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">nRasterYSize</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">CPLError</span><span class="p">(</span><span class="n">CE_Failure</span><span class="p">,</span> <span class="n">CPLE_AppDefined</span><span class="p">,</span>
+                <span class="s">&quot;Invalid dimensions : %d x %d&quot;</span><span class="p">,</span>
+                <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">nRasterXSize</span><span class="p">,</span> <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">nRasterYSize</span><span class="p">);</span>
+        <span class="k">delete</span> <span class="n">poDS</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Create band information objects.</span>
+    <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">SetBand</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="k">new</span> <span class="n">JDEMRasterBand</span><span class="p">(</span><span class="n">poDS</span><span class="p">,</span> <span class="mi">1</span><span class="p">));</span>
+
+    <span class="c1">// Initialize any PAM information.</span>
+    <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">SetDescription</span><span class="p">(</span><span class="n">poOpenInfo</span><span class="o">-&gt;</span><span class="n">pszFilename</span><span class="p">);</span>
+    <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">TryLoadXML</span><span class="p">();</span>
+
+    <span class="c1">// Initialize default overviews.</span>
+    <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">oOvManager</span><span class="p">.</span><span class="n">Initialize</span><span class="p">(</span><span class="n">poDS</span><span class="p">,</span> <span class="n">poOpenInfo</span><span class="o">-&gt;</span><span class="n">pszFilename</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">poDS</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The first step in any database Open function is to verify that the file
+being passed is in fact of the type this driver is for.  It is important
+to realize that each driver’s Open function is called in turn till one
+succeeds.  Drivers must quietly return NULL if the passed file is not of
+their format.  They should only produce an error if the file does appear to
+be of their supported format, but is for some reason unsupported or corrupt.
+The information on the file to be opened is passed in contained in a
+GDALOpenInfo object.  The GDALOpenInfo includes the following public
+data members:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">char</span>        <span class="o">*</span><span class="n">pszFilename</span><span class="p">;</span>
+<span class="kt">char</span><span class="o">**</span>      <span class="n">papszOpenOptions</span><span class="p">;</span>
+<span class="n">GDALAccess</span>  <span class="n">eAccess</span><span class="p">;</span>  <span class="c1">// GA_ReadOnly or GA_Update</span>
+<span class="kt">int</span>         <span class="n">nOpenFlags</span><span class="p">;</span>
+<span class="kt">int</span>         <span class="n">bStatOK</span><span class="p">;</span>
+<span class="kt">int</span>         <span class="n">bIsDirectory</span><span class="p">;</span>
+<span class="n">VSILFILE</span>   <span class="o">*</span><span class="n">fpL</span><span class="p">;</span>
+<span class="kt">int</span>         <span class="n">nHeaderBytes</span><span class="p">;</span>
+<span class="n">GByte</span>       <span class="o">*</span><span class="n">pabyHeader</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The driver can inspect these to establish if the file is supported. If the <cite>pszFilename</cite> refers to an object in the file system, the <cite>bStatOK</cite> flag will be set to TRUE. As well, if the file was successfully opened, the first kilobyte or so is read in, and put in pabyHeader, with the exact size in <cite>nHeaderBytes</cite>.</p>
+<p>In this typical testing example it is verified that the file was successfully opened, that we have at least enough header information to perform our test, and that various parts of the header are as expected for this format. In this case, there are no magic numbers for JDEM format so we check various date fields to ensure they have reasonable century values. If the test fails, we quietly return NULL indicating this file isn’t of our supported format.</p>
+<p>The identification is in fact delegated to a Identify() static function :</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/************************************************************************/</span>
+<span class="cm">/*                              Identify()                              */</span>
+<span class="cm">/************************************************************************/</span>
+<span class="kt">int</span> <span class="n">JDEMDataset</span><span class="o">::</span><span class="n">Identify</span><span class="p">(</span> <span class="n">GDALOpenInfo</span> <span class="o">*</span> <span class="n">poOpenInfo</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// Confirm that the header has what appears to be dates in the</span>
+    <span class="c1">// expected locations.  Sadly this is a relatively weak test.</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">poOpenInfo</span><span class="o">-&gt;</span><span class="n">nHeaderBytes</span> <span class="o">&lt;</span> <span class="mi">50</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="n">FALSE</span><span class="p">;</span>
+
+    <span class="c1">// Check if century values seem reasonable.</span>
+    <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">psHeader</span> <span class="o">=</span> <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="kt">char</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">poOpenInfo</span><span class="o">-&gt;</span><span class="n">pabyHeader</span><span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span> <span class="p">(</span><span class="o">!</span><span class="n">EQUALN</span><span class="p">(</span><span class="n">psHeader</span> <span class="o">+</span> <span class="mi">11</span><span class="p">,</span> <span class="s">&quot;19&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+        <span class="o">!</span><span class="n">EQUALN</span><span class="p">(</span><span class="n">psHeader</span> <span class="o">+</span> <span class="mi">11</span><span class="p">,</span> <span class="s">&quot;20&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span> <span class="o">||</span>
+        <span class="p">(</span><span class="o">!</span><span class="n">EQUALN</span><span class="p">(</span><span class="n">psHeader</span> <span class="o">+</span> <span class="mi">15</span><span class="p">,</span> <span class="s">&quot;19&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+        <span class="o">!</span><span class="n">EQUALN</span><span class="p">(</span><span class="n">psHeader</span> <span class="o">+</span> <span class="mi">15</span><span class="p">,</span> <span class="s">&quot;20&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span> <span class="o">||</span>
+        <span class="p">(</span><span class="o">!</span><span class="n">EQUALN</span><span class="p">(</span><span class="n">psHeader</span> <span class="o">+</span> <span class="mi">19</span><span class="p">,</span> <span class="s">&quot;19&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+        <span class="o">!</span><span class="n">EQUALN</span><span class="p">(</span><span class="n">psHeader</span> <span class="o">+</span> <span class="mi">19</span><span class="p">,</span> <span class="s">&quot;20&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">TRUE</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>It is important to make the “is this my format” test as stringent as
+possible.  In this particular case the test is weak, and a file that happened
+to have 19s or 20s at a few locations could be erroneously recognized as
+JDEM format, causing it to not be handled properly.
+Once we are satisfied that the file is of our format, we can do any other
+tests that are necessary to validate the file is usable, and in particular
+that we can provide the level of access desired.  Since the JDEM driver does
+not provide update support, error out in that case.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="p">(</span> <span class="n">poOpenInfo</span><span class="o">-&gt;</span><span class="n">eAccess</span> <span class="o">==</span> <span class="n">GA_Update</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">CPLError</span><span class="p">(</span><span class="n">CE_Failure</span><span class="p">,</span> <span class="n">CPLE_NotSupported</span><span class="p">,</span>
+             <span class="s">&quot;The JDEM driver does not support update access to existing &quot;</span>
+             <span class="s">&quot;datasets.&quot;</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Next we need to create an instance of the database class in which we will set various information of interest.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Check that the file pointer from GDALOpenInfo* is available.</span>
+<span class="k">if</span><span class="p">(</span> <span class="n">poOpenInfo</span><span class="o">-&gt;</span><span class="n">fpL</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">JDEMDataset</span> <span class="o">*</span><span class="n">poDS</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JDEMDataset</span><span class="p">();</span>
+
+<span class="c1">// Borrow the file pointer from GDALOpenInfo*.</span>
+<span class="n">poDS</span><span class="o">-&gt;</span><span class="n">fp</span> <span class="o">=</span> <span class="n">poOpenInfo</span><span class="o">-&gt;</span><span class="n">fpL</span><span class="p">;</span>
+<span class="n">poOpenInfo</span><span class="o">-&gt;</span><span class="n">fpL</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>At this point we “borrow” the file handle that was held by GDALOpenInfo*. This file pointer uses the VSI*L GDAL API to access files on disk. This virtualized POSIX-style API allows some special capabilities like supporting large files, in-memory files and zipped files.</p>
+<p>Next the X and Y size are extracted from the header. The <cite>nRasterXSize</cite> and <cite>nRasterYSize</cite> are data fields inherited from the GDALDataset base class, and must be set by the Open() method.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">VSIFReadL</span><span class="p">(</span><span class="n">poDS</span><span class="o">-&gt;</span><span class="n">abyHeader</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1012</span><span class="p">,</span> <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">fp</span><span class="p">);</span>
+<span class="n">poDS</span><span class="o">-&gt;</span><span class="n">nRasterXSize</span> <span class="o">=</span>
+    <span class="n">JDEMGetField</span><span class="p">(</span><span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="kt">char</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">poDS</span><span class="o">-&gt;</span><span class="n">abyHeader</span><span class="p">)</span> <span class="o">+</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+<span class="n">poDS</span><span class="o">-&gt;</span><span class="n">nRasterYSize</span> <span class="o">=</span>
+    <span class="n">JDEMGetField</span><span class="p">(</span><span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="kt">char</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">poDS</span><span class="o">-&gt;</span><span class="n">abyHeader</span><span class="p">)</span> <span class="o">+</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+<span class="k">if</span>  <span class="p">(</span><span class="n">poDS</span><span class="o">-&gt;</span><span class="n">nRasterXSize</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">nRasterYSize</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">CPLError</span><span class="p">(</span><span class="n">CE_Failure</span><span class="p">,</span> <span class="n">CPLE_AppDefined</span><span class="p">,</span>
+            <span class="s">&quot;Invalid dimensions : %d x %d&quot;</span><span class="p">,</span>
+            <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">nRasterXSize</span><span class="p">,</span> <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">nRasterYSize</span><span class="p">);</span>
+    <span class="k">delete</span> <span class="n">poDS</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>All the bands related to this dataset must be created and attached using the SetBand() method. We will explore the JDEMRasterBand() class shortly.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Create band information objects.</span>
+<span class="n">poDS</span><span class="o">-&gt;</span><span class="n">SetBand</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="k">new</span> <span class="n">JDEMRasterBand</span><span class="p">(</span><span class="n">poDS</span><span class="p">,</span> <span class="mi">1</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>Finally we assign a name to the dataset object, and call the GDALPamDataset TryLoadXML() method which can initialize auxiliary information from an .aux.xml file if available. For more details on these services review the GDALPamDataset and related classes.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span>    <span class="c1">// Initialize any PAM information.</span>
+    <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">SetDescription</span><span class="p">(</span> <span class="n">poOpenInfo</span><span class="o">-&gt;</span><span class="n">pszFilename</span> <span class="p">);</span>
+    <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">TryLoadXML</span><span class="p">();</span>
+    <span class="k">return</span> <span class="n">poDS</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="implementing-the-rasterband">
+<h2>Implementing the RasterBand<a class="headerlink" href="#implementing-the-rasterband" title="Permalink to this headline">¶</a></h2>
+<p>Similar to the customized JDEMDataset class subclassed from GDALDataset, we also need to declare and implement a customized JDEMRasterBand derived from <a class="reference internal" href="../api/gdalrasterband_cpp.html#_CPPv414GDALRasterBand" title="GDALRasterBand"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALRasterBand</span></code></a> for access to the band(s) of the JDEM file. For JDEMRasterBand the declaration looks like this:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">JDEMRasterBand</span> <span class="o">:</span> <span class="k">public</span> <span class="n">GDALPamRasterBand</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">JDEMRasterBand</span><span class="p">(</span> <span class="n">JDEMDataset</span> <span class="o">*</span><span class="p">,</span> <span class="kt">int</span> <span class="p">);</span>
+    <span class="k">virtual</span> <span class="n">CPLErr</span> <span class="nf">IReadBlock</span><span class="p">(</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span> <span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The constructor may have any signature, and is only called from the Open() method. Other virtual methods, such as <a class="reference internal" href="../api/gdalrasterband_cpp.html#_CPPv4N14GDALRasterBand10IReadBlockEiiPv" title="GDALRasterBand::IReadBlock"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALRasterBand::IReadBlock()</span></code></a> must be exactly matched to the method signature in gdal_priv.h.</p>
+<p>The constructor implementation looks like this:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">JDEMRasterBand</span><span class="o">::</span><span class="n">JDEMRasterBand</span><span class="p">(</span> <span class="n">JDEMDataset</span> <span class="o">*</span><span class="n">poDSIn</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nBandIn</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">poDS</span> <span class="o">=</span> <span class="n">poDSIn</span><span class="p">;</span>
+    <span class="n">nBand</span> <span class="o">=</span> <span class="n">nBandIn</span><span class="p">;</span>
+    <span class="n">eDataType</span> <span class="o">=</span> <span class="n">GDT_Float32</span><span class="p">;</span>
+    <span class="n">nBlockXSize</span> <span class="o">=</span> <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">GetRasterXSize</span><span class="p">();</span>
+    <span class="n">nBlockYSize</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The following data members are inherited from GDALRasterBand, and should generally be set in the band constructor.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="nl">poDS</span><span class="p">:</span> <span class="n">Pointer</span> <span class="n">to</span> <span class="n">the</span> <span class="n">parent</span> <span class="n">GDALDataset</span><span class="p">.</span>
+<span class="nl">nBand</span><span class="p">:</span> <span class="n">The</span> <span class="n">band</span> <span class="n">number</span> <span class="n">within</span> <span class="n">the</span> <span class="n">dataset</span><span class="p">.</span>
+<span class="nl">eDataType</span><span class="p">:</span> <span class="n">The</span> <span class="n">data</span> <span class="n">type</span> <span class="n">of</span> <span class="n">pixels</span> <span class="n">in</span> <span class="k">this</span> <span class="n">band</span><span class="p">.</span>
+<span class="nl">nBlockXSize</span><span class="p">:</span> <span class="n">The</span> <span class="n">width</span> <span class="n">of</span> <span class="n">one</span> <span class="n">block</span> <span class="n">in</span> <span class="k">this</span> <span class="n">band</span><span class="p">.</span>
+<span class="nl">nBlockYSize</span><span class="p">:</span> <span class="n">The</span> <span class="n">height</span> <span class="n">of</span> <span class="n">one</span> <span class="n">block</span> <span class="n">in</span> <span class="k">this</span> <span class="n">band</span><span class="p">.</span>
+</pre></div>
+</div>
+<p>The full set of possible GDALDataType values are declared in gdal.h, and include GDT_Byte, GDT_UInt16, GDT_Int16, and GDT_Float32. The block size is used to establish a natural or efficient block size to access the data with. For tiled datasets this will be the size of a tile, while for most other datasets it will be one scanline, as in this case.</p>
+<p>Next we see the implementation of the code that actually reads the image data, IReadBlock().</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">CPLErr</span> <span class="n">JDEMRasterBand</span><span class="o">::</span><span class="n">IReadBlock</span><span class="p">(</span> <span class="kt">int</span> <span class="n">nBlockXOff</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nBlockYOff</span><span class="p">,</span>
+                                <span class="kt">void</span> <span class="o">*</span> <span class="n">pImage</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">JDEMDataset</span> <span class="o">*</span><span class="n">poGDS</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">JDEMDataset</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">poDS</span><span class="p">);</span>
+    <span class="kt">int</span> <span class="n">nRecordSize</span> <span class="o">=</span> <span class="n">nBlockXSize</span> <span class="o">*</span> <span class="mi">5</span> <span class="o">+</span> <span class="mi">9</span> <span class="o">+</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="n">VSIFSeekL</span><span class="p">(</span><span class="n">poGDS</span><span class="o">-&gt;</span><span class="n">fp</span><span class="p">,</span> <span class="mi">1011</span> <span class="o">+</span> <span class="n">nRecordSize</span><span class="o">*</span><span class="n">nBlockYOff</span><span class="p">,</span> <span class="n">SEEK_SET</span><span class="p">);</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">pszRecord</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">char</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">CPLMalloc</span><span class="p">(</span><span class="n">nRecordSize</span><span class="p">));</span>
+    <span class="n">VSIFReadL</span><span class="p">(</span><span class="n">pszRecord</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nRecordSize</span><span class="p">,</span> <span class="n">poGDS</span><span class="o">-&gt;</span><span class="n">fp</span><span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="n">EQUALN</span><span class="p">(</span><span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="kt">char</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">poGDS</span><span class="o">-&gt;</span><span class="n">abyHeader</span><span class="p">),</span> <span class="n">pszRecord</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">CPLFree</span><span class="p">(</span><span class="n">pszRecord</span><span class="p">);</span>
+        <span class="n">CPLError</span><span class="p">(</span><span class="n">CE_Failure</span><span class="p">,</span> <span class="n">CPLE_AppDefined</span><span class="p">,</span>
+                <span class="s">&quot;JDEM Scanline corrupt.  Perhaps file was not transferred &quot;</span>
+                <span class="s">&quot;in binary mode?&quot;</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">CE_Failure</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">JDEMGetField</span><span class="p">(</span><span class="n">pszRecord</span> <span class="o">+</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">!=</span> <span class="n">nBlockYOff</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">CPLFree</span><span class="p">(</span><span class="n">pszRecord</span><span class="p">);</span>
+        <span class="n">CPLError</span><span class="p">(</span><span class="n">CE_Failure</span><span class="p">,</span> <span class="n">CPLE_AppDefined</span><span class="p">,</span>
+                <span class="s">&quot;JDEM scanline out of order, JDEM driver does not &quot;</span>
+                <span class="s">&quot;currently support partial datasets.&quot;</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">CE_Failure</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nBlockXSize</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
+        <span class="p">((</span><span class="kt">float</span> <span class="o">*</span><span class="p">)</span> <span class="n">pImage</span><span class="p">)[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">JDEMGetField</span><span class="p">(</span><span class="n">pszRecord</span> <span class="o">+</span> <span class="mi">9</span> <span class="o">+</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">i</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.1</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">CE_None</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Key items to note are:</p>
+<ul class="simple">
+<li><p>It is typical to cast the GDALRasterBand::poDS member to the derived type of the owning dataset. If your RasterBand class will need privileged access to the owning dataset object, ensure it is declared as a friend (omitted above for brevity).</p></li>
+<li><p>If an error occurs, report it with CPLError(), and return CE_Failure. Otherwise return CE_None.</p></li>
+<li><p>The pImage buffer should be filled with one block of data. The block is the size declared in nBlockXSize and nBlockYSize for the raster band. The type of the data within pImage should match the type declared in eDataType in the raster band object.</p></li>
+<li><p>The nBlockXOff and nBlockYOff are block offsets, so with 128x128 tiled datasets values of 1 and 1 would indicate the block going from (128,128) to (255,255) should be loaded.</p></li>
+</ul>
+</div>
+<div class="section" id="the-driver">
+<h2>The Driver<a class="headerlink" href="#the-driver" title="Permalink to this headline">¶</a></h2>
+<p>While the JDEMDataset and JDEMRasterBand are now ready to use to read image data, it still isn’t clear how the GDAL system knows about the new driver. This is accomplished via the <a class="reference internal" href="../api/gdaldriver_cpp.html#_CPPv417GDALDriverManager" title="GDALDriverManager"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDriverManager</span></code></a>. To register our format we implement a registration function. The declaration goes in gcore/gdal_frmts.h:
+void CPL_DLL GDALRegister_JDEM(void);</p>
+<p>The definition in the driver file is:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span> <span class="nf">GDALRegister_JDEM</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="n">GDAL_CHECK_VERSION</span><span class="p">(</span><span class="s">&quot;JDEM&quot;</span><span class="p">)</span> <span class="p">)</span>
+        <span class="k">return</span><span class="p">;</span>
+
+    <span class="k">if</span><span class="p">(</span> <span class="n">GDALGetDriverByName</span><span class="p">(</span><span class="s">&quot;JDEM&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">NULL</span> <span class="p">)</span>
+        <span class="k">return</span><span class="p">;</span>
+
+    <span class="n">GDALDriver</span> <span class="o">*</span><span class="n">poDriver</span> <span class="o">=</span> <span class="k">new</span> <span class="n">GDALDriver</span><span class="p">();</span>
+    <span class="n">poDriver</span><span class="o">-&gt;</span><span class="n">SetDescription</span><span class="p">(</span><span class="s">&quot;JDEM&quot;</span><span class="p">);</span>
+    <span class="n">poDriver</span><span class="o">-&gt;</span><span class="n">SetMetadataItem</span><span class="p">(</span><span class="n">GDAL_DCAP_RASTER</span><span class="p">,</span> <span class="s">&quot;YES&quot;</span><span class="p">);</span>
+    <span class="n">poDriver</span><span class="o">-&gt;</span><span class="n">SetMetadataItem</span><span class="p">(</span><span class="n">GDAL_DMD_LONGNAME</span><span class="p">,</span>
+                            <span class="s">&quot;Japanese DEM (.mem)&quot;</span><span class="p">);</span>
+    <span class="n">poDriver</span><span class="o">-&gt;</span><span class="n">SetMetadataItem</span><span class="p">(</span><span class="n">GDAL_DMD_HELPTOPIC</span><span class="p">,</span>
+                            <span class="s">&quot;frmt_various.html#JDEM&quot;</span><span class="p">);</span>
+    <span class="n">poDriver</span><span class="o">-&gt;</span><span class="n">SetMetadataItem</span><span class="p">(</span><span class="n">GDAL_DMD_EXTENSION</span><span class="p">,</span> <span class="s">&quot;mem&quot;</span><span class="p">);</span>
+    <span class="n">poDriver</span><span class="o">-&gt;</span><span class="n">SetMetadataItem</span><span class="p">(</span><span class="n">GDAL_DCAP_VIRTUALIO</span><span class="p">,</span> <span class="s">&quot;YES&quot;</span><span class="p">);</span>
+    <span class="n">poDriver</span><span class="o">-&gt;</span><span class="n">pfnOpen</span> <span class="o">=</span> <span class="n">JDEMDataset</span><span class="o">::</span><span class="n">Open</span><span class="p">;</span>
+    <span class="n">poDriver</span><span class="o">-&gt;</span><span class="n">pfnIdentify</span> <span class="o">=</span> <span class="n">JDEMDataset</span><span class="o">::</span><span class="n">Identify</span><span class="p">;</span>
+    <span class="n">GetGDALDriverManager</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">RegisterDriver</span><span class="p">(</span><span class="n">poDriver</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Note the use of GDAL_CHECK_VERSION macro (starting with GDAL 1.5.0). This is an optional macro for drivers inside GDAL tree that don’t depend on external libraries, but that can be very useful if you compile your driver as a plugin (that is to say, an out-of-tree driver). As the GDAL C++ ABI may, and will, change between GDAL releases (for example from GDAL 1.5.0 to 1.6.0), it may be necessary to recompile your driver against the header files of the GDAL version with which you want to make it work. The GDAL_CHECK_VERSION macro will check that the GDAL version with which the driver was compiled and the version against which it is running are compatible.</p>
+<p>The registration function will create an instance of a GDALDriver object when first called, and register it with the GDALDriverManager. The following fields can be set in the driver before registering it with the GDALDriverManager.</p>
+<ul class="simple">
+<li><p>The description is the short name for the format. This is a unique name for this format, often used to identity the driver in scripts and command line programs. Normally 3-5 characters in length, and matching the prefix of the format classes. (mandatory)</p></li>
+<li><p>GDAL_DCAP_RASTER: set to YES to indicate that this driver handles raster data. (mandatory)</p></li>
+<li><p>GDAL_DMD_LONGNAME: A longer descriptive name for the file format, but still no longer than 50-60 characters. (mandatory)</p></li>
+<li><p>GDAL_DMD_HELPTOPIC: The name of a help topic to display for this driver, if any. In this case JDEM format is contained within the various format web page held in gdal/html. (optional)</p></li>
+<li><p>GDAL_DMD_EXTENSION: The extension used for files of this type. If more than one pick the primary extension, or none at all. (optional)</p></li>
+<li><p>GDAL_DMD_MIMETYPE: The standard mime type for this file format, such as “image/png”. (optional)</p></li>
+<li><p>GDAL_DMD_CREATIONOPTIONLIST: There is evolving work on mechanisms to describe creation options. See the geotiff driver for an example of this. (optional)</p></li>
+<li><p>GDAL_DMD_CREATIONDATATYPES: A list of space separated data types supported by this create when creating new datasets. If a Create() method exists, these will be will supported. If a CreateCopy() method exists, this will be a list of types that can be losslessly exported but it may include weaker data types than the type eventually written. For instance, a format with a CreateCopy() method, and that always writes Float32 might also list Byte, Int16, and UInt16 since they can losslessly translated to Float32. An example value might be “Byte Int16 UInt16”. (required - if creation supported)</p></li>
+<li><p>GDAL_DCAP_VIRTUALIO: set to YES to indicate that this driver can deal with files opened with the VSI*L GDAL API. Otherwise this metadata item should not be defined. (optional)</p></li>
+<li><p>pfnOpen: The function to call to try opening files of this format. (optional)</p></li>
+<li><p>pfnIdentify: The function to call to try identifying files of this format. A driver should return 1 if it recognizes the file as being of its format, 0 if it recognizes the file as being NOT of its format, or -1 if it cannot reach to a firm conclusion by just examining the header bytes. (optional)</p></li>
+<li><p>pfnCreate: The function to call to create new updatable datasets of this format. (optional)</p></li>
+<li><p>pfnCreateCopy: The function to call to create a new dataset of this format copied from another source, but not necessary updatable. (optional)</p></li>
+<li><p>pfnDelete: The function to call to delete a dataset of this format. (optional)</p></li>
+<li><p>pfnUnloadDriver: A function called only when the driver is destroyed. Could be used to cleanup data at the driver level. Rarely used. (optional)</p></li>
+</ul>
+</div>
+<div class="section" id="adding-driver-to-gdal-tree">
+<h2>Adding Driver to GDAL Tree<a class="headerlink" href="#adding-driver-to-gdal-tree" title="Permalink to this headline">¶</a></h2>
+<p>Note that the GDALRegister_JDEM() method must be called by the higher level program in order to have access to the JDEM driver. Normal practice when writing new drivers is to:</p>
+<ul class="simple">
+<li><p>Add a driver directory under gdal/frmts, with the directory name the same as the short name.</p></li>
+<li><p>Add a GNUmakefile and makefile.vc in that directory modeled on those from other similar directories (i.e. the jdem directory).</p></li>
+<li><p>Add the module with the dataset, and rasterband implementation. Generally this is called &lt;short_name&gt;dataset.cpp, with all the GDAL specific code in one file, though that is not required.</p></li>
+<li><p>Add the registration entry point declaration (i.e. GDALRegister_JDEM()) to gdal/gcore/gdal_frmts.h.</p></li>
+<li><p>Add a call to the registration function to frmts/gdalallregister.cpp, protected by an appropriate #ifdef.</p></li>
+<li><p>Add the format short name to the GDAL_FORMATS macro in GDALmake.opt.in (and to GDALmake.opt).</p></li>
+<li><p>Add a format specific item to the EXTRAFLAGS macro in frmts/makefile.vc.</p></li>
+</ul>
+<p>Once this is all done, it should be possible to rebuild GDAL, and have the new format available in all the utilities. The <a class="reference internal" href="../programs/gdalinfo.html#gdalinfo"><span class="std std-ref">gdalinfo</span></a> utility can be used to test that opening and reporting on the format is working, and the <a class="reference internal" href="../programs/gdal_translate.html#gdal-translate"><span class="std std-ref">gdal_translate</span></a> utility can be used to test image reading.</p>
+</div>
+<div class="section" id="adding-georeferencing">
+<h2>Adding Georeferencing<a class="headerlink" href="#adding-georeferencing" title="Permalink to this headline">¶</a></h2>
+<p>Now we will take the example a step forward, adding georeferencing support. We add the following two virtual method overrides to JDEMDataset, taking care to exactly match the signature of the method on the GDALDataset base class.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">CPLErr</span>      <span class="nf">GetGeoTransform</span><span class="p">(</span> <span class="kt">double</span> <span class="o">*</span> <span class="n">padfTransform</span> <span class="p">);</span>
+<span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="nf">GetProjectionRef</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>The implementation of <a class="reference internal" href="../api/gdaldataset_cpp.html#_CPPv4N11GDALDataset15GetGeoTransformEPd" title="GDALDataset::GetGeoTransform"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDataset::GetGeoTransform()</span></code></a> just copies the usual geotransform matrix into the supplied buffer. Note that <a class="reference internal" href="../api/gdaldataset_cpp.html#_CPPv4N11GDALDataset15GetGeoTransformEPd" title="GDALDataset::GetGeoTransform"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDataset::GetGeoTransform()</span></code></a> may be called a lot, so it isn’t generally wise to do a lot of computation in it. In many cases the Open() will collect the geotransform, and this method will just copy it over. Also note that the geotransform return is based on an anchor point at the top left corner of the top left pixel, not the center of pixel approach used in some packages.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">CPLErr</span> <span class="n">JDEMDataset</span><span class="o">::</span><span class="n">GetGeoTransform</span><span class="p">(</span> <span class="kt">double</span> <span class="o">*</span> <span class="n">padfTransform</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">psHeader</span> <span class="o">=</span> <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="kt">char</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">abyHeader</span><span class="p">);</span>
+    <span class="k">const</span> <span class="kt">double</span> <span class="n">dfLLLat</span> <span class="o">=</span> <span class="n">JDEMGetAngle</span><span class="p">(</span><span class="n">psHeader</span> <span class="o">+</span> <span class="mi">29</span><span class="p">);</span>
+    <span class="k">const</span> <span class="kt">double</span> <span class="n">dfLLLong</span> <span class="o">=</span> <span class="n">JDEMGetAngle</span><span class="p">(</span><span class="n">psHeader</span> <span class="o">+</span> <span class="mi">36</span><span class="p">);</span>
+    <span class="k">const</span> <span class="kt">double</span> <span class="n">dfURLat</span> <span class="o">=</span> <span class="n">JDEMGetAngle</span><span class="p">(</span><span class="n">psHeader</span> <span class="o">+</span> <span class="mi">43</span><span class="p">);</span>
+    <span class="k">const</span> <span class="kt">double</span> <span class="n">dfURLong</span> <span class="o">=</span> <span class="n">JDEMGetAngle</span><span class="p">(</span><span class="n">psHeader</span> <span class="o">+</span> <span class="mi">50</span><span class="p">);</span>
+    <span class="n">padfTransform</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">dfLLLong</span><span class="p">;</span>
+    <span class="n">padfTransform</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">dfURLat</span><span class="p">;</span>
+    <span class="n">padfTransform</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">dfURLong</span> <span class="o">-</span> <span class="n">dfLLLong</span><span class="p">)</span> <span class="o">/</span> <span class="n">GetRasterXSize</span><span class="p">();</span>
+    <span class="n">padfTransform</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
+    <span class="n">padfTransform</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
+    <span class="n">padfTransform</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="p">(</span><span class="n">dfURLat</span> <span class="o">-</span> <span class="n">dfLLLat</span><span class="p">)</span> <span class="o">/</span> <span class="n">GetRasterYSize</span><span class="p">();</span>
+    <span class="k">return</span> <span class="n">CE_None</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="../api/gdaldataset_cpp.html#_CPPv4NK11GDALDataset16GetProjectionRefEv" title="GDALDataset::GetProjectionRef"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDataset::GetProjectionRef()</span></code></a> method returns a pointer to an internal string containing a coordinate system definition in OGC WKT format. In this case the coordinate system is fixed for all files of this format, but in more complex cases a definition may need to be composed on the fly, in which case it may be helpful to use the <a class="reference internal" href="../api/ogrspatialref.html#_CPPv419OGRSpatialReference" title="OGRSpatialReference"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRSpatialReference</span></code></a> class to help build the definition.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">JDEMDataset</span><span class="o">::</span><span class="n">GetProjectionRef</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">return</span>
+        <span class="s">&quot;GEOGCS[</span><span class="se">\&quot;</span><span class="s">Tokyo</span><span class="se">\&quot;</span><span class="s">,DATUM[</span><span class="se">\&quot;</span><span class="s">Tokyo</span><span class="se">\&quot;</span><span class="s">,SPHEROID[</span><span class="se">\&quot;</span><span class="s">Bessel 1841</span><span class="se">\&quot;</span><span class="s">,&quot;</span>
+        <span class="s">&quot;6377397.155,299.1528128,AUTHORITY[</span><span class="se">\&quot;</span><span class="s">EPSG</span><span class="se">\&quot;</span><span class="s">,7004]],TOWGS84[-148,&quot;</span>
+        <span class="s">&quot;507,685,0,0,0,0],AUTHORITY[</span><span class="se">\&quot;</span><span class="s">EPSG</span><span class="se">\&quot;</span><span class="s">,6301]],PRIMEM[</span><span class="se">\&quot;</span><span class="s">Greenwich</span><span class="se">\&quot;</span><span class="s">,&quot;</span>
+        <span class="s">&quot;0,AUTHORITY[</span><span class="se">\&quot;</span><span class="s">EPSG</span><span class="se">\&quot;</span><span class="s">,8901]],UNIT[</span><span class="se">\&quot;</span><span class="s">DMSH</span><span class="se">\&quot;</span><span class="s">,0.0174532925199433,&quot;</span>
+        <span class="s">&quot;AUTHORITY[</span><span class="se">\&quot;</span><span class="s">EPSG</span><span class="se">\&quot;</span><span class="s">,9108]],AXIS[</span><span class="se">\&quot;</span><span class="s">Lat</span><span class="se">\&quot;</span><span class="s">,NORTH],AXIS[</span><span class="se">\&quot;</span><span class="s">Long</span><span class="se">\&quot;</span><span class="s">,EAST],&quot;</span>
+        <span class="s">&quot;AUTHORITY[</span><span class="se">\&quot;</span><span class="s">EPSG</span><span class="se">\&quot;</span><span class="s">,4301]]&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This completes explanation of the features of the JDEM driver. The full source for jdemdataset.cpp can be reviewed as needed.</p>
+</div>
+<div class="section" id="overviews">
+<h2>Overviews<a class="headerlink" href="#overviews" title="Permalink to this headline">¶</a></h2>
+<p>GDAL allows file formats to make pre-built overviews available to applications via the <a class="reference internal" href="../api/gdalrasterband_cpp.html#_CPPv4N14GDALRasterBand11GetOverviewEi" title="GDALRasterBand::GetOverview"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALRasterBand::GetOverview()</span></code></a> and related methods. However, implementing this is pretty involved, and goes beyond the scope of this document for now. The GeoTIFF driver (gdal/frmts/gtiff/geotiff.cpp) and related source can be reviewed for an example of a file format implementing overview reporting and creation support.</p>
+<p>Formats can also report that they have arbitrary overviews, by overriding the <a class="reference internal" href="../api/gdalrasterband_cpp.html#_CPPv4N14GDALRasterBand21HasArbitraryOverviewsEv" title="GDALRasterBand::HasArbitraryOverviews"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALRasterBand::HasArbitraryOverviews()</span></code></a> method on the GDALRasterBand, returning TRUE. In this case the raster band object is expected to override the <a class="reference internal" href="../api/gdalrasterband_cpp.html#_CPPv4N14GDALRasterBand8RasterIOE10GDALRWFlagiiiiPvii12GDALDataType8GSpacing8GSpacingP20GDALRasterIOExtraArg" title="GDALRasterBand::RasterIO"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALRasterBand::RasterIO()</span></code></a> method itself, to implement efficient access to imagery with resampling. This is also involved, and there are a lot of requirements for correct implementation of the RasterIO() method. An example of this can be found in the OGDI and ECW formats.</p>
+<p>However, by far the most common approach to implementing overviews is to use the default support in GDAL for external overviews stored in TIFF files with the same name as the dataset, but the extension .ovr appended. In order to enable reading and creation of this style of overviews it is necessary for the GDALDataset to initialize the <cite>oOvManager</cite> object within itself. This is typically accomplished with a call like the following near the end of the Open() method (after the PAM <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDataset::TryLoadXML()</span></code>).</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">poDS</span><span class="o">-&gt;</span><span class="n">oOvManager</span><span class="p">.</span><span class="n">Initialize</span><span class="p">(</span><span class="n">poDS</span><span class="p">,</span> <span class="n">poOpenInfo</span><span class="o">-&gt;</span><span class="n">pszFilename</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>This will enable default implementations for reading and creating overviews for the format. It is advised that this be enabled for all simple file system based formats unless there is a custom overview mechanism to be tied into.</p>
+</div>
+<div class="section" id="file-creation">
+<h2>File Creation<a class="headerlink" href="#file-creation" title="Permalink to this headline">¶</a></h2>
+<p>There are two approaches to file creation. The first method is called the <a class="reference internal" href="../api/gdaldriver_cpp.html#_CPPv4N10GDALDriver10CreateCopyEPKcP11GDALDatasetiPPc16GDALProgressFuncPv" title="GDALDriver::CreateCopy"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDriver::CreateCopy()</span></code></a> method, and involves implementing a function that can write a file in the output format, pulling all imagery and other information needed from a source GDALDataset. The second method, the dynamic creation method, involves implementing a Create method to create the shell of the file, and then the application writes various information by calls to set methods.</p>
+<p>The benefits of the first method are that that all the information is available at the point the output file is being created. This can be especially important when implementing file formats using external libraries which require information like color maps, and georeferencing information at the point the file is created. The other advantage of this method is that the CreateCopy() method can read some kinds of information, such as min/max, scaling, description and GCPs for which there are no equivalent set methods.</p>
+<p>The benefits of the second method are that applications can create an empty new file, and write results to it as they become available. A complete image of the desired data does not have to be available in advance.</p>
+<p>For very important formats both methods may be implemented, otherwise do whichever is simpler, or provides the required capabilities.</p>
+<div class="section" id="createcopy">
+<h3>CreateCopy<a class="headerlink" href="#createcopy" title="Permalink to this headline">¶</a></h3>
+<p>The GDALDriver::CreateCopy() method call is passed through directly, so that method should be consulted for details of arguments. However, some things to keep in mind are:</p>
+<ul class="simple">
+<li><p>If the <cite>bStrict</cite> flag is FALSE the driver should try to do something reasonable when it cannot exactly represent the source dataset, transforming data types on the fly, dropping georeferencing and so forth.</p></li>
+<li><p>Implementing progress reporting correctly is somewhat involved. The return result of the progress function needs always to be checked for cancellation, and progress should be reported at reasonable intervals. The JPEGCreateCopy() method demonstrates good handling of the progress function.</p></li>
+<li><p>Special creation options should be documented in the on-line help. If the options take the format “NAME=VALUE” the papszOptions list can be manipulated with <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">CPLFetchNameValue()</span></code> as demonstrated in the handling of the QUALITY and PROGRESSIVE flags for JPEGCreateCopy().</p></li>
+<li><p>The returned GDALDataset handle can be in ReadOnly or Update mode. Return it in Update mode if practical, otherwise in ReadOnly mode is fine.</p></li>
+</ul>
+<p>The full implementation of the CreateCopy function for JPEG (which is assigned to pfnCreateCopy in the GDALDriver object) is here.
+static GDALDataset *</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">JPEGCreateCopy</span><span class="p">(</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">pszFilename</span><span class="p">,</span> <span class="n">GDALDataset</span> <span class="o">*</span><span class="n">poSrcDS</span><span class="p">,</span>
+                <span class="kt">int</span> <span class="n">bStrict</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span> <span class="n">papszOptions</span><span class="p">,</span>
+                <span class="n">GDALProgressFunc</span> <span class="n">pfnProgress</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span> <span class="n">pProgressData</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">const</span> <span class="kt">int</span> <span class="n">nBands</span> <span class="o">=</span> <span class="n">poSrcDS</span><span class="o">-&gt;</span><span class="n">GetRasterCount</span><span class="p">();</span>
+    <span class="k">const</span> <span class="kt">int</span> <span class="n">nXSize</span> <span class="o">=</span> <span class="n">poSrcDS</span><span class="o">-&gt;</span><span class="n">GetRasterXSize</span><span class="p">();</span>
+    <span class="k">const</span> <span class="kt">int</span> <span class="n">nYSize</span> <span class="o">=</span> <span class="n">poSrcDS</span><span class="o">-&gt;</span><span class="n">GetRasterYSize</span><span class="p">();</span>
+    <span class="c1">// Some some rudimentary checks</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">nBands</span> <span class="o">!=</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">nBands</span> <span class="o">!=</span> <span class="mi">3</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">CPLError</span><span class="p">(</span><span class="n">CE_Failure</span><span class="p">,</span> <span class="n">CPLE_NotSupported</span><span class="p">,</span>
+                <span class="s">&quot;JPEG driver doesn&#39;t support %d bands.  Must be 1 (grey) &quot;</span>
+                <span class="s">&quot;or 3 (RGB) bands.&quot;</span><span class="p">,</span> <span class="n">nBands</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span><span class="p">(</span> <span class="n">poSrcDS</span><span class="o">-&gt;</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetRasterDataType</span><span class="p">()</span> <span class="o">!=</span> <span class="n">GDT_Byte</span> <span class="o">&amp;&amp;</span> <span class="n">bStrict</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">CPLError</span><span class="p">(</span><span class="n">CE_Failure</span><span class="p">,</span> <span class="n">CPLE_NotSupported</span><span class="p">,</span>
+                <span class="s">&quot;JPEG driver doesn&#39;t support data type %s. &quot;</span>
+                <span class="s">&quot;Only eight bit byte bands supported.&quot;</span><span class="p">,</span>
+                <span class="n">GDALGetDataTypeName</span><span class="p">(</span>
+                    <span class="n">poSrcDS</span><span class="o">-&gt;</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetRasterDataType</span><span class="p">()));</span>
+        <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// What options has the user selected?</span>
+    <span class="kt">int</span> <span class="n">nQuality</span> <span class="o">=</span> <span class="mi">75</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">CSLFetchNameValue</span><span class="p">(</span><span class="n">papszOptions</span><span class="p">,</span> <span class="s">&quot;QUALITY&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">NULL</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">nQuality</span> <span class="o">=</span> <span class="n">atoi</span><span class="p">(</span><span class="n">CSLFetchNameValue</span><span class="p">(</span><span class="n">papszOptions</span><span class="p">,</span> <span class="s">&quot;QUALITY&quot;</span><span class="p">));</span>
+        <span class="k">if</span><span class="p">(</span> <span class="n">nQuality</span> <span class="o">&lt;</span> <span class="mi">10</span> <span class="o">||</span> <span class="n">nQuality</span> <span class="o">&gt;</span> <span class="mi">100</span> <span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">CPLError</span><span class="p">(</span><span class="n">CE_Failure</span><span class="p">,</span> <span class="n">CPLE_IllegalArg</span><span class="p">,</span>
+                    <span class="s">&quot;QUALITY=%s is not a legal value in the range 10 - 100.&quot;</span><span class="p">,</span>
+                    <span class="n">CSLFetchNameValue</span><span class="p">(</span><span class="n">papszOptions</span><span class="p">,</span> <span class="s">&quot;QUALITY&quot;</span><span class="p">));</span>
+            <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kt">bool</span> <span class="n">bProgressive</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">CSLFetchNameValue</span><span class="p">(</span><span class="n">papszOptions</span><span class="p">,</span> <span class="s">&quot;PROGRESSIVE&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">NULL</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">bProgressive</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Create the dataset.</span>
+    <span class="n">VSILFILE</span> <span class="o">*</span><span class="n">fpImage</span> <span class="o">=</span> <span class="n">VSIFOpenL</span><span class="p">(</span><span class="n">pszFilename</span><span class="p">,</span> <span class="s">&quot;wb&quot;</span><span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">fpImage</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">CPLError</span><span class="p">(</span><span class="n">CE_Failure</span><span class="p">,</span> <span class="n">CPLE_OpenFailed</span><span class="p">,</span>
+                <span class="s">&quot;Unable to create jpeg file %s.&quot;</span><span class="p">,</span>
+                <span class="n">pszFilename</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Initialize JPG access to the file.</span>
+    <span class="k">struct</span> <span class="n">jpeg_compress_struct</span> <span class="n">sCInfo</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">jpeg_error_mgr</span> <span class="n">sJErr</span><span class="p">;</span>
+    <span class="n">sCInfo</span><span class="p">.</span><span class="n">err</span> <span class="o">=</span> <span class="n">jpeg_std_error</span><span class="p">(</span><span class="o">&amp;</span><span class="n">sJErr</span><span class="p">);</span>
+    <span class="n">jpeg_create_compress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">sCInfo</span><span class="p">);</span>
+    <span class="n">jpeg_stdio_dest</span><span class="p">(</span><span class="o">&amp;</span><span class="n">sCInfo</span><span class="p">,</span> <span class="n">fpImage</span><span class="p">);</span>
+    <span class="n">sCInfo</span><span class="p">.</span><span class="n">image_width</span> <span class="o">=</span> <span class="n">nXSize</span><span class="p">;</span>
+    <span class="n">sCInfo</span><span class="p">.</span><span class="n">image_height</span> <span class="o">=</span> <span class="n">nYSize</span><span class="p">;</span>
+    <span class="n">sCInfo</span><span class="p">.</span><span class="n">input_components</span> <span class="o">=</span> <span class="n">nBands</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">nBands</span> <span class="o">==</span> <span class="mi">1</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">sCInfo</span><span class="p">.</span><span class="n">in_color_space</span> <span class="o">=</span> <span class="n">JCS_GRAYSCALE</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="n">sCInfo</span><span class="p">.</span><span class="n">in_color_space</span> <span class="o">=</span> <span class="n">JCS_RGB</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">jpeg_set_defaults</span><span class="p">(</span><span class="o">&amp;</span><span class="n">sCInfo</span><span class="p">);</span>
+    <span class="n">jpeg_set_quality</span><span class="p">(</span><span class="o">&amp;</span><span class="n">sCInfo</span><span class="p">,</span> <span class="n">nQuality</span><span class="p">,</span> <span class="n">TRUE</span><span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">bProgressive</span> <span class="p">)</span>
+        <span class="n">jpeg_simple_progression</span><span class="p">(</span><span class="o">&amp;</span><span class="n">sCInfo</span><span class="p">);</span>
+    <span class="n">jpeg_start_compress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">sCInfo</span><span class="p">,</span> <span class="n">TRUE</span><span class="p">);</span>
+
+    <span class="c1">// Loop over image, copying image data.</span>
+    <span class="n">GByte</span> <span class="o">*</span><span class="n">pabyScanline</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">GByte</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">CPLMalloc</span><span class="p">(</span><span class="n">nBands</span> <span class="o">*</span> <span class="n">nXSize</span><span class="p">));</span>
+    <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">iLine</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">iLine</span> <span class="o">&lt;</span> <span class="n">nYSize</span><span class="p">;</span> <span class="n">iLine</span><span class="o">++</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">iBand</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">iBand</span> <span class="o">&lt;</span> <span class="n">nBands</span><span class="p">;</span> <span class="n">iBand</span><span class="o">++</span> <span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">GDALRasterBand</span> <span class="o">*</span> <span class="n">poBand</span> <span class="o">=</span> <span class="n">poSrcDS</span><span class="o">-&gt;</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="n">iBand</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+            <span class="k">const</span> <span class="n">CPLErr</span> <span class="n">eErr</span> <span class="o">=</span>
+                <span class="n">poBand</span><span class="o">-&gt;</span><span class="n">RasterIO</span><span class="p">(</span><span class="n">GF_Read</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">iLine</span><span class="p">,</span> <span class="n">nXSize</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+                                <span class="n">pabyScanline</span> <span class="o">+</span> <span class="n">iBand</span><span class="p">,</span> <span class="n">nXSize</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">GDT_Byte</span><span class="p">,</span>
+                                <span class="n">nBands</span><span class="p">,</span> <span class="n">nBands</span> <span class="o">*</span> <span class="n">nXSize</span><span class="p">);</span>
+            <span class="c1">// TODO: Handle error.</span>
+        <span class="p">}</span>
+        <span class="n">JSAMPLE</span> <span class="o">*</span><span class="n">ppSamples</span> <span class="o">=</span> <span class="n">pabyScanline</span><span class="p">;</span>
+        <span class="n">jpeg_write_scanlines</span><span class="p">(</span><span class="o">&amp;</span><span class="n">sCInfo</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ppSamples</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">CPLFree</span><span class="p">(</span><span class="n">pabyScanline</span><span class="p">);</span>
+    <span class="n">jpeg_finish_compress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">sCInfo</span><span class="p">);</span>
+    <span class="n">jpeg_destroy_compress</span><span class="p">(</span><span class="o">&amp;</span><span class="n">sCInfo</span><span class="p">);</span>
+    <span class="n">VSIFCloseL</span><span class="p">(</span><span class="n">fpImage</span><span class="p">);</span>
+    <span class="k">return</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">GDALDataset</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">GDALOpen</span><span class="p">(</span><span class="n">pszFilename</span><span class="p">,</span> <span class="n">GA_ReadOnly</span><span class="p">));</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="dynamic-creation">
+<h3>Dynamic Creation<a class="headerlink" href="#dynamic-creation" title="Permalink to this headline">¶</a></h3>
+<p>In the case of dynamic creation, there is no source dataset. Instead the size, number of bands, and pixel data type of the desired file is provided but other information (such as georeferencing, and imagery data) would be supplied later via other method calls on the resulting GDALDataset.</p>
+<p>The following sample implement PCI .aux labeled raw raster creation. It follows a common approach of creating a blank, but valid file using non-GDAL calls, and then calling GDALOpen(,GA_Update) at the end to return a writable file handle. This avoids having to duplicate the various setup actions in the Open() function.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">GDALDataset</span> <span class="o">*</span><span class="n">PAuxDataset</span><span class="o">::</span><span class="n">Create</span><span class="p">(</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">pszFilename</span><span class="p">,</span>
+                                <span class="kt">int</span> <span class="n">nXSize</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nYSize</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nBands</span><span class="p">,</span>
+                                <span class="n">GDALDataType</span> <span class="n">eType</span><span class="p">,</span>
+                                <span class="kt">char</span> <span class="o">**</span> <span class="cm">/* papszParmList */</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// Verify input options.</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">eType</span> <span class="o">!=</span> <span class="n">GDT_Byte</span> <span class="o">&amp;&amp;</span> <span class="n">eType</span> <span class="o">!=</span> <span class="n">GDT_Float32</span> <span class="o">&amp;&amp;</span>
+        <span class="n">eType</span> <span class="o">!=</span> <span class="n">GDT_UInt16</span> <span class="o">&amp;&amp;</span> <span class="n">eType</span> <span class="o">!=</span> <span class="n">GDT_Int16</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">CPLError</span><span class="p">(</span>
+            <span class="n">CE_Failure</span><span class="p">,</span> <span class="n">CPLE_AppDefined</span><span class="p">,</span>
+            <span class="s">&quot;Attempt to create PCI .Aux labeled dataset with an illegal &quot;</span>
+            <span class="s">&quot;data type (%s).&quot;</span><span class="p">,</span>
+            <span class="n">GDALGetDataTypeName</span><span class="p">(</span><span class="n">eType</span><span class="p">));</span>
+        <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Try to create the file.</span>
+    <span class="kt">FILE</span> <span class="o">*</span><span class="n">fp</span> <span class="o">=</span> <span class="n">VSIFOpen</span><span class="p">(</span><span class="n">pszFilename</span><span class="p">,</span> <span class="s">&quot;w&quot;</span><span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">fp</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">CPLError</span><span class="p">(</span><span class="n">CE_Failure</span><span class="p">,</span> <span class="n">CPLE_OpenFailed</span><span class="p">,</span>
+                <span class="s">&quot;Attempt to create file `%s&#39; failed.&quot;</span><span class="p">,</span>
+                <span class="n">pszFilename</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Just write out a couple of bytes to establish the binary</span>
+    <span class="c1">// file, and then close it.</span>
+    <span class="n">VSIFWrite</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\0\0</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">fp</span><span class="p">);</span>
+    <span class="n">VSIFClose</span><span class="p">(</span><span class="n">fp</span><span class="p">);</span>
+
+    <span class="c1">// Create the aux filename.</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">pszAuxFilename</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">char</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">CPLMalloc</span><span class="p">(</span><span class="n">strlen</span><span class="p">(</span><span class="n">pszFilename</span><span class="p">)</span> <span class="o">+</span> <span class="mi">5</span><span class="p">));</span>
+    <span class="n">strcpy</span><span class="p">(</span><span class="n">pszAuxFilename</span><span class="p">,</span> <span class="n">pszFilename</span><span class="p">);;</span>
+    <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">pszAuxFilename</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">--</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span> <span class="n">pszAuxFilename</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="sc">&#39;.&#39;</span> <span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">pszAuxFilename</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="sc">&#39;\0&#39;</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">strcat</span><span class="p">(</span><span class="n">pszAuxFilename</span><span class="p">,</span> <span class="s">&quot;.aux&quot;</span><span class="p">);</span>
+
+    <span class="c1">// Open the file.</span>
+    <span class="n">fp</span> <span class="o">=</span> <span class="n">VSIFOpen</span><span class="p">(</span><span class="n">pszAuxFilename</span><span class="p">,</span> <span class="s">&quot;wt&quot;</span><span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">fp</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">CPLError</span><span class="p">(</span><span class="n">CE_Failure</span><span class="p">,</span> <span class="n">CPLE_OpenFailed</span><span class="p">,</span>
+                <span class="s">&quot;Attempt to create file `%s&#39; failed.&quot;</span><span class="p">,</span>
+                <span class="n">pszAuxFilename</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// We need to write out the original filename but without any</span>
+    <span class="c1">// path components in the AuxiliaryTarget line.  Do so now.</span>
+    <span class="kt">int</span> <span class="n">iStart</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">pszFilename</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">while</span><span class="p">(</span> <span class="n">iStart</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">pszFilename</span><span class="p">[</span><span class="n">iStart</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="sc">&#39;/&#39;</span> <span class="o">&amp;&amp;</span>
+        <span class="n">pszFilename</span><span class="p">[</span><span class="n">iStart</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="sc">&#39;\\&#39;</span> <span class="p">)</span>
+        <span class="n">iStart</span><span class="o">--</span><span class="p">;</span>
+    <span class="n">VSIFPrintf</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="s">&quot;AuxilaryTarget: %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">pszFilename</span> <span class="o">+</span> <span class="n">iStart</span><span class="p">);</span>
+
+    <span class="c1">// Write out the raw definition for the dataset as a whole.</span>
+    <span class="n">VSIFPrintf</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="s">&quot;RawDefinition: %d %d %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+            <span class="n">nXSize</span><span class="p">,</span> <span class="n">nYSize</span><span class="p">,</span> <span class="n">nBands</span><span class="p">);</span>
+
+    <span class="c1">// Write out a definition for each band.  We always write band</span>
+    <span class="c1">// sequential files for now as these are pretty efficiently</span>
+    <span class="c1">// handled by GDAL.</span>
+    <span class="kt">int</span> <span class="n">nImgOffset</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">iBand</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">iBand</span> <span class="o">&lt;</span> <span class="n">nBands</span><span class="p">;</span> <span class="n">iBand</span><span class="o">++</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">const</span> <span class="kt">int</span> <span class="n">nPixelOffset</span> <span class="o">=</span> <span class="n">GDALGetDataTypeSize</span><span class="p">(</span><span class="n">eType</span><span class="p">)</span><span class="o">/</span><span class="mi">8</span><span class="p">;</span>
+        <span class="k">const</span> <span class="kt">int</span> <span class="n">nLineOffset</span> <span class="o">=</span> <span class="n">nXSize</span> <span class="o">*</span> <span class="n">nPixelOffset</span><span class="p">;</span>
+        <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">pszTypeName</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span> <span class="n">eType</span> <span class="o">==</span> <span class="n">GDT_Float32</span> <span class="p">)</span>
+            <span class="n">pszTypeName</span> <span class="o">=</span> <span class="s">&quot;32R&quot;</span><span class="p">;</span>
+        <span class="k">else</span> <span class="nf">if</span><span class="p">(</span> <span class="n">eType</span> <span class="o">==</span> <span class="n">GDT_Int16</span> <span class="p">)</span>
+            <span class="n">pszTypeName</span> <span class="o">=</span> <span class="s">&quot;16S&quot;</span><span class="p">;</span>
+        <span class="k">else</span> <span class="nf">if</span><span class="p">(</span> <span class="n">eType</span> <span class="o">==</span> <span class="n">GDT_UInt16</span> <span class="p">)</span>
+            <span class="n">pszTypeName</span> <span class="o">=</span> <span class="s">&quot;16U&quot;</span><span class="p">;</span>
+        <span class="k">else</span>
+            <span class="n">pszTypeName</span> <span class="o">=</span> <span class="s">&quot;8U&quot;</span><span class="p">;</span>
+        <span class="n">VSIFPrintf</span><span class="p">(</span> <span class="n">fp</span><span class="p">,</span> <span class="s">&quot;ChanDefinition-%d: %s %d %d %d %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+                    <span class="n">iBand</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">pszTypeName</span><span class="p">,</span>
+                    <span class="n">nImgOffset</span><span class="p">,</span> <span class="n">nPixelOffset</span><span class="p">,</span> <span class="n">nLineOffset</span><span class="p">,</span>
+<span class="cp">#ifdef CPL_LSB</span>
+                    <span class="s">&quot;Swapped&quot;</span>
+<span class="cp">#else</span>
+                    <span class="s">&quot;Unswapped&quot;</span>
+<span class="cp">#endif</span>
+                    <span class="p">);</span>
+        <span class="n">nImgOffset</span> <span class="o">+=</span> <span class="n">nYSize</span> <span class="o">*</span> <span class="n">nLineOffset</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Cleanup.</span>
+    <span class="n">VSIFClose</span><span class="p">(</span><span class="n">fp</span><span class="p">);</span>
+    <span class="k">return</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">GDALDataset</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">GDALOpen</span><span class="p">(</span><span class="n">pszFilename</span><span class="p">,</span> <span class="n">GA_Update</span><span class="p">));</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>File formats supporting dynamic creation, or even just update-in-place access also need to implement an IWriteBlock() method on the raster band class. It has semantics similar to IReadBlock(). As well, for various esoteric reasons, it is critical that a FlushCache() method be implemented in the raster band destructor. This is to ensure that any write cache blocks for the band be flushed out before the destructor is called.</p>
+</div>
+</div>
+<div class="section" id="rawdataset-rawrasterband-helper-classes">
+<h2>RawDataset/RawRasterBand Helper Classes<a class="headerlink" href="#rawdataset-rawrasterband-helper-classes" title="Permalink to this headline">¶</a></h2>
+<p>Many file formats have the actual imagery data stored in a regular, binary, scanline oriented format. Rather than re-implement the access semantics for this for each formats, there are provided <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">RawDataset</span></code> and <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">RawRasterBand</span></code> classes declared in gcore/ that can be utilized to implement efficient and convenient access.</p>
+<p>In these cases the format specific band class may not be required, or if required it can be derived from RawRasterBand. The dataset class should be derived from RawDataset.</p>
+<p>The Open() method for the dataset then instantiates raster bands passing all the layout information to the constructor. For instance, the PNM driver uses the following calls to create it’s raster bands.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="p">(</span> <span class="n">poOpenInfo</span><span class="o">-&gt;</span><span class="n">pabyHeader</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="sc">&#39;5&#39;</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">SetBand</span><span class="p">(</span>
+        <span class="mi">1</span><span class="p">,</span> <span class="k">new</span> <span class="n">RawRasterBand</span><span class="p">(</span><span class="n">poDS</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">fpImage</span><span class="p">,</span>
+                            <span class="n">iIn</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nWidth</span><span class="p">,</span> <span class="n">GDT_Byte</span><span class="p">,</span> <span class="n">TRUE</span><span class="p">));</span>
+<span class="p">}</span>
+<span class="k">else</span>
+<span class="p">{</span>
+    <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">SetBand</span><span class="p">(</span>
+        <span class="mi">1</span><span class="p">,</span> <span class="k">new</span> <span class="n">RawRasterBand</span><span class="p">(</span><span class="n">poDS</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">fpImage</span><span class="p">,</span>
+                            <span class="n">iIn</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">nWidth</span><span class="o">*</span><span class="mi">3</span><span class="p">,</span> <span class="n">GDT_Byte</span><span class="p">,</span> <span class="n">TRUE</span><span class="p">));</span>
+    <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">SetBand</span><span class="p">(</span>
+        <span class="mi">2</span><span class="p">,</span> <span class="k">new</span> <span class="n">RawRasterBand</span><span class="p">(</span><span class="n">poDS</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">fpImage</span><span class="p">,</span>
+                            <span class="n">iIn</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">nWidth</span><span class="o">*</span><span class="mi">3</span><span class="p">,</span> <span class="n">GDT_Byte</span><span class="p">,</span> <span class="n">TRUE</span><span class="p">));</span>
+    <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">SetBand</span><span class="p">(</span>
+        <span class="mi">3</span><span class="p">,</span> <span class="k">new</span> <span class="n">RawRasterBand</span><span class="p">(</span><span class="n">poDS</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">fpImage</span><span class="p">,</span>
+                            <span class="n">iIn</span><span class="o">+</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">nWidth</span><span class="o">*</span><span class="mi">3</span><span class="p">,</span> <span class="n">GDT_Byte</span><span class="p">,</span> <span class="n">TRUE</span><span class="p">));</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The RawRasterBand takes the following arguments.</p>
+<ul class="simple">
+<li><p>poDS: The GDALDataset this band will be a child of. This dataset must be of a class derived from RawRasterDataset.</p></li>
+<li><p>nBand: The band it is on that dataset, 1 based.</p></li>
+<li><p>fpRaw: The FILE * handle to the file containing the raster data.</p></li>
+<li><p>nImgOffset: The byte offset to the first pixel of raster data for the first scanline.</p></li>
+<li><p>nPixelOffset: The byte offset from the start of one pixel to the start of the next within the scanline.</p></li>
+<li><p>nLineOffset: The byte offset from the start of one scanline to the start of the next.</p></li>
+<li><p>eDataType: The GDALDataType code for the type of the data on disk.</p></li>
+<li><p>bNativeOrder: FALSE if the data is not in the same endianness as the machine GDAL is running on. The data will be automatically byte swapped.</p></li>
+</ul>
+<p>Simple file formats utilizing the Raw services are normally placed all within one file in the gdal/frmts/raw directory. There are numerous examples there of format implementation.</p>
+</div>
+<div class="section" id="metadata-and-other-exotic-extensions">
+<h2>Metadata, and Other Exotic Extensions<a class="headerlink" href="#metadata-and-other-exotic-extensions" title="Permalink to this headline">¶</a></h2>
+<p>There are various other items in the GDAL data model, for which virtual methods exist on the GDALDataset and GDALRasterBand. They include:</p>
+<ul class="simple">
+<li><p>Metadata: Name/value text values about a dataset or band. The GDALMajorObject (base class for GDALRasterBand and GDALDataset) has built-in support for holding metadata, so for read access it only needs to be set with calls to SetMetadataItem() during the Open(). The SAR_CEOS (frmts/ceos2/sar_ceosdataset.cpp) and GeoTIFF drivers are examples of drivers implementing readable metadata.</p></li>
+<li><p>ColorTables: GDT_Byte raster bands can have color tables associated with them. The frmts/png/pngdataset.cpp driver contains an example of a format that supports colortables.</p></li>
+<li><p>ColorInterpretation: The PNG driver contains an example of a driver that returns an indication of whether a band should be treated as a Red, Green, Blue, Alpha or Greyscale band.</p></li>
+<li><p>GCPs: GDALDatasets can have a set of ground control points associated with them (as opposed to an explicit affine transform returned by GetGeotransform()) relating the raster to georeferenced coordinates. The MFF2 (gdal/frmts/raw/hkvdataset.cpp) format is a simple example of a format supporting GCPs.</p></li>
+<li><p>NoDataValue: Bands with known “nodata” values can implement the GetNoDataValue() method. See the PAux (frmts/raw/pauxdataset.cpp) for an example of this.</p></li>
+<li><p>Category Names: Classified images with names for each class can return them using the GetCategoryNames() method though no formats currently implement this.</p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="warp_tut.html" class="btn btn-neutral float-right" title="GDAL Warp API tutorial (Reprojection, …)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="raster_api_tut.html" class="btn btn-neutral float-left" title="Raster API tutorial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2019 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

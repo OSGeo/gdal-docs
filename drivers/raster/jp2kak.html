@@ -1,0 +1,621 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>JP2KAK – JPEG-2000 (based on Kakadu) &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdrivers/raster/jp2kak.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="JP2Lura – JPEG2000 driver based on Lurawave library" href="jp2lura.html" />
+    <link rel="prev" title="JP2ECW – ERDAS JPEG2000 (.jp2)" href="jp2ecw.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Raster drivers</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="aaigrid.html">AAIGrid – Arc/Info ASCII Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ace2.html">ACE2 – ACE2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adrg.html">ADRG – ADRG/ARC Digitized Raster Graphics (.gen/.thf)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aig.html">AIG – Arc/Info Binary Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="airsar.html">AIRSAR – AIRSAR Polarimetric Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arg.html">ARG – Azavea Raster Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bag.html">BAG — Bathymetry Attributed Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blx.html">BLX – Magellan BLX Topo File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bmp.html">BMP — Microsoft Windows Device Independent Bitmap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bpg.html">BPG – Better Portable Graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bsb.html">BSB – Maptech/NOAA BSB Nautical Chart Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bt.html">BT – VTP .bt Binary Terrain Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="byn.html">BYN - Natural Resources Canada’s Geoid file format (.byn)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cad.html">CAD – AutoCAD DWG raster layer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cals.html">CALS — CALS Type 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ceos.html">CEOS – CEOS Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coasp.html">COASP –  DRDC COASP SAR Processor Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cog.html">COG – Cloud Optimized GeoTIFF generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cosar.html">COSAR – TerraSAR-X Complex SAR Data Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpg.html">CPG – Convair PolGASP data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctable2.html">CTable2 – CTable2 Datum Grid Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctg.html">CTG – USGS LULC Composite Theme Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="daas.html">DAAS (Airbus DS Intelligence Data As A Service driver)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="db2.html">DB2 raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dds.html">DDS – DirectDraw Surface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="derived.html">DERIVED – Derived subdatasets driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dimap.html">DIMAP – Spot DIMAP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dipex.html">DIPEx – ELAS DIPEx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dods.html">DODS – OPeNDAP Grid Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doq1.html">DOQ1 – First Generation USGS DOQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doq2.html">DOQ2 – New Labelled USGS DOQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dted.html">DTED – Military Elevation Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="e00grid.html">E00GRID – Arc/Info Export E00 GRID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ecrgtoc.html">ECRGTOC – ECRG Table Of Contents (TOC.xml)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ecw.html">ECW – Enhanced Compressed Wavelets (.ecw)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eedai.html">EEDAI - Google Earth Engine Data API Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ehdr.html">EHdr – ESRI .hdr Labelled</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eir.html">EIR – Erdas Imagine Raw</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elas.html">ELAS - Earth Resources Laboratory Applications Software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="envi.html">ENVI – ENVI .hdr Labelled Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="epsilon.html">Epsilon - Wavelet compressed images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="esat.html">ESAT – Envisat Image Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ers.html">ERS – ERMapper .ERS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fast.html">FAST – EOSAT FAST Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fit.html">FIT – FIT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fits.html">FITS – Flexible Image Transport System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fujibas.html">FujiBAS – Fuji BAS Scanner Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="genbin.html">GenBin – Generic Binary (.hdr labelled)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="georaster.html">Oracle Spatial GeoRaster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gff.html">GFF – Sandia National Laboratories GSAT File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gif.html">GIF – Graphics Interchange Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gmt.html">GMT – GMT Compatible netCDF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpkg.html">GPKG – GeoPackage raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grass.html">GRASS Raster Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grassasciigrid.html">GRASSASCIIGrid – GRASS ASCII Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grib.html">GRIB – WMO General Regularly-distributed Information in Binary form</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gs7bg.html">GS7BG – Golden Software Surfer 7 Binary Grid File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gsag.html">GSAG – Golden Software ASCII Grid File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gsbg.html">GSBG – Golden Software Binary Grid File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gsc.html">GSC – GSC Geogrid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gta.html">GTA - Generic Tagged Arrays</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gtiff.html">GTiff – GeoTIFF File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gxf.html">GXF – Grid eXchange File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hdf4.html">HDF4 — Hierarchical Data Format Release 4 (HDF4)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hdf5.html">HDF5 — Hierarchical Data Format Release 5 (HDF5)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hf2.html">HF2 – HF2/HFZ heightfield raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hfa.html">HFA – Erdas Imagine .img</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ida.html">IDA – Image Display and Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Idrisi.html">RST — Idrisi Raster Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ignfheightasciigrid.html">IGNFHeightASCIIGrid – IGN-France height correction ASCII grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ilwis.html">ILWIS – Raster Map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intergraphraster.html">INGR — Intergraph Raster Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iris.html">IRIS – Vaisala’s weather radar software format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="isce.html">ISCE – ISCE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="isis2.html">ISIS2 – USGS Astrogeology ISIS Cube (Version 2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="isis3.html">ISIS3 – USGS Astrogeology ISIS Cube (Version 3)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jdem.html">JDEM – Japanese DEM (.mem)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2ecw.html">JP2ECW – ERDAS JPEG2000 (.jp2)</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">JP2KAK – JPEG-2000 (based on Kakadu)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#driver-capabilities">Driver capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configuration-options">Configuration Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#georeferencing">Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#option-options">Option Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#creation-issues">Creation Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#known-kakadu-issues">Known Kakadu Issues</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#alpha-channel-writing-in-v7-8">Alpha Channel Writing in v7.8</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kdu-get-num-processors-always-returns-0-for-some-platforms">kdu_get_num_processors always returns 0 for some platforms</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#see-also">See Also</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="jp2lura.html">JP2Lura – JPEG2000 driver based on Lurawave library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2mrsid.html">JP2MrSID – JPEG2000 via MrSID SDK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2openjpeg.html">JP2OpenJPEG – JPEG2000 driver based on OpenJPEG library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jpeg2000.html">JPEG2000 – Implementation of the JPEG-2000 part 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jpegls.html">JPEGLS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jpeg.html">JPEG – JPEG JFIF File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jpipkak.html">JPIPKAK - JPIP Streaming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kea.html">KEA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kmlsuperoverlay.html">KMLSuperoverlay – KMLSuperoverlay</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kro.html">KRO – KOLOR Raw format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lan.html">LAN – Erdas 7.x .LAN and .GIS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="l1b.html">L1B – NOAA Polar Orbiter Level 1b Data Set (AVHRR)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lcp.html">LCP – FARSITE v.4 LCP Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="leveller.html">Leveller — Daylon Leveller Heightfield</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loslas.html">LOSLAS – NADCON .los/.las Datum Grid Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="map.html">MAP — OziExplorer .MAP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="marfa.html">MRF – Meta Raster Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mbtiles.html">MBTiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mem.html">MEM – In Memory Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mff.html">MFF – Vexcel MFF Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mff2.html">MFF2 – Vexcel MFF2 Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mg4lidar.html">MG4Lidar – MrSID/MG4 LiDAR Compression / Point Cloud View files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mrsid.html">MrSID — Multi-resolution Seamless Image Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="msg.html">MSG – Meteosat Second Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="msgn.html">MSGN – Meteosat Second Generation (MSG) Native Archive Format (.nat)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ndf.html">NDF – NLAPS Data Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="netcdf.html">NetCDF: Network Common Data Form</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ngsgeoid.html">NGSGEOID - NOAA NGS Geoid Height Grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ngw.html">NGW – NextGIS Web</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nitf.html">NITF – National Imagery Transmission Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ntv1.html">NTv1 – NTv1 Datum Grid Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ntv2.html">NTv2 – NTv2 Datum Grid Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nwtgrd.html">NWT_GRD/NWT_GRC – Northwood/Vertical Mapper File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ozi.html">OZI – OZF2/OZFX3 raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="palsar.html">JAXA PALSAR Processed Products</a></li>
+<li class="toctree-l2"><a class="reference internal" href="paux.html">PAux – PCI .aux Labelled Raw Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pcidsk.html">PCIDSK – PCI Geomatics Database File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pcraster.html">PCRaster – PCRaster raster file format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pdf.html">PDF – Geospatial PDF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pds.html">PDS – Planetary Data System v3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pds4.html">PDS4 – NASA Planetary Data System (Version 4)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plmosaic.html">PLMosaic (Planet Labs Mosaics API)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="png.html">PNG – Portable Network Graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pnm.html">PNM – Netpbm (.pgm, .ppm)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="postgisraster.html">PostGISRaster — PostGIS Raster driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prf.html">PHOTOMOD Raster File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasdaman.html">Rasdaman GDAL driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasterlite.html">Rasterlite - Rasters in SQLite DB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasterlite2.html">RasterLite2 - Rasters in SQLite DB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="r.html">R – R Object Data Store</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rda.html">RDA (DigitalGlobe Raster Data Access)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rdb.html">RDB - <em>RIEGL</em> Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rik.html">RIK – Swedish Grid Maps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rmf.html">RMF — Raster Matrix Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="roi_pac.html">ROI_PAC – ROI_PAC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpftoc.html">RPFTOC – Raster Product Format/RPF (a.toc)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rraster.html">RRASTER – R Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rs2.html">RS2 – RadarSat 2 XML Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="safe.html">SAFE – Sentinel-1 SAFE XML Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sar_ceos.html">SAR_CEOS – CEOS SAR Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sdat.html">SAGA – SAGA GIS Binary Grid File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sdts.html">SDTS – USGS SDTS DEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sde.html">ESRI ArcSDE Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sentinel2.html">SENTINEL2 – Sentinel-2 Products</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sgi.html">SGI – SGI Image Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sigdem.html">SIGDEM – Scaled Integer Gridded DEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="snodas.html">SNODAS – Snow Data Assimilation System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="srp.html">SRP – Standard Product Format (ASRP/USRP) (.gen)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="srtmhgt.html">SRTMHGT – SRTM HGT Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="terragen.html">Terragen — Terragen™ Terrain File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="til.html">TIL – EarthWatch/DigitalGlobe .TIL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.html">TileDB - TileDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tsx.html">TSX –  TerraSAR-X Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usgsdem.html">USGSDEM – USGS ASCII DEM (and CDED)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vicar.html">VICAR – VICAR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vrt.html">VRT – GDAL Virtual Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wcs.html">WCS – OGC Web Coverage Service</a></li>
+<li class="toctree-l2"><a class="reference internal" href="webp.html">WEBP - WEBP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wms.html">WMS – Web Map Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wmts.html">WMTS – OGC Web Map Tile Service</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xpm.html">XPM – X11 Pixmap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xyz.html">XYZ – ASCII Gridded XYZ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="zmap.html">ZMap – ZMap Plus Grid</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Raster drivers</a> &raquo;</li>
+      
+      <li>JP2KAK – JPEG-2000 (based on Kakadu)</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/blob//master/gdal/doc/source/drivers/raster/jp2kak.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="jp2lura.html" class="btn btn-neutral float-right" title="JP2Lura – JPEG2000 driver based on Lurawave library" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="jp2ecw.html" class="btn btn-neutral float-left" title="JP2ECW – ERDAS JPEG2000 (.jp2)" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="jp2kak-jpeg-2000-based-on-kakadu">
+<span id="raster-jp2kak"></span><h1>JP2KAK – JPEG-2000 (based on Kakadu)<a class="headerlink" href="#jp2kak-jpeg-2000-based-on-kakadu" title="Permalink to this headline">¶</a></h1>
+<div class="admonition supports_create" id="shortname-0">
+<p class="admonition-title">Driver short name</p>
+<p>JP2KAK</p>
+</div>
+<p>Most forms of JPEG2000 JP2 and JPC compressed images (ISO/IEC 15444-1)
+can be read with GDAL using a driver based on the Kakadu library. As
+well, new images can be written. Existing images cannot be updated in
+place.</p>
+<p>The JPEG2000 file format supports lossy and lossless compression of 8bit
+and 16bit images with 1 or more bands (components). Via the <a class="reference external" href="https://web.archive.org/web/20151028081930/http://www.lizardtech.com/download/geo/geotiff_box.txt">GeoJP2
+(tm)</a>
+mechanism, GeoTIFF style coordinate system and georeferencing
+information can be embedded within the JP2 file. JPEG2000 files use a
+substantially different format and compression mechanism than the
+traditional JPEG compression and JPEG JFIF format. They are distinct
+compression mechanisms produced by the same group. JPEG2000 is based on
+wavelet compression.</p>
+<p>The JPEG2000 driver documented on this page (the JP2KAK driver) is
+implemented on top of the proprietary
+<a class="reference external" href="http://www.kakadusoftware.com/">Kakadu</a> library. This is a high
+quality and high performance JPEG2000 library in wide used in the
+geospatial and general imaging community. However, it is not free, and
+so normally builds of GDAL from source will not include support for this
+driver unless the builder purchases a license for the library and
+configures accordingly.</p>
+<p>When reading images this driver will represent the bands as being Byte
+(8bit unsigned), 16 bit signed or 16 bit unsigned. Georeferencing and
+coordinate system information will be available if the file is a GeoJP2
+(tm) file. Files color encoded in YCbCr color space will be
+automatically translated to RGB. Paletted images are also supported.</p>
+<p>Starting with GDAL 1.9.0, XMP metadata can be extracted from JPEG2000
+files, and will be stored as XML raw content in the xml:XMP metadata
+domain.</p>
+<div class="section" id="driver-capabilities">
+<h2>Driver capabilities<a class="headerlink" href="#driver-capabilities" title="Permalink to this headline">¶</a></h2>
+<div class="admonition supports_createcopy" id="supports_createcopy-0">
+<p class="admonition-title">Supports CreateCopy()</p>
+<p>This driver supports the <a class="reference internal" href="../../api/gdaldriver_cpp.html#_CPPv4N10GDALDriver10CreateCopyEPKcP11GDALDatasetiPPc16GDALProgressFuncPv" title="GDALDriver::CreateCopy"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDriver::CreateCopy()</span></code></a> operation</p>
+</div>
+<div class="admonition supports_georeferencing" id="supports_georeferencing-0">
+<p class="admonition-title">Supports Georeferencing</p>
+<p>This driver supports georeferencing</p>
+</div>
+<div class="admonition supports_virtualio" id="supports_virtualio-0">
+<p class="admonition-title">Supports VirtualIO</p>
+<p>This driver supports <a class="reference internal" href="../../user/virtual_file_systems.html#virtual-file-systems"><span class="std std-ref">virtual I/O operations (/vsimem/, etc.)</span></a></p>
+</div>
+</div>
+<div class="section" id="configuration-options">
+<h2>Configuration Options<a class="headerlink" href="#configuration-options" title="Permalink to this headline">¶</a></h2>
+<p>The JP2KAK driver supports the following <a class="reference external" href="http://trac.osgeo.org/gdal/wiki/ConfigOptions">Config
+Options</a>. These
+runtime options can be used to alter the behavior of the driver.</p>
+<ul class="simple">
+<li><p><strong>JP2KAK_THREADS</strong>=n: By default an effort is made to take
+advantage of multi-threading on multi-core computers using default
+rules from the Kakadu library. This option may be set to a value of
+zero to avoid using additional threads or to a specific count to
+create the requested number of worker threads.</p></li>
+<li><p><strong>JP2KAK_FUSSY</strong>=YES/NO: This can be set to YES to turn on fussy
+reporting of problems with the JPEG2000 data stream. Defaults to NO.</p></li>
+<li><p><strong>JP2KAK_RESILIENT</strong>=YES/NO: This can be set to YES to force Kakadu
+to maximize resilience with incorrectly created JPEG2000 data files,
+likely at some cost in performance. This is likely to be necessary
+if, among other reasons, you get an error message about “Expected to
+find EPH marker following packet header” or error reports indicating
+the need to run with the resilient and sequential flags on. Defaults
+to NO.</p></li>
+</ul>
+</div>
+<div class="section" id="georeferencing">
+<h2>Georeferencing<a class="headerlink" href="#georeferencing" title="Permalink to this headline">¶</a></h2>
+<p>Georeferencing information can come from different sources : internal
+(GeoJP2 or GMLJP2 boxes), worldfile .j2w/.wld sidecar files, or PAM
+(Persistent Auxiliary metadata) .aux.xml sidecar files. By default,
+information is fetched in following order (first listed is the most
+prioritary): PAM, GeoJP2, GMLJP2, WORLDFILE.</p>
+<p>Starting with GDAL 2.2, the allowed sources and their priority order can
+be changed with the GDAL_GEOREF_SOURCES configuration option (or
+GEOREF_SOURCES open option) whose value is a comma-separated list of the
+following keywords : PAM, GEOJP2, GMLJP2, INTERNAL (shortcut for
+GEOJP2,GMLJP2), WORLDFILE, NONE. First mentioned sources are the most
+prioritary over the next ones. A non mentioned source will be ignored.</p>
+<p>For example setting it to “WORLDFILE,PAM,INTERNAL” will make a
+geotransformation matrix from a potential worldfile prioritary over PAM
+or internal JP2 boxes. Setting it to “PAM,WORLDFILE,GEOJP2” will use the
+mentioned sources and ignore GMLJP2 boxes.</p>
+</div>
+<div class="section" id="option-options">
+<h2>Option Options<a class="headerlink" href="#option-options" title="Permalink to this headline">¶</a></h2>
+<p>(GDAL &gt;= 2.0 ) The following open option is available:</p>
+<ul class="simple">
+<li><p><strong>1BIT_ALPHA_PROMOTION=YES/NO</strong>: Whether a 1-bit alpha channel should
+be promoted to 8-bit. Defaults to YES.</p></li>
+<li><p><strong>GEOREF_SOURCES=string</strong>: (GDAL &gt; 2.2) Define which georeferencing
+sources are allowed and their priority order. See
+<a class="reference external" href="#georeferencing">Georeferencing</a> paragraph.</p></li>
+</ul>
+</div>
+<div class="section" id="creation-issues">
+<h2>Creation Issues<a class="headerlink" href="#creation-issues" title="Permalink to this headline">¶</a></h2>
+<p>JPEG2000 files can only be created using the CreateCopy mechanism to
+copy from an existing dataset.</p>
+<p>JPEG2000 overviews are maintained as part of the mathematical
+description of the image. Overviews cannot be built as a separate
+process, but on read the image will generally be represented as having
+overview levels at various power of two factors.</p>
+<p>Creation Options:</p>
+<ul class="simple">
+<li><p><strong>CODEC=JP2/J2K</strong> Codec to use. If not specified, guess based on file
+extension. If unknown, default to JP2</p></li>
+<li><p><strong>QUALITY=n</strong>: Set the compressed size ratio as a percentage of the
+size of the uncompressed image. The default is 20 indicating that the
+resulting image should be 20% of the size of the uncompressed image.
+Actual final image size may not exactly match that requested
+depending on various factors. A value of 100 will result in use of
+the lossless compression algorithm . On typical image data, if you
+specify a value greater than 65, it might be worth trying with
+QUALITY=100 instead as lossless compression might produce better
+compression than lossy compression.</p></li>
+<li><p><strong>BLOCKXSIZE=n</strong>: Set the tile width to use. Defaults to 20000.</p></li>
+<li><p><strong>BLOCKYSIZE=n</strong>: Set the tile height to use. Defaults to image
+height.</p></li>
+<li><p><strong>FLUSH=TRUE/FALSE</strong>: Enable/Disable incremental flushing when
+writing files. Required to be FALSE for RLPC and LRPC Corder. May use
+a lot of memory when FALSE while writing large images. Defaults to
+TRUE.</p></li>
+<li><p><strong>GMLJP2=YES/NO</strong>: Indicates whether a GML box conforming to the OGC
+GML in JPEG2000 specification should be included in the file. Unless
+GMLJP2V2_DEF is used, the version of the GMLJP2 box will be version
+1. Defaults to YES.</p></li>
+<li><p><strong>GMLJP2V2_DEF=filename</strong>: (Starting with GDAL 2.0) Indicates whether
+a GML box conforming to the <a class="reference external" href="http://docs.opengeospatial.org/is/08-085r4/08-085r4.html">OGC GML in JPEG2000, version
+2</a>
+specification should be included in the file. <em>filename</em> must point
+to a file with a JSon content that defines how the GMLJP2 v2 box
+should be built. See <a class="reference internal" href="jp2openjpeg.html#gmjp2v2def"><span class="std std-ref">GMLJP2v2 definition file
+section</span></a> in documentation of
+the JP2OpenJPEG driver for the syntax of the JSon configuration file.
+It is also possible to directly pass the JSon content inlined as a
+string. If filename is just set to YES, a minimal instance will be
+built.</p></li>
+<li><p><strong>GeoJP2=YES/NO</strong>: Indicates whether a UUID/GeoTIFF box conforming to
+the GeoJP2 (GeoTIFF in JPEG2000) specification should be included in
+the file. Defaults to YES.</p></li>
+<li><p><strong>LAYERS=n</strong>: Control the number of layers produced. These are sort
+of like resolution layers, but not exactly. The default value is 12
+and this works well in most situations.</p></li>
+<li><p><strong>ROI=xoff,yoff,xsize,ysize</strong>: Selects a region to be a region of
+interest to process with higher data quality. The various “R” flags
+below may be used to control the amount better. For example the
+settings “ROI=0,0,100,100”, “Rweight=7” would encode the top left
+100x100 area of the image with considerable higher quality compared
+to the rest of the image.</p></li>
+</ul>
+<p>The following creation options are tightly tied to the Kakadu library,
+and are considered to be for advanced use only. Consult Kakadu
+documentation to better understand their meaning.</p>
+<ul class="simple">
+<li><p><strong>Corder</strong>: Defaults to “PRCL”.</p></li>
+<li><p><strong>Cprecincts</strong>: Defaults to
+“{512,512},{256,512},{128,512},{64,512},{32,512},{16,512},{8,512},{4,512},{2,512}”.</p></li>
+<li><p><strong>ORGgen_plt</strong>: Defaults to “yes”.</p></li>
+<li><p><strong>Cmodes</strong>: Kakadu library default used.</p></li>
+<li><p><strong>Clevels</strong>: Kakadu library default used.</p></li>
+<li><p><strong>Rshift</strong>: Kakadu library default used.</p></li>
+<li><p><strong>Rlevels</strong>: Kakadu library default used.</p></li>
+<li><p><strong>Rweight</strong>: Kakadu library default used.</p></li>
+</ul>
+</div>
+<div class="section" id="known-kakadu-issues">
+<h2>Known Kakadu Issues<a class="headerlink" href="#known-kakadu-issues" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="alpha-channel-writing-in-v7-8">
+<h3>Alpha Channel Writing in v7.8<a class="headerlink" href="#alpha-channel-writing-in-v7-8" title="Permalink to this headline">¶</a></h3>
+<p>Kakadu v7.8 has a bug in jp2_channels::set_opacity_mapping that can
+cause an error when writing images with an alpha channel. Please upgrade
+to version 7.9.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Error</span><span class="p">:</span> <span class="n">GdalIO</span><span class="p">:</span> <span class="n">Error</span> <span class="ow">in</span> <span class="n">Kakadu</span> <span class="n">File</span> <span class="n">Format</span> <span class="n">Support</span><span class="p">:</span> <span class="n">Attempting</span> <span class="n">to</span>
+<span class="n">create</span> <span class="n">a</span> <span class="n">Component</span> <span class="n">Mapping</span> <span class="p">(</span><span class="n">cmap</span><span class="p">)</span> <span class="n">box</span><span class="p">,</span> <span class="n">one</span> <span class="n">of</span> <span class="n">whose</span> <span class="n">channels</span> <span class="n">refers</span> <span class="n">to</span>
+<span class="n">a</span> <span class="n">non</span><span class="o">-</span><span class="n">existent</span> <span class="n">image</span> <span class="n">component</span> <span class="ow">or</span> <span class="n">palette</span> <span class="n">lookup</span> <span class="n">table</span><span class="o">.</span> <span class="p">(</span><span class="n">code</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="kdu-get-num-processors-always-returns-0-for-some-platforms">
+<h3>kdu_get_num_processors always returns 0 for some platforms<a class="headerlink" href="#kdu-get-num-processors-always-returns-0-for-some-platforms" title="Permalink to this headline">¶</a></h3>
+<p>On non-windows / non-mac installs (e.g. Linux), Kakadu might not include
+unistd.h in kdu_arch.cpp. This means that _SC_NPROCESSORS_ONLN and
+_SC_NPROCESSORS_CONF are not defined and kdu_get_num_processors will
+always return 0. Therefore the jp2kak driver might not default to
+creating worker threads.</p>
+</div>
+</div>
+<div class="section" id="see-also">
+<h2>See Also<a class="headerlink" href="#see-also" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Implemented as <cite>gdal/frmts/jp2kak/jp2kakdataset.cpp</cite>.</p></li>
+<li><p>If you’re using a Kakadu release before v7.5, configure &amp; compile
+GDAL with eg.
+<cite>CXXFLAGS=”-DKDU_MAJOR_VERSION=7 -DKDU_MINOR_VERSION=3 -DKDU_PATCH_VERSION=2”</cite>
+for Kakadu version 7.3.2.</p></li>
+<li><p>Alternate <a class="reference internal" href="jp2openjpeg.html#raster-jp2openjpeg"><span class="std std-ref">JP2OpenJPEG – JPEG2000 driver based on OpenJPEG library</span></a> driver.</p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="jp2lura.html" class="btn btn-neutral float-right" title="JP2Lura – JPEG2000 driver based on Lurawave library" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="jp2ecw.html" class="btn btn-neutral float-left" title="JP2ECW – ERDAS JPEG2000 (.jp2)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2019 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
