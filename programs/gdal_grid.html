@@ -1,0 +1,704 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gdal_grid &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgprograms/gdal_grid.html"/>
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="gdal_proximity" href="gdal_proximity.html" />
+    <link rel="prev" title="gdal_retile" href="gdal_retile.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Programs</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#raster-programs">Raster programs</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="raster_common_options.html">Common options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalinfo.html">gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_translate.html">gdal_translate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaladdo.html">gdaladdo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalwarp.html">gdalwarp</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaltindex.html">gdaltindex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalbuildvrt.html">gdalbuildvrt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_contour.html">gdal_contour</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaldem.html">gdaldem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rgb2pct.html">rgb2pct</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pct2rgb.html">pct2rgb</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_merge.html">gdal_merge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal2tiles.html">gdal2tiles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_rasterize.html">gdal_rasterize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaltransform.html">gdaltransform</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nearblack.html">nearblack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_retile.html">gdal_retile</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">gdal_grid</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#synopsis">Synopsis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#description">Description</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#interpolation-algorithms">Interpolation algorithms</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#data-metrics">Data metrics</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#reading-comma-separated-values">Reading comma separated values</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#c-api">C API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_proximity.html">gdal_proximity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_polygonize.html">gdal_polygonize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_sieve.html">gdal_sieve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_fillnodata.html">gdal_fillnodata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdallocationinfo.html">gdallocationinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalsrsinfo.html">gdalsrsinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalmove.html">gdalmove</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_edit.html">gdal_edit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_calc.html">gdal_calc.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_pansharpen.html">gdal_pansharpen.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal-config.html">gdal-config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalmanage.html">gdalmanage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalcompare.html">gdalcompare</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_viewshed.html">gdal_viewshed</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#multidimensional-raster-programs">Multidimensional Raster programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#vector-programs">Vector programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#geographic-network-programs">Geographic network programs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Programs</a> &raquo;</li>
+      
+      <li>gdal_grid</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/programs/gdal_grid.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="gdal_proximity.html" class="btn btn-neutral float-right" title="gdal_proximity" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gdal_retile.html" class="btn btn-neutral float-left" title="gdal_retile" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="gdal-grid">
+<span id="id1"></span><h1>gdal_grid<a class="headerlink" href="#gdal-grid" title="Permalink to this headline">¶</a></h1>
+<p>Creates regular grid from the scattered data.</p>
+<div class="section" id="synopsis">
+<span id="index-0"></span><h2>Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdal_grid</span> <span class="p">[</span><span class="o">-</span><span class="n">ot</span> <span class="p">{</span><span class="n">Byte</span><span class="o">/</span><span class="n">Int16</span><span class="o">/</span><span class="n">UInt16</span><span class="o">/</span><span class="n">UInt32</span><span class="o">/</span><span class="n">Int32</span><span class="o">/</span><span class="n">Float32</span><span class="o">/</span><span class="n">Float64</span><span class="o">/</span>
+          <span class="n">CInt16</span><span class="o">/</span><span class="n">CInt32</span><span class="o">/</span><span class="n">CFloat32</span><span class="o">/</span><span class="n">CFloat64</span><span class="p">}]</span>
+          <span class="p">[</span><span class="o">-</span><span class="n">of</span> <span class="nb">format</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">co</span> <span class="s2">&quot;NAME=VALUE&quot;</span><span class="p">]</span>
+          <span class="p">[</span><span class="o">-</span><span class="n">zfield</span> <span class="n">field_name</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">z_increase</span> <span class="n">increase_value</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">z_multiply</span> <span class="n">multiply_value</span><span class="p">]</span>
+          <span class="p">[</span><span class="o">-</span><span class="n">a_srs</span> <span class="n">srs_def</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">spat</span> <span class="n">xmin</span> <span class="n">ymin</span> <span class="n">xmax</span> <span class="n">ymax</span><span class="p">]</span>
+          <span class="p">[</span><span class="o">-</span><span class="n">clipsrc</span> <span class="o">&lt;</span><span class="n">xmin</span> <span class="n">ymin</span> <span class="n">xmax</span> <span class="n">ymax</span><span class="o">&gt;|</span><span class="n">WKT</span><span class="o">|</span><span class="n">datasource</span><span class="o">|</span><span class="n">spat_extent</span><span class="p">]</span>
+          <span class="p">[</span><span class="o">-</span><span class="n">clipsrcsql</span> <span class="n">sql_statement</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">clipsrclayer</span> <span class="n">layer</span><span class="p">]</span>
+          <span class="p">[</span><span class="o">-</span><span class="n">clipsrcwhere</span> <span class="n">expression</span><span class="p">]</span>
+          <span class="p">[</span><span class="o">-</span><span class="n">l</span> <span class="n">layername</span><span class="p">]</span><span class="o">*</span> <span class="p">[</span><span class="o">-</span><span class="n">where</span> <span class="n">expression</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">sql</span> <span class="n">select_statement</span><span class="p">]</span>
+          <span class="p">[</span><span class="o">-</span><span class="n">txe</span> <span class="n">xmin</span> <span class="n">xmax</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">tye</span> <span class="n">ymin</span> <span class="n">ymax</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">outsize</span> <span class="n">xsize</span> <span class="n">ysize</span><span class="p">]</span>
+          <span class="p">[</span><span class="o">-</span><span class="n">a</span> <span class="n">algorithm</span><span class="p">[:</span><span class="n">parameter1</span><span class="o">=</span><span class="n">value1</span><span class="p">]</span><span class="o">*</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">q</span><span class="p">]</span>
+          <span class="o">&lt;</span><span class="n">src_datasource</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">dst_filename</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>This program creates regular grid (raster) from the scattered data read from
+the OGR datasource. Input data will be interpolated to fill grid nodes with
+values, you can choose from various interpolation methods.</p>
+<p>It is possible to set the <code class="docutils literal notranslate"><span class="pre">GDAL_NUM_THREADS</span></code>
+configuration option to parallelize the processing. The value to specify is
+the number of worker threads, or <code class="docutils literal notranslate"><span class="pre">ALL_CPUS</span></code> to use all the cores/CPUs of the
+computer.</p>
+<dl class="option">
+<dt id="cmdoption-gdaladdo-ot">
+<code class="descname">-ot</code><code class="descclassname"> &lt;type&gt;</code><a class="headerlink" href="#cmdoption-gdaladdo-ot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Force the output image bands to have a specific type. Use type names
+(i.e. <code class="docutils literal notranslate"><span class="pre">Byte</span></code>, <code class="docutils literal notranslate"><span class="pre">Int16</span></code>,…)</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdaladdo-of">
+<code class="descname">-of</code><code class="descclassname"> &lt;format&gt;</code><a class="headerlink" href="#cmdoption-gdaladdo-of" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select the output format. Starting with GDAL 2.3, if not specified, the
+format is guessed from the extension (previously was GTiff). Use the short
+format name.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdaladdo-txe">
+<code class="descname">-txe</code><code class="descclassname"> &lt;xmin&gt; &lt;xmax&gt;</code><a class="headerlink" href="#cmdoption-gdaladdo-txe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set georeferenced X extents of output file to be created.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdaladdo-tye">
+<code class="descname">-tye</code><code class="descclassname"> &lt;ymin&gt; &lt;ymax&gt;</code><a class="headerlink" href="#cmdoption-gdaladdo-tye" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set georeferenced Y extents of output file to be created.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdaladdo-outsize">
+<code class="descname">-outsize</code><code class="descclassname"> &lt;xsize ysize&gt;</code><a class="headerlink" href="#cmdoption-gdaladdo-outsize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the size of the output file in pixels and lines.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdaladdo-a-srs">
+<code class="descname">-a_srs</code><code class="descclassname"> &lt;srs_def&gt;</code><a class="headerlink" href="#cmdoption-gdaladdo-a-srs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override the projection for the
+output file.  The &lt;i&gt;srs_def&gt; may be any of the usual GDAL/OGR forms,
+complete WKT, PROJ.4, EPSG:n or a file containing the WKT.
+No reprojection is done.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdaladdo-zfield">
+<code class="descname">-zfield</code><code class="descclassname"> &lt;field_name&gt;</code><a class="headerlink" href="#cmdoption-gdaladdo-zfield" title="Permalink to this definition">¶</a></dt>
+<dd><p>Identifies an attribute field
+on the features to be used to get a Z value from. This value overrides Z value
+read from feature geometry record (naturally, if you have a Z value in
+geometry, otherwise you have no choice and should specify a field name
+containing Z value).</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdaladdo-z-increase">
+<code class="descname">-z_increase</code><code class="descclassname"> &lt;increase_value&gt;</code><a class="headerlink" href="#cmdoption-gdaladdo-z-increase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Addition to the attribute field
+on the features to be used to get a Z value from. The addition should be the same
+unit as Z value. The result value will be Z value + Z increase value. The default value is 0.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdaladdo-z-multiply">
+<code class="descname">-z_multiply</code><code class="descclassname"> &lt;multiply_value&gt;</code><a class="headerlink" href="#cmdoption-gdaladdo-z-multiply" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is multiplication
+ratio for Z field. This can be used for shift from e.g. foot to meters or from
+elevation to deep. The result value will be (Z value + Z increase value) * Z multiply value.
+The default value is 1.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdaladdo-a">
+<code class="descname">-a</code><code class="descclassname"> &lt;[algorithm[:parameter1=value1][:parameter2=value2]...]&gt;</code><a class="headerlink" href="#cmdoption-gdaladdo-a" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the interpolation algorithm or data metric name and (optionally)
+its parameters. See <a class="reference internal" href="#interpolation-algorithms">Interpolation algorithms</a> and <a class="reference internal" href="#data-metrics">Data metrics</a>
+sections for further discussion of available options.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdaladdo-spat">
+<code class="descname">-spat</code><code class="descclassname"> &lt;xmin&gt; &lt;ymin&gt; &lt;xmax&gt; &lt;ymax&gt;</code><a class="headerlink" href="#cmdoption-gdaladdo-spat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a spatial filter
+to select only features contained within the bounding box described by
+(xmin, ymin) - (xmax, ymax).</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdaladdo-clipsrc">
+<code class="descname">-clipsrc</code><code class="descclassname"> [xmin ymin xmax ymax]|WKT|datasource|spat_extent</code><a class="headerlink" href="#cmdoption-gdaladdo-clipsrc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a spatial filter to select only features contained within the
+specified bounding box (expressed in source SRS), WKT geometry (POLYGON or
+MULTIPOLYGON), from a datasource or to the spatial extent of the <a class="reference internal" href="#cmdoption-gdaladdo-spat"><code class="xref std std-option docutils literal notranslate"><span class="pre">-spat</span></code></a>
+option if you use the <code class="docutils literal notranslate"><span class="pre">spat_extent</span></code> keyword. When specifying a
+datasource, you will generally want to use it in combination of the
+<a class="reference internal" href="#cmdoption-gdaladdo-clipsrclayer"><code class="xref std std-option docutils literal notranslate"><span class="pre">-clipsrclayer</span></code></a>, <a class="reference internal" href="#cmdoption-gdaladdo-clipsrcwhere"><code class="xref std std-option docutils literal notranslate"><span class="pre">-clipsrcwhere</span></code></a> or <a class="reference internal" href="#cmdoption-gdaladdo-clipsrcsql"><code class="xref std std-option docutils literal notranslate"><span class="pre">-clipsrcsql</span></code></a>
+options.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdaladdo-clipsrcsql">
+<code class="descname">-clipsrcsql</code><code class="descclassname"> &lt;sql_statement&gt;</code><a class="headerlink" href="#cmdoption-gdaladdo-clipsrcsql" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select desired geometries using an SQL query instead.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdaladdo-clipsrclayer">
+<code class="descname">-clipsrclayer</code><code class="descclassname"> &lt;layername&gt;</code><a class="headerlink" href="#cmdoption-gdaladdo-clipsrclayer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select the named layer from the source clip datasource.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdaladdo-clipsrcwhere">
+<code class="descname">-clipsrcwhere</code><code class="descclassname"> &lt;expression&gt;</code><a class="headerlink" href="#cmdoption-gdaladdo-clipsrcwhere" title="Permalink to this definition">¶</a></dt>
+<dd><p>Restrict desired geometries based on attribute query.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdaladdo-l">
+<code class="descname">-l</code><code class="descclassname"> &lt;layername&gt;</code><a class="headerlink" href="#cmdoption-gdaladdo-l" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates the layer(s) from the
+datasource that will be used for input features.  May be specified multiple
+times, but at least one layer name or a <a class="reference internal" href="#cmdoption-gdaladdo-sql"><code class="xref std std-option docutils literal notranslate"><span class="pre">-sql</span></code></a> option must be
+specified.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdaladdo-where">
+<code class="descname">-where</code><code class="descclassname"> &lt;expression&gt;</code><a class="headerlink" href="#cmdoption-gdaladdo-where" title="Permalink to this definition">¶</a></dt>
+<dd><p>An optional SQL WHERE style query expression to be applied to select features
+to process from the input layer(s).</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdaladdo-sql">
+<code class="descname">-sql</code><code class="descclassname"> &lt;select_statement&gt;</code><a class="headerlink" href="#cmdoption-gdaladdo-sql" title="Permalink to this definition">¶</a></dt>
+<dd><p>An SQL statement to be evaluated against the datasource to produce a
+virtual layer of features to be processed.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdaladdo-co">
+<code class="descname">-co</code><code class="descclassname"> &lt;NAME=VALUE&gt;</code><a class="headerlink" href="#cmdoption-gdaladdo-co" title="Permalink to this definition">¶</a></dt>
+<dd><p>Many formats have one or more optional creation options that can be
+used to control particulars about the file created. For instance,
+the GeoTIFF driver supports creation options to control compression,
+and whether the file should be tiled.</p>
+<p>The creation options available vary by format driver, and some
+simple formats have no creation options at all. A list of options
+supported for a format can be listed with the
+<a class="reference internal" href="raster_common_options.html#raster-common-options-formats"><span class="std std-ref">–formats</span></a>
+command line option but the documentation for the format is the
+definitive source of information on driver creation options.
+See <a class="reference internal" href="../drivers/raster/index.html#raster-drivers"><span class="std std-ref">Raster drivers</span></a> format
+specific documentation for legal creation options for each format.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdaladdo-q">
+<code class="descname">-q</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gdaladdo-q" title="Permalink to this definition">¶</a></dt>
+<dd><p>Suppress progress monitor and other non-error output.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdaladdo-arg-src-datasource">
+<code class="descname">&lt;src_datasource&gt;</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gdaladdo-arg-src-datasource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Any OGR supported readable datasource.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdaladdo-arg-dst-filename">
+<code class="descname">&lt;dst_filename&gt;</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gdaladdo-arg-dst-filename" title="Permalink to this definition">¶</a></dt>
+<dd><p>The GDAL supported output file.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="interpolation-algorithms">
+<h2>Interpolation algorithms<a class="headerlink" href="#interpolation-algorithms" title="Permalink to this headline">¶</a></h2>
+<p>There are number of interpolation algorithms to choose from.</p>
+<p>More details about them can also be found in <a class="reference internal" href="../tutorials/gdal_grid_tut.html#gdal-grid-tut"><span class="std std-ref">GDAL Grid Tutorial</span></a></p>
+<div class="section" id="invdist">
+<span id="gdal-grid-invdist"></span><h3>invdist<a class="headerlink" href="#invdist" title="Permalink to this headline">¶</a></h3>
+<p>Inverse distance to a power. This is default algorithm. It has following
+parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">power</span></code>: Weighting power (default 2.0).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">smoothing</span></code>: Smoothing parameter (default 0.0).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">radius1</span></code>: The first radius (X axis if rotation angle is 0)
+of search ellipse. Set this parameter to zero to use whole point array.
+Default is 0.0.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">radius2</span></code>: The second radius (Y axis if rotation angle is 0)
+of search ellipse. Set this parameter to zero to use whole point array.
+Default is 0.0.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">angle</span></code>: Angle of search ellipse rotation in degrees
+(counter clockwise, default 0.0).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">max_points</span></code>: Maximum number of data points to use. Do not
+search for more points than this number. This is only used if search ellipse
+is set (both radii are non-zero). Zero means that all found points should
+be used. Default is 0.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">min_points</span></code>: Minimum number of data points to use. If less
+amount of points found the grid node considered empty and will be filled with
+NODATA marker. This is only used if search ellipse is set (both radii are
+non-zero). Default is 0.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nodata</span></code>: NODATA marker to fill empty points (default
+0.0).</p></li>
+</ul>
+</div>
+<div class="section" id="invdistnn">
+<h3>invdistnn<a class="headerlink" href="#invdistnn" title="Permalink to this headline">¶</a></h3>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.1.</span></p>
+</div>
+<p>Inverse distance to a power with nearest neighbor searching, ideal when
+max_points is used. It has following parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">power</span></code>: Weighting power (default 2.0).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">smoothing</span></code>: Smoothing parameter (default 0.0).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">radius</span></code>: The radius of the search circle, which should be
+non-zero. Default is 1.0.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">max_points</span></code>: Maximum number of data points to use. Do not
+search for more points than this number. Found points will be ranked from
+nearest to furthest distance when weighting. Default is 12.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">min_points</span></code>: Minimum number of data points to use. If less
+amount of points found the grid node is considered empty and will be filled
+with NODATA marker. Default is 0.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nodata</span></code>: NODATA marker to fill empty points (default
+0.0).</p></li>
+</ul>
+</div>
+<div class="section" id="average">
+<span id="gdal-grid-average"></span><h3>average<a class="headerlink" href="#average" title="Permalink to this headline">¶</a></h3>
+<p>Moving average algorithm. It has following parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">radius1</span></code>: The first radius (X axis if rotation angle is 0)
+of search ellipse. Set this parameter to zero to use whole point array.
+Default is 0.0.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">radius2</span></code>: The second radius (Y axis if rotation angle is 0)
+of search ellipse. Set this parameter to zero to use whole point array.
+Default is 0.0.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">angle</span></code>: Angle of search ellipse rotation in degrees
+(counter clockwise, default 0.0).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">min_points</span></code>: Minimum number of data points to use. If less
+amount of points found the grid node considered empty and will be filled with
+NODATA marker. Default is 0.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nodata</span></code>: NODATA marker to fill empty points (default
+0.0).</p></li>
+</ul>
+<p>Note, that it is essential to set search ellipse for moving average method. It
+is a window that will be averaged when computing grid nodes values.</p>
+</div>
+<div class="section" id="nearest">
+<span id="gdal-grid-nearest"></span><h3>nearest<a class="headerlink" href="#nearest" title="Permalink to this headline">¶</a></h3>
+<p>Nearest neighbor algorithm. It has following parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">radius1</span></code>: The first radius (X axis if rotation angle is 0)
+of search ellipse. Set this parameter to zero to use whole point array.
+Default is 0.0.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">radius2</span></code>: The second radius (Y axis if rotation angle is 0)
+of search ellipse. Set this parameter to zero to use whole point array.
+Default is 0.0.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">angle</span></code>: Angle of search ellipse rotation in degrees
+(counter clockwise, default 0.0).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nodata</span></code>: NODATA marker to fill empty points (default
+0.0).</p></li>
+</ul>
+</div>
+<div class="section" id="linear">
+<h3>linear<a class="headerlink" href="#linear" title="Permalink to this headline">¶</a></h3>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.1.</span></p>
+</div>
+<p>Linear interpolation algorithm.</p>
+<p>The Linear method performs linear interpolation by computing a Delaunay
+triangulation of the point cloud, finding in which triangle of the triangulation
+the point is, and by doing linear interpolation from its barycentric coordinates
+within the triangle.
+If the point is not in any triangle, depending on the radius, the
+algorithm will use the value of the nearest point or the nodata value.</p>
+<p>It has following parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">radius</span></code>: In case the point to be interpolated does not fit
+into a triangle of the Delaunay triangulation, use that maximum distance to search a nearest
+neighbour, or use nodata otherwise. If set to -1, the search distance is infinite.
+If set to 0, nodata value will be always used. Default is -1.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nodata</span></code>: NODATA marker to fill empty points (default
+0.0).</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="data-metrics">
+<h2>Data metrics<a class="headerlink" href="#data-metrics" title="Permalink to this headline">¶</a></h2>
+<p>Besides the interpolation functionality ref gdal_grid can be used to compute
+some data metrics using the specified window and output grid geometry. These
+metrics are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">minimum</span></code>: Minimum value found in grid node search ellipse.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">maximum</span></code>: Maximum value found in grid node search ellipse.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">range</span></code>: A difference between the minimum and maximum values
+found in grid node search ellipse.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">count</span></code>:  A number of data points found in grid node search ellipse.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">average_distance</span></code>: An average distance between the grid
+node (center of the search ellipse) and all of the data points found in grid
+node search ellipse.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">average_distance_pts</span></code>: An average distance between the data
+points found in grid node search ellipse. The distance between each pair of
+points within ellipse is calculated and average of all distances is set as a
+grid node value.</p></li>
+</ul>
+<p>All the metrics have the same set of options:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">radius1</span></code>: The first radius (X axis if rotation angle is 0)
+of search ellipse. Set this parameter to zero to use whole point array.
+Default is 0.0.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">radius2</span></code>: The second radius (Y axis if rotation angle is 0)
+of search ellipse. Set this parameter to zero to use whole point array.
+Default is 0.0.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">angle</span></code>: Angle of search ellipse rotation in degrees
+(counter clockwise, default 0.0).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">min_points</span></code>: Minimum number of data points to use. If less
+amount of points found the grid node considered empty and will be filled with
+NODATA marker. This is only used if search ellipse is set (both radii are
+non-zero). Default is 0.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nodata</span></code>: NODATA marker to fill empty points (default
+0.0).</p></li>
+</ul>
+</div>
+<div class="section" id="reading-comma-separated-values">
+<h2>Reading comma separated values<a class="headerlink" href="#reading-comma-separated-values" title="Permalink to this headline">¶</a></h2>
+<p>Often you have a text file with a list of comma separated XYZ values to work
+with (so called CSV file). You can easily use that kind of data source in ref
+gdal_grid. All you need is create a virtual dataset header (VRT) for you CSV
+file and use it as input datasource for ref gdal_grid. You can find details
+on VRT format at <a class="reference internal" href="../drivers/vector/vrt.html#vector-vrt"><span class="std std-ref">VRT – Virtual Format</span></a> description page.</p>
+<p>Here is a small example. Let we have a CSV file called &lt;i&gt;dem.csv&gt;
+containing</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Easting</span><span class="p">,</span><span class="n">Northing</span><span class="p">,</span><span class="n">Elevation</span>
+<span class="mf">86943.4</span><span class="p">,</span><span class="mi">891957</span><span class="p">,</span><span class="mf">139.13</span>
+<span class="mf">87124.3</span><span class="p">,</span><span class="mi">892075</span><span class="p">,</span><span class="mf">135.01</span>
+<span class="mf">86962.4</span><span class="p">,</span><span class="mi">892321</span><span class="p">,</span><span class="mf">182.04</span>
+<span class="mf">87077.6</span><span class="p">,</span><span class="mi">891995</span><span class="p">,</span><span class="mf">135.01</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>For above data we will create &lt;i&gt;dem.vrt&gt; header with the following
+content:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;OGRVRTDataSource&gt;</span>
+    <span class="nt">&lt;OGRVRTLayer</span> <span class="na">name=</span><span class="s">&quot;dem&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;SrcDataSource&gt;</span>dem.csv<span class="nt">&lt;/SrcDataSource&gt;</span>
+        <span class="nt">&lt;GeometryType&gt;</span>wkbPoint<span class="nt">&lt;/GeometryType&gt;</span>
+        <span class="nt">&lt;GeometryField</span> <span class="na">encoding=</span><span class="s">&quot;PointFromColumns&quot;</span> <span class="na">x=</span><span class="s">&quot;Easting&quot;</span> <span class="na">y=</span><span class="s">&quot;Northing&quot;</span> <span class="na">z=</span><span class="s">&quot;Elevation&quot;</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/OGRVRTLayer&gt;</span>
+<span class="nt">&lt;/OGRVRTDataSource&gt;</span>
+</pre></div>
+</div>
+<p>This description specifies so called 2.5D geometry with three coordinates X, Y
+and Z. Z value will be used for interpolation. Now you can use &lt;i&gt;dem.vrt&gt;
+with all OGR programs (start with ref ogrinfo to test that everything works
+fine). The datasource will contain single layer called &lt;i&gt;”dem”&gt; filled
+with point features constructed from values in CSV file. Using this technique
+you can handle CSV files with more than three columns, switch columns, etc.</p>
+<p>If your CSV file does not contain column headers then it can be handled in the
+following way:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;GeometryField</span> <span class="na">encoding=</span><span class="s">&quot;PointFromColumns&quot;</span> <span class="na">x=</span><span class="s">&quot;field_1&quot;</span> <span class="na">y=</span><span class="s">&quot;field_2&quot;</span> <span class="na">z=</span><span class="s">&quot;field_3&quot;</span><span class="nt">/&gt;</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="../drivers/vector/csv.html#vector-csv"><span class="std std-ref">Comma Separated Value (.csv)</span></a> description page contains
+details on CSV format supported by GDAL/OGR.</p>
+</div>
+<div class="section" id="c-api">
+<h2>C API<a class="headerlink" href="#c-api" title="Permalink to this headline">¶</a></h2>
+<p>This utility is also callable from C with <a class="reference internal" href="../api/gdal_utils.html#_CPPv48GDALGridPKc12GDALDatasetHPK15GDALGridOptionsPi" title="GDALGrid"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALGrid()</span></code></a>.</p>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>The following would create raster TIFF file from VRT datasource described in
+<a class="reference internal" href="#reading-comma-separated-values">Reading comma separated values</a> section using the inverse distance to a power method.
+Values to interpolate will be read from Z value of geometry record.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdal_grid</span> <span class="o">-</span><span class="n">a</span> <span class="n">invdist</span><span class="p">:</span><span class="n">power</span><span class="o">=</span><span class="mf">2.0</span><span class="p">:</span><span class="n">smoothing</span><span class="o">=</span><span class="mf">1.0</span> <span class="o">-</span><span class="n">txe</span> <span class="mi">85000</span> <span class="mi">89000</span> <span class="o">-</span><span class="n">tye</span> <span class="mi">894000</span> <span class="mi">890000</span> <span class="o">-</span><span class="n">outsize</span> <span class="mi">400</span> <span class="mi">400</span> <span class="o">-</span><span class="n">of</span> <span class="n">GTiff</span> <span class="o">-</span><span class="n">ot</span> <span class="n">Float64</span> <span class="o">-</span><span class="n">l</span> <span class="n">dem</span> <span class="n">dem</span><span class="o">.</span><span class="n">vrt</span> <span class="n">dem</span><span class="o">.</span><span class="n">tiff</span>
+</pre></div>
+</div>
+<p>The next command does the same thing as the previous one, but reads values to
+interpolate from the attribute field specified with &lt;b&gt;-zfield&lt;/b&gt; option
+instead of geometry record. So in this case X and Y coordinates are being
+taken from geometry and Z is being taken from the &lt;i&gt;”Elevation”&gt; field.
+The GDAL_NUM_THREADS is also set to parallelize the computation.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdal_grid</span> <span class="o">-</span><span class="n">zfield</span> <span class="s2">&quot;Elevation&quot;</span> <span class="o">-</span><span class="n">a</span> <span class="n">invdist</span><span class="p">:</span><span class="n">power</span><span class="o">=</span><span class="mf">2.0</span><span class="p">:</span><span class="n">smoothing</span><span class="o">=</span><span class="mf">1.0</span> <span class="o">-</span><span class="n">txe</span> <span class="mi">85000</span> <span class="mi">89000</span> <span class="o">-</span><span class="n">tye</span> <span class="mi">894000</span> <span class="mi">890000</span> <span class="o">-</span><span class="n">outsize</span> <span class="mi">400</span> <span class="mi">400</span> <span class="o">-</span><span class="n">of</span> <span class="n">GTiff</span> <span class="o">-</span><span class="n">ot</span> <span class="n">Float64</span> <span class="o">-</span><span class="n">l</span> <span class="n">dem</span> <span class="n">dem</span><span class="o">.</span><span class="n">vrt</span> <span class="n">dem</span><span class="o">.</span><span class="n">tiff</span> <span class="o">--</span><span class="n">config</span> <span class="n">GDAL_NUM_THREADS</span> <span class="n">ALL_CPUS</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="gdal_proximity.html" class="btn btn-neutral float-right" title="gdal_proximity" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gdal_retile.html" class="btn btn-neutral float-left" title="gdal_retile" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,644 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>HDF5 – Hierarchical Data Format Release 5 (HDF5) &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdrivers/raster/hdf5.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="HF2 – HF2/HFZ heightfield raster" href="hf2.html" />
+    <link rel="prev" title="HDF4 – Hierarchical Data Format Release 4 (HDF4)" href="hdf4.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Raster drivers</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="aaigrid.html">AAIGrid – Arc/Info ASCII Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ace2.html">ACE2 – ACE2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adrg.html">ADRG – ADRG/ARC Digitized Raster Graphics (.gen/.thf)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aig.html">AIG – Arc/Info Binary Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="airsar.html">AIRSAR – AIRSAR Polarimetric Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arg.html">ARG – Azavea Raster Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bag.html">BAG – Bathymetry Attributed Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blx.html">BLX – Magellan BLX Topo File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bmp.html">BMP – Microsoft Windows Device Independent Bitmap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bpg.html">BPG – Better Portable Graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bsb.html">BSB – Maptech/NOAA BSB Nautical Chart Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bt.html">BT – VTP .bt Binary Terrain Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="byn.html">BYN - Natural Resources Canada’s Geoid file format (.byn)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cad.html">CAD – AutoCAD DWG raster layer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cals.html">CALS – CALS Type 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ceos.html">CEOS – CEOS Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coasp.html">COASP –  DRDC COASP SAR Processor Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cog.html">COG – Cloud Optimized GeoTIFF generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cosar.html">COSAR – TerraSAR-X Complex SAR Data Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpg.html">CPG – Convair PolGASP data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctable2.html">CTable2 – CTable2 Datum Grid Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctg.html">CTG – USGS LULC Composite Theme Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="daas.html">DAAS (Airbus DS Intelligence Data As A Service driver)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="db2.html">DB2 raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dds.html">DDS – DirectDraw Surface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="derived.html">DERIVED – Derived subdatasets driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dimap.html">DIMAP – Spot DIMAP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dipex.html">DIPEx – ELAS DIPEx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dods.html">DODS – OPeNDAP Grid Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doq1.html">DOQ1 – First Generation USGS DOQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doq2.html">DOQ2 – New Labelled USGS DOQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dted.html">DTED – Military Elevation Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="e00grid.html">E00GRID – Arc/Info Export E00 GRID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ecrgtoc.html">ECRGTOC – ECRG Table Of Contents (TOC.xml)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ecw.html">ECW – Enhanced Compressed Wavelets (.ecw)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eedai.html">EEDAI - Google Earth Engine Data API Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ehdr.html">EHdr – ESRI .hdr Labelled</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eir.html">EIR – Erdas Imagine Raw</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elas.html">ELAS - Earth Resources Laboratory Applications Software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="envi.html">ENVI – ENVI .hdr Labelled Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="epsilon.html">Epsilon - Wavelet compressed images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="esat.html">ESAT – Envisat Image Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ers.html">ERS – ERMapper .ERS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exr.html">EXR – Extended Dynamic Range Image File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fast.html">FAST – EOSAT FAST Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fit.html">FIT – FIT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fits.html">FITS – Flexible Image Transport System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fujibas.html">FujiBAS – Fuji BAS Scanner Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="genbin.html">GenBin – Generic Binary (.hdr labelled)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="georaster.html">Oracle Spatial GeoRaster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gff.html">GFF – Sandia National Laboratories GSAT File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gif.html">GIF – Graphics Interchange Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gmt.html">GMT – GMT Compatible netCDF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpkg.html">GPKG – GeoPackage raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grass.html">GRASS Raster Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grassasciigrid.html">GRASSASCIIGrid – GRASS ASCII Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grib.html">GRIB – WMO General Regularly-distributed Information in Binary form</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gs7bg.html">GS7BG – Golden Software Surfer 7 Binary Grid File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gsag.html">GSAG – Golden Software ASCII Grid File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gsbg.html">GSBG – Golden Software Binary Grid File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gsc.html">GSC – GSC Geogrid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gta.html">GTA - Generic Tagged Arrays</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gtiff.html">GTiff – GeoTIFF File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gxf.html">GXF – Grid eXchange File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hdf4.html">HDF4 – Hierarchical Data Format Release 4 (HDF4)</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">HDF5 – Hierarchical Data Format Release 5 (HDF5)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#driver-capabilities">Driver capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#multiple-image-handling-subdatasets">Multiple Image Handling (Subdatasets)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#georeference">Georeference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#multi-file-support">Multi-file support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#multidimensional-api-support">Multidimensional API support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#driver-building">Driver building</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#see-also">See Also</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="hf2.html">HF2 – HF2/HFZ heightfield raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hfa.html">HFA – Erdas Imagine .img</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ida.html">IDA – Image Display and Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Idrisi.html">RST – Idrisi Raster Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ignfheightasciigrid.html">IGNFHeightASCIIGrid – IGN-France height correction ASCII grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ilwis.html">ILWIS – Raster Map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intergraphraster.html">INGR – Intergraph Raster Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iris.html">IRIS – Vaisala’s weather radar software format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="isce.html">ISCE – ISCE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="isg.html">ISG – International Service for the Geoid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="isis2.html">ISIS2 – USGS Astrogeology ISIS Cube (Version 2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="isis3.html">ISIS3 – USGS Astrogeology ISIS Cube (Version 3)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jdem.html">JDEM – Japanese DEM (.mem)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2ecw.html">JP2ECW – ERDAS JPEG2000 (.jp2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2kak.html">JP2KAK – JPEG-2000 (based on Kakadu)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2lura.html">JP2Lura – JPEG2000 driver based on Lurawave library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2mrsid.html">JP2MrSID – JPEG2000 via MrSID SDK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2openjpeg.html">JP2OpenJPEG – JPEG2000 driver based on OpenJPEG library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jpeg2000.html">JPEG2000 – Implementation of the JPEG-2000 part 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jpegls.html">JPEGLS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jpeg.html">JPEG – JPEG JFIF File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jpipkak.html">JPIPKAK - JPIP Streaming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kea.html">KEA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kmlsuperoverlay.html">KMLSuperoverlay – KMLSuperoverlay</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kro.html">KRO – KOLOR Raw format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lan.html">LAN – Erdas 7.x .LAN and .GIS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="l1b.html">L1B – NOAA Polar Orbiter Level 1b Data Set (AVHRR)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lcp.html">LCP – FARSITE v.4 LCP Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="leveller.html">Leveller – Daylon Leveller Heightfield</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loslas.html">LOSLAS – NADCON .los/.las Datum Grid Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="map.html">MAP – OziExplorer .MAP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="marfa.html">MRF – Meta Raster Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mbtiles.html">MBTiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mem.html">MEM – In Memory Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mff.html">MFF – Vexcel MFF Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mff2.html">MFF2 – Vexcel MFF2 Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mg4lidar.html">MG4Lidar – MrSID/MG4 LiDAR Compression / Point Cloud View files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mrsid.html">MrSID – Multi-resolution Seamless Image Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="msg.html">MSG – Meteosat Second Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="msgn.html">MSGN – Meteosat Second Generation (MSG) Native Archive Format (.nat)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ndf.html">NDF – NLAPS Data Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="netcdf.html">NetCDF: Network Common Data Form</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ngsgeoid.html">NGSGEOID - NOAA NGS Geoid Height Grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ngw.html">NGW – NextGIS Web</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nitf.html">NITF – National Imagery Transmission Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ntv1.html">NTv1 – NTv1 Datum Grid Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ntv2.html">NTv2 – NTv2 Datum Grid Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nwtgrd.html">NWT_GRD/NWT_GRC – Northwood/Vertical Mapper File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ozi.html">OZI – OZF2/OZFX3 raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="palsar.html">JAXA PALSAR Processed Products</a></li>
+<li class="toctree-l2"><a class="reference internal" href="paux.html">PAux – PCI .aux Labelled Raw Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pcidsk.html">PCIDSK – PCI Geomatics Database File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pcraster.html">PCRaster – PCRaster raster file format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pdf.html">PDF – Geospatial PDF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pds.html">PDS – Planetary Data System v3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pds4.html">PDS4 – NASA Planetary Data System (Version 4)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plmosaic.html">PLMosaic (Planet Labs Mosaics API)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="png.html">PNG – Portable Network Graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pnm.html">PNM – Netpbm (.pgm, .ppm)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="postgisraster.html">PostGISRaster – PostGIS Raster driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prf.html">PHOTOMOD Raster File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasdaman.html">Rasdaman GDAL driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasterlite.html">Rasterlite - Rasters in SQLite DB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasterlite2.html">RasterLite2 - Rasters in SQLite DB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="r.html">R – R Object Data Store</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rda.html">RDA (DigitalGlobe Raster Data Access)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rdb.html">RDB - <em>RIEGL</em> Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rik.html">RIK – Swedish Grid Maps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rmf.html">RMF – Raster Matrix Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="roi_pac.html">ROI_PAC – ROI_PAC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpftoc.html">RPFTOC – Raster Product Format/RPF (a.toc)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rraster.html">RRASTER – R Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rs2.html">RS2 – RadarSat 2 XML Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="safe.html">SAFE – Sentinel-1 SAFE XML Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sar_ceos.html">SAR_CEOS – CEOS SAR Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sdat.html">SAGA – SAGA GIS Binary Grid File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sdts.html">SDTS – USGS SDTS DEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sde.html">ESRI ArcSDE Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sentinel2.html">SENTINEL2 – Sentinel-2 Products</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sgi.html">SGI – SGI Image Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sigdem.html">SIGDEM – Scaled Integer Gridded DEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="snodas.html">SNODAS – Snow Data Assimilation System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="srp.html">SRP – Standard Product Format (ASRP/USRP) (.gen)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="srtmhgt.html">SRTMHGT – SRTM HGT Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="terragen.html">Terragen – Terragen™ Terrain File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="til.html">TIL – EarthWatch/DigitalGlobe .TIL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.html">TileDB - TileDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tsx.html">TSX –  TerraSAR-X Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usgsdem.html">USGSDEM – USGS ASCII DEM (and CDED)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vicar.html">VICAR – VICAR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vrt.html">VRT – GDAL Virtual Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wcs.html">WCS – OGC Web Coverage Service</a></li>
+<li class="toctree-l2"><a class="reference internal" href="webp.html">WEBP - WEBP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wms.html">WMS – Web Map Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wmts.html">WMTS – OGC Web Map Tile Service</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xpm.html">XPM – X11 Pixmap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xyz.html">XYZ – ASCII Gridded XYZ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="zmap.html">ZMap – ZMap Plus Grid</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Raster drivers</a> &raquo;</li>
+      
+      <li>HDF5 – Hierarchical Data Format Release 5 (HDF5)</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/drivers/raster/hdf5.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="hf2.html" class="btn btn-neutral float-right" title="HF2 – HF2/HFZ heightfield raster" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="hdf4.html" class="btn btn-neutral float-left" title="HDF4 – Hierarchical Data Format Release 4 (HDF4)" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="hdf5-hierarchical-data-format-release-5-hdf5">
+<span id="raster-hdf5"></span><h1>HDF5 – Hierarchical Data Format Release 5 (HDF5)<a class="headerlink" href="#hdf5-hierarchical-data-format-release-5-hdf5" title="Permalink to this headline">¶</a></h1>
+<div class="admonition shortname" id="shortname-0">
+<p class="admonition-title">Driver short name</p>
+<p>HDF5</p>
+</div>
+<div class="admonition shortname" id="shortname-1">
+<p class="admonition-title">Driver short name</p>
+<p>HDF5Image</p>
+</div>
+<div class="admonition build_dependencies" id="build_dependencies-0">
+<p class="admonition-title">Build dependencies</p>
+<p>libhdf5</p>
+</div>
+<p>This driver intended for HDF5 file formats importing.</p>
+<div class="section" id="driver-capabilities">
+<h2>Driver capabilities<a class="headerlink" href="#driver-capabilities" title="Permalink to this headline">¶</a></h2>
+<div class="admonition supports_georeferencing" id="supports_georeferencing-0">
+<p class="admonition-title">Supports Georeferencing</p>
+<p>This driver supports georeferencing</p>
+</div>
+<div class="versionadded">
+<span class="target" id="supports_virtualio-0"><span class="versionmodified added">New in version 2.4: </span></span><div class="admonition supports_virtualio">
+<p class="admonition-title">Supports VirtualIO</p>
+<p>This driver supports <a class="reference internal" href="../../user/virtual_file_systems.html#virtual-file-systems"><span class="std std-ref">virtual I/O operations (/vsimem/, etc.)</span></a></p>
+</div>
+</div>
+</div>
+<div class="section" id="multiple-image-handling-subdatasets">
+<h2>Multiple Image Handling (Subdatasets)<a class="headerlink" href="#multiple-image-handling-subdatasets" title="Permalink to this headline">¶</a></h2>
+<p>Hierarchical Data Format is a container for several different datasets.
+For data storing. HDF contains multidimensional arrays filled by data.
+One HDF file may contain several arrays. They may differ in size, number
+of dimensions.</p>
+<p>The first step is to get a report of the components images (arrays) in
+the file using <strong>gdalinfo</strong>, and then to import the desired images using
+gdal_translate. The <strong>gdalinfo</strong> utility lists all multidimensional
+subdatasets from the input HDF file. The name of individual images
+(subdatasets) are assigned to the <strong>SUBDATASET_n_NAME</strong> metadata item.
+The description for each image is found in the <strong>SUBDATASET_n_DESC</strong>
+metadata item. For HDF5 images the subdataset names will be formatted
+like this:</p>
+<p><em>HDF5:file_name:subdataset</em></p>
+<div class="line-block">
+<div class="line">where:</div>
+<div class="line"><em>file_name</em> is the name of the input file, and</div>
+<div class="line"><em>subdataset</em> is the dataset name of the array to use (for internal use
+in GDAL).</div>
+</div>
+<p>On the second step you should provide this name for <strong>gdalinfo</strong> or
+<strong>gdal_translate</strong> for actual reading of the data.</p>
+<p>For example, we want to read data from the OMI/Aura Ozone (O3) dataset:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gdalinfo OMI-Aura_L2-OMTO3_2005m0326t2307-o03709_v002-2005m0428t201311.he5
+Driver: HDF5/Hierarchical Data Format Release 5
+Size is 512, 512
+Coordinate System is `&#39;
+
+Subdatasets:
+  SUBDATASET_1_NAME=HDF5:&quot;OMI-Aura_L2-OMTO3_2005m0113t0224-o02648_v002-2005m0625t035355.he5&quot;://HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/APrioriLayerO3
+  SUBDATASET_1_DESC=[1496x60x11] //HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/APrioriLayerO3 (32-bit floating-point)
+  SUBDATASET_2_NAME=HDF5:&quot;OMI-Aura_L2-OMTO3_2005m0113t0224-o02648_v002-2005m0625t035355.he5&quot;://HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/AlgorithmFlags
+  SUBDATASET_2_DESC=[1496x60] //HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/AlgorithmFlags (8-bit unsigned character)
+  SUBDATASET_3_NAME=HDF5:&quot;OMI-Aura_L2-OMTO3_2005m0113t0224-o02648_v002-2005m0625t035355.he5&quot;://HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/CloudFraction
+  SUBDATASET_3_DESC=[1496x60] //HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/CloudFraction (32-bit floating-point)
+  SUBDATASET_4_NAME=HDF5:&quot;OMI-Aura_L2-OMTO3_2005m0113t0224-o02648_v002-2005m0625t035355.he5&quot;://HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/CloudTopPressure
+  SUBDATASET_4_DESC=[1496x60] //HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/CloudTopPressure (32-bit floating-point)
+  SUBDATASET_5_NAME=HDF5:&quot;OMI-Aura_L2-OMTO3_2005m0113t0224-o02648_v002-2005m0625t035355.he5&quot;://HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/ColumnAmountO3
+  SUBDATASET_5_DESC=[1496x60] //HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/ColumnAmountO3 (32-bit floating-point)
+  SUBDATASET_6_NAME=HDF5:&quot;OMI-Aura_L2-OMTO3_2005m0113t0224-o02648_v002-2005m0625t035355.he5&quot;://HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/LayerEfficiency
+  SUBDATASET_6_DESC=[1496x60x11] //HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/LayerEfficiency (32-bit floating-point)
+  SUBDATASET_7_NAME=HDF5:&quot;OMI-Aura_L2-OMTO3_2005m0113t0224-o02648_v002-2005m0625t035355.he5&quot;://HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/NValue
+  SUBDATASET_7_DESC=[1496x60x12] //HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/NValue (32-bit floating-point)
+  SUBDATASET_8_NAME=HDF5:&quot;OMI-Aura_L2-OMTO3_2005m0113t0224-o02648_v002-2005m0625t035355.he5&quot;://HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/O3BelowCloud
+  SUBDATASET_8_DESC=[1496x60] //HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/O3BelowCloud (32-bit floating-point)
+  SUBDATASET_9_NAME=HDF5:&quot;OMI-Aura_L2-OMTO3_2005m0113t0224-o02648_v002-2005m0625t035355.he5&quot;://HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/QualityFlags
+  SUBDATASET_9_DESC=[1496x60] //HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/QualityFlags (16-bit unsigned integer)
+  SUBDATASET_10_NAME=HDF5:&quot;OMI-Aura_L2-OMTO3_2005m0113t0224-o02648_v002-2005m0625t035355.he5&quot;://HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/Reflectivity331
+  SUBDATASET_10_DESC=[1496x60] //HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/Reflectivity331 (32-bit floating-point)
+  SUBDATASET_11_NAME=HDF5:&quot;OMI-Aura_L2-OMTO3_2005m0113t0224-o02648_v002-2005m0625t035355.he5&quot;://HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/Reflectivity360
+  SUBDATASET_11_DESC=[1496x60] //HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/Reflectivity360 (32-bit floating-point)
+  SUBDATASET_12_NAME=HDF5:&quot;OMI-Aura_L2-OMTO3_2005m0113t0224-o02648_v002-2005m0625t035355.he5&quot;://HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/Residual
+  SUBDATASET_12_DESC=[1496x60x12] //HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/Residual (32-bit floating-point)
+  SUBDATASET_13_NAME=HDF5:&quot;OMI-Aura_L2-OMTO3_2005m0113t0224-o02648_v002-2005m0625t035355.he5&quot;://HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/ResidualStep1
+  SUBDATASET_13_DESC=[1496x60x12] //HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/ResidualStep1 (32-bit floating-point)
+  SUBDATASET_14_NAME=HDF5:&quot;OMI-Aura_L2-OMTO3_2005m0113t0224-o02648_v002-2005m0625t035355.he5&quot;://HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/ResidualStep2
+  SUBDATASET_14_DESC=[1496x60x12] //HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/ResidualStep2 (32-bit floating-point)
+  SUBDATASET_15_NAME=HDF5:&quot;OMI-Aura_L2-OMTO3_2005m0113t0224-o02648_v002-2005m0625t035355.he5&quot;://HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/SO2index
+  SUBDATASET_15_DESC=[1496x60] //HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/SO2index (32-bit floating-point)
+  SUBDATASET_16_NAME=HDF5:&quot;OMI-Aura_L2-OMTO3_2005m0113t0224-o02648_v002-2005m0625t035355.he5&quot;://HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/Sensitivity
+  SUBDATASET_16_DESC=[1496x60x12] //HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/Sensitivity (32-bit floating-point)
+  SUBDATASET_17_NAME=HDF5:&quot;OMI-Aura_L2-OMTO3_2005m0113t0224-o02648_v002-2005m0625t035355.he5&quot;://HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/StepOneO3
+  SUBDATASET_17_DESC=[1496x60] //HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/StepOneO3 (32-bit floating-point)
+  SUBDATASET_18_NAME=HDF5:&quot;OMI-Aura_L2-OMTO3_2005m0113t0224-o02648_v002-2005m0625t035355.he5&quot;://HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/StepTwoO3
+  SUBDATASET_18_DESC=[1496x60] //HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/StepTwoO3 (32-bit floating-point)
+  SUBDATASET_19_NAME=HDF5:&quot;OMI-Aura_L2-OMTO3_2005m0113t0224-o02648_v002-2005m0625t035355.he5&quot;://HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/TerrainPressure
+  SUBDATASET_19_DESC=[1496x60] //HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/TerrainPressure (32-bit floating-point)
+  SUBDATASET_20_NAME=HDF5:&quot;OMI-Aura_L2-OMTO3_2005m0113t0224-o02648_v002-2005m0625t035355.he5&quot;://HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/UVAerosolIndex
+  SUBDATASET_20_DESC=[1496x60] //HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/UVAerosolIndex (32-bit floating-point)
+  SUBDATASET_21_NAME=HDF5:&quot;OMI-Aura_L2-OMTO3_2005m0113t0224-o02648_v002-2005m0625t035355.he5&quot;://HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/dN_dR
+  SUBDATASET_21_DESC=[1496x60x12] //HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/dN_dR (32-bit floating-point)
+  SUBDATASET_22_NAME=HDF5:&quot;OMI-Aura_L2-OMTO3_2005m0113t0224-o02648_v002-2005m0625t035355.he5&quot;://HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/dN_dT
+  SUBDATASET_22_DESC=[1496x60x12] //HDFEOS/SWATHS/OMI_Column_Amount_O3/Data_Fields/dN_dT (32-bit floating-point)
+  SUBDATASET_23_NAME=HDF5:&quot;OMI-Aura_L2-OMTO3_2005m0113t0224-o02648_v002-2005m0625t035355.he5&quot;://HDFEOS/SWATHS/OMI_Column_Amount_O3/Geolocation_Fields/GroundPixelQualityFlags
+  SUBDATASET_23_DESC=[1496x60] //HDFEOS/SWATHS/OMI_Column_Amount_O3/Geolocation_Fields/GroundPixelQualityFlags (16-bit unsigned integer)
+  SUBDATASET_24_NAME=HDF5:&quot;OMI-Aura_L2-OMTO3_2005m0113t0224-o02648_v002-2005m0625t035355.he5&quot;://HDFEOS/SWATHS/OMI_Column_Amount_O3/Geolocation_Fields/Latitude
+  SUBDATASET_24_DESC=[1496x60] //HDFEOS/SWATHS/OMI_Column_Amount_O3/Geolocation_Fields/Latitude (32-bit floating-point)
+  SUBDATASET_25_NAME=HDF5:&quot;OMI-Aura_L2-OMTO3_2005m0113t0224-o02648_v002-2005m0625t035355.he5&quot;://HDFEOS/SWATHS/OMI_Column_Amount_O3/Geolocation_Fields/Longitude
+  SUBDATASET_25_DESC=[1496x60] //HDFEOS/SWATHS/OMI_Column_Amount_O3/Geolocation_Fields/Longitude (32-bit floating-point)
+  SUBDATASET_26_NAME=HDF5:&quot;OMI-Aura_L2-OMTO3_2005m0113t0224-o02648_v002-2005m0625t035355.he5&quot;://HDFEOS/SWATHS/OMI_Column_Amount_O3/Geolocation_Fields/RelativeAzimuthAngle
+  SUBDATASET_26_DESC=[1496x60] //HDFEOS/SWATHS/OMI_Column_Amount_O3/Geolocation_Fields/RelativeAzimuthAngle (32-bit floating-point)
+  SUBDATASET_27_NAME=HDF5:&quot;OMI-Aura_L2-OMTO3_2005m0113t0224-o02648_v002-2005m0625t035355.he5&quot;://HDFEOS/SWATHS/OMI_Column_Amount_O3/Geolocation_Fields/SolarAzimuthAngle
+  SUBDATASET_27_DESC=[1496x60] //HDFEOS/SWATHS/OMI_Column_Amount_O3/Geolocation_Fields/SolarAzimuthAngle (32-bit floating-point)
+  SUBDATASET_28_NAME=HDF5:&quot;OMI-Aura_L2-OMTO3_2005m0113t0224-o02648_v002-2005m0625t035355.he5&quot;://HDFEOS/SWATHS/OMI_Column_Amount_O3/Geolocation_Fields/SolarZenithAngle
+  SUBDATASET_28_DESC=[1496x60] //HDFEOS/SWATHS/OMI_Column_Amount_O3/Geolocation_Fields/SolarZenithAngle (32-bit floating-point)
+  SUBDATASET_29_NAME=HDF5:&quot;OMI-Aura_L2-OMTO3_2005m0113t0224-o02648_v002-2005m0625t035355.he5&quot;://HDFEOS/SWATHS/OMI_Column_Amount_O3/Geolocation_Fields/TerrainHeight
+  SUBDATASET_29_DESC=[1496x60] //HDFEOS/SWATHS/OMI_Column_Amount_O3/Geolocation_Fields/TerrainHeight (16-bit integer)
+  SUBDATASET_30_NAME=HDF5:&quot;OMI-Aura_L2-OMTO3_2005m0113t0224-o02648_v002-2005m0625t035355.he5&quot;://HDFEOS/SWATHS/OMI_Column_Amount_O3/Geolocation_Fields/ViewingAzimuthAngle
+  SUBDATASET_30_DESC=[1496x60] //HDFEOS/SWATHS/OMI_Column_Amount_O3/Geolocation_Fields/ViewingAzimuthAngle (32-bit floating-point)
+  SUBDATASET_31_NAME=HDF5:&quot;OMI-Aura_L2-OMTO3_2005m0113t0224-o02648_v002-2005m0625t035355.he5&quot;://HDFEOS/SWATHS/OMI_Column_Amount_O3/Geolocation_Fields/ViewingZenithAngle
+  SUBDATASET_31_DESC=[1496x60] //HDFEOS/SWATHS/OMI_Column_Amount_O3/Geolocation_Fields/ViewingZenithAngle (32-bit floating-point)
+Corner Coordinates:
+Upper Left  (    0.0,    0.0)
+Lower Left  (    0.0,  512.0)
+Upper Right (  512.0,    0.0)
+Lower Right (  512.0,  512.0)
+Center      (  256.0,  256.0)
+</pre></div>
+</div>
+<p>Now select one of the subdatasets, described as
+<code class="docutils literal notranslate"><span class="pre">[1645x60]</span> <span class="pre">CloudFraction</span> <span class="pre">(32-bit</span> <span class="pre">floating-point)</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gdalinfo HDF5:&quot;OMI-Aura_L2-OMTO3_2005m0326t2307-o03709_v002-2005m0428t201311.he5&quot;:CloudFraction
+Driver: HDF5Image/HDF5 Dataset
+Size is 60, 1645
+Coordinate System is:
+GEOGCS[&quot;WGS 84&quot;,
+    DATUM[&quot;WGS_1984&quot;,
+        SPHEROID[&quot;WGS 84&quot;,6378137,298.257223563,
+            AUTHORITY[&quot;EPSG&quot;,&quot;7030&quot;]],
+        TOWGS84[0,0,0,0,0,0,0],
+        AUTHORITY[&quot;EPSG&quot;,&quot;6326&quot;]],
+    PRIMEM[&quot;Greenwich&quot;,0,
+        AUTHORITY[&quot;EPSG&quot;,&quot;8901&quot;]],
+    UNIT[&quot;degree&quot;,0.0174532925199433,
+        AUTHORITY[&quot;EPSG&quot;,&quot;9108&quot;]],
+    AXIS[&quot;Lat&quot;,NORTH],
+    AXIS[&quot;Long&quot;,EAST],
+    AUTHORITY[&quot;EPSG&quot;,&quot;4326&quot;]]
+GCP Projection = GEOGCS[&quot;WGS 84&quot;,DATUM[&quot;WGS_1984&quot;,SPHEROID[&quot;WGS 84&quot;,6378137,298.257223563,AUTHORITY[&quot;EPSG&quot;,&quot;7030&quot;]],TOWGS84[0,0,0,0,0,0,0],AUTHORITY[&quot;EPSG&quot;,&quot;6326&quot;]],PRIMEM[&quot;Greenwich&quot;,0,AUTHORITY[&quot;EPSG&quot;,&quot;8901&quot;]],UNIT[&quot;degree&quot;,0.0174532925199433,AUTHORITY[&quot;EPSG&quot;,&quot;9108&quot;]],AXIS[&quot;Lat&quot;,NORTH],AXIS[&quot;Long&quot;,EAST],AUTHORITY[&quot;EPSG&quot;,&quot;4326&quot;]]
+GCP[  0]: Id=, Info=
+          (0.5,0.5) -&gt; (261.575,-84.3495,0)
+GCP[  1]: Id=, Info=
+          (2.5,0.5) -&gt; (240.826,-85.9928,0)
+GCP[  2]: Id=, Info=
+          (4.5,0.5) -&gt; (216.754,-86.5932,0)
+GCP[  3]: Id=, Info=
+          (6.5,0.5) -&gt; (195.5,-86.5541,0)
+GCP[  4]: Id=, Info=
+          (8.5,0.5) -&gt; (180.265,-86.2009,0)
+GCP[  5]: Id=, Info=
+          (10.5,0.5) -&gt; (170.011,-85.7315,0)
+GCP[  6]: Id=, Info=
+          (12.5,0.5) -&gt; (162.987,-85.2337,0)
+... 3000 GCPs are read from the file if Latitude and Longitude arrays are presents
+</pre></div>
+</div>
+<p>Corner Coordinates: Upper Left ( 0.0, 0.0) Lower Left ( 0.0, 1645.0)
+Upper Right ( 60.0, 0.0) Lower Right ( 60.0, 1645.0) Center ( 30.0,
+822.5) Band 1 Block=60x1 Type=Float32, ColorInterp=Undefined Open GDAL
+Datasets: 1 N DriverIsNULL 512x512x0</p>
+<p>You may use <strong>gdal_translate</strong> for reading image bands from this
+dataset.</p>
+<p>Note that you should provide exactly the contents of the line marked
+<strong>SUBDATASET_n_NAME</strong> to GDAL, including the <strong>HDF5:</strong> prefix.</p>
+<p>This driver is intended only for importing remote sensing and geospatial
+datasets in form of raster images(2D or 3D arrays). If you want explore
+all data contained in HDF file you should use another tools (you can
+find information about different HDF tools using links at end of this
+page).</p>
+</div>
+<div class="section" id="georeference">
+<h2>Georeference<a class="headerlink" href="#georeference" title="Permalink to this headline">¶</a></h2>
+<p>There is no universal way of storing georeferencing in HDF files.
+However, some product types have mechanisms for saving georeferencing,
+and some of these are supported by GDAL. Currently supported are
+(<em>subdataset_type</em> shown in parenthesis):</p>
+<ul class="simple">
+<li><p>HDF5 OMI/Aura Ozone (O3) Total Column 1-Orbit L2 Swath 13x24km
+(<strong>Level-2 OMTO3</strong>)</p></li>
+</ul>
+</div>
+<div class="section" id="multi-file-support">
+<h2>Multi-file support<a class="headerlink" href="#multi-file-support" title="Permalink to this headline">¶</a></h2>
+<p>Starting with GDAL 3.1, the driver supports opening datasets split over
+several files using the ‘family’ HDF5 file driver. For that, GDAL must be
+provided with the filename of the first part, containing in it a single ‘0’
+(zero) character, or ending with 0.h5 or 0.hdf5</p>
+</div>
+<div class="section" id="multidimensional-api-support">
+<h2>Multidimensional API support<a class="headerlink" href="#multidimensional-api-support" title="Permalink to this headline">¶</a></h2>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 3.1.</span></p>
+</div>
+<p>The HDF5 driver supports the <a class="reference internal" href="../../user/multidim_raster_data_model.html#multidim-raster-data-model"><span class="std std-ref">Multidimensional Raster Data Model</span></a> for reading
+operations.</p>
+</div>
+<div class="section" id="driver-building">
+<h2>Driver building<a class="headerlink" href="#driver-building" title="Permalink to this headline">¶</a></h2>
+<p>This driver built on top of NCSA HDF5 library, so you need to download
+prebuild HDF5 libraries: HDF5-1.6.4 library or higher. You also need
+zlib 1.2 and szlib 2.0. For windows user be sure to set the attributes
+writable (especially if you are using Cygwin) and that the DLLs can be
+located somewhere by your PATH environment variable. You may also
+download source code NCSA HDF Home Page (see links below).</p>
+</div>
+<div class="section" id="see-also">
+<h2>See Also<a class="headerlink" href="#see-also" title="Permalink to this headline">¶</a></h2>
+<p>Implemented as <code class="docutils literal notranslate"><span class="pre">gdal/frmts/hdf5/hdf5dataset.cpp</span></code> and
+<code class="docutils literal notranslate"><span class="pre">gdal/frmts/hdf5/hdf5imagedataset.cpp</span></code>.</p>
+<p><a class="reference external" href="http://hdf.ncsa.uiuc.edu/HDF5/release/obtain5.html">The NCSA HDF5 Download
+Page</a> at the
+<a class="reference external" href="http://www.ncsa.uiuc.edu/">National Center for Supercomputing
+Applications</a></p>
+<p><a class="reference external" href="http://hdf.ncsa.uiuc.edu/hdf-java-html/hdfview/">The HDFView is a visual tool for browsing and editing NCSA HDF4 and
+HDF5 files.</a></p>
+<p>Documentation to individual products, supported by this driver:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://disc.gsfc.nasa.gov/uui/datasets/OMTO3_V003/summary">OMTO3: OMI/Aura Ozone (O3) Total Column 1-Orbit L2 Swath 13x24km
+V003</a></p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="hf2.html" class="btn btn-neutral float-right" title="HF2 – HF2/HFZ heightfield raster" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="hdf4.html" class="btn btn-neutral float-left" title="HDF4 – Hierarchical Data Format Release 4 (HDF4)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,622 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RFC 68: C++11 Compilation Mode &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdevelopment/rfc/rfc68_cplusplus11.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="RFC 69: C/C++ Code Formatting" href="rfc69_cplusplus_formatting.html" />
+    <link rel="prev" title="RFC 67 : Null values in OGR" href="rfc67_nullfieldvalues.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 68: C++11 Compilation Mode</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motivation">Motivation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#compilers-landscape">Compilers Landscape</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#plan">Plan</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#issues">Issues</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#release">Release</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#references">References</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#self-assigned-development-constraints">Self-assigned development constraints</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#core-changes-summary">Core changes: summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#changes-in-swig-bindings">Changes in SWIG bindings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#potential-changes-that-are-not-included-in-this-rfc">Potential changes that are <em>NOT</em> included in this RFC</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#backward-compatibility">Backward compatibility</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#testing">Testing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#version-numbering">Version numbering</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#related-rfcs">Related RFCs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voting-history">Voting history</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 68: C++11 Compilation Mode</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/development/rfc/rfc68_cplusplus11.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="rfc69_cplusplus_formatting.html" class="btn btn-neutral float-right" title="RFC 69: C/C++ Code Formatting" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc67_nullfieldvalues.html" class="btn btn-neutral float-left" title="RFC 67 : Null values in OGR" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rfc-68-c-11-compilation-mode">
+<span id="rfc-68"></span><h1>RFC 68: C++11 Compilation Mode<a class="headerlink" href="#rfc-68-c-11-compilation-mode" title="Permalink to this headline">¶</a></h1>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 83%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Author:</p></td>
+<td><p>Kurt Schwehr</p></td>
+</tr>
+<tr class="row-even"><td><p>Contact:</p></td>
+<td><p><a class="reference external" href="mailto:schwehr&#37;&#52;&#48;google&#46;com">schwehr<span>&#64;</span>google<span>&#46;</span>com</a> / <a class="reference external" href="mailto:schwehr&#37;&#52;&#48;gmail&#46;com">schwehr<span>&#64;</span>gmail<span>&#46;</span>com</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Started:</p></td>
+<td><p>2017-Apr-11</p></td>
+</tr>
+<tr class="row-even"><td><p>Passed:</p></td>
+<td><p>2017-Sep-11</p></td>
+</tr>
+<tr class="row-odd"><td><p>Status:</p></td>
+<td><p>Adopted, implemented in GDAL 2.3</p></td>
+</tr>
+</tbody>
+</table>
+<p>This RFC is based on <a class="reference external" href="http://trac.osgeo.org/geos/wiki/RFC5">GEOS RFC
+5</a> by Mateusz Łoskot.</p>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>The document proposes to switch to
+<a class="reference external" href="http://en.wikipedia.org/wiki/C%2B%2B11">C++11</a> compilation mode as
+default throughout the whole C++ source code of GDAL.</p>
+<p>The goal of the document is to request and achieve agreement on using
+C++11 as the minimum required version of the C++ programming language
+standard.</p>
+</div>
+<div class="section" id="motivation">
+<h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">¶</a></h2>
+<p>C++11 is the first major update of the C++ standard since 1998.
+(<a class="reference external" href="https://en.wikipedia.org/wiki/C%2B%2B03">C++03</a> was a bug fix
+release.)</p>
+<p>Having fewer versions of C++ to support will reduce the load on
+developers and testing systems.</p>
+<p>C++11 features aim to promote writing clean, compact, type-safe and fast
+code. It also delivers better feature-wise compatibility with the C
+language (C99).</p>
+<p>The Wikipedia article at
+<a class="reference external" href="http://en.wikipedia.org/wiki/C++11">http://en.wikipedia.org/wiki/C++11</a>
+does a great job describing all changes in C++11 extensively.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">std::auto_ptr</span></code> smart pointer, together with a bunch of other
+features, were deprecated and will be removed from C++17. Features like
+<code class="docutils literal notranslate"><span class="pre">std::unique_ptr</span></code> provide much stronger replacements.</p>
+<p>Enabling C++11 compilation mode will improve the programming environment
+making it much friendlier than C++98.</p>
+<p>A social factor: since (many) C++ programmers no longer enjoy C++98,
+allowing C++11 mode may increase potential for new contributions.</p>
+</div>
+<div class="section" id="compilers-landscape">
+<h2>Compilers Landscape<a class="headerlink" href="#compilers-landscape" title="Permalink to this headline">¶</a></h2>
+<p>Summary of compilers supported by GDAL with their minimal versions
+required to compile source code based on</p>
+<p><a class="reference external" href="http://en.cppreference.com/w/cpp/compiler_support">http://en.cppreference.com/w/cpp/compiler_support</a>
+C++11 features.</p>
+<div class="section" id="c-11">
+<h3>C++11<a class="headerlink" href="#c-11" title="Permalink to this headline">¶</a></h3>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 3%" />
+<col style="width: 6%" />
+<col style="width: 39%" />
+<col style="width: 52%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>GCC</p></th>
+<th class="head"><p>4.8.1+</p></th>
+<th class="head"><p><a class="reference external" href="https://gcc.gnu.org/projects/cxx-status.html#cxx11">C++11 status</a></p></th>
+<th class="head"><p>Debian 8 (stable), Ubuntu 15.04+, Ubuntu 14.04 <code class="docutils literal notranslate"><span class="pre">ppa:ubuntu-toolchain-r/test</span></code>, Fedora 19+, RHEL7</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Clang</p></td>
+<td><p>3.3+</p></td>
+<td><p><a class="reference external" href="https://clang.llvm.org/cxx_status.html#cxx11">C++11 status</a></p></td>
+<td><p>Debian 8 (stable), Ubuntu 14.04+, Fedora 19+, CentOS 6(?)</p></td>
+</tr>
+<tr class="row-odd"><td><p>MSVC</p></td>
+<td><p>14.0+ (2015)</p></td>
+<td><p><a class="reference external" href="https://msdn.microsoft.com/en-us/library/hh567368.aspx">C++11 status</a></p></td>
+<td><p>n/a</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="c-14">
+<h3>C++14<a class="headerlink" href="#c-14" title="Permalink to this headline">¶</a></h3>
+<p>The C++14 compilers are listed for comparison only:</p>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 71%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>GCC</p></th>
+<th class="head"><p>4.9+</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Clang</p></td>
+<td><p>3.4+</p></td>
+</tr>
+<tr class="row-odd"><td><p>MSVC</p></td>
+<td><p>14.0+ (2015)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="plan">
+<h2>Plan<a class="headerlink" href="#plan" title="Permalink to this headline">¶</a></h2>
+<p>This proposal only requests agreement for the C++11 compilation mode
+switch in the current <code class="docutils literal notranslate"><span class="pre">trunk</span></code> branch only.</p>
+<p>This proposal does not suggest any detailed roadmap of large refactoring
+of the GDAL C++ codebase.</p>
+<p>The GDAL codebase is &gt; 1.3M LOC and given the available man-power to
+LOCs ratio, such one-step refactoring would not be feasible.</p>
+<p>Instead, the task will be tackled with the baby step approach gradually
+transforming the codebase according to priorities set along the way. Any
+disruptive refactoring, changes in interfaces of C++ classes, breaking
+changes in C++ API must be announced and discussed on the mailing list
+or the bug tracker.</p>
+<p><em>IMPORTANT</em>: C++11 refactoring must not change the C API or break C API
+compatibility, unless agreed upon based on prior RFC proposed.</p>
+<p>However, if the proposal is accepted, any new C++ code written for GDAL
+must be C++11-compliant.</p>
+<p>Prior acceptance of this proposal is necessary in order to start any
+source code refactoring using C++11 features.</p>
+<p>Once accepted, first step will be to update the build configurations to
+require C++11-compliant compiler.</p>
+</div>
+<div class="section" id="issues">
+<h2>Issues<a class="headerlink" href="#issues" title="Permalink to this headline">¶</a></h2>
+<p>This section outlines issues potentially caused by upgrade to C++11
+language.</p>
+<ul class="simple">
+<li><p>C++11 destructors, by default, have now the new exception
+specification of <code class="docutils literal notranslate"><span class="pre">nothrow(true)</span></code>. Destructors of GDAL classes
+should be reviewed and any that are allowed/expected to throw
+exceptions must be marked with <code class="docutils literal notranslate"><span class="pre">nothrow(false)</span></code>. Otherwise, any
+user of the existing GDAL codebase would find the program terminating
+whenever GDAL destructor throws an exception. Such review would be
+beneficial anyway.</p></li>
+</ul>
+</div>
+<div class="section" id="release">
+<h2>Release<a class="headerlink" href="#release" title="Permalink to this headline">¶</a></h2>
+<p>First release of GDAL with C++11 compiler requirement could be 2.3.0.</p>
+<div class="section" id="c14-1">
+<span id="id1"></span><h3>C++14<a class="headerlink" href="#c14-1" title="Permalink to this headline">¶</a></h3>
+<p>This section clarifies status of C++14 support in GDAL.</p>
+<ul class="simple">
+<li><p>Once C++11 is adopted as default compilation mode, GDAL developers
+and maintainers must ensure it also successfully compiles in C++14
+and C++17 modes.</p></li>
+<li><p>Are contributors allowed to add <code class="docutils literal notranslate"><span class="pre">ifdef</span></code>’s for C++14 and C++17? No.
+Not at this time.</p></li>
+<li><p>Is there a plan to upgrade to C++14 or C++17 to allow use of the C++
+latest features? No, there is no plan. It is, however, recognized,
+such motion may be put to the vote around 2020.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="http://en.cppreference.com/w/cpp/compiler_support">http://en.cppreference.com/w/cpp/compiler_support</a>
+C++ compiler support</p></li>
+</ul>
+</div>
+<div class="section" id="self-assigned-development-constraints">
+<h2>Self-assigned development constraints<a class="headerlink" href="#self-assigned-development-constraints" title="Permalink to this headline">¶</a></h2>
+<p>The changes should have moderate impact on the existing GDAL/OGR code
+base, and particularly on most of its code, that lies in drivers.
+Existing users of the GDAL/OGR API should also be moderately impacted by
+the changes, if they do not need to use the new offered capabilities.</p>
+<p>GDAL has been working well with C++11 builds for a number of years now,
+so there should be no externally visible changes for the initial removal
+of C++03 support.</p>
+</div>
+<div class="section" id="core-changes-summary">
+<h2>Core changes: summary<a class="headerlink" href="#core-changes-summary" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Change configure.ac to remove <code class="docutils literal notranslate"><span class="pre">with_cpp11</span></code> flag, always use C++11,
+and fail if <code class="docutils literal notranslate"><span class="pre">AX_CXX_COMPILE_STDCXX_11</span></code> does not find C++11</p></li>
+<li><p>Remove &#64;CXX11_SUPPORT&#64; in GDALmake.opt.in and anywhere else it occurs</p></li>
+<li><p>Remove continuous build targets that do not support C++11 from
+Travis-CI and AppVeyor</p></li>
+<li><p>Remove #if HAVE_CXX11 and leave only the C++11 code</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">find</span> <span class="pre">.</span> <span class="pre">-name</span> <span class="pre">\*.h</span> <span class="pre">-o</span> <span class="pre">-name</span> <span class="pre">\*.cpp</span> <span class="pre">|</span> <span class="pre">xargs</span> <span class="pre">egrep</span> <span class="pre">'HAVE_CXX11'</span></code></p></li>
+</ul>
+</li>
+<li><p>CPL_STATIC_ASSERT -&gt; <code class="docutils literal notranslate"><span class="pre">static_assert</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NULL</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">nullptr</span></code> (Only for C++ code)</p></li>
+<li><p>CPL_OVERRIDE -&gt; override and remove redundant virtual</p></li>
+<li><p>-MAX or -max() -&gt; <code class="docutils literal notranslate"><span class="pre">std::numeric_limits&lt;T&gt;::lowest()</span></code></p></li>
+</ol>
+</div>
+<div class="section" id="changes-in-swig-bindings">
+<h2>Changes in SWIG bindings<a class="headerlink" href="#changes-in-swig-bindings" title="Permalink to this headline">¶</a></h2>
+<p>The switch does not impact the <code class="docutils literal notranslate"><span class="pre">C</span></code> API used by the SWIG bindings.
+However, there may be some code that can be removed.</p>
+</div>
+<div class="section" id="potential-changes-that-are-not-included-in-this-rfc">
+<h2>Potential changes that are <em>NOT</em> included in this RFC<a class="headerlink" href="#potential-changes-that-are-not-included-in-this-rfc" title="Permalink to this headline">¶</a></h2>
+<p>There are many C++11 features not address in this RFC. See
+<a class="reference external" href="https://en.wikipedia.org/wiki/C%2B%2B11">https://en.wikipedia.org/wiki/C%2B%2B11</a></p>
+<ul class="simple">
+<li><p>attributes</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">auto</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">consexpr</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cstdint</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">delete</span></code> and <code class="docutils literal notranslate"><span class="pre">default</span></code> for member functions</p></li>
+<li><p>enum classes</p></li>
+<li><p>initializer lists and <code class="docutils literal notranslate"><span class="pre">std::initializer_list</span></code></p></li>
+<li><p>lambda</p></li>
+<li><p>range based for loops</p></li>
+<li><p>std::regex</p></li>
+<li><p>rvalue references</p></li>
+<li><p>smart pointers <code class="docutils literal notranslate"><span class="pre">std::unique_ptr</span></code> and <code class="docutils literal notranslate"><span class="pre">std::shared_ptr</span></code></p></li>
+<li><p>New string literals: u8”An UTF-8 string”, u”An UTF-16 str”, U”An
+UTF-32 str”, R”xml(raw content)xml”</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">std::thread</span></code>, <code class="docutils literal notranslate"><span class="pre">thread_local</span></code> and related</p></li>
+<li><p>tuples</p></li>
+<li><p>And more…</p></li>
+</ul>
+</div>
+<div class="section" id="backward-compatibility">
+<h2>Backward compatibility<a class="headerlink" href="#backward-compatibility" title="Permalink to this headline">¶</a></h2>
+<p>Any code using the C++ API must use C++11 or newer.</p>
+<p>The C API should not be impacted.</p>
+<p>GDAL 2.2.x and older will continue to have C++03 support.</p>
+</div>
+<div class="section" id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
+<p>The existing autotest suite should continue to pass.</p>
+</div>
+<div class="section" id="version-numbering">
+<h2>Version numbering<a class="headerlink" href="#version-numbering" title="Permalink to this headline">¶</a></h2>
+<p>Although the above describes changes should have very few impact on
+existing applications of the C API, some behavior changes, C++ level
+changes and the conceptual changes are thought to deserve a 2.3 version
+number.</p>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>Implementation will be done by Kurt Schwehr. Others are welcome to pitch
+in.</p>
+</div>
+<div class="section" id="related-rfcs">
+<h2>Related RFCs<a class="headerlink" href="#related-rfcs" title="Permalink to this headline">¶</a></h2>
+<p>Related RFCs:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="http://trac.osgeo.org/geos/wiki/RFC5">GEOS RFC 5: C++11 Compilation
+Mode</a>: GEOS is switching to
+requiring C++11 to build.</p></li>
+<li><p><a class="reference external" href="https://wiki.orfeo-toolbox.org/index.php/Request_for_Comments-36:_Move_OTB_to_C%2B%2B14">Move OTB to
+C++14</a></p></li>
+</ul>
+</div>
+<div class="section" id="voting-history">
+<h2>Voting history<a class="headerlink" href="#voting-history" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://lists.osgeo.org/pipermail/gdal-dev/2017-September/047139.html">https://lists.osgeo.org/pipermail/gdal-dev/2017-September/047139.html</a></p>
+<ul class="simple">
+<li><p>EvenR +1</p></li>
+<li><p>JukkaR +1</p></li>
+<li><p>DanielM +0</p></li>
+<li><p>HowardB +1</p></li>
+<li><p>KurtS +1</p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rfc69_cplusplus_formatting.html" class="btn btn-neutral float-right" title="RFC 69: C/C++ Code Formatting" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc67_nullfieldvalues.html" class="btn btn-neutral float-left" title="RFC 67 : Null values in OGR" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

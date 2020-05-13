@@ -1,0 +1,561 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>GNM API tutorial &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgtutorials/gnm_api_tut.html"/>
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="OGR Coordinate Reference Systems and Coordinate Transformation tutorial" href="osr_api_tut.html" />
+    <link rel="prev" title="Vector driver in Python implementation tutorial" href="vector_python_driver.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#raster">Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#multidimensional-raster">Multidimensional raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#vector">Vector</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#geographic-network-model">Geographic Network Model</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">GNM API tutorial</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#managing-networks">Managing networks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#analysing-networks">Analysing networks</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#projections-and-spatial-reference-systems-tutorial-osr-ogrspatialreference">Projections and Spatial Reference Systems tutorial (OSR - OGRSpatialReference)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Tutorials</a> &raquo;</li>
+      
+      <li>GNM API tutorial</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/tutorials/gnm_api_tut.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="osr_api_tut.html" class="btn btn-neutral float-right" title="OGR Coordinate Reference Systems and Coordinate Transformation tutorial" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="vector_python_driver.html" class="btn btn-neutral float-left" title="Vector driver in Python implementation tutorial" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="gnm-api-tutorial">
+<span id="gnm-api-tut"></span><h1>GNM API tutorial<a class="headerlink" href="#gnm-api-tutorial" title="Permalink to this headline">¶</a></h1>
+<p>This document is intended to describe using the GNM C++ classes to work with networks. It is advised to read the <a class="reference internal" href="../user/gnm_data_model.html#gnm-data-model"><span class="std std-ref">Geographic Networks Data Model</span></a> before to understand the purpose and structure of GNM classes.</p>
+<div class="section" id="managing-networks">
+<h2>Managing networks<a class="headerlink" href="#managing-networks" title="Permalink to this headline">¶</a></h2>
+<p>In the first example we will create a small water network on the base of the set of spatial data (two shapefiles: pipes and wells which are situated at the GDAL source tree: autotest\gnm\data). The use of the common network format - <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GNMGdalNetwork</span></code> class - will allow us to select one of the GDAL-supported vector formats for our network - ESRI Shapefile. After the creation we will build a topology and add some additional data: pumps layer, in order to manually edit network topology.</p>
+<p>Initially we register GDAL drivers and create some options (string pairs), which will be passed as parameters during network creation. Here we create a network’s name.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;gnm.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span> <span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">GDALAllRegister</span><span class="p">();</span>
+
+    <span class="kt">char</span> <span class="o">**</span><span class="n">papszDSCO</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="n">papszDSCO</span> <span class="o">=</span> <span class="n">CSLAddNameValue</span><span class="p">(</span><span class="n">papszDSCO</span><span class="p">,</span> <span class="n">GNM_MD_NAME</span><span class="p">,</span> <span class="s">&quot;my_pipes_network&quot;</span><span class="p">);</span>
+    <span class="n">papszDSCO</span> <span class="o">=</span> <span class="n">CSLAddNameValue</span><span class="p">(</span><span class="n">papszDSCO</span><span class="p">,</span> <span class="n">GNM_MD_SRS</span><span class="p">,</span> <span class="s">&quot;EPSG:4326&quot;</span><span class="p">);</span>
+    <span class="n">papszDSCO</span> <span class="o">=</span> <span class="n">CSLAddNameValue</span><span class="p">(</span><span class="n">papszDSCO</span><span class="p">,</span> <span class="n">GNM_MD_DESCR</span><span class="p">,</span> <span class="s">&quot;My pipes network&quot;</span><span class="p">);</span>
+    <span class="n">papszDSCO</span> <span class="o">=</span> <span class="n">CSLAddNameValue</span><span class="p">(</span><span class="n">papszDSCO</span><span class="p">,</span> <span class="n">GNM_MD_FORMAT</span><span class="p">,</span> <span class="s">&quot;ESRI Shapefile&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Some options are obligatory. The following parameters must be specified during the network creation: the path/name; format of network storage; spatial reference system (EPSG, WKT, etc.). The according dataset with the “network part” will be created and the resulting network will be returned.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">GDALDriver</span> <span class="o">*</span><span class="n">poDriver</span> <span class="o">=</span> <span class="n">GetGDALDriverManager</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetDriverByName</span><span class="p">(</span><span class="s">&quot;GNMFile&quot;</span><span class="p">);</span>
+<span class="n">GNMGenericNetwork</span><span class="o">*</span> <span class="n">poDS</span> <span class="o">=</span> <span class="p">(</span><span class="n">GNMGenericNetwork</span><span class="o">*</span><span class="p">)</span> <span class="n">poDriver</span><span class="o">-&gt;</span><span class="n">Create</span><span class="p">(</span> <span class="s">&quot;..</span><span class="se">\\</span><span class="s">network_data&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">GDT_Unknown</span><span class="p">,</span>
+                                                   <span class="n">papszDSCO</span> <span class="p">);</span>
+<span class="n">CSLDestroy</span><span class="p">(</span><span class="n">papszDSCO</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>For now we have a void network consisted of only “system layers”. We need to populate it with “class layers” full of features, so we open a certain foreign dataset and copy layers from it to our network. Note, that we use GDALDataset:: methods for working with “class layers”, because <a class="reference internal" href="../api/gnm_cpp.html#_CPPv410GNMNetwork" title="GNMNetwork"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GNMNetwork</span></code></a> inherited from GDALDataset.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">GDALDataset</span> <span class="o">*</span><span class="n">poSrcDS</span> <span class="o">=</span> <span class="p">(</span><span class="n">GDALDataset</span><span class="o">*</span><span class="p">)</span> <span class="n">GDALOpenEx</span><span class="p">(</span><span class="s">&quot;..</span><span class="se">\\</span><span class="s">in_data&quot;</span><span class="p">,</span>
+                                <span class="n">GDAL_OF_VECTOR</span> <span class="o">|</span> <span class="n">GDAL_OF_READONLY</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span> <span class="p">);</span>
+
+<span class="n">OGRLayer</span> <span class="o">*</span><span class="n">poSrcLayer1</span> <span class="o">=</span> <span class="n">poSrcDS</span><span class="o">-&gt;</span><span class="n">GetLayerByName</span><span class="p">(</span><span class="s">&quot;pipes&quot;</span><span class="p">);</span>
+<span class="n">OGRLayer</span> <span class="o">*</span><span class="n">poSrcLayer2</span> <span class="o">=</span> <span class="n">poSrcDS</span><span class="o">-&gt;</span><span class="n">GetLayerByName</span><span class="p">(</span><span class="s">&quot;wells&quot;</span><span class="p">);</span>
+
+<span class="n">poDS</span><span class="o">-&gt;</span><span class="n">CopyLayer</span><span class="p">(</span><span class="n">poSrcLayer1</span><span class="p">,</span> <span class="s">&quot;pipes&quot;</span><span class="p">);</span>
+<span class="n">poDS</span><span class="o">-&gt;</span><span class="n">CopyLayer</span><span class="p">(</span><span class="n">poSrcLayer2</span><span class="p">,</span> <span class="s">&quot;wells&quot;</span><span class="p">);</span>
+
+<span class="n">GDALClose</span><span class="p">(</span><span class="n">poSrcDS</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>After the successful copying we have the network full of features, but with no topology. The features were added and registered in the network but they are still not connected with each other. Now it is time to build the network topology. There are two ways of doing this in GNM: manually or automatically. In the most cases automatic building is more convenient, while manual is useful for small editings. Automatic building requires some parameters: we must specify which “class layers” will participate in topology building (we select our two layers), a snap tolerance, direct and inverse cost, direction, which is equal 0.00005 in our case. If the building will be successful the network’s graph will be filled with the according connections.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">Building network topology ...</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="kt">char</span> <span class="o">**</span><span class="n">papszLayers</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">GetLayerCount</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">OGRLayer</span><span class="o">*</span> <span class="n">poLayer</span> <span class="o">=</span> <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">GetLayer</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+    <span class="n">papszLayers</span> <span class="o">=</span> <span class="n">CSLAddString</span><span class="p">(</span><span class="n">papszLayers</span><span class="p">,</span> <span class="n">poLayer</span><span class="o">-&gt;</span><span class="n">GetName</span><span class="p">()</span> <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">if</span><span class="p">(</span><span class="n">poGenericNetwork</span><span class="o">-&gt;</span><span class="n">ConnectPointsByLines</span><span class="p">(</span><span class="n">papszLayers</span><span class="p">,</span> <span class="n">dfTolerance</span><span class="p">,</span>
+                                    <span class="n">dfDirCost</span><span class="p">,</span> <span class="n">dfInvCost</span><span class="p">,</span> <span class="n">eDir</span><span class="p">)</span> <span class="o">!=</span> <span class="n">CE_None</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Building topology failed</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">else</span>
+<span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Topology has been built successfully</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>At this point we have a ready network with topological and spatial data, which can be used now for different purposes (analysis, converting into different formats, etc). But sometimes it is necessary to modify some network’s data. For example we need to add additional features and attach them to our built topology (modify topology). We create a new “class layer” in the network and add one feature to it.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">OGRLayer</span> <span class="o">*</span><span class="n">poNewLayer</span> <span class="o">=</span> <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">CreateLayer</span><span class="p">(</span><span class="s">&quot;pumps&quot;</span><span class="p">,</span> <span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">wkbPoint</span><span class="p">,</span> <span class="nb">NULL</span> <span class="p">);</span>
+<span class="k">if</span><span class="p">(</span> <span class="n">poNewLayer</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;Layer creation failed.</span><span class="se">\n</span><span class="s">&quot;</span> <span class="p">);</span>
+    <span class="n">exit</span><span class="p">(</span> <span class="mi">1</span> <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">OGRFieldDefn</span> <span class="n">fieldDefn</span> <span class="p">(</span><span class="s">&quot;pressure&quot;</span><span class="p">,</span><span class="n">OFTReal</span><span class="p">);</span>
+<span class="k">if</span><span class="p">(</span> <span class="n">poNewLayer</span><span class="o">-&gt;</span><span class="n">CreateField</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">fieldDefn</span> <span class="p">)</span> <span class="o">!=</span> <span class="n">OGRERR_NONE</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;Creating Name field failed.</span><span class="se">\n</span><span class="s">&quot;</span> <span class="p">);</span>
+    <span class="n">exit</span><span class="p">(</span> <span class="mi">1</span> <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">OGRFeature</span> <span class="o">*</span><span class="n">poFeature</span> <span class="o">=</span> <span class="n">OGRFeature</span><span class="o">::</span><span class="n">CreateFeature</span><span class="p">(</span><span class="n">poNewLayer</span><span class="o">-&gt;</span><span class="n">GetLayerDefn</span><span class="p">());</span>
+<span class="n">OGRPoint</span> <span class="n">pt</span><span class="p">;</span>
+<span class="n">pt</span><span class="p">.</span><span class="n">setX</span><span class="p">(</span><span class="mf">37.291466</span><span class="p">);</span>
+<span class="n">pt</span><span class="p">.</span><span class="n">setY</span><span class="p">(</span><span class="mf">55.828351</span><span class="p">);</span>
+<span class="n">poFeature</span><span class="o">-&gt;</span><span class="n">SetGeometry</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pt</span><span class="p">);</span>
+<span class="k">if</span><span class="p">(</span> <span class="n">poNewLayer</span><span class="o">-&gt;</span><span class="n">CreateFeature</span><span class="p">(</span> <span class="n">poFeature</span> <span class="p">)</span> <span class="o">!=</span> <span class="n">OGRERR_NONE</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;Failed to create feature.</span><span class="se">\n</span><span class="s">&quot;</span> <span class="p">);</span>
+    <span class="n">exit</span><span class="p">(</span> <span class="mi">1</span> <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">GNMGFID</span> <span class="n">gfid</span> <span class="o">=</span> <span class="n">poFeature</span><span class="o">-&gt;</span><span class="n">GetFID</span><span class="p">();</span>
+
+<span class="n">OGRFeature</span><span class="o">::</span><span class="n">DestroyFeature</span><span class="p">(</span> <span class="n">poFeature</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>After the successful creation the feature will be registered in the network and we can connect it with others. There can be two possible ways to do this. In the first case we need a real feature which will be an edge in the connection, while in the second case we do not need such feature, and passing -1 into the <a class="reference internal" href="../api/gnm_cpp.html#_CPPv4N17GNMGenericNetwork15ConnectFeaturesE7GNMGFID7GNMGFID7GNMGFIDdd12GNMDirection" title="GNMGenericNetwork::ConnectFeatures"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GNMGenericNetwork::ConnectFeatures()</span></code></a> method means that the special system edge will be created for this connection and added to the graph automatically. In our case we had added only one point feature and we have not got the line one to be an edge, so we will use the “virtual” connection. We pass the GFID of our point as the source, the GFID of one of the existed features as the target and -1 as the connector. Note that we also set the costs (direct and inverse) and the direction of our edge manually and these values will be written to the graph. When we used the automatic connection (which also uses ConnectFeatures() internally) such vales were set automatically according to the rule which we also set before.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="p">(</span><span class="n">poDS</span><span class="o">-&gt;</span><span class="n">ConnectFeatures</span><span class="p">(</span><span class="n">gfid</span> <span class="p">,</span><span class="mi">63</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="n">GNMDirection_SrcToTgt</span><span class="p">)</span> <span class="o">!=</span> <span class="n">GNMError_None</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Can not connect features</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>After all we correctly close the network which frees the allocated resources.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">GDALClose</span><span class="p">(</span><span class="n">poDS</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>All in one block:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;gnm.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;gnm_priv.h&quot;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span> <span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">GDALAllRegister</span><span class="p">();</span>
+
+    <span class="kt">char</span> <span class="o">**</span><span class="n">papszDSCO</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="n">papszDSCO</span> <span class="o">=</span> <span class="n">CSLAddNameValue</span><span class="p">(</span><span class="n">papszDSCO</span><span class="p">,</span> <span class="n">GNM_MD_NAME</span><span class="p">,</span> <span class="s">&quot;my_pipes_network&quot;</span><span class="p">);</span>
+    <span class="n">papszDSCO</span> <span class="o">=</span> <span class="n">CSLAddNameValue</span><span class="p">(</span><span class="n">papszDSCO</span><span class="p">,</span> <span class="n">GNM_MD_SRS</span><span class="p">,</span> <span class="s">&quot;EPSG:4326&quot;</span><span class="p">);</span>
+    <span class="n">papszDSCO</span> <span class="o">=</span> <span class="n">CSLAddNameValue</span><span class="p">(</span><span class="n">papszDSCO</span><span class="p">,</span> <span class="n">GNM_MD_DESCR</span><span class="p">,</span> <span class="s">&quot;My pipes network&quot;</span><span class="p">);</span>
+    <span class="n">papszDSCO</span> <span class="o">=</span> <span class="n">CSLAddNameValue</span><span class="p">(</span><span class="n">papszDSCO</span><span class="p">,</span> <span class="n">GNM_MD_FORMAT</span><span class="p">,</span> <span class="s">&quot;ESRI Shapefile&quot;</span><span class="p">);</span>
+
+
+    <span class="n">GDALDriver</span> <span class="o">*</span><span class="n">poDriver</span> <span class="o">=</span> <span class="n">GetGDALDriverManager</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetDriverByName</span><span class="p">(</span><span class="s">&quot;GNMFile&quot;</span><span class="p">);</span>
+    <span class="n">GNMGenericNetwork</span><span class="o">*</span> <span class="n">poDS</span> <span class="o">=</span> <span class="p">(</span><span class="n">GNMGenericNetwork</span><span class="o">*</span><span class="p">)</span> <span class="n">poDriver</span><span class="o">-&gt;</span><span class="n">Create</span><span class="p">(</span> <span class="s">&quot;..</span><span class="se">\\</span><span class="s">network_data&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">GDT_Unknown</span><span class="p">,</span>
+                                                    <span class="n">papszDSCO</span> <span class="p">);</span>
+    <span class="n">CSLDestroy</span><span class="p">(</span><span class="n">papszDSCO</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">poDS</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Failed to create network</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+        <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">GDALDataset</span> <span class="o">*</span><span class="n">poSrcDS</span> <span class="o">=</span> <span class="p">(</span><span class="n">GDALDataset</span><span class="o">*</span><span class="p">)</span> <span class="n">GDALOpenEx</span><span class="p">(</span><span class="s">&quot;..</span><span class="se">\\</span><span class="s">in_data&quot;</span><span class="p">,</span><span class="n">GDAL_OF_VECTOR</span> <span class="o">|</span> <span class="n">GDAL_OF_READONLY</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span> <span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">poSrcDS</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Can not open source dataset at</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+        <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">OGRLayer</span> <span class="o">*</span><span class="n">poSrcLayer1</span> <span class="o">=</span> <span class="n">poSrcDS</span><span class="o">-&gt;</span><span class="n">GetLayerByName</span><span class="p">(</span><span class="s">&quot;pipes&quot;</span><span class="p">);</span>
+    <span class="n">OGRLayer</span> <span class="o">*</span><span class="n">poSrcLayer2</span> <span class="o">=</span> <span class="n">poSrcDS</span><span class="o">-&gt;</span><span class="n">GetLayerByName</span><span class="p">(</span><span class="s">&quot;wells&quot;</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">poSrcLayer1</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="o">||</span> <span class="n">poSrcLayer2</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Can not process layers of source dataset</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+        <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">CopyLayer</span><span class="p">(</span><span class="n">poSrcLayer1</span><span class="p">,</span> <span class="s">&quot;pipes&quot;</span><span class="p">);</span>
+    <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">CopyLayer</span><span class="p">(</span><span class="n">poSrcLayer2</span><span class="p">,</span> <span class="s">&quot;wells&quot;</span><span class="p">);</span>
+
+    <span class="n">GDALClose</span><span class="p">(</span><span class="n">poSrcDS</span><span class="p">);</span>
+
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">Building network topology ...</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+    <span class="kt">char</span> <span class="o">**</span><span class="n">papszLayers</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">GetLayerCount</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">OGRLayer</span><span class="o">*</span> <span class="n">poLayer</span> <span class="o">=</span> <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">GetLayer</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+        <span class="n">papszLayers</span> <span class="o">=</span> <span class="n">CSLAddString</span><span class="p">(</span><span class="n">papszLayers</span><span class="p">,</span> <span class="n">poLayer</span><span class="o">-&gt;</span><span class="n">GetName</span><span class="p">()</span> <span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="n">poGenericNetwork</span><span class="o">-&gt;</span><span class="n">ConnectPointsByLines</span><span class="p">(</span><span class="n">papszLayers</span><span class="p">,</span> <span class="n">dfTolerance</span><span class="p">,</span>
+                                        <span class="n">dfDirCost</span><span class="p">,</span> <span class="n">dfInvCost</span><span class="p">,</span> <span class="n">eDir</span><span class="p">)</span> <span class="o">!=</span> <span class="n">CE_None</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Building topology failed</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+        <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Topology has been built successfully</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">OGRLayer</span> <span class="o">*</span><span class="n">poNewLayer</span> <span class="o">=</span> <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">CreateLayer</span><span class="p">(</span><span class="s">&quot;pumps&quot;</span><span class="p">,</span> <span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">wkbPoint</span><span class="p">,</span> <span class="nb">NULL</span> <span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">poNewLayer</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;Layer creation failed.</span><span class="se">\n</span><span class="s">&quot;</span> <span class="p">);</span>
+        <span class="n">exit</span><span class="p">(</span> <span class="mi">1</span> <span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">OGRFieldDefn</span> <span class="n">fieldDefn</span> <span class="p">(</span><span class="s">&quot;pressure&quot;</span><span class="p">,</span><span class="n">OFTReal</span><span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">poNewLayer</span><span class="o">-&gt;</span><span class="n">CreateField</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">fieldDefn</span> <span class="p">)</span> <span class="o">!=</span> <span class="n">OGRERR_NONE</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;Creating Name field failed.</span><span class="se">\n</span><span class="s">&quot;</span> <span class="p">);</span>
+        <span class="n">exit</span><span class="p">(</span> <span class="mi">1</span> <span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">OGRFeature</span> <span class="o">*</span><span class="n">poFeature</span> <span class="o">=</span> <span class="n">OGRFeature</span><span class="o">::</span><span class="n">CreateFeature</span><span class="p">(</span><span class="n">poNewLayer</span><span class="o">-&gt;</span><span class="n">GetLayerDefn</span><span class="p">());</span>
+    <span class="n">OGRPoint</span> <span class="n">pt</span><span class="p">;</span>
+    <span class="n">pt</span><span class="p">.</span><span class="n">setX</span><span class="p">(</span><span class="mf">37.291466</span><span class="p">);</span>
+    <span class="n">pt</span><span class="p">.</span><span class="n">setY</span><span class="p">(</span><span class="mf">55.828351</span><span class="p">);</span>
+    <span class="n">poFeature</span><span class="o">-&gt;</span><span class="n">SetGeometry</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pt</span><span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">poNewLayer</span><span class="o">-&gt;</span><span class="n">CreateFeature</span><span class="p">(</span> <span class="n">poFeature</span> <span class="p">)</span> <span class="o">!=</span> <span class="n">OGRERR_NONE</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;Failed to create feature.</span><span class="se">\n</span><span class="s">&quot;</span> <span class="p">);</span>
+        <span class="n">exit</span><span class="p">(</span> <span class="mi">1</span> <span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">GNMGFID</span> <span class="n">gfid</span> <span class="o">=</span> <span class="n">poFeature</span><span class="o">-&gt;</span><span class="n">GetFID</span><span class="p">();</span>
+
+    <span class="n">OGRFeature</span><span class="o">::</span><span class="n">DestroyFeature</span><span class="p">(</span> <span class="n">poFeature</span> <span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">poDS</span><span class="o">-&gt;</span><span class="n">ConnectFeatures</span><span class="p">(</span><span class="n">gfid</span> <span class="p">,</span><span class="mi">63</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="n">GNMDirection_SrcToTgt</span><span class="p">)</span> <span class="o">!=</span> <span class="n">GNMError_None</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Can not connect features</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">GDALClose</span><span class="p">(</span><span class="n">poDS</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="analysing-networks">
+<h2>Analysing networks<a class="headerlink" href="#analysing-networks" title="Permalink to this headline">¶</a></h2>
+<p>In the second example we will analyse the network which we have built in the first example. We will calculate the shortest path between two points via Dijkstra algorithm performing the feature blockings and saving the resulting path into the file.</p>
+<p>Initially we open our network, passing the path to its Shapefile dataset.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;gnm.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;gnm_priv.h&quot;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span> <span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">GDALAllRegister</span><span class="p">();</span>
+
+    <span class="n">GNMGenericNetwork</span> <span class="o">*</span><span class="n">poNet</span> <span class="o">=</span> <span class="p">(</span><span class="n">GNMGenericNetwork</span><span class="o">*</span><span class="p">)</span> <span class="n">GDALOpenEx</span><span class="p">(</span><span class="s">&quot;..</span><span class="se">\\</span><span class="s">network_data&quot;</span><span class="p">,</span><span class="n">GDAL_OF_GNM</span> <span class="o">|</span> <span class="n">GDAL_OF_UPDATE</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span> <span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">poSrcDS</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Can not open source dataset at</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+        <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>Before any calculations we open the dataset which will hold the layer with the resulting path.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">GDALDataset</span> <span class="o">*</span><span class="n">poResDS</span><span class="p">;</span>
+<span class="n">poResDS</span> <span class="o">=</span> <span class="p">(</span><span class="n">GDALDataset</span><span class="o">*</span><span class="p">)</span> <span class="n">GDALOpenEx</span><span class="p">(</span><span class="s">&quot;..</span><span class="se">\\</span><span class="s">out_data&quot;</span><span class="p">,</span>
+                                    <span class="n">GDAL_OF_VECTOR</span> <span class="o">|</span> <span class="n">GDAL_OF_UPDATE</span><span class="p">,</span>
+                                    <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">poResDS</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Failed to open resulting dataset</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+    <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Finally we use the Dijkstra shortest path method to calculations. This path will be found passing over the blocked feature and saved into internal memory OGRLayer, which we copy to the real dataset. Now it can be visualized by GIS.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span>    <span class="n">OGRLayer</span> <span class="o">*</span><span class="n">poResLayer</span> <span class="o">=</span> <span class="n">poNet</span><span class="o">-&gt;</span><span class="n">GetPath</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">41</span><span class="p">,</span> <span class="n">GATDijkstraShortestPath</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">poResLayer</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Failed to save or calculate path</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">poResDS</span><span class="o">-&gt;</span><span class="n">CopyLayer</span><span class="p">(</span><span class="n">poResLayer</span><span class="p">,</span> <span class="s">&quot;shp_tutorial.shp&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Failed to save path to the layer</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Path saved successfully</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">GDALClose</span><span class="p">(</span><span class="n">poResDS</span><span class="p">);</span>
+    <span class="n">poNet</span><span class="o">-&gt;</span><span class="n">ReleaseResultSet</span><span class="p">(</span><span class="n">poRout</span><span class="p">);</span>
+    <span class="n">GDALClose</span><span class="p">(</span><span class="n">poNet</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>All in one block:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;gnm.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;gnmstdanalysis.h&quot;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span> <span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">GDALAllRegister</span><span class="p">();</span>
+
+    <span class="n">GNMGenericNetwork</span> <span class="o">*</span><span class="n">poNet</span> <span class="o">=</span> <span class="p">(</span><span class="n">GNMGenericNetwork</span><span class="o">*</span><span class="p">)</span> <span class="n">GDALOpenEx</span><span class="p">(</span><span class="s">&quot;..</span><span class="se">\\</span><span class="s">network_data&quot;</span><span class="p">,</span>
+                                                    <span class="n">GDAL_OF_GNM</span> <span class="o">|</span> <span class="n">GDAL_OF_UPDATE</span><span class="p">,</span>
+                                                    <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span> <span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">poSrcDS</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Can not open source dataset at</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+        <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">GDALDataset</span> <span class="o">*</span><span class="n">poResDS</span><span class="p">;</span>
+    <span class="n">poResDS</span> <span class="o">=</span> <span class="p">(</span><span class="n">GDALDataset</span><span class="o">*</span><span class="p">)</span> <span class="n">GDALOpenEx</span><span class="p">(</span><span class="s">&quot;..</span><span class="se">\\</span><span class="s">out_data&quot;</span><span class="p">,</span>
+                                        <span class="n">GDAL_OF_VECTOR</span> <span class="o">|</span> <span class="n">GDAL_OF_UPDATE</span><span class="p">,</span>
+                                        <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">poResDS</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Failed to open resulting dataset</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+        <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">poNet</span><span class="o">-&gt;</span><span class="n">ChangeBlockState</span><span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
+
+    <span class="n">OGRLayer</span> <span class="o">*</span><span class="n">poResLayer</span> <span class="o">=</span> <span class="n">poNet</span><span class="o">-&gt;</span><span class="n">GetPath</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">41</span><span class="p">,</span> <span class="n">GATDijkstraShortestPath</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">poResLayer</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Failed to save or calculate path</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">poResDS</span><span class="o">-&gt;</span><span class="n">CopyLayer</span><span class="p">(</span><span class="n">poResLayer</span><span class="p">,</span> <span class="s">&quot;shp_tutorial.shp&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Failed to save path to the layer</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Path saved successfully</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">GDALClose</span><span class="p">(</span><span class="n">poResDS</span><span class="p">);</span>
+    <span class="n">poNet</span><span class="o">-&gt;</span><span class="n">ReleaseResultSet</span><span class="p">(</span><span class="n">poRout</span><span class="p">);</span>
+    <span class="n">GDALClose</span><span class="p">(</span><span class="n">poNet</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="osr_api_tut.html" class="btn btn-neutral float-right" title="OGR Coordinate Reference Systems and Coordinate Transformation tutorial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="vector_python_driver.html" class="btn btn-neutral float-left" title="Vector driver in Python implementation tutorial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

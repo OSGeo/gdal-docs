@@ -1,0 +1,688 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RFC 31: OGR 64bit Integer Fields and FIDs &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdevelopment/rfc/rfc31_ogr_64.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="RFC 32: gdallocationinfo utility" href="rfc32_gdallocationinfo.html" />
+    <link rel="prev" title="RFC 30: Unicode Filenames" href="rfc30_utf8_filenames.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 31: OGR 64bit Integer Fields and FIDs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bit-fid-feature-index-and-feature-count">64bit FID, feature index and feature count</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bit-fields">64bit Fields</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ogr-sql">OGR SQL</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#python-java-c-perl-changes">Python / Java / C# / perl Changes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#utilities">Utilities</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#file-formats">File Formats</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#test-suite">Test Suite</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#compatibility-issues">Compatibility Issues</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#related-tickets">Related tickets</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#related-topics-out-of-scope-of-this-rfc">Related topics out of scope of this RFC</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voting-history">Voting history</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 31: OGR 64bit Integer Fields and FIDs</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/development/rfc/rfc31_ogr_64.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="rfc32_gdallocationinfo.html" class="btn btn-neutral float-right" title="RFC 32: gdallocationinfo utility" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc30_utf8_filenames.html" class="btn btn-neutral float-left" title="RFC 30: Unicode Filenames" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rfc-31-ogr-64bit-integer-fields-and-fids">
+<span id="rfc-31"></span><h1>RFC 31: OGR 64bit Integer Fields and FIDs<a class="headerlink" href="#rfc-31-ogr-64bit-integer-fields-and-fids" title="Permalink to this headline">¶</a></h1>
+<p>Authors: Frank Warmerdam, Even Rouault</p>
+<p>Contact: <a class="reference external" href="mailto:warmerdam&#37;&#52;&#48;pobox&#46;com">warmerdam<span>&#64;</span>pobox<span>&#46;</span>com</a>, even dot rouault at spatialys.com</p>
+<p>Status: Adopted, implemented in GDAL 2.0</p>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>This RFC addresses steps to upgrade OGR to support 64bit integer fields
+and feature ids. Many feature data formats support wide integers, and
+the inability to transform these through OGR causes increasing numbers
+of problems.</p>
+</div>
+<div class="section" id="bit-fid-feature-index-and-feature-count">
+<span id="id1"></span><h2>64bit FID, feature index and feature count<a class="headerlink" href="#bit-fid-feature-index-and-feature-count" title="Permalink to this headline">¶</a></h2>
+<p>Feature id’s will be handled as type “GIntBig” instead of “long”
+internally. This will include the nFID field of the OGRFeature. The
+existing GetFID() and SetFID() methods on the OGRFeature use type long
+and are changed to return (respectively accept) GIntBig instead. The
+change of return type for GetFID() will require application code to
+carefully adapt to avoid potential issues (for example if GetFID() is
+used in printf-like expression). SetFID() change should be mostly
+transparent. So the changes in the OGRFeature class are:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">GIntBig</span>  <span class="n">GetFID</span><span class="p">();</span>
+<span class="n">OGRErr</span>   <span class="n">SetFID</span><span class="p">(</span><span class="n">GIntBig</span> <span class="n">nFID</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>At the C API level:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">GIntBig</span> <span class="n">CPL_DLL</span> <span class="n">OGR_F_GetFID</span><span class="p">(</span> <span class="n">OGRFeatureH</span> <span class="p">);</span>
+<span class="n">OGRErr</span> <span class="n">CPL_DLL</span> <span class="n">OGR_F_SetFID</span><span class="p">(</span> <span class="n">OGRFeatureH</span><span class="p">,</span> <span class="n">GIntBig</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>Note that the old interfaces using “long” are already 64bit on 64bit
+operating systems (excluding Windows target compilers where long is
+32bit even on 64bit builds), so there is little harm to applications
+continuing to use these interfaces on 64bit operating systems.</p>
+<p>A layer that can discover in a relatively cheap way that it holds
+features with 64bit FID should advertise the OLMD_FID64 metadata item to
+“YES”, so ogr2ogr can pass the FID64 creation option to drivers that
+support it.</p>
+<p>The OGRLayer class allows several operations based on the FID. The
+signature of these will be <em>altered</em> to accept GIntBig instead of long.
+In theory this should not require any changes to application code since
+long can be converted to GIntBig losslessly. However, all existing OGR
+drivers require changes, including private drivers. This will also
+result in a backwards incompatible change in the C ABI. While we are at
+it, we want GetFeatureCount() to be able to return more than 2 billion
+record (currently returning 32 bit integer), and thus it will return
+GIntBig. Similarly to GetFID(), this change of return type will require
+caution in application code.</p>
+<p>So at the OGRLayer C++ class level:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">virtual</span> <span class="n">OGRFeature</span> <span class="o">*</span><span class="n">GetFeature</span><span class="p">(</span> <span class="n">GIntBig</span> <span class="n">nFID</span> <span class="p">);</span>
+<span class="n">virtual</span> <span class="n">OGRErr</span>      <span class="n">DeleteFeature</span><span class="p">(</span> <span class="n">GIntBig</span> <span class="n">nFID</span> <span class="p">);</span>
+<span class="n">virtual</span> <span class="n">OGRErr</span>      <span class="n">SetNextByIndex</span><span class="p">(</span> <span class="n">GIntBig</span> <span class="n">nIndex</span> <span class="p">);</span>
+<span class="n">virtual</span> <span class="n">GIntBig</span>     <span class="n">GetFeatureCount</span><span class="p">(</span> <span class="nb">int</span> <span class="n">bForce</span> <span class="o">=</span> <span class="n">TRUE</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>At the C API level :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">OGRFeatureH</span> <span class="n">CPL_DLL</span> <span class="n">OGR_L_GetFeature</span><span class="p">(</span> <span class="n">OGRLayerH</span><span class="p">,</span> <span class="n">GIntBig</span> <span class="p">);</span>
+<span class="n">OGRErr</span> <span class="n">CPL_DLL</span> <span class="n">OGR_L_DeleteFeature</span><span class="p">(</span> <span class="n">OGRLayerH</span><span class="p">,</span> <span class="n">GIntBig</span> <span class="p">);</span>
+<span class="n">OGRErr</span> <span class="n">CPL_DLL</span> <span class="n">OGR_L_SetNextByIndex</span><span class="p">(</span> <span class="n">OGRLayerH</span><span class="p">,</span> <span class="n">GIntBig</span> <span class="p">);</span>
+<span class="n">GIntBig</span> <span class="n">CPL_DLL</span> <span class="n">OGR_L_GetFeatureCount</span><span class="p">(</span> <span class="n">OGRLayerH</span><span class="p">,</span> <span class="nb">int</span> <span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="bit-fields">
+<span id="id2"></span><h2>64bit Fields<a class="headerlink" href="#bit-fields" title="Permalink to this headline">¶</a></h2>
+<p>New field types will be introduced for 64bit integers:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">OFTInteger64</span> <span class="o">=</span> <span class="mi">12</span>
+<span class="n">OFTInteger64List</span> <span class="o">=</span> <span class="mi">13</span>
+</pre></div>
+</div>
+<p>The OGRField union will be extended to include:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">GIntBig</span>     <span class="n">Integer64</span><span class="p">;</span>
+<span class="n">struct</span> <span class="p">{</span>
+    <span class="nb">int</span> <span class="n">nCount</span><span class="p">;</span>
+    <span class="n">GIntBig</span> <span class="o">*</span><span class="n">paList</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">Integer64List</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The OGRFeature class will be extended with these new methods:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">GIntBig</span>             <span class="n">GetFieldAsInteger64</span><span class="p">(</span> <span class="nb">int</span> <span class="n">i</span> <span class="p">);</span>
+<span class="n">GIntBig</span>             <span class="n">GetFieldAsInteger64</span><span class="p">(</span> <span class="n">const</span> <span class="n">char</span> <span class="o">*</span><span class="n">pszFName</span> <span class="p">);</span>
+<span class="n">const</span> <span class="nb">int</span>          <span class="o">*</span><span class="n">GetFieldAsInteger64List</span><span class="p">(</span> <span class="n">const</span> <span class="n">char</span> <span class="o">*</span><span class="n">pszFName</span><span class="p">,</span>
+                                           <span class="nb">int</span> <span class="o">*</span><span class="n">pnCount</span> <span class="p">);</span>
+<span class="n">const</span> <span class="nb">int</span>          <span class="o">*</span><span class="n">GetFieldAsInteger64List</span><span class="p">(</span> <span class="nb">int</span> <span class="n">i</span><span class="p">,</span> <span class="nb">int</span> <span class="o">*</span><span class="n">pnCount</span> <span class="p">);</span>
+
+<span class="n">void</span>                <span class="n">SetField</span><span class="p">(</span> <span class="nb">int</span> <span class="n">i</span><span class="p">,</span> <span class="n">GIntBig</span> <span class="n">nValue</span> <span class="p">);</span>
+<span class="n">void</span>                <span class="n">SetField</span><span class="p">(</span> <span class="nb">int</span> <span class="n">i</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nCount</span><span class="p">,</span> <span class="n">const</span> <span class="n">GIntBig</span> <span class="o">*</span> <span class="n">panValues</span> <span class="p">);</span>
+<span class="n">void</span>                <span class="n">SetField</span><span class="p">(</span> <span class="n">const</span> <span class="n">char</span> <span class="o">*</span><span class="n">pszFName</span><span class="p">,</span> <span class="n">GIntBig</span> <span class="n">nValue</span> <span class="p">)</span>
+<span class="n">void</span>                <span class="n">SetField</span><span class="p">(</span> <span class="n">const</span> <span class="n">char</span> <span class="o">*</span><span class="n">pszFName</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nCount</span><span class="p">,</span>
+                              <span class="n">const</span> <span class="n">GIntBig</span> <span class="o">*</span> <span class="n">panValues</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>At the C level, the following functions are added :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">GIntBig</span> <span class="n">CPL_DLL</span> <span class="n">OGR_F_GetFieldAsInteger64</span><span class="p">(</span> <span class="n">OGRFeatureH</span><span class="p">,</span> <span class="nb">int</span> <span class="p">);</span>
+<span class="n">const</span> <span class="n">GIntBig</span> <span class="n">CPL_DLL</span> <span class="o">*</span><span class="n">OGR_F_GetFieldAsInteger64List</span><span class="p">(</span> <span class="n">OGRFeatureH</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span> <span class="o">*</span> <span class="p">);</span>
+<span class="n">void</span>   <span class="n">CPL_DLL</span> <span class="n">OGR_F_SetFieldInteger64</span><span class="p">(</span> <span class="n">OGRFeatureH</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">GIntBig</span> <span class="p">);</span>
+<span class="n">void</span>   <span class="n">CPL_DLL</span> <span class="n">OGR_F_SetFieldInteger64List</span><span class="p">(</span> <span class="n">OGRFeatureH</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">const</span> <span class="n">GIntBig</span> <span class="o">*</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>Furthermore, the new interfaces will internally support setting/getting
+integer fields, and the integer field methods will support
+getting/setting 64bit integer fields so that one case can be used for
+both field types where convenient (except GetFieldAsInteger64List() that
+can only operate on Integer64List fields)</p>
+<p>A GDAL_DMD_CREATIONFIELDDATATYPES = “DMD_CREATIONFIELDDATATYPES” driver
+metadata item is added so as drivers to be able to declare the field
+types they support on creation. For example “Integer Integer64 Real
+String Date DateTime Time IntegerList Integer64List RealList StringList
+Binary”. Commonly used drivers will be updated to declare it.</p>
+</div>
+<div class="section" id="ogr-sql">
+<h2>OGR SQL<a class="headerlink" href="#ogr-sql" title="Permalink to this headline">¶</a></h2>
+<p>A SWQ_INTEGER64 internal type is added so as to be able to map/from
+OFTInteger64 fields. The int_value member of the swq_expr_node class is
+extended from int to GIntBig (so both SWQ_INTEGER and SWQ_INTEGER64
+refer to that member).</p>
+</div>
+<div class="section" id="python-java-c-perl-changes">
+<span id="id3"></span><h2>Python / Java / C# / perl Changes<a class="headerlink" href="#python-java-c-perl-changes" title="Permalink to this headline">¶</a></h2>
+<p>The following changes have been done :</p>
+<ul class="simple">
+<li><p>GetFID(), GetFeatureCount() have been changed to return a 64 bit
+integer</p></li>
+<li><p>SetFID(), GetFeature(), DeleteFeature(), SetNextByIndex() have been
+changed to accept a 64 bit integer as argument</p></li>
+<li><p>GetFieldAsInteger64() and SetFieldInteger64() have been added</p></li>
+<li><p>In Python, GetField(), SetField() can accept/return 64 bit values</p></li>
+<li><p>GetFieldAsInteger64List() and SetFieldInteger64List() have been added
+(Python only, due to lack of relevant typemaps for other languages,
+but could potentially be done)</p></li>
+</ul>
+<p>The change in return type of GetFID() and GetFeatureCount() might cause
+warnings at compilation time in some languages (Java YES, Python not
+relevant, Perl/C# ?). All changes to existing methods will are an ABI
+change for Java bytecode.</p>
+</div>
+<div class="section" id="utilities">
+<h2>Utilities<a class="headerlink" href="#utilities" title="Permalink to this headline">¶</a></h2>
+<p>ogr2ogr and ogrinfo are updated to support the new 64bit interfaces.</p>
+<p>A new option is added to ogr2ogr : -mapFieldType. Can be used like this
+-mapFieldType Integer64=Integer,Date=String to mean that Integer64 field
+in the source layer should be created as Integer, and Date as String.
+ogr2ogr will also warn if attempting to create a field in an output
+driver that advertizes a GDAL_DMD_CREATIONFIELDDATATYPES metadata item
+that does not mention the required field type. For Integer64 fields, if
+it is not advertized in GDAL_DMD_CREATIONFIELDDATATYPES metadata item or
+GDAL_DMD_CREATIONFIELDDATATYPES is missing, conversion to Real is done
+by default with a warning. ogr2ogr will also query the source layer to
+check if the OLMD_FID64 metadata item is declared and if the output
+driver has the FID64 layer creation option. In which case it will set
+it.</p>
+</div>
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<p>New/modified API are documented. Updates in drivers with new
+options/behaviours are documented. MIGRATION_GUIDE.TXT extended with a
+section related to this RFC. OGR API updated.</p>
+</div>
+<div class="section" id="file-formats">
+<h2>File Formats<a class="headerlink" href="#file-formats" title="Permalink to this headline">¶</a></h2>
+<p>As appropriate, existing OGR drivers have been updated to support the
+new/updated interfaces. In particular an effort has been made to update
+a few database drivers to support 64bit integer columns for use as
+feature id, though they don’t always create FID columns as 64bit by
+default when creating new layers as this may cause problems for other
+applications.</p>
+<p>Apart from the mechanical changes due to interface changes, the detailed
+list of changes is :</p>
+<ul class="simple">
+<li><p>Shapefile: OFTInteger fields are created by default with a width of 9
+characters, so to be unambiguously read as OFTInteger (and if
+specifying integer that require 10 or 11 characters. the field is
+dynamically extended like managed since a few versions). OFTInteger64
+fields are created by default with a width of 18 digits, so to be
+unambiguously read as OFTInteger64, and extended to 19 or 20 if
+needed. Integer fields of width between 10 and 18 will be read as
+OFTInteger64. Above they will be treated as OFTReal. In previous GDAL
+versions, Integer fields were created with a default with of 10, and
+thus will be now read as OFTInteger64. An open option,
+DETECT_TYPE=YES, can be specified so as OGR does a full scan of the
+DBF file to see if integer fields of size 10 or 11 hold 32 bit or 64
+bit values and adjust the type accordingly (and same for integer
+fields of size 19 or 20, in case of overflow of 64 bit integer,
+OFTReal is chosen)</p></li>
+<li><p>PG: updated to read and create OFTInteger64 as INT8 and
+OFTInteger64List as bigint[]. 64 bit FIDs are supported. By default,
+on layer creation, the FID field is created as a SERIAL (32 bit
+integer) to avoid compatibility issues. The FID64=YES creation option
+can be passed to create it as a BIGSERIAL instead. If needed, the
+drivers will dynamically alter the schema to extend a 32 bit integer
+FID field to 64 bit. GetFeatureCount() modified to return 64 bit
+values. OLMD_FID64 = “YES” advertized as soon as the FID column is 64
+bit.</p></li>
+<li><p>PGDump: Integer64, Integer64List and 64 bit FID supported in
+read/write. FID64=YES creation option available.</p></li>
+<li><p>GeoJSON: Integer64, Integer64List and 64 bit FID supported in
+read/write. The 64 bit variants are reported only if needed,
+otherwise OFTInteger/OFTIntegerList is used. OLMD_FID64 = “YES”
+advertized if needed</p></li>
+<li><p>CSV: Integer64 supported in read/write, including the autodetection
+feature of field types.</p></li>
+<li><p>GPKG: Integer64 and 64 bit FID supported in read/write. Conforming
+with the GeoPackage spec, “INT” or “INTEGER” columns are considered
+64 bits, whereas “MEDIUMINT” is considered 32 bit. OLMD_FID64 = “YES”
+advertized as soon as MAX(fid_column) is 64 bit. GetFeatureCount()
+modified to return 64 bit values.</p></li>
+<li><p>SQLite: Integer64 and 64 bit FID supported in read/write. On write,
+Integer64 are createad as “BIGINT” and on read BIGINT or INT8 are
+considered as Integer64. However it might be possible that databases
+produced by other tools are created with “INTEGER” and hold 64 bit
+values, in which case OGR will not be able to detect it. The
+OGR_PROMOTE_TO_INTEGER64=YES configuration option can then be passed
+to workaround that issue. OLMD_FID64 = “YES” advertized as soon as
+MAX(fid_column) is 64 bit. GetFeatureCount() modified to return 64
+bit values.</p></li>
+<li><p>MySQL: Integer64 and 64 bit FID supported in read/write. Similarly to
+PG, FID column is created as 32 bit by default, unless FID64=YES
+creation option is specified. OLMD_FID64 = “YES” advertized as soon
+as the FID column is 64 bit. GetFeatureCount() modified to return 64
+bit values.</p></li>
+<li><p>OCI: Integer64 and 64 bit FID supported in read/write. Detecting
+Integer/Integer64 on read is tricky since there’s only a NUMBER SQL
+type with a field width. It is assumed that if the width is &lt;= 9 or
+if it is the unspecified value (38), then it is a Integer. On
+creation, OGR will set a width of 20 for OFTInteger64, so a NUMBER
+without decimal part and with a width of 20 will be considered as a
+Integer64.</p></li>
+<li><p>MEM: Integer64 and 64 bit FID supported in read/write.
+GetFeatureCount() modified to return 64 bit values.</p></li>
+<li><p>VRT: Integer64, Integer64List and 64 bit FID supported in read/write.
+GetFeatureCount() modified to return 64 bit values.</p></li>
+<li><p>JML: Integer64 supported on creation (created as “OBJECT”). On read,
+returned as String</p></li>
+<li><p>GML: Integer64, Integer64List and 64 bit FID supported in read/write.
+GetFeatureCount() modified to return 64 bit values.</p></li>
+<li><p>WFS: Integer64, Integer64List and 64 bit FID supported in read/write.
+GetFeatureCount() modified to return 64 bit values.</p></li>
+<li><p>CartoDB: Integer64 supported on creation. On read returned as Real
+(CartoDB only advertizes a ‘Number’ type). GetFeatureCount() modified
+to return 64 bit values.</p></li>
+<li><p>XLSX: Integer64 supported in read/write.</p></li>
+<li><p>ODS: Integer64 supported in read/write.</p></li>
+<li><p>MSSQLSpatial: GetFeatureCount() modified to return 64 bit values. No
+Integer64 support implemented although could likely be done.</p></li>
+<li><p>OSM: FID is now always set even when sizeof(long) != 8</p></li>
+<li><p>LIBKML: KML ‘uint’ advertized as Integer64.</p></li>
+<li><p>MITAB: Change the way FID of Seamless tables are generated to make it
+more robust and accept arbitrary number of index tables made of an
+arbitrary number of features, by using full 64bit width of IDs</p></li>
+</ul>
+</div>
+<div class="section" id="test-suite">
+<h2>Test Suite<a class="headerlink" href="#test-suite" title="Permalink to this headline">¶</a></h2>
+<p>The test suite is extended to test the new capabilities:</p>
+<ul class="simple">
+<li><p>core SetField/GetField methods</p></li>
+<li><p>updated drivers: Shapefile, PG, GeoJSON, CSV, GPKG, SQLite, MySQL,
+VRT, GML, XLSX, ODS, MITAB</p></li>
+<li><p>OGR SQL</p></li>
+<li><p>option -mapFieldType of ogr2ogr</p></li>
+</ul>
+</div>
+<div class="section" id="compatibility-issues">
+<h2>Compatibility Issues<a class="headerlink" href="#compatibility-issues" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="driver-code-changes">
+<h3>Driver Code Changes<a class="headerlink" href="#driver-code-changes" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>All drivers implementing SetNextByIndex(), DeleteFeature(),
+GetFeature(), GetFeatureCount() will need to change their prototype
+and do modest changes.</p></li>
+<li><p>Drivers supporting CreateField() likely ought to be extended to
+support OFTInteger64 as an integer/real/string field if nothing else
+is available (and if bApproxOK is TRUE). ogr2ogr will convert
+Integer64 to Real if Integer64 support is not advertized</p></li>
+<li><p>Drivers reporting FIDs via Debug statements, printf’s or using
+sprintfs like statements to format them for output have been updated
+to use CPL_FRMT_GIB to format the FID. Failure to make these changes
+may result in code crashing. Due to the use of GCC annotation to
+advertise printf()-like formatting syntax in CPL functions, we are
+reasonably confident to have done the required changes in in-tree
+drivers (except in some proprietary drivers, like SDE, IDB, INGRES,
+ArcObjects, where this couldn’t be compiled-checked). The same holds
+true for GetFeatureCount()</p></li>
+</ul>
+</div>
+<div class="section" id="application-code">
+<h3>Application Code<a class="headerlink" href="#application-code" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Application code may need to be updated to use GIntBig for FIDs and
+feature count in order to avoid warnings about downcasting.</p></li>
+<li><p>Application code formatting FIDs or feature count using printf like
+facilities may also need to be changed to downcast explicitly or to
+use CPL_FRMT_GIB.</p></li>
+<li><p>Application code may need to add Integer64 handling in order to
+utilize wide fields.</p></li>
+</ul>
+</div>
+<div class="section" id="behavioral-changes">
+<h3>Behavioral Changes<a class="headerlink" href="#behavioral-changes" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Wide integer fields that were previously treated as “real” or Integer
+by the shapefile driver will now be treated as Integer64 which will
+likely not work with some applications, and translation to other
+formats may fail.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="related-tickets">
+<h2>Related tickets<a class="headerlink" href="#related-tickets" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="http://trac.osgeo.org/gdal/ticket/3747">#3747 OGR FID needs to be 64
+bit</a></p></li>
+<li><p><a class="reference external" href="http://trac.osgeo.org/gdal/ticket/3615">#3615 Shapefile : A 10-digit value doesn’t necessarily fit into a 32
+bit integer.</a></p></li>
+<li><p><a class="reference external" href="http://trac.osgeo.org/gdal/ticket/3150">#3150 Precision Problem for Numeric on OGR/OCI
+driver</a></p></li>
+</ul>
+</div>
+<div class="section" id="related-topics-out-of-scope-of-this-rfc">
+<h2>Related topics out of scope of this RFC<a class="headerlink" href="#related-topics-out-of-scope-of-this-rfc" title="Permalink to this headline">¶</a></h2>
+<p>The possibility of having a Numeric type that corresponds to the
+matching SQL type, i.e. a decimal number with an arbitrary number of
+significant figures has been considered. In OGR, this could be
+implemented as a full type like Integer, Integer64 etc., or possibly as
+a subtype of String (see <a class="reference external" href="./rfc50_ogr_field_subtype">RFC 50: OGR field
+subtypes</a>). The latter approach would be
+easier to implement and mostly useful for lossless conversion between
+database drivers (and shapefile). The former approach would require more
+work, and would ideally involve OGR SQL support, which would require
+supporting arithmetic of arbitrary length. The use cases for such a
+numeric type have been considered marginal enough to let that aside for
+now.</p>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>Implementation will be done by Even Rouault
+(<a class="reference external" href="http://spatialys.com">Spatialys</a>), and sponsored by <a class="reference external" href="http://www.linz.govt.nz/">LINZ (Land
+Information New Zealand)</a>.</p>
+<p>The proposed implementation lies in the “rfc31_64bit” branch of the
+<a class="reference external" href="https://github.com/rouault/gdal2/tree/rfc31_64bit">https://github.com/rouault/gdal2/tree/rfc31_64bit</a>
+repository.</p>
+<p>The list of changes :
+<a class="reference external" href="https://github.com/rouault/gdal2/compare/rfc31_64bit">https://github.com/rouault/gdal2/compare/rfc31_64bit</a></p>
+</div>
+<div class="section" id="voting-history">
+<h2>Voting history<a class="headerlink" href="#voting-history" title="Permalink to this headline">¶</a></h2>
+<p>+1 from JukkaR, DanielM, TamasS, HowardB and EvenR</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rfc32_gdallocationinfo.html" class="btn btn-neutral float-right" title="RFC 32: gdallocationinfo utility" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc30_utf8_filenames.html" class="btn btn-neutral float-left" title="RFC 30: Unicode Filenames" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

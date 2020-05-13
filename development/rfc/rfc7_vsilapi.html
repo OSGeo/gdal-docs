@@ -1,0 +1,435 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RFC 7: Use VSILFILE for VSI*L Functions &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdevelopment/rfc/rfc7_vsilapi.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="RFC 8: Developer Guidelines" href="rfc8_devguide.html" />
+    <link rel="prev" title="RFC 6: Geometry and Feature Style as OGR Special Fields" href="rfc6_sqlgeom.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 7: Use VSILFILE for VSI*L Functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#purpose">Purpose</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#background-rationale">Background, Rationale</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#proposed-fix">Proposed Fix</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rawrasterband-changes">RawRasterBand changes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#compatibility-issues-transition-timeline">Compatibility Issues, Transition timeline</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#questions">Questions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voting-history">Voting History</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 7: Use VSILFILE for VSI*L Functions</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/development/rfc/rfc7_vsilapi.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="rfc8_devguide.html" class="btn btn-neutral float-right" title="RFC 8: Developer Guidelines" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc6_sqlgeom.html" class="btn btn-neutral float-left" title="RFC 6: Geometry and Feature Style as OGR Special Fields" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rfc-7-use-vsilfile-for-vsi-l-functions">
+<span id="rfc-7"></span><h1>RFC 7: Use VSILFILE for VSI*L Functions<a class="headerlink" href="#rfc-7-use-vsilfile-for-vsi-l-functions" title="Permalink to this headline">¶</a></h1>
+<p>Author: Even Rouault (Eric Doenges is original author)</p>
+<p>Contact: even dot rouault at spatialys.com, <a class="reference external" href="mailto:Eric&#46;Doenges&#37;&#52;&#48;gmx&#46;net">Eric<span>&#46;</span>Doenges<span>&#64;</span>gmx<span>&#46;</span>net</a></p>
+<p>Status: Adopted</p>
+<div class="section" id="purpose">
+<h2>Purpose<a class="headerlink" href="#purpose" title="Permalink to this headline">¶</a></h2>
+<p>To change the API for the VSI*L family of functions to use a new
+data-type VSILFILE instead of the current FILE.</p>
+</div>
+<div class="section" id="background-rationale">
+<h2>Background, Rationale<a class="headerlink" href="#background-rationale" title="Permalink to this headline">¶</a></h2>
+<p>Currently, GDAL offers two APIs to abstract file access functions
+(referred to as VSI* and VSI<em>L in this document). Both APIs claim to
+operate on FILE pointers; however, the VSI</em>L functions can only
+operate on FILE pointers created by the VSIFOpenL function. This is
+because VSIFOpenL returns a pointer to an internal C++ class typecast to
+a FILE pointer, not an actual FILE pointer. This makes it impossible for
+the compiler to warn when the VSI* and VSI*L functions are
+inappropriately mixed.</p>
+</div>
+<div class="section" id="proposed-fix">
+<h2>Proposed Fix<a class="headerlink" href="#proposed-fix" title="Permalink to this headline">¶</a></h2>
+<p>A new opaque data-type VSILFILE shall be declared. All VSI<em>L functions
+shall be changed to use this new type instead of FILE. Additionally, any
+GDAL code that uses the VSI</em>L functions must be changed to use this
+data-type as well.</p>
+</div>
+<div class="section" id="rawrasterband-changes">
+<h2>RawRasterBand changes<a class="headerlink" href="#rawrasterband-changes" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>The 2 constructors are changed to accept a void* fpRaw instead of a
+FILE*</p></li>
+<li><p>A new member VSILFILE* fpRawL is added. The existing member FILE*
+fpRaw is kept. The constructors will set the adequate member
+according to the value of the bIsVSIL parameter.</p></li>
+<li><p>A new method VSILFILE* GetFPL() is added.</p></li>
+<li><p>The old FILE* GetFP() is adapted to have same behavior as before
+(can return a standard FILE handle or a VSI*L handle depending on the
+handle that was passed to the constructor)</p></li>
+</ul>
+<p>Those changes are meant to minimize the need for casting when using
+RawRasterBand. Backward API compatibility is preserved.</p>
+</div>
+<div class="section" id="compatibility-issues-transition-timeline">
+<h2>Compatibility Issues, Transition timeline<a class="headerlink" href="#compatibility-issues-transition-timeline" title="Permalink to this headline">¶</a></h2>
+<p>In order to allow the compiler to detect inappropriate parameters passed
+to any of the VSI*L functions, VSILFILE will be declared with the help
+of an empty forward declaration, i.e.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">typedef</span> <span class="n">struct</span> <span class="n">_VSILFILE</span> <span class="n">VSILFILE</span>
+</pre></div>
+</div>
+<p>with the struct _VSILFILE itself left undefined.</p>
+<p>However, this would break source compatibility for any existing code
+using the VSI*L API. Therefore, for now, VSILFILE is defined to be an
+alias of FILE, unless the VSIL_STRICT_ENFORCE macro is defined.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#ifdef VSIL_STRICT_ENFORCE</span>
+<span class="n">typedef</span> <span class="n">struct</span> <span class="n">_VSILFILE</span> <span class="n">VSILFILE</span><span class="p">;</span>
+<span class="c1">#else</span>
+<span class="n">typedef</span> <span class="n">FILE</span> <span class="n">VSILFILE</span><span class="p">;</span>
+<span class="c1">#endif</span>
+</pre></div>
+</div>
+<p>In a future release (GDAL 2.0 ?), the behavior will be changed to
+enforce the new strong typing.</p>
+<p>Any future development done since the adoption of this RFC should use
+VSILFILE when dealing with the VSIF*L API.</p>
+</div>
+<div class="section" id="questions">
+<h2>Questions<a class="headerlink" href="#questions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Should we define VSIL_STRICT_ENFORCE by default when DEBUG is defined
+?</p></li>
+</ul>
+<p>This would make life easier for GDAL developers to use the appropriate
+typing, but not affect API/ABI when using release mode.</p>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>The whole source tree ( port, gcore, frmts, ogr, swig/include ) will be
+altered adequatly so that the compilation works in VSIL_STRICT_ENFORCE
+mode. Ticket #3799 contains a patch with the implementation. The
+compilation doesn’t add any new warning. The autotest suite still works
+after this change.</p>
+<p>The GeoRaster and JPIPKAK drivers have been modified during the
+conversion process, but I’m not in position to compile them. Testing
+appreciated. All other drivers that have been altered in the conversion
+process have been compiled.</p>
+<p>In the conversion process, a misuse of POSIX FILE API with a large file
+handler was discovered in the ceos2 driver, but the function happened to
+be unusued.</p>
+</div>
+<div class="section" id="voting-history">
+<h2>Voting History<a class="headerlink" href="#voting-history" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">*</span> <span class="n">Frank</span> <span class="n">Warmerdam</span> <span class="o">+</span><span class="mi">1</span>
+<span class="o">*</span> <span class="n">Tamas</span> <span class="n">Szekeres</span> <span class="o">+</span><span class="mi">1</span>
+<span class="o">*</span> <span class="n">Daniel</span> <span class="n">Morissette</span> <span class="o">+</span><span class="mi">1</span>
+<span class="o">*</span> <span class="n">Howard</span> <span class="n">Butler</span> <span class="o">+</span><span class="mi">1</span>
+<span class="o">*</span> <span class="n">Even</span> <span class="n">Rouault</span> <span class="o">+</span><span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rfc8_devguide.html" class="btn btn-neutral float-right" title="RFC 8: Developer Guidelines" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc6_sqlgeom.html" class="btn btn-neutral float-left" title="RFC 6: Geometry and Feature Style as OGR Special Fields" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

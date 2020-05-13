@@ -1,0 +1,1066 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RFC 59.1 : GDAL/OGR utilities as a library &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdevelopment/rfc/rfc59.1_utilities_as_a_library.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="RFC 59 : GDAL/OGR utilities as a library" href="rfc59_utilities_as_a_library.html" />
+    <link rel="prev" title="RFC 58: Removing Dataset Nodata Value" href="rfc58_removing_dataset_nodata_value.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 59.1 : GDAL/OGR utilities as a library</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rationale">Rationale</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#changes">Changes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#swig-bindings-python-java-c-perl-changes">SWIG bindings (Python / Java / C# / Perl) changes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#utilities">Utilities</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#test-suite">Test Suite</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#compatibility-issues">Compatibility Issues</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#related-ticket">Related ticket</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voting-history">Voting history</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 59.1 : GDAL/OGR utilities as a library</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/development/rfc/rfc59.1_utilities_as_a_library.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="rfc59_utilities_as_a_library.html" class="btn btn-neutral float-right" title="RFC 59 : GDAL/OGR utilities as a library" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc58_removing_dataset_nodata_value.html" class="btn btn-neutral float-left" title="RFC 58: Removing Dataset Nodata Value" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rfc-59-1-gdal-ogr-utilities-as-a-library">
+<span id="rfc-59-1"></span><h1>RFC 59.1 : GDAL/OGR utilities as a library<a class="headerlink" href="#rfc-59-1-gdal-ogr-utilities-as-a-library" title="Permalink to this headline">¶</a></h1>
+<p>Authors: Faza Mahamood, Even Rouault</p>
+<p>Contact: fazamhd at gmail dot com, even.rouault at spatialys.com</p>
+<p>Status: Adopted, implemented</p>
+<p>Implementation version: 2.1</p>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>This RFC defines how to expose GDAL/OGR C/C++ utilities as C callable
+functions. The utility code is modified to call the new function. This
+RFC gives a general frame and principles, demonstrated with a few
+utilities, but aimed at being extended with other utilities.</p>
+</div>
+<div class="section" id="rationale">
+<h2>Rationale<a class="headerlink" href="#rationale" title="Permalink to this headline">¶</a></h2>
+<p>There is a need for calling GDAL utilities from code without involving
+system calls, to be able to work on in-memory datasets and use
+progress/cancellation callback functions.</p>
+</div>
+<div class="section" id="changes">
+<h2>Changes<a class="headerlink" href="#changes" title="Permalink to this headline">¶</a></h2>
+<p>A public header file gdal_utils.h is created which contains the public
+declarations of GDAL utilities. The current header(still in progress)
+can be found
+<a class="reference external" href="https://github.com/rouault/gdal2/blob/rfc59.1/gdal/apps/gdal_utils.h">here</a>.</p>
+<p>Each utility has a function (XXXXOptionsNew) to create an option
+structure from arguments specified as an array of strings. This function
+also accepts as argument an extra semi-private structure used to
+cooperate with the code of the command line utility itself.</p>
+<p>For GDALInfo():</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>/*! Options for GDALInfo(). Opaque type */
+typedef struct GDALInfoOptions GDALInfoOptions;
+typedef struct GDALInfoOptionsForBinary GDALInfoOptionsForBinary;
+
+/**
+ * Allocates a GDALInfoOptions struct.
+ *
+ * @param papszArgv NULL terminated list of options (potentially including filename and open options too)
+ *                  The accepted options are the one of the gdalinfo utility.
+ * @param psOptionsForBinary (output) may be NULL (and should generally be NULL),
+ *                           otherwise (gdalinfo_bin.cpp use case) must be allocated with
+ *                           GDALInfoOptionsForBinaryNew() prior to this function. Will be
+ *                           filled with potentially present filename, open options, subdataset number...
+ * @return pointer to the allocated GDALInfoOptions struct.
+ *
+ * @since GDAL 2.1
+ */
+GDALInfoOptions CPL_DLL *GDALInfoOptionsNew(char** papszArgv, GDALInfoOptionsForBinary* psOptionsForBinary);
+
+void CPL_DLL GDALInfoOptionsFree( GDALInfoOptions *psOptions );
+
+/**
+ * Lists various information about a GDAL supported raster dataset.
+ *
+ * GDALInfoOptions* must be allocated and freed with GDALInfoOptionsNew()
+ * and GDALInfoOptionsFree() respectively.
+ *
+ * @param hDataset the dataset handle.
+ * @param psOptions the options structure returned by GDALInfoOptionsNew() or NULL.
+ * @return string corresponding to the information about the raster dataset.
+ * It must be freed using CPLFree().
+ *
+ * @since GDAL 2.1
+ */
+char CPL_DLL *GDALInfo( GDALDatasetH hDataset, const GDALInfoOptions *psOptions );
+</pre></div>
+</div>
+<p>Similarly for GDALTranslate():</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>/*! Options for GDALTranslate(). Opaque type */
+typedef struct GDALTranslateOptions GDALTranslateOptions;
+typedef struct GDALTranslateOptionsForBinary GDALTranslateOptionsForBinary;
+
+GDALTranslateOptions CPL_DLL *GDALTranslateOptionsNew(char** papszArgv,
+                                                      GDALTranslateOptionsForBinary* psOptionsForBinary);
+
+void CPL_DLL GDALTranslateOptionsFree( GDALTranslateOptions *psOptions );
+
+void CPL_DLL GDALTranslateOptionsSetProgress( GDALTranslateOptions *psOptions,
+                                              GDALProgressFunc pfnProgress,
+                                              void *pProgressData );
+
+GDALDatasetH CPL_DLL GDALTranslate(const char *pszDestFilename,
+                                   GDALDatasetH hSrcDataset,
+                                   const GDALTranslateOptions *psOptions,
+                                   int *pbUsageError);
+</pre></div>
+</div>
+<p>Similarly for GDALWarp():</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>/*! Options for GDALWarp(). Opaque type */
+typedef struct GDALWarpAppOptions GDALWarpAppOptions;
+
+typedef struct GDALWarpAppOptionsForBinary GDALWarpAppOptionsForBinary;
+
+GDALWarpAppOptions CPL_DLL *GDALWarpAppOptionsNew(char** papszArgv,
+                                                      GDALWarpAppOptionsForBinary* psOptionsForBinary);
+
+void CPL_DLL GDALWarpAppOptionsFree( GDALWarpAppOptions *psOptions );
+
+void CPL_DLL GDALWarpAppOptionsSetProgress( GDALWarpAppOptions *psOptions,
+                                              GDALProgressFunc pfnProgress,
+                                              void *pProgressData );
+void CPL_DLL GDALWarpAppOptionsSetWarpOption( GDALWarpAppOptions *psOptions,
+                                              const char* pszKey,
+                                              const char* pszValue );
+
+GDALDatasetH CPL_DLL GDALWarp( const char *pszDest, GDALDatasetH hDstDS, int nSrcCount,
+                               GDALDatasetH *pahSrcDS,
+                               const GDALWarpAppOptions *psOptions, int *pbUsageError );
+</pre></div>
+</div>
+<p>Similarly for GDALVectorTranslate() (equivalent of ogr2ogr):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>/*! Options for GDALVectorTranslate(). Opaque type */
+typedef struct GDALVectorTranslateOptions GDALVectorTranslateOptions;
+
+typedef struct GDALVectorTranslateOptionsForBinary GDALVectorTranslateOptionsForBinary;
+
+GDALVectorTranslateOptions CPL_DLL *GDALVectorTranslateOptionsNew(char** papszArgv,
+                                                      GDALVectorTranslateOptionsForBinary* psOptionsForBinary);
+
+void CPL_DLL GDALVectorTranslateOptionsFree( GDALVectorTranslateOptions *psOptions );
+
+void CPL_DLL GDALVectorTranslateOptionsSetProgress( GDALVectorTranslateOptions *psOptions,
+                                              GDALProgressFunc pfnProgress,
+                                              void *pProgressData );
+
+GDALDatasetH CPL_DLL GDALVectorTranslate( const char *pszDest, GDALDatasetH hDstDS, int nSrcCount,
+                               GDALDatasetH *pahSrcDS,
+                               const GDALVectorTranslateOptions *psOptions, int *pbUsageError );
+</pre></div>
+</div>
+<p>For other utilities, see
+<a class="reference external" href="http://svn.osgeo.org/gdal/trunk/gdal/apps/gdal_utils.h">gdal_utils.h</a></p>
+</div>
+<div class="section" id="swig-bindings-python-java-c-perl-changes">
+<h2>SWIG bindings (Python / Java / C# / Perl) changes<a class="headerlink" href="#swig-bindings-python-java-c-perl-changes" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="all-bindings">
+<h3>All bindings<a class="headerlink" href="#all-bindings" title="Permalink to this headline">¶</a></h3>
+<p>For all bindings, the above functions are mapped to SWIG with :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">struct</span> <span class="n">GDALInfoOptions</span> <span class="p">{</span>
+<span class="o">%</span><span class="n">extend</span> <span class="p">{</span>
+    <span class="n">GDALInfoOptions</span><span class="p">(</span><span class="n">char</span><span class="o">**</span> <span class="n">options</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">GDALInfoOptionsNew</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="n">NULL</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="o">~</span><span class="n">GDALInfoOptions</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">GDALInfoOptionsFree</span><span class="p">(</span> <span class="bp">self</span> <span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="p">};</span>
+
+<span class="o">%</span><span class="n">rename</span> <span class="p">(</span><span class="n">InfoInternal</span><span class="p">)</span> <span class="n">GDALInfo</span><span class="p">;</span>
+<span class="n">char</span> <span class="o">*</span><span class="n">GDALInfo</span><span class="p">(</span> <span class="n">GDALDatasetShadow</span> <span class="o">*</span><span class="n">hDataset</span><span class="p">,</span> <span class="n">GDALInfoOptions</span> <span class="o">*</span><span class="n">infoOptions</span> <span class="p">);</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">struct</span> <span class="n">GDALTranslateOptions</span> <span class="p">{</span>
+<span class="o">%</span><span class="n">extend</span> <span class="p">{</span>
+    <span class="n">GDALTranslateOptions</span><span class="p">(</span><span class="n">char</span><span class="o">**</span> <span class="n">options</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">GDALTranslateOptionsNew</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="n">NULL</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="o">~</span><span class="n">GDALTranslateOptions</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">GDALTranslateOptionsFree</span><span class="p">(</span> <span class="bp">self</span> <span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="p">};</span>
+
+<span class="o">%</span><span class="n">rename</span> <span class="p">(</span><span class="n">TranslateInternal</span><span class="p">)</span> <span class="n">wrapper_GDALTranslate</span><span class="p">;</span>
+<span class="o">%</span><span class="n">newobject</span> <span class="n">wrapper_GDALTranslate</span><span class="p">;</span>
+
+<span class="o">%</span><span class="n">inline</span> <span class="o">%</span><span class="p">{</span>
+<span class="n">GDALDatasetShadow</span><span class="o">*</span> <span class="n">wrapper_GDALTranslate</span><span class="p">(</span> <span class="n">const</span> <span class="n">char</span><span class="o">*</span> <span class="n">dest</span><span class="p">,</span>
+                                      <span class="n">GDALDatasetShadow</span><span class="o">*</span> <span class="n">dataset</span><span class="p">,</span>
+                                      <span class="n">GDALTranslateOptions</span><span class="o">*</span> <span class="n">translateOptions</span><span class="p">,</span>
+                                      <span class="n">GDALProgressFunc</span> <span class="n">callback</span><span class="o">=</span><span class="n">NULL</span><span class="p">,</span>
+                                      <span class="n">void</span><span class="o">*</span> <span class="n">callback_data</span><span class="o">=</span><span class="n">NULL</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">struct</span> <span class="n">GDALWarpAppOptions</span> <span class="p">{</span>
+<span class="o">%</span><span class="n">extend</span> <span class="p">{</span>
+    <span class="n">GDALWarpAppOptions</span><span class="p">(</span><span class="n">char</span><span class="o">**</span> <span class="n">options</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">GDALWarpAppOptionsNew</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="n">NULL</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="o">~</span><span class="n">GDALWarpAppOptions</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">GDALWarpAppOptionsFree</span><span class="p">(</span> <span class="bp">self</span> <span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="p">};</span>
+
+<span class="o">/*</span> <span class="n">Note</span><span class="p">:</span> <span class="n">we</span> <span class="n">must</span> <span class="n">use</span> <span class="mi">2</span> <span class="n">distinct</span> <span class="n">names</span> <span class="n">since</span> <span class="n">there</span><span class="s1">&#39;s a bug/feature in swig */</span>
+<span class="o">/*</span> <span class="n">that</span> <span class="n">doesn</span><span class="s1">&#39;t play nicely with the (int object_list_count, GDALDatasetShadow** poObjects) input typemap */</span>
+
+<span class="o">%</span><span class="n">inline</span> <span class="o">%</span><span class="p">{</span>
+<span class="nb">int</span> <span class="n">wrapper_GDALWarpDestDS</span><span class="p">(</span> <span class="n">GDALDatasetShadow</span><span class="o">*</span> <span class="n">dstDS</span><span class="p">,</span>
+                            <span class="nb">int</span> <span class="n">object_list_count</span><span class="p">,</span> <span class="n">GDALDatasetShadow</span><span class="o">**</span> <span class="n">poObjects</span><span class="p">,</span>
+                            <span class="n">GDALWarpAppOptions</span><span class="o">*</span> <span class="n">warpAppOptions</span><span class="p">,</span>
+                            <span class="n">GDALProgressFunc</span> <span class="n">callback</span><span class="o">=</span><span class="n">NULL</span><span class="p">,</span>
+                            <span class="n">void</span><span class="o">*</span> <span class="n">callback_data</span><span class="o">=</span><span class="n">NULL</span><span class="p">),</span>
+<span class="o">%</span><span class="p">}</span>
+
+<span class="o">%</span><span class="n">newobject</span> <span class="n">wrapper_GDALWarpDestName</span><span class="p">;</span>
+
+<span class="o">%</span><span class="n">inline</span> <span class="o">%</span><span class="p">{</span>
+<span class="n">GDALDatasetShadow</span><span class="o">*</span> <span class="n">wrapper_GDALWarpDestName</span><span class="p">(</span> <span class="n">const</span> <span class="n">char</span><span class="o">*</span> <span class="n">dest</span><span class="p">,</span>
+                                             <span class="nb">int</span> <span class="n">object_list_count</span><span class="p">,</span> <span class="n">GDALDatasetShadow</span><span class="o">**</span> <span class="n">poObjects</span><span class="p">,</span>
+                                             <span class="n">GDALWarpAppOptions</span><span class="o">*</span> <span class="n">warpAppOptions</span><span class="p">,</span>
+                                             <span class="n">GDALProgressFunc</span> <span class="n">callback</span><span class="o">=</span><span class="n">NULL</span><span class="p">,</span>
+                                             <span class="n">void</span><span class="o">*</span> <span class="n">callback_data</span><span class="o">=</span><span class="n">NULL</span><span class="p">),</span>
+<span class="o">%</span><span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">struct</span> <span class="n">GDALVectorTranslateOptions</span> <span class="p">{</span>
+<span class="o">%</span><span class="n">extend</span> <span class="p">{</span>
+    <span class="n">GDALVectorTranslateOptions</span><span class="p">(</span><span class="n">char</span><span class="o">**</span> <span class="n">options</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">GDALVectorTranslateOptionsNew</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="n">NULL</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="o">~</span><span class="n">GDALVectorTranslateOptions</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">GDALVectorTranslateOptionsFree</span><span class="p">(</span> <span class="bp">self</span> <span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="p">};</span>
+
+<span class="o">/*</span> <span class="n">Note</span><span class="p">:</span> <span class="n">we</span> <span class="n">must</span> <span class="n">use</span> <span class="mi">2</span> <span class="n">distinct</span> <span class="n">names</span> <span class="n">since</span> <span class="n">there</span><span class="s1">&#39;s a bug/feature in swig */</span>
+<span class="o">/*</span> <span class="n">that</span> <span class="n">doesn</span><span class="s1">&#39;t play nicely with the (int object_list_count, GDALDatasetShadow** poObjects) input typemap */</span>
+
+<span class="o">%</span><span class="n">inline</span> <span class="o">%</span><span class="p">{</span>
+<span class="nb">int</span> <span class="n">wrapper_GDALVectorTranslateDestDS</span><span class="p">(</span> <span class="n">GDALDatasetShadow</span><span class="o">*</span> <span class="n">dstDS</span><span class="p">,</span>
+                                       <span class="n">GDALDatasetShadow</span><span class="o">*</span> <span class="n">srcDS</span><span class="p">,</span>
+                            <span class="n">GDALVectorTranslateOptions</span><span class="o">*</span> <span class="n">options</span><span class="p">,</span>
+                            <span class="n">GDALProgressFunc</span> <span class="n">callback</span><span class="o">=</span><span class="n">NULL</span><span class="p">,</span>
+                            <span class="n">void</span><span class="o">*</span> <span class="n">callback_data</span><span class="o">=</span><span class="n">NULL</span><span class="p">);</span>
+<span class="o">%</span><span class="p">}</span>
+
+<span class="o">%</span><span class="n">newobject</span> <span class="n">wrapper_GDALVectorTranslateDestName</span><span class="p">;</span>
+
+<span class="o">%</span><span class="n">inline</span> <span class="o">%</span><span class="p">{</span>
+<span class="n">GDALDatasetShadow</span><span class="o">*</span> <span class="n">wrapper_GDALVectorTranslateDestName</span><span class="p">(</span> <span class="n">const</span> <span class="n">char</span><span class="o">*</span> <span class="n">dest</span><span class="p">,</span>
+                                             <span class="n">GDALDatasetShadow</span><span class="o">*</span> <span class="n">srcDS</span><span class="p">,</span>
+                                             <span class="n">GDALVectorTranslateOptions</span><span class="o">*</span> <span class="n">options</span><span class="p">,</span>
+                                             <span class="n">GDALProgressFunc</span> <span class="n">callback</span><span class="o">=</span><span class="n">NULL</span><span class="p">,</span>
+                                             <span class="n">void</span><span class="o">*</span> <span class="n">callback_data</span><span class="o">=</span><span class="n">NULL</span><span class="p">);</span>
+<span class="o">%</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>For other utilities, see
+<a class="reference external" href="http://svn.osgeo.org/gdal/trunk/gdal/swig/python/gdal.i">gdal.i</a></p>
+</div>
+<div class="section" id="python-bindings">
+<h3>Python bindings<a class="headerlink" href="#python-bindings" title="Permalink to this headline">¶</a></h3>
+<p>For Python bindings, convenience wrappers are created to allow
+specifying options in a more user friendly way.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">InfoOptions</span><span class="p">(</span><span class="n">options</span> <span class="o">=</span> <span class="p">[],</span> <span class="nb">format</span> <span class="o">=</span> <span class="s1">&#39;text&#39;</span><span class="p">,</span> <span class="n">deserialize</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+         <span class="n">computeMinMax</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">reportHistograms</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">reportProj4</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+         <span class="n">stats</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">approxStats</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">computeChecksum</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+         <span class="n">showGCPs</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">showMetadata</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">showRAT</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">showColorTable</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+         <span class="n">listMDD</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">showFileList</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">allMetadata</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+         <span class="n">extraMDDomains</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Create a InfoOptions() object that can be passed to gdal.Info()</span>
+<span class="sd">        options can be be an array of strings, a string or let empty and filled from other keywords.&quot;&quot;&quot;</span>
+
+
+<span class="k">def</span> <span class="nf">Info</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Return information on a dataset.</span>
+<span class="sd">        Arguments are :</span>
+<span class="sd">          ds --- a Dataset object or a filename</span>
+<span class="sd">        Keyword arguments are :</span>
+<span class="sd">          options --- return of gdal.InfoOptions(), string or array of strings</span>
+<span class="sd">          other keywords arguments of gdal.InfoOptions()</span>
+<span class="sd">        If options is provided as a gdal.InfoOptions() object, other keywords are ignored. &quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<p>gdal.Info() can be used either with setting the attributes of
+gdal.InfoOptions() or inlined arguments of gdal.Info(). Arguments can be
+specified as array of strings, command line syntax or dedeicated
+keywords. So various combinations are possible :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">options</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">InfoOptions</span><span class="p">(</span><span class="nb">format</span> <span class="o">=</span> <span class="s1">&#39;json&#39;</span><span class="p">,</span> <span class="n">computeChecksum</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">gdal</span><span class="o">.</span><span class="n">Info</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">options</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">InfoOptions</span><span class="p">(</span><span class="n">options</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;-json&#39;</span><span class="p">,</span> <span class="s1">&#39;-checksum&#39;</span><span class="p">])</span>
+<span class="n">gdal</span><span class="o">.</span><span class="n">Info</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">options</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">InfoOptions</span><span class="p">(</span><span class="n">options</span> <span class="o">=</span> <span class="s1">&#39;-json -checksum&#39;</span><span class="p">)</span>
+<span class="n">gdal</span><span class="o">.</span><span class="n">Info</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdal</span><span class="o">.</span><span class="n">Info</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="nb">format</span> <span class="o">=</span> <span class="s1">&#39;json&#39;</span><span class="p">,</span> <span class="n">computeChecksum</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdal</span><span class="o">.</span><span class="n">Info</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;-json&#39;</span><span class="p">,</span> <span class="s1">&#39;-checksum&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdal</span><span class="o">.</span><span class="n">Info</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="s1">&#39;-json -checksum&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">TranslateOptions</span><span class="p">(</span><span class="n">options</span> <span class="o">=</span> <span class="p">[],</span> <span class="nb">format</span> <span class="o">=</span> <span class="s1">&#39;GTiff&#39;</span><span class="p">,</span>
+              <span class="n">outputType</span> <span class="o">=</span> <span class="n">GDT_Unknown</span><span class="p">,</span> <span class="n">bandList</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">maskBand</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+              <span class="n">width</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">widthPct</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">heightPct</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+              <span class="n">xRes</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">yRes</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+              <span class="n">creationOptions</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">srcWin</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">projWin</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">projWinSRS</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">strict</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+              <span class="n">unscale</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">scaleParams</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">exponents</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+              <span class="n">outputBounds</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">metadataOptions</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+              <span class="n">outputSRS</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">GCPs</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+              <span class="n">noData</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">rgbExpand</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+              <span class="n">stats</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">rat</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">resampleAlg</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+              <span class="n">callback</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">callback_data</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Create a TranslateOptions() object that can be passed to gdal.Translate()</span>
+<span class="sd">        Keyword arguments are :</span>
+<span class="sd">          options --- can be be an array of strings, a string or let empty and filled from other keywords.</span>
+<span class="sd">          format --- output format (&quot;GTiff&quot;, etc...)</span>
+<span class="sd">          outputType --- output type (gdal.GDT_Byte, etc...)</span>
+<span class="sd">          bandList --- array of band numbers (index start at 1)</span>
+<span class="sd">          maskBand --- mask band to generate or not (&quot;none&quot;, &quot;auto&quot;, &quot;mask&quot;, 1, ...)</span>
+<span class="sd">          width --- width of the output raster in pixel</span>
+<span class="sd">          height --- height of the output raster in pixel</span>
+<span class="sd">          widthPct --- width of the output raster in percentage (100 = original width)</span>
+<span class="sd">          heightPct --- height of the output raster in percentage (100 = original height)</span>
+<span class="sd">          xRes --- output horizontal resolution</span>
+<span class="sd">          yRes --- output vertical resolution</span>
+<span class="sd">          creationOptions --- list of creation options</span>
+<span class="sd">          srcWin --- subwindow in pixels to extract: [left_x, top_y, width, height]</span>
+<span class="sd">          projWin --- subwindow in projected coordinates to extract: [ulx, uly, lrx, lry]</span>
+<span class="sd">          projWinSRS --- SRS in which projWin is expressed</span>
+<span class="sd">          strict --- strict mode</span>
+<span class="sd">          unscale --- unscale values with scale and offset metadata</span>
+<span class="sd">          scaleParams --- list of scale parameters, each of the form [src_min,src_max] or [src_min,src_max,dst_min,dst_max]</span>
+<span class="sd">          exponents --- list of exponentation parameters</span>
+<span class="sd">          outputBounds --- assigned output bounds: [ulx, uly, lrx, lry]</span>
+<span class="sd">          metadataOptions --- list of metadata options</span>
+<span class="sd">          outputSRS --- assigned output SRS</span>
+<span class="sd">          GCPs --- list of GCPs</span>
+<span class="sd">          noData --- nodata value (or &quot;none&quot; to unset it)</span>
+<span class="sd">          rgbExpand --- Color palette expansion mode: &quot;gray&quot;, &quot;rgb&quot;, &quot;rgba&quot;</span>
+<span class="sd">          stats --- whether to calcule statistics</span>
+<span class="sd">          rat --- whether to write source RAT</span>
+<span class="sd">          resampleAlg --- resampling mode</span>
+<span class="sd">          callback --- callback method</span>
+<span class="sd">          callback_data --- user data for callback</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<span class="k">def</span> <span class="nf">Translate</span><span class="p">(</span><span class="n">destName</span><span class="p">,</span> <span class="n">srcDS</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Convert a dataset.</span>
+<span class="sd">        Arguments are :</span>
+<span class="sd">          destName --- Output dataset name</span>
+<span class="sd">          srcDS --- a Dataset object or a filename</span>
+<span class="sd">        Keyword arguments are :</span>
+<span class="sd">          options --- return of gdal.InfoOptions(), string or array of strings</span>
+<span class="sd">          other keywords arguments of gdal.TranslateOptions()</span>
+<span class="sd">        If options is provided as a gdal.TranslateOptions() object, other keywords are ignored. &quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">WarpOptions</span><span class="p">(</span><span class="n">options</span> <span class="o">=</span> <span class="p">[],</span> <span class="nb">format</span> <span class="o">=</span> <span class="s1">&#39;GTiff&#39;</span><span class="p">,</span>
+         <span class="n">outputBounds</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">outputBoundsSRS</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">xRes</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">yRes</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">targetAlignedPixels</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+         <span class="n">width</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+         <span class="n">srcSRS</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dstSRS</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">srcAlpha</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">dstAlpha</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+         <span class="n">warpOptions</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">errorThreshold</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">warpMemoryLimit</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">creationOptions</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">outputType</span> <span class="o">=</span> <span class="n">GDT_Unknown</span><span class="p">,</span>
+         <span class="n">workingType</span> <span class="o">=</span> <span class="n">GDT_Unknown</span><span class="p">,</span> <span class="n">resampleAlg</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">srcNodata</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dstNodata</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">multithread</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+         <span class="n">tps</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">rpc</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">geoloc</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">polynomialOrder</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">transformerOptions</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">cutlineDSName</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">cutlineLayer</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">cutlineWhere</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">cutlineSQL</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">cutlineBlend</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">cropToCutline</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+         <span class="n">copyMetadata</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">metadataConflictValue</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">setColorInterpretation</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+         <span class="n">callback</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">callback_data</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Create a WarpOptions() object that can be passed to gdal.Warp()</span>
+<span class="sd">        Keyword arguments are :</span>
+<span class="sd">          options --- can be be an array of strings, a string or let empty and filled from other keywords.</span>
+<span class="sd">          format --- output format (&quot;GTiff&quot;, etc...)</span>
+<span class="sd">          outputBounds --- output bounds as (minX, minY, maxX, maxY) in target SRS</span>
+<span class="sd">          outputBoundsSRS --- SRS in which output bounds are expressed, in the case they are not expressed in dstSRS</span>
+<span class="sd">          xRes, yRes --- output resolution in target SRS</span>
+<span class="sd">          targetAlignedPixels --- whether to force output bounds to be multiple of output resolution</span>
+<span class="sd">          width --- width of the output raster in pixel</span>
+<span class="sd">          height --- height of the output raster in pixel</span>
+<span class="sd">          srcSRS --- source SRS</span>
+<span class="sd">          dstSRS --- output SRS</span>
+<span class="sd">          srcAlpha --- whether to force the last band of the input dataset to be considered as an alpha band</span>
+<span class="sd">          dstAlpha --- whether to force the creation of an output alpha band</span>
+<span class="sd">          outputType --- output type (gdal.GDT_Byte, etc...)</span>
+<span class="sd">          workingType --- working type (gdal.GDT_Byte, etc...)</span>
+<span class="sd">          warpOptions --- list of warping options</span>
+<span class="sd">          errorThreshold --- error threshold for approximation transformer (in pixels)</span>
+<span class="sd">          warpMemoryLimit --- size of working buffer in bytes</span>
+<span class="sd">          resampleAlg --- resampling mode</span>
+<span class="sd">          creationOptions --- list of creation options</span>
+<span class="sd">          srcNodata --- source nodata value(s)</span>
+<span class="sd">          dstNodata --- output nodata value(s)</span>
+<span class="sd">          multithread --- whether to multithread computation and I/O operations</span>
+<span class="sd">          tps --- whether to use Thin Plate Spline GCP transformer</span>
+<span class="sd">          rpc --- whether to use RPC transformer</span>
+<span class="sd">          geoloc --- whether to use GeoLocation array transformer</span>
+<span class="sd">          polynomialOrder --- order of polynomial GCP interpolation</span>
+<span class="sd">          transformerOptions --- list of transformer options</span>
+<span class="sd">          cutlineDSName --- cutline dataset name</span>
+<span class="sd">          cutlineLayer --- cutline layer name</span>
+<span class="sd">          cutlineWhere --- cutline WHERE clause</span>
+<span class="sd">          cutlineSQL --- cutline SQL statement</span>
+<span class="sd">          cutlineBlend --- cutline blend distance in pixels</span>
+<span class="sd">          cropToCutline --- whether to use cutline extent for output bounds</span>
+<span class="sd">          copyMetadata --- whether to copy source metadata</span>
+<span class="sd">          metadataConflictValue --- metadata data conflict value</span>
+<span class="sd">          setColorInterpretation --- whether to force color interpretation of input bands to output bands</span>
+<span class="sd">          callback --- callback method</span>
+<span class="sd">          callback_data --- user data for callback</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<span class="k">def</span> <span class="nf">Warp</span><span class="p">(</span><span class="n">destNameOrDestDS</span><span class="p">,</span> <span class="n">srcDSOrSrcDSTab</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Warp one or several datasets.</span>
+<span class="sd">        Arguments are :</span>
+<span class="sd">          destNameOrDestDS --- Output dataset name or object</span>
+<span class="sd">          srcDSOrSrcDSTab --- an array of Dataset objects or filenames, or a Dataset object or a filename</span>
+<span class="sd">        Keyword arguments are :</span>
+<span class="sd">          options --- return of gdal.InfoOptions(), string or array of strings</span>
+<span class="sd">          other keywords arguments of gdal.WarpOptions()</span>
+<span class="sd">        If options is provided as a gdal.WarpOptions() object, other keywords are ignored. &quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">VectorTranslateOptions</span><span class="p">(</span><span class="n">options</span> <span class="o">=</span> <span class="p">[],</span> <span class="nb">format</span> <span class="o">=</span> <span class="s1">&#39;ESRI Shapefile&#39;</span><span class="p">,</span>
+         <span class="n">accessMode</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">srcSRS</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dstSRS</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">reproject</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+         <span class="n">SQLStatement</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">SQLDialect</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">where</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">selectFields</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">spatFilter</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">datasetCreationOptions</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">layerCreationOptions</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">layers</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">layerName</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">geometryType</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">segmentizeMaxDist</span><span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">callback</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">callback_data</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Create a VectorTranslateOptions() object that can be passed to gdal.VectorTranslate()</span>
+<span class="sd">        Keyword arguments are :</span>
+<span class="sd">          options --- can be be an array of strings, a string or let empty and filled from other keywords.</span>
+<span class="sd">          format --- output format (&quot;ESRI Shapefile&quot;, etc...)</span>
+<span class="sd">          accessMode --- None for creation, &#39;update&#39;, &#39;append&#39;, &#39;overwrite&#39;</span>
+<span class="sd">          srcSRS --- source SRS</span>
+<span class="sd">          dstSRS --- output SRS (with reprojection if reproject = True)</span>
+<span class="sd">          reproject --- whether to do reprojection</span>
+<span class="sd">          SQLStatement --- SQL statement to apply to the source dataset</span>
+<span class="sd">          SQLDialect --- SQL dialect (&#39;OGRSQL&#39;, &#39;SQLITE&#39;, ...)</span>
+<span class="sd">          where --- WHERE clause to apply to source layer(s)</span>
+<span class="sd">          selectFields --- list of fields to select</span>
+<span class="sd">          spatFilter --- spatial filter as (minX, minY, maxX, maxY) bounding box</span>
+<span class="sd">          datasetCreationOptions --- list of dataset creation options</span>
+<span class="sd">          layerCreationOptions --- list of layer creation options</span>
+<span class="sd">          layers --- list of layers to convert</span>
+<span class="sd">          layerName --- output layer name</span>
+<span class="sd">          geometryType --- output layer geometry type (&#39;POINT&#39;, ....)</span>
+<span class="sd">          segmentizeMaxDist --- maximum distance between consecutive nodes of a line geometry</span>
+<span class="sd">          callback --- callback method</span>
+<span class="sd">          callback_data --- user data for callback</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<span class="k">def</span> <span class="nf">VectorTranslate</span><span class="p">(</span><span class="n">destNameOrDestDS</span><span class="p">,</span> <span class="n">srcDS</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Convert one vector dataset</span>
+<span class="sd">        Arguments are :</span>
+<span class="sd">          destNameOrDestDS --- Output dataset name or object</span>
+<span class="sd">          srcDS --- a Dataset object or a filename</span>
+<span class="sd">        Keyword arguments are :</span>
+<span class="sd">          options --- return of gdal.InfoOptions(), string or array of strings</span>
+<span class="sd">          other keywords arguments of gdal.VectorTranslateOptions()</span>
+<span class="sd">        If options is provided as a gdal.VectorTranslateOptions() object, other keywords are ignored. &quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">DEMProcessingOptions</span><span class="p">(</span><span class="n">options</span> <span class="o">=</span> <span class="p">[],</span> <span class="n">colorFilename</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">format</span> <span class="o">=</span> <span class="s1">&#39;GTiff&#39;</span><span class="p">,</span>
+              <span class="n">creationOptions</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">computeEdges</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">alg</span> <span class="o">=</span> <span class="s1">&#39;Horn&#39;</span><span class="p">,</span> <span class="n">band</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+              <span class="n">zFactor</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">scale</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">azimuth</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">altitude</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">combined</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+              <span class="n">slopeFormat</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">trigonometric</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">zeroForFlat</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+              <span class="n">callback</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">callback_data</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Create a DEMProcessingOptions() object that can be passed to gdal.DEMProcessing()</span>
+<span class="sd">        Keyword arguments are :</span>
+<span class="sd">          options --- can be be an array of strings, a string or let empty and filled from other keywords.</span>
+<span class="sd">          colorFilename --- (mandatory for &quot;color-relief&quot;) name of file that contains palette definition for the &quot;color-relief&quot; processing.</span>
+<span class="sd">          format --- output format (&quot;GTiff&quot;, etc...)</span>
+<span class="sd">          creationOptions --- list of creation options</span>
+<span class="sd">          computeEdges --- whether to compute values at raster edges.</span>
+<span class="sd">          alg --- &#39;ZevenbergenThorne&#39; or &#39;Horn&#39;</span>
+<span class="sd">          band --- source band number to use</span>
+<span class="sd">          zFactor --- (hillshade only) vertical exaggeration used to pre-multiply the elevations.</span>
+<span class="sd">          scale --- ratio of vertical units to horizontal.</span>
+<span class="sd">          azimuth --- (hillshade only) azimuth of the light, in degrees. 0 if it comes from the top of the raster, 90 from the east, ... The default value, 315, should rarely be changed as it is the value generally used to generate shaded maps.</span>
+<span class="sd">          altitude ---(hillshade only) altitude of the light, in degrees. 90 if the light comes from above the DEM, 0 if it is raking light.</span>
+<span class="sd">          combined --- (hillshade only) whether to compute combined shading, a combination of slope and oblique shading.</span>
+<span class="sd">          slopeformat --- (slope only) &quot;degree&quot; or &quot;percent&quot;.</span>
+<span class="sd">          trigonometric --- (aspect only) whether to return trigonometric angle instead of azimuth. Thus 0deg means East, 90deg North, 180deg West, 270deg South.</span>
+<span class="sd">          zeroForFlat --- (aspect only) whether to return 0 for flat areas with slope=0, instead of -9999.</span>
+<span class="sd">          callback --- callback method</span>
+<span class="sd">          callback_data --- user data for callback</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<span class="k">def</span> <span class="nf">DEMProcessing</span><span class="p">(</span><span class="n">destName</span><span class="p">,</span> <span class="n">srcDS</span><span class="p">,</span> <span class="n">processing</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Apply a DEM processing.</span>
+<span class="sd">        Arguments are :</span>
+<span class="sd">          destName --- Output dataset name</span>
+<span class="sd">          srcDS --- a Dataset object or a filename</span>
+<span class="sd">          processing --- one of &quot;hillshade&quot;, &quot;slope&quot;, &quot;aspect&quot;, &quot;color-relief&quot;, &quot;TRI&quot;, &quot;TPI&quot;, &quot;Roughness&quot;</span>
+<span class="sd">        Keyword arguments are :</span>
+<span class="sd">          options --- return of gdal.InfoOptions(), string or array of strings</span>
+<span class="sd">          other keywords arguments of gdal.DEMProcessingOptions()</span>
+<span class="sd">        If options is provided as a gdal.DEMProcessingOptions() object, other keywords are ignored. &quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">NearblackOptions</span><span class="p">(</span><span class="n">options</span> <span class="o">=</span> <span class="p">[],</span> <span class="nb">format</span> <span class="o">=</span> <span class="s1">&#39;GTiff&#39;</span><span class="p">,</span>
+         <span class="n">creationOptions</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">white</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">maxNonBlack</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">nearDist</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">setAlpha</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">setMask</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+         <span class="n">callback</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">callback_data</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Create a NearblackOptions() object that can be passed to gdal.Nearblack()</span>
+<span class="sd">        Keyword arguments are :</span>
+<span class="sd">          options --- can be be an array of strings, a string or let empty and filled from other keywords.</span>
+<span class="sd">          format --- output format (&quot;GTiff&quot;, etc...)</span>
+<span class="sd">          creationOptions --- list of creation options</span>
+<span class="sd">          white --- whether to search for nearly white (255) pixels instead of nearly black pixels.</span>
+<span class="sd">          colors --- list of colors  to search for, e.g. ((0,0,0),(255,255,255)). The pixels that are considered as the collar are set to 0</span>
+<span class="sd">          maxNonBlack --- number of non-black (or other searched colors specified with white / colors) pixels that can be encountered before the giving up search inwards. Defaults to 2.</span>
+<span class="sd">          nearDist --- select how far from black, white or custom colors the pixel values can be and still considered near black, white or custom color.  Defaults to 15.</span>
+<span class="sd">          setAlpha --- adds an alpha band if the output file.</span>
+<span class="sd">          setMask --- adds a mask band to the output file.</span>
+<span class="sd">          callback --- callback method</span>
+<span class="sd">          callback_data --- user data for callback</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<span class="k">def</span> <span class="nf">Nearblack</span><span class="p">(</span><span class="n">destNameOrDestDS</span><span class="p">,</span> <span class="n">srcDS</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Convert nearly black/white borders to exact value.</span>
+<span class="sd">        Arguments are :</span>
+<span class="sd">          destNameOrDestDS --- Output dataset name or object</span>
+<span class="sd">          srcDS --- a Dataset object or a filename</span>
+<span class="sd">        Keyword arguments are :</span>
+<span class="sd">          options --- return of gdal.InfoOptions(), string or array of strings</span>
+<span class="sd">          other keywords arguments of gdal.NearblackOptions()</span>
+<span class="sd">        If options is provided as a gdal.NearblackOptions() object, other keywords are ignored. &quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">GridOptions</span><span class="p">(</span><span class="n">options</span> <span class="o">=</span> <span class="p">[],</span> <span class="nb">format</span> <span class="o">=</span> <span class="s1">&#39;GTiff&#39;</span><span class="p">,</span>
+              <span class="n">outputType</span> <span class="o">=</span> <span class="n">GDT_Unknown</span><span class="p">,</span>
+              <span class="n">width</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+              <span class="n">creationOptions</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+              <span class="n">outputBounds</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+              <span class="n">outputSRS</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+              <span class="n">noData</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+              <span class="n">algorithm</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+              <span class="n">layers</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+              <span class="n">SQLStatement</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+              <span class="n">where</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+              <span class="n">spatFilter</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+              <span class="n">zfield</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+              <span class="n">z_increase</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+              <span class="n">z_multiply</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+              <span class="n">callback</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">callback_data</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Create a GridOptions() object that can be passed to gdal.Grid()</span>
+<span class="sd">        Keyword arguments are :</span>
+<span class="sd">          options --- can be be an array of strings, a string or let empty and filled from other keywords.</span>
+<span class="sd">          format --- output format (&quot;GTiff&quot;, etc...)</span>
+<span class="sd">          outputType --- output type (gdal.GDT_Byte, etc...)</span>
+<span class="sd">          width --- width of the output raster in pixel</span>
+<span class="sd">          height --- height of the output raster in pixel</span>
+<span class="sd">          creationOptions --- list of creation options</span>
+<span class="sd">          outputBounds --- assigned output bounds: [ulx, uly, lrx, lry]</span>
+<span class="sd">          outputSRS --- assigned output SRS</span>
+<span class="sd">          noData --- nodata value</span>
+<span class="sd">          algorithm --- e.g &quot;invdist:power=2.0:smoothing=0.0:radius1=0.0:radius2=0.0:angle=0.0:max_points=0:min_points=0:nodata=0.0&quot;</span>
+<span class="sd">          layers --- list of layers to convert</span>
+<span class="sd">          SQLStatement --- SQL statement to apply to the source dataset</span>
+<span class="sd">          where --- WHERE clause to apply to source layer(s)</span>
+<span class="sd">          spatFilter --- spatial filter as (minX, minY, maxX, maxY) bounding box</span>
+<span class="sd">          zfield --- Identifies an attribute field on the features to be used to get a Z value from. This value overrides Z value read from feature geometry record.</span>
+<span class="sd">          z_increase --- Addition to the attribute field on the features to be used to get a Z value from. The addition should be the same unit as Z value. The result value will be Z value + Z increase value. The default value is 0.</span>
+<span class="sd">          z_multiply - Multiplication ratio for Z field. This can be used for shift from e.g. foot to meters or from  elevation to deep. The result value will be (Z value + Z increase value) * Z multiply value.  The default value is 1.</span>
+<span class="sd">          callback --- callback method</span>
+<span class="sd">          callback_data --- user data for callback</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<span class="k">def</span> <span class="nf">Grid</span><span class="p">(</span><span class="n">destName</span><span class="p">,</span> <span class="n">srcDS</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Create raster from the scattered data.</span>
+<span class="sd">        Arguments are :</span>
+<span class="sd">          destName --- Output dataset name</span>
+<span class="sd">          srcDS --- a Dataset object or a filename</span>
+<span class="sd">        Keyword arguments are :</span>
+<span class="sd">          options --- return of gdal.InfoOptions(), string or array of strings</span>
+<span class="sd">          other keywords arguments of gdal.GridOptions()</span>
+<span class="sd">        If options is provided as a gdal.GridOptions() object, other keywords are ignored. &quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">RasterizeOptions</span><span class="p">(</span><span class="n">options</span> <span class="o">=</span> <span class="p">[],</span> <span class="nb">format</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">creationOptions</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">noData</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">initValues</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">outputBounds</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">outputSRS</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">width</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">xRes</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">yRes</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">targetAlignedPixels</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+         <span class="n">bands</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">inverse</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">allTouched</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+         <span class="n">burnValues</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">attribute</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">useZ</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">layers</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">SQLStatement</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">SQLDialect</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">where</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">callback</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">callback_data</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Create a RasterizeOptions() object that can be passed to gdal.Rasterize()</span>
+<span class="sd">        Keyword arguments are :</span>
+<span class="sd">          options --- can be be an array of strings, a string or let empty and filled from other keywords.</span>
+<span class="sd">          format --- output format (&quot;GTiff&quot;, etc...)</span>
+<span class="sd">          creationOptions --- list of creation options</span>
+<span class="sd">          outputBounds --- assigned output bounds: [minx, miny, maxx, maxy]</span>
+<span class="sd">          outputSRS --- assigned output SRS</span>
+<span class="sd">          width --- width of the output raster in pixel</span>
+<span class="sd">          height --- height of the output raster in pixel</span>
+<span class="sd">          xRes, yRes --- output resolution in target SRS</span>
+<span class="sd">          targetAlignedPixels --- whether to force output bounds to be multiple of output resolution</span>
+<span class="sd">          noData --- nodata value</span>
+<span class="sd">          initValues --- Value or list of values to pre-initialize the output image bands with.  However, it is not marked as the nodata value in the output file.  If only one value is given, the same value is used in all the bands.</span>
+<span class="sd">          bands --- list of output bands to burn values into</span>
+<span class="sd">          inverse --- whether to invert rasterization, ie burn the fixed burn value, or the burn value associated  with the first feature into all parts of the image not inside the provided a polygon.</span>
+<span class="sd">          allTouched -- whether to enable the ALL_TOUCHED rasterization option so that all pixels touched by lines or polygons will be updated, not just those on the line render path, or whose center point is within the polygon.</span>
+<span class="sd">          burnValues -- list of fixed values to burn into each band for all objects. Excusive with attribute.</span>
+<span class="sd">          attribute --- identifies an attribute field on the features to be used for a burn-in value. The value will be burned into all output bands. Excusive with burnValues.</span>
+<span class="sd">          useZ --- whether to indicate that a burn value should be extracted from the &quot;Z&quot; values of the feature. These values are added to the burn value given by burnValues or attribute if provided. As of now, only points and lines are drawn in 3D.</span>
+<span class="sd">          layers --- list of layers from the datasource that will be used for input features.</span>
+<span class="sd">          SQLStatement --- SQL statement to apply to the source dataset</span>
+<span class="sd">          SQLDialect --- SQL dialect (&#39;OGRSQL&#39;, &#39;SQLITE&#39;, ...)</span>
+<span class="sd">          where --- WHERE clause to apply to source layer(s)</span>
+<span class="sd">          callback --- callback method</span>
+<span class="sd">          callback_data --- user data for callback</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<span class="k">def</span> <span class="nf">Rasterize</span><span class="p">(</span><span class="n">destNameOrDestDS</span><span class="p">,</span> <span class="n">srcDS</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Burns vector geometries into a raster</span>
+<span class="sd">        Arguments are :</span>
+<span class="sd">          destNameOrDestDS --- Output dataset name or object</span>
+<span class="sd">          srcDS --- a Dataset object or a filename</span>
+<span class="sd">        Keyword arguments are :</span>
+<span class="sd">          options --- return of gdal.InfoOptions(), string or array of strings</span>
+<span class="sd">          other keywords arguments of gdal.RasterizeOptions()</span>
+<span class="sd">        If options is provided as a gdal.RasterizeOptions() object, other keywords are ignored. &quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">BuildVRTOptions</span><span class="p">(</span><span class="n">options</span> <span class="o">=</span> <span class="p">[],</span>
+                    <span class="n">resolution</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="n">outputBounds</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="n">xRes</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">yRes</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="n">targetAlignedPixels</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="n">separate</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="n">bandList</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="n">addAlpha</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="n">resampleAlg</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="n">outputSRS</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="n">allowProjectionDifference</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="n">srcNodata</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="n">VRTNodata</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="n">hideNodata</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="n">callback</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">callback_data</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Create a BuildVRTOptions() object that can be passed to gdal.BuildVRT()</span>
+<span class="sd">        Keyword arguments are :</span>
+<span class="sd">          options --- can be be an array of strings, a string or let empty and filled from other keywords..</span>
+<span class="sd">          resolution --- &#39;highest&#39;, &#39;lowest&#39;, &#39;average&#39;, &#39;user&#39;.</span>
+<span class="sd">          outputBounds --- output bounds as (minX, minY, maxX, maxY) in target SRS.</span>
+<span class="sd">          xRes, yRes --- output resolution in target SRS.</span>
+<span class="sd">          targetAlignedPixels --- whether to force output bounds to be multiple of output resolution.</span>
+<span class="sd">          separate --- whether each source file goes into a separate stacked band in the VRT band.</span>
+<span class="sd">          bandList --- array of band numbers (index start at 1).</span>
+<span class="sd">          addAlpha --- whether to add an alpha mask band to the VRT when the source raster have none.</span>
+<span class="sd">          resampleAlg --- resampling mode.</span>
+<span class="sd">          outputSRS --- assigned output SRS.</span>
+<span class="sd">          allowProjectionDifference --- whether to accept input datasets have not the same projection. Note: they will *not* be reprojected.</span>
+<span class="sd">          srcNodata --- source nodata value(s).</span>
+<span class="sd">          VRTNodata --- nodata values at the VRT band level.</span>
+<span class="sd">          hideNodata --- whether to make the VRT band not report the NoData value.</span>
+<span class="sd">          callback --- callback method.</span>
+<span class="sd">          callback_data --- user data for callback.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<span class="k">def</span> <span class="nf">BuildVRT</span><span class="p">(</span><span class="n">destName</span><span class="p">,</span> <span class="n">srcDSOrSrcDSTab</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Build a VRT from a list of datasets.</span>
+<span class="sd">        Arguments are :</span>
+<span class="sd">          destName --- Output dataset name</span>
+<span class="sd">          srcDSOrSrcDSTab --- an array of Dataset objects or filenames, or a Dataset object or a filename</span>
+<span class="sd">        Keyword arguments are :</span>
+<span class="sd">          options --- return of gdal.InfoOptions(), string or array of strings</span>
+<span class="sd">          other keywords arguments of gdal.BuildVRTOptions()</span>
+<span class="sd">        If options is provided as a gdal.BuildVRTOptions() object, other keywords are ignored. &quot;&quot;&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="utilities">
+<h2>Utilities<a class="headerlink" href="#utilities" title="Permalink to this headline">¶</a></h2>
+<p>Utilities are modified to call the respective function.</p>
+</div>
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<p>All new methods/functions are documented.</p>
+</div>
+<div class="section" id="test-suite">
+<h2>Test Suite<a class="headerlink" href="#test-suite" title="Permalink to this headline">¶</a></h2>
+<p>gdal.Info method is tested in
+<a class="reference external" href="http://svn.osgeo.org/gdal/trunk/autotest/utilities/test_gdalinfo_lib.py">test_gdalinfo_lib.py</a>.</p>
+<p>gdal.Translate method is tested in
+<a class="reference external" href="http://svn.osgeo.org/gdal/trunk/autotest/utilities/test_gdal_translate_lib.py">test_gdal_translate_lib.py</a></p>
+<p>gdal.Warp method is tested in
+<a class="reference external" href="http://svn.osgeo.org/gdal/trunk/autotest/utilities/test_gdalwarp_lib.py">test_gdalwarp_lib.py</a></p>
+<p>gdal.VectorTranslate method is tested in
+<a class="reference external" href="http://svn.osgeo.org/gdal/trunk/autotest/utilities/test_ogr2ogr_lib.py">test_ogr2ogr_lib.py</a></p>
+<p>gdal.DEMProcessing method is tested in
+<a class="reference external" href="http://svn.osgeo.org/gdal/trunk/autotest/utilities/test_gdaldem_lib.py">test_gdaldem_lib.py</a></p>
+<p>gdal.Nearblack method is tested in
+<a class="reference external" href="http://svn.osgeo.org/gdal/trunk/autotest/utilities/test_nearblack_lib.py">test_nearblack_lib.py</a></p>
+<p>gdal.Grid method is tested in
+<a class="reference external" href="http://svn.osgeo.org/gdal/trunk/autotest/utilities/test_gdal_grid_lib.py">test_gdal_grid_lib.py</a></p>
+<p>gdal.Rasterize method is tested in
+<a class="reference external" href="http://svn.osgeo.org/gdal/trunk/autotest/utilities/test_gdal_rasterize_lib.py">test_gdal_rasterize_lib.py</a>.</p>
+<p>gdal.BuildVRT method is tested in
+<a class="reference external" href="http://svn.osgeo.org/gdal/trunk/autotest/utilities/test_gdalbuildvrt_lib.py">test_gdalbuildvrt_lib.py</a>.</p>
+</div>
+<div class="section" id="compatibility-issues">
+<h2>Compatibility Issues<a class="headerlink" href="#compatibility-issues" title="Permalink to this headline">¶</a></h2>
+<p>None expected. Command line utilities will keep the same interface. It
+will be checked by ensuring their tests in autotest/utilities still
+pass.</p>
+</div>
+<div class="section" id="related-ticket">
+<h2>Related ticket<a class="headerlink" href="#related-ticket" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>Implementation will be done by Faza Mahamood and Even Rouault</p>
+<p>The proposed implementation for gdalinfo and gdal_translate lies in the
+“rfc59.1” branch of the
+<a class="reference external" href="https://github.com/rouault/gdal2/tree/rfc59.1">https://github.com/rouault/gdal2/tree/rfc59.1</a>.</p>
+</div>
+<div class="section" id="voting-history">
+<h2>Voting history<a class="headerlink" href="#voting-history" title="Permalink to this headline">¶</a></h2>
+<p>+1 from DanielM and EvenR</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rfc59_utilities_as_a_library.html" class="btn btn-neutral float-right" title="RFC 59 : GDAL/OGR utilities as a library" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc58_removing_dataset_nodata_value.html" class="btn btn-neutral float-left" title="RFC 58: Removing Dataset Nodata Value" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

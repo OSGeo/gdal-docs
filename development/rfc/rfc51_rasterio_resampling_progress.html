@@ -1,0 +1,578 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RFC 51: RasterIO() improvements : resampling and progress callback &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdevelopment/rfc/rfc51_rasterio_resampling_progress.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="RFC 52: Strict OGR SQL quoting" href="rfc52_strict_sql_quoting.html" />
+    <link rel="prev" title="RFC 50: OGR field subtypes" href="rfc50_ogr_field_subtype.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 51: RasterIO() improvements : resampling and progress callback</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#core-changes">Core changes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#changes-in-drivers">Changes in drivers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#changes-in-utilities">Changes in utilities</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#changes-in-swig-bindings">Changes in SWIG bindings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#compatibility">Compatibility</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#testing">Testing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voting-history">Voting history</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 51: RasterIO() improvements : resampling and progress callback</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/development/rfc/rfc51_rasterio_resampling_progress.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="rfc52_strict_sql_quoting.html" class="btn btn-neutral float-right" title="RFC 52: Strict OGR SQL quoting" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc50_ogr_field_subtype.html" class="btn btn-neutral float-left" title="RFC 50: OGR field subtypes" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rfc-51-rasterio-improvements-resampling-and-progress-callback">
+<span id="rfc-51"></span><h1>RFC 51: RasterIO() improvements : resampling and progress callback<a class="headerlink" href="#rfc-51-rasterio-improvements-resampling-and-progress-callback" title="Permalink to this headline">¶</a></h1>
+<p>Author: Even Rouault</p>
+<p>Contact: even dot rouault at spatialys dot com</p>
+<p>Status: Adopted, implemented in GDAL 2.0</p>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>This RFC aims at extending the RasterIO() API to allow specifying a
+resampling algorithm when doing requests involving subsampling or
+oversampling. A progress callback can also be specified to be notified
+of progression and allow the user to interrupt the operation.</p>
+</div>
+<div class="section" id="core-changes">
+<h2>Core changes<a class="headerlink" href="#core-changes" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="addition-of-gdalrasterioextraarg-structure">
+<h3>Addition of GDALRasterIOExtraArg structure<a class="headerlink" href="#addition-of-gdalrasterioextraarg-structure" title="Permalink to this headline">¶</a></h3>
+<p>A new structure GDALRasterIOExtraArg is added to contain the new
+options.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>/** Structure to pass extra arguments to RasterIO() method
+  * @since GDAL 2.0
+  */
+typedef struct
+{
+    /*! Version of structure (to allow future extensions of the structure) */
+    int                    nVersion;
+
+    /*! Resampling algorithm */
+    GDALRIOResampleAlg     eResampleAlg;
+
+    /*! Progress callback */
+    GDALProgressFunc       pfnProgress;
+    /*! Progress callback user data */
+    void                  *pProgressData;
+
+    /*! Indicate if dfXOff, dfYOff, dfXSize and dfYSize are set.
+        Mostly reserved from the VRT driver to communicate a more precise
+        source window. Must be such that dfXOff - nXOff &lt; 1.0 and
+        dfYOff - nYOff &lt; 1.0 and nXSize - dfXSize &lt; 1.0 and nYSize - dfYSize &lt; 1.0 */
+    int                    bFloatingPointWindowValidity;
+    /*! Pixel offset to the top left corner. Only valid if bFloatingPointWindowValidity = TRUE */
+    double                 dfXOff;
+    /*! Line offset to the top left corner. Only valid if bFloatingPointWindowValidity = TRUE */
+    double                 dfYOff;
+    /*! Width in pixels of the area of interest. Only valid if bFloatingPointWindowValidity = TRUE */
+    double                 dfXSize;
+    /*! Height in pixels of the area of interest. Only valid if bFloatingPointWindowValidity = TRUE */
+    double                 dfYSize;
+} GDALRasterIOExtraArg;
+
+#define RASTERIO_EXTRA_ARG_CURRENT_VERSION  1
+
+/** Macro to initialize an instance of GDALRasterIOExtraArg structure.
+  * @since GDAL 2.0
+  */
+#define INIT_RASTERIO_EXTRA_ARG(s)  \
+    do { (s).nVersion = RASTERIO_EXTRA_ARG_CURRENT_VERSION; \
+         (s).eResampleAlg = GRIORA_NearestNeighbour; \
+         (s).pfnProgress = NULL; \
+         (s).pProgressData = NULL; \
+         (s).bFloatingPointWindowValidity = FALSE; } while(0)
+</pre></div>
+</div>
+<p>There are several reasons to prefer a structure rather than new
+parameters to the RasterIO() methods :</p>
+<ul class="simple">
+<li><p>code readability (GDALDataset::IRasterIO() has already 14
+parameters…)</p></li>
+<li><p>allow future extensions without changing the prototype in all drivers</p></li>
+<li><p>to a lesser extent, efficiency: it is common for RasterIO() calls to
+be chained between generic/specific and/or dataset/rasterband
+implementations. Passing just the pointer is more efficient.</p></li>
+</ul>
+<p>The structure is versioned. In the future if further options are added,
+the new members will be added at the end of the structure and the
+version number will be incremented. Code in GDAL core&amp;drivers can check
+the version number to determine which options are available.</p>
+</div>
+<div class="section" id="addition-of-gdalrioresamplealg-structure">
+<h3>Addition of GDALRIOResampleAlg structure<a class="headerlink" href="#addition-of-gdalrioresamplealg-structure" title="Permalink to this headline">¶</a></h3>
+<p>The following resampling algorithms are available :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>/** RasterIO() resampling method.
+  * @since GDAL 2.0
+  */
+typedef enum
+{
+    /*! Nearest neighbour */                            GRIORA_NearestNeighbour = 0,
+    /*! Bilinear (2x2 kernel) */                        GRIORA_Bilinear = 1,
+    /*! Cubic Convolution Approximation (4x4 kernel) */ GRIORA_Cubic = 2,
+    /*! Cubic B-Spline Approximation (4x4 kernel) */    GRIORA_CubicSpline = 3,
+    /*! Lanczos windowed sinc interpolation (6x6 kernel) */ GRIORA_Lanczos = 4,
+    /*! Average */                                      GRIORA_Average = 5,
+    /*! Mode (selects the value which appears most often of all the sampled points) */
+                                                        GRIORA_Mode = 6,
+    /*! Gauss blurring */                               GRIORA_Gauss = 7
+} GDALRIOResampleAlg;
+</pre></div>
+</div>
+<p>Those new resampling methods can be used by the
+GDALRasterBand::IRasterIO() default implementation when the size of the
+buffer (nBufXSize x nBufYSize) is different from the size of the area of
+interest (nXSize x nYSize). The code heavily relies on the algorithms
+used for overview computation, with adjustments to be also able to deal
+with oversampling. Bilinear, CubicSpline and Lanczos are now available
+in overview computation as well, and rely on the generic infrastructure
+for convolution computation introduced lately for improved cubic
+overviews. Some algorithms are not available on raster bands with color
+palette. A warning will be emitted if an attempt of doing so is done,
+and nearest neighbour will be used as a fallback.</p>
+<p>The GDAL_RASTERIO_RESAMPLING configuration option can be set as an
+alternate way of specifying the resampling algorithm. Mainly useful for
+tests with applications that do not yet use the new API.</p>
+<p>Currently, the new resampling methods are only available for GF_Read
+operations. The use case for GF_Write operations isn’t obvious, but
+could be added without API changes if needed.</p>
+</div>
+<div class="section" id="c-changes">
+<h3>C++ changes<a class="headerlink" href="#c-changes" title="Permalink to this headline">¶</a></h3>
+<p>GDALDataset and GDALRasterBand (non virtual) RasterIO() and (virtual)
+IRasterIO() methods have a new final argument psExtraArg of type
+GDALRasterIOExtraArg*. This extra argument defaults to NULL for code
+using GDAL, but is required for all in-tree code, so as to avoid that
+in-tree code forgets to forwards psExtraArg it might have returned from
+a caller.</p>
+<p>GDALDataset::RasterIO() and GDALRasterBand::RasterIO() can accept a NULL
+pointer for that argument in which case they will instantiate a default
+GDALRasterIOExtraArg structure to be passed to IRasterIO(). Any other
+code that calls IRasterIO() directly (a few IReadBlock()
+implementations) should make sure of doing so, so that IRasterIO() can
+assume that its psExtraArg is not NULL.</p>
+<p>As a provision to be able to deal with very large requests with buffers
+larger than several gigabytes, the nPixelSpace, nLineSpace and
+nBandSpace parameters have been promoted from the int datatype to the
+new GSpacing datatype, which is an alias of a signed 64 bit integer.</p>
+<p>GDALRasterBand::IRasterIO() and GDALDataset::BlockBasedRasterIO() now
+use the progress callback when available.</p>
+</div>
+<div class="section" id="c-api-changes">
+<h3>C API changes<a class="headerlink" href="#c-api-changes" title="Permalink to this headline">¶</a></h3>
+<p>Only additions :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CPLErr</span> <span class="n">CPL_DLL</span> <span class="n">CPL_STDCALL</span> <span class="n">GDALDatasetRasterIOEx</span><span class="p">(</span>
+    <span class="n">GDALDatasetH</span> <span class="n">hDS</span><span class="p">,</span> <span class="n">GDALRWFlag</span> <span class="n">eRWFlag</span><span class="p">,</span>
+    <span class="nb">int</span> <span class="n">nDSXOff</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nDSYOff</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nDSXSize</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nDSYSize</span><span class="p">,</span>
+    <span class="n">void</span> <span class="o">*</span> <span class="n">pBuffer</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nBXSize</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nBYSize</span><span class="p">,</span> <span class="n">GDALDataType</span> <span class="n">eBDataType</span><span class="p">,</span>
+    <span class="nb">int</span> <span class="n">nBandCount</span><span class="p">,</span> <span class="nb">int</span> <span class="o">*</span><span class="n">panBandCount</span><span class="p">,</span>
+    <span class="n">GSpacing</span> <span class="n">nPixelSpace</span><span class="p">,</span> <span class="n">GSpacing</span> <span class="n">nLineSpace</span><span class="p">,</span> <span class="n">GSpacing</span> <span class="n">nBandSpace</span><span class="p">,</span>
+    <span class="n">GDALRasterIOExtraArg</span><span class="o">*</span> <span class="n">psExtraArg</span><span class="p">);</span>
+
+<span class="n">CPLErr</span> <span class="n">CPL_DLL</span> <span class="n">CPL_STDCALL</span>
+<span class="n">GDALRasterIOEx</span><span class="p">(</span> <span class="n">GDALRasterBandH</span> <span class="n">hRBand</span><span class="p">,</span> <span class="n">GDALRWFlag</span> <span class="n">eRWFlag</span><span class="p">,</span>
+                <span class="nb">int</span> <span class="n">nDSXOff</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nDSYOff</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nDSXSize</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nDSYSize</span><span class="p">,</span>
+                <span class="n">void</span> <span class="o">*</span> <span class="n">pBuffer</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nBXSize</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nBYSize</span><span class="p">,</span><span class="n">GDALDataType</span> <span class="n">eBDataType</span><span class="p">,</span>
+                <span class="n">GSpacing</span> <span class="n">nPixelSpace</span><span class="p">,</span> <span class="n">GSpacing</span> <span class="n">nLineSpace</span><span class="p">,</span>
+                <span class="n">GDALRasterIOExtraArg</span><span class="o">*</span> <span class="n">psExtraArg</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>Those are the same as the existing functions with a final
+GDALRasterIOExtraArg* psExtraArg argument, and the spacing parameters
+promoted to GSpacing.</p>
+</div>
+</div>
+<div class="section" id="changes-in-drivers">
+<h2>Changes in drivers<a class="headerlink" href="#changes-in-drivers" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>All in-tree drivers that implemented or used RasterIO have been
+edited to accept the GDALRasterIOExtraArg* psExtraArg parameter, and
+forward it when needed. Those who had a custom RasterIO()
+implementation now use the progress callback when available.</p></li>
+<li><p>VRT: the and elements can accept a ‘resampling’ attribute. The VRT
+driver will also set the dfXOff, dfYOff, dfXSize and dfYSize fields
+of GDALRasterIOExtraArg* to have source sub-pixel accuracy, so that
+GDALRasterBand::IRasterIO() leads to consistent results when
+operating on a small area of interest or the whole raster. If that
+was not done, chunking done in GDALDatasetCopyWholeRaster() or other
+algorithms could lead to repeated lines due to integer rounding
+issues.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-utilities">
+<h2>Changes in utilities<a class="headerlink" href="#changes-in-utilities" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>gdal_translate: accept a -r parameter to specify the resampling
+algorithm. Defaults to NEAR. Can be set to bilinear, cubic,
+cubicspline, lanczos, average or mode. (Under the hood, this sets the
+new resampling property at the VRT source level.)</p></li>
+<li><p>gdaladdo: -r parameter now accepts bilinear, cubicspline and lanczos
+as additional algorithms to the existing ones.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-swig-bindings">
+<h2>Changes in SWIG bindings<a class="headerlink" href="#changes-in-swig-bindings" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>For Python and Perl bindings: Band.ReadRaster(), Dataset.ReadRaster()
+now accept optional resample_alg, callback and callback_data
+arguments. (untested for Perl, but the existing tests pass)</p></li>
+<li><p>For Python bindings, Band.ReadAsArray() and Dataset.ReadAsArray() now
+accept optional resample_alg, callback and callback_data arguments.</p></li>
+</ul>
+</div>
+<div class="section" id="compatibility">
+<h2>Compatibility<a class="headerlink" href="#compatibility" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>C API/ABI preserved.</p></li>
+<li><p>C++ users of the GDALRasterBand::RasterIO() and
+GDALDataset::RasterIO() API do not need to change their code, since
+the new GDALRasterIOExtraArg* psExtraArg argument is optional for
+out-of-tree code.</p></li>
+<li><p>Out-of-tree drivers that implement IRasterIO() must be changed to
+accept the new GDALRasterIOExtraArg* psExtraArg argument. Note:
+failing to do so will be undetected at compile time (due to how C++
+virtual method overloading work).</p></li>
+</ul>
+<p>Both issues will be mentioned in MIGRATION_GUIDE.TXT</p>
+</div>
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<p>All new methods are documented.</p>
+</div>
+<div class="section" id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
+<p>The various aspects of this RFC are tested in the Python bindings:</p>
+<ul class="simple">
+<li><p>use of the new options of Band.ReadRaster(), Dataset.ReadRaster(),
+Band.ReadAsArray() and Dataset.ReadAsArray().</p></li>
+<li><p>resampling algorithms in subsampling and oversampling RasterIO()
+requests.</p></li>
+<li><p>“-r” option of gdal_translate</p></li>
+</ul>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>Implementation will be done by Even Rouault
+(<a class="reference external" href="http://spatialys.com">Spatialys</a>), and sponsored by <a class="reference external" href="http://r3-gis.com">R3
+GIS</a>.</p>
+<p>The proposed implementation lies in the “rasterio” branch of the
+<a class="reference external" href="https://github.com/rouault/gdal2/tree/rasterio">https://github.com/rouault/gdal2/tree/rasterio</a>
+repository.</p>
+<p>The list of changes :
+<a class="reference external" href="https://github.com/rouault/gdal2/compare/rasterio">https://github.com/rouault/gdal2/compare/rasterio</a></p>
+</div>
+<div class="section" id="voting-history">
+<h2>Voting history<a class="headerlink" href="#voting-history" title="Permalink to this headline">¶</a></h2>
+<p>+1 from FrankW, JukkaR, HowardB, DanielM, TamasS and EvenR</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rfc52_strict_sql_quoting.html" class="btn btn-neutral float-right" title="RFC 52: Strict OGR SQL quoting" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc50_ogr_field_subtype.html" class="btn btn-neutral float-left" title="RFC 50: OGR field subtypes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

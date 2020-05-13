@@ -1,0 +1,1200 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gdal_utils.h: GDAL Algorithms C API &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgapi/gdal_utils.html"/>
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="GDALDriver C++ API" href="gdaldriver_cpp.html" />
+    <link rel="prev" title="ogr_srs_api.h: Spatial Reference System C API" href="ogr_srs_api.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#id2">Full Doxygen output</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#c-api">C API</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cpl.html">Common Portability Library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="raster_c_api.html">gdal.h: Raster C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vector_c_api.html">ogr_core.h and ogr_api.h: Vector C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_alg.html">gdal_alg.h: GDAL Algorithms C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ogr_srs_api.html">ogr_srs_api.h: Spatial Reference System C API</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">gdal_utils.h: GDAL Algorithms C API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id3">C++ API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#python-api">Python API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id4">Java API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">API</a> &raquo;</li>
+      
+      <li>gdal_utils.h: GDAL Algorithms C API</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/api/gdal_utils.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="gdaldriver_cpp.html" class="btn btn-neutral float-right" title="GDALDriver C++ API" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ogr_srs_api.html" class="btn btn-neutral float-left" title="ogr_srs_api.h: Spatial Reference System C API" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="gdal-utils-h-gdal-algorithms-c-api">
+<span id="gdal-utils"></span><h1>gdal_utils.h: GDAL Algorithms C API<a class="headerlink" href="#gdal-utils-h-gdal-algorithms-c-api" title="Permalink to this headline">¶</a></h1>
+<p>Public (C callable) GDAL Utilities entry points. </p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.1 </p>
+</dd>
+</dl>
+</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Typedefs</p>
+<dl class="type">
+<dt id="_CPPv415GDALInfoOptions">
+<span id="_CPPv315GDALInfoOptions"></span><span id="_CPPv215GDALInfoOptions"></span><span id="GDALInfoOptions"></span><span class="target" id="gdal__utils_8h_1a1ab627f7c3092f9861a45a4db42832cd"></span><em class="property">typedef </em><em class="property">struct</em> <a class="reference internal" href="#_CPPv415GDALInfoOptions" title="GDALInfoOptions">GDALInfoOptions</a> <code class="descname">GDALInfoOptions</code><a class="headerlink" href="#_CPPv415GDALInfoOptions" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Options for <a class="reference internal" href="#gdal__utils_8h_1a39aaaa537474fead1ef4575e61e9b96d"><span class="std std-ref">GDALInfo()</span></a>. Opaque type </p>
+</dd></dl>
+
+<dl class="type">
+<dt id="_CPPv424GDALInfoOptionsForBinary">
+<span id="_CPPv324GDALInfoOptionsForBinary"></span><span id="_CPPv224GDALInfoOptionsForBinary"></span><span id="GDALInfoOptionsForBinary"></span><span class="target" id="gdal__utils_8h_1a1abbd14aff4c7d715a4eca1feb0afde9"></span><em class="property">typedef </em><em class="property">struct</em> <a class="reference internal" href="#_CPPv424GDALInfoOptionsForBinary" title="GDALInfoOptionsForBinary">GDALInfoOptionsForBinary</a> <code class="descname">GDALInfoOptionsForBinary</code><a class="headerlink" href="#_CPPv424GDALInfoOptionsForBinary" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Opaque type. </p>
+</dd></dl>
+
+<dl class="type">
+<dt id="_CPPv420GDALTranslateOptions">
+<span id="_CPPv320GDALTranslateOptions"></span><span id="_CPPv220GDALTranslateOptions"></span><span id="GDALTranslateOptions"></span><span class="target" id="gdal__utils_8h_1a824ae5ddbd5058bb317501bd25219dd4"></span><em class="property">typedef </em><em class="property">struct</em> <a class="reference internal" href="#_CPPv420GDALTranslateOptions" title="GDALTranslateOptions">GDALTranslateOptions</a> <code class="descname">GDALTranslateOptions</code><a class="headerlink" href="#_CPPv420GDALTranslateOptions" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Options for <a class="reference internal" href="#gdal__utils_8h_1a1cf5b30de14ccaf847ae7a77bb546b28"><span class="std std-ref">GDALTranslate()</span></a>. Opaque type </p>
+</dd></dl>
+
+<dl class="type">
+<dt id="_CPPv429GDALTranslateOptionsForBinary">
+<span id="_CPPv329GDALTranslateOptionsForBinary"></span><span id="_CPPv229GDALTranslateOptionsForBinary"></span><span id="GDALTranslateOptionsForBinary"></span><span class="target" id="gdal__utils_8h_1ad799fc84e01c885a85eb2717364d57c8"></span><em class="property">typedef </em><em class="property">struct</em> <a class="reference internal" href="#_CPPv429GDALTranslateOptionsForBinary" title="GDALTranslateOptionsForBinary">GDALTranslateOptionsForBinary</a> <code class="descname">GDALTranslateOptionsForBinary</code><a class="headerlink" href="#_CPPv429GDALTranslateOptionsForBinary" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Opaque type. </p>
+</dd></dl>
+
+<dl class="type">
+<dt id="_CPPv418GDALWarpAppOptions">
+<span id="_CPPv318GDALWarpAppOptions"></span><span id="_CPPv218GDALWarpAppOptions"></span><span id="GDALWarpAppOptions"></span><span class="target" id="gdal__utils_8h_1af5db58f893c229b45fb1d197cadced19"></span><em class="property">typedef </em><em class="property">struct</em> <a class="reference internal" href="#_CPPv418GDALWarpAppOptions" title="GDALWarpAppOptions">GDALWarpAppOptions</a> <code class="descname">GDALWarpAppOptions</code><a class="headerlink" href="#_CPPv418GDALWarpAppOptions" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Options for <a class="reference internal" href="#gdal__utils_8h_1ab2094d5332364d63e0851dcb12398469"><span class="std std-ref">GDALWarp()</span></a>. Opaque type </p>
+</dd></dl>
+
+<dl class="type">
+<dt id="_CPPv427GDALWarpAppOptionsForBinary">
+<span id="_CPPv327GDALWarpAppOptionsForBinary"></span><span id="_CPPv227GDALWarpAppOptionsForBinary"></span><span id="GDALWarpAppOptionsForBinary"></span><span class="target" id="gdal__utils_8h_1a5248dc9a1205dc0c2d354836934d68ac"></span><em class="property">typedef </em><em class="property">struct</em> <a class="reference internal" href="#_CPPv427GDALWarpAppOptionsForBinary" title="GDALWarpAppOptionsForBinary">GDALWarpAppOptionsForBinary</a> <code class="descname">GDALWarpAppOptionsForBinary</code><a class="headerlink" href="#_CPPv427GDALWarpAppOptionsForBinary" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Opaque type. </p>
+</dd></dl>
+
+<dl class="type">
+<dt id="_CPPv426GDALVectorTranslateOptions">
+<span id="_CPPv326GDALVectorTranslateOptions"></span><span id="_CPPv226GDALVectorTranslateOptions"></span><span id="GDALVectorTranslateOptions"></span><span class="target" id="gdal__utils_8h_1ada2303d2328d2cfd62c13dc917646a15"></span><em class="property">typedef </em><em class="property">struct</em> <a class="reference internal" href="#_CPPv426GDALVectorTranslateOptions" title="GDALVectorTranslateOptions">GDALVectorTranslateOptions</a> <code class="descname">GDALVectorTranslateOptions</code><a class="headerlink" href="#_CPPv426GDALVectorTranslateOptions" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Options for <a class="reference internal" href="#gdal__utils_8h_1aa176ae667bc857ab9c6016dbe62166eb"><span class="std std-ref">GDALVectorTranslate()</span></a>. Opaque type </p>
+</dd></dl>
+
+<dl class="type">
+<dt id="_CPPv435GDALVectorTranslateOptionsForBinary">
+<span id="_CPPv335GDALVectorTranslateOptionsForBinary"></span><span id="_CPPv235GDALVectorTranslateOptionsForBinary"></span><span id="GDALVectorTranslateOptionsForBinary"></span><span class="target" id="gdal__utils_8h_1a36714f50c38f2cd71c4f620cc9de39b1"></span><em class="property">typedef </em><em class="property">struct</em> <a class="reference internal" href="#_CPPv435GDALVectorTranslateOptionsForBinary" title="GDALVectorTranslateOptionsForBinary">GDALVectorTranslateOptionsForBinary</a> <code class="descname">GDALVectorTranslateOptionsForBinary</code><a class="headerlink" href="#_CPPv435GDALVectorTranslateOptionsForBinary" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Opaque type. </p>
+</dd></dl>
+
+<dl class="type">
+<dt id="_CPPv424GDALDEMProcessingOptions">
+<span id="_CPPv324GDALDEMProcessingOptions"></span><span id="_CPPv224GDALDEMProcessingOptions"></span><span id="GDALDEMProcessingOptions"></span><span class="target" id="gdal__utils_8h_1a4a9b158e74629c68406d5c071c281b2b"></span><em class="property">typedef </em><em class="property">struct</em> <a class="reference internal" href="#_CPPv424GDALDEMProcessingOptions" title="GDALDEMProcessingOptions">GDALDEMProcessingOptions</a> <code class="descname">GDALDEMProcessingOptions</code><a class="headerlink" href="#_CPPv424GDALDEMProcessingOptions" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Options for <a class="reference internal" href="#gdal__utils_8h_1a5d8486d2fd4a7a39bc954eb7f4410053"><span class="std std-ref">GDALDEMProcessing()</span></a>. Opaque type </p>
+</dd></dl>
+
+<dl class="type">
+<dt id="_CPPv433GDALDEMProcessingOptionsForBinary">
+<span id="_CPPv333GDALDEMProcessingOptionsForBinary"></span><span id="_CPPv233GDALDEMProcessingOptionsForBinary"></span><span id="GDALDEMProcessingOptionsForBinary"></span><span class="target" id="gdal__utils_8h_1a715c2befe2ff881d9f68e8b4c0431245"></span><em class="property">typedef </em><em class="property">struct</em> <a class="reference internal" href="#_CPPv433GDALDEMProcessingOptionsForBinary" title="GDALDEMProcessingOptionsForBinary">GDALDEMProcessingOptionsForBinary</a> <code class="descname">GDALDEMProcessingOptionsForBinary</code><a class="headerlink" href="#_CPPv433GDALDEMProcessingOptionsForBinary" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Opaque type. </p>
+</dd></dl>
+
+<dl class="type">
+<dt id="_CPPv420GDALNearblackOptions">
+<span id="_CPPv320GDALNearblackOptions"></span><span id="_CPPv220GDALNearblackOptions"></span><span id="GDALNearblackOptions"></span><span class="target" id="gdal__utils_8h_1a6162e0ddc96e172683249f1010bccaf3"></span><em class="property">typedef </em><em class="property">struct</em> <a class="reference internal" href="#_CPPv420GDALNearblackOptions" title="GDALNearblackOptions">GDALNearblackOptions</a> <code class="descname">GDALNearblackOptions</code><a class="headerlink" href="#_CPPv420GDALNearblackOptions" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Options for <a class="reference internal" href="#gdal__utils_8h_1acc77cd8d180d43d07783dd61c327f1b6"><span class="std std-ref">GDALNearblack()</span></a>. Opaque type </p>
+</dd></dl>
+
+<dl class="type">
+<dt id="_CPPv429GDALNearblackOptionsForBinary">
+<span id="_CPPv329GDALNearblackOptionsForBinary"></span><span id="_CPPv229GDALNearblackOptionsForBinary"></span><span id="GDALNearblackOptionsForBinary"></span><span class="target" id="gdal__utils_8h_1aa784000e49dc3069d99f6c9e4498db94"></span><em class="property">typedef </em><em class="property">struct</em> <a class="reference internal" href="#_CPPv429GDALNearblackOptionsForBinary" title="GDALNearblackOptionsForBinary">GDALNearblackOptionsForBinary</a> <code class="descname">GDALNearblackOptionsForBinary</code><a class="headerlink" href="#_CPPv429GDALNearblackOptionsForBinary" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Opaque type. </p>
+</dd></dl>
+
+<dl class="type">
+<dt id="_CPPv415GDALGridOptions">
+<span id="_CPPv315GDALGridOptions"></span><span id="_CPPv215GDALGridOptions"></span><span id="GDALGridOptions"></span><span class="target" id="gdal__utils_8h_1a87c299124685bcfe800f6744bd90da52"></span><em class="property">typedef </em><em class="property">struct</em> <a class="reference internal" href="#_CPPv415GDALGridOptions" title="GDALGridOptions">GDALGridOptions</a> <code class="descname">GDALGridOptions</code><a class="headerlink" href="#_CPPv415GDALGridOptions" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Options for <a class="reference internal" href="#gdal__utils_8h_1aba2c7e659a2fdb180867e3480a8be3a8"><span class="std std-ref">GDALGrid()</span></a>. Opaque type </p>
+</dd></dl>
+
+<dl class="type">
+<dt id="_CPPv424GDALGridOptionsForBinary">
+<span id="_CPPv324GDALGridOptionsForBinary"></span><span id="_CPPv224GDALGridOptionsForBinary"></span><span id="GDALGridOptionsForBinary"></span><span class="target" id="gdal__utils_8h_1aae1e8619ce740ed7b29760d2d797165a"></span><em class="property">typedef </em><em class="property">struct</em> <a class="reference internal" href="#_CPPv424GDALGridOptionsForBinary" title="GDALGridOptionsForBinary">GDALGridOptionsForBinary</a> <code class="descname">GDALGridOptionsForBinary</code><a class="headerlink" href="#_CPPv424GDALGridOptionsForBinary" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Opaque type. </p>
+</dd></dl>
+
+<dl class="type">
+<dt id="_CPPv420GDALRasterizeOptions">
+<span id="_CPPv320GDALRasterizeOptions"></span><span id="_CPPv220GDALRasterizeOptions"></span><span id="GDALRasterizeOptions"></span><span class="target" id="gdal__utils_8h_1a697aa0c4773dcb01889622c98833cd92"></span><em class="property">typedef </em><em class="property">struct</em> <a class="reference internal" href="#_CPPv420GDALRasterizeOptions" title="GDALRasterizeOptions">GDALRasterizeOptions</a> <code class="descname">GDALRasterizeOptions</code><a class="headerlink" href="#_CPPv420GDALRasterizeOptions" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Options for <a class="reference internal" href="#gdal__utils_8h_1afd3a6dead8773c7716e2a4cbaa4e8d4e"><span class="std std-ref">GDALRasterize()</span></a>. Opaque type </p>
+</dd></dl>
+
+<dl class="type">
+<dt id="_CPPv429GDALRasterizeOptionsForBinary">
+<span id="_CPPv329GDALRasterizeOptionsForBinary"></span><span id="_CPPv229GDALRasterizeOptionsForBinary"></span><span id="GDALRasterizeOptionsForBinary"></span><span class="target" id="gdal__utils_8h_1aff59e948965ccae6be147fe19aee1975"></span><em class="property">typedef </em><em class="property">struct</em> <a class="reference internal" href="#_CPPv429GDALRasterizeOptionsForBinary" title="GDALRasterizeOptionsForBinary">GDALRasterizeOptionsForBinary</a> <code class="descname">GDALRasterizeOptionsForBinary</code><a class="headerlink" href="#_CPPv429GDALRasterizeOptionsForBinary" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Opaque type. </p>
+</dd></dl>
+
+<dl class="type">
+<dt id="_CPPv419GDALBuildVRTOptions">
+<span id="_CPPv319GDALBuildVRTOptions"></span><span id="_CPPv219GDALBuildVRTOptions"></span><span id="GDALBuildVRTOptions"></span><span class="target" id="gdal__utils_8h_1ad79d876a7a564fbed4a1da1b0a59c4e3"></span><em class="property">typedef </em><em class="property">struct</em> <a class="reference internal" href="#_CPPv419GDALBuildVRTOptions" title="GDALBuildVRTOptions">GDALBuildVRTOptions</a> <code class="descname">GDALBuildVRTOptions</code><a class="headerlink" href="#_CPPv419GDALBuildVRTOptions" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Options for <a class="reference internal" href="#gdal__utils_8h_1a057aaea8b0ed0476809a781ffa377ea4"><span class="std std-ref">GDALBuildVRT()</span></a>. Opaque type </p>
+</dd></dl>
+
+<dl class="type">
+<dt id="_CPPv428GDALBuildVRTOptionsForBinary">
+<span id="_CPPv328GDALBuildVRTOptionsForBinary"></span><span id="_CPPv228GDALBuildVRTOptionsForBinary"></span><span id="GDALBuildVRTOptionsForBinary"></span><span class="target" id="gdal__utils_8h_1a0fd6003ebc6d04d94beb9049633b45ff"></span><em class="property">typedef </em><em class="property">struct</em> <a class="reference internal" href="#_CPPv428GDALBuildVRTOptionsForBinary" title="GDALBuildVRTOptionsForBinary">GDALBuildVRTOptionsForBinary</a> <code class="descname">GDALBuildVRTOptionsForBinary</code><a class="headerlink" href="#_CPPv428GDALBuildVRTOptionsForBinary" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Opaque type. </p>
+</dd></dl>
+
+<dl class="type">
+<dt id="_CPPv423GDALMultiDimInfoOptions">
+<span id="_CPPv323GDALMultiDimInfoOptions"></span><span id="_CPPv223GDALMultiDimInfoOptions"></span><span id="GDALMultiDimInfoOptions"></span><span class="target" id="gdal__utils_8h_1ad142967170400c3d229814dd26f68b33"></span><em class="property">typedef </em><em class="property">struct</em> <a class="reference internal" href="#_CPPv423GDALMultiDimInfoOptions" title="GDALMultiDimInfoOptions">GDALMultiDimInfoOptions</a> <code class="descname">GDALMultiDimInfoOptions</code><a class="headerlink" href="#_CPPv423GDALMultiDimInfoOptions" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Options for <a class="reference internal" href="#gdal__utils_8h_1a0e571d445f7331e5eef62ec859422632"><span class="std std-ref">GDALMultiDimInfo()</span></a>. Opaque type </p>
+</dd></dl>
+
+<dl class="type">
+<dt id="_CPPv432GDALMultiDimInfoOptionsForBinary">
+<span id="_CPPv332GDALMultiDimInfoOptionsForBinary"></span><span id="_CPPv232GDALMultiDimInfoOptionsForBinary"></span><span id="GDALMultiDimInfoOptionsForBinary"></span><span class="target" id="gdal__utils_8h_1aca6e13cf13f25397f91caa02c4dbad27"></span><em class="property">typedef </em><em class="property">struct</em> <a class="reference internal" href="#_CPPv432GDALMultiDimInfoOptionsForBinary" title="GDALMultiDimInfoOptionsForBinary">GDALMultiDimInfoOptionsForBinary</a> <code class="descname">GDALMultiDimInfoOptionsForBinary</code><a class="headerlink" href="#_CPPv432GDALMultiDimInfoOptionsForBinary" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Opaque type. </p>
+</dd></dl>
+
+<dl class="type">
+<dt id="_CPPv428GDALMultiDimTranslateOptions">
+<span id="_CPPv328GDALMultiDimTranslateOptions"></span><span id="_CPPv228GDALMultiDimTranslateOptions"></span><span id="GDALMultiDimTranslateOptions"></span><span class="target" id="gdal__utils_8h_1ac529d5344ffdebcfd4fc55d013acd84d"></span><em class="property">typedef </em><em class="property">struct</em> <a class="reference internal" href="#_CPPv428GDALMultiDimTranslateOptions" title="GDALMultiDimTranslateOptions">GDALMultiDimTranslateOptions</a> <code class="descname">GDALMultiDimTranslateOptions</code><a class="headerlink" href="#_CPPv428GDALMultiDimTranslateOptions" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Options for <a class="reference internal" href="#gdal__utils_8h_1ad90adfbf5cb782945c1c781fe0f9e64a"><span class="std std-ref">GDALMultiDimTranslate()</span></a>. Opaque type </p>
+</dd></dl>
+
+<dl class="type">
+<dt id="_CPPv437GDALMultiDimTranslateOptionsForBinary">
+<span id="_CPPv337GDALMultiDimTranslateOptionsForBinary"></span><span id="_CPPv237GDALMultiDimTranslateOptionsForBinary"></span><span id="GDALMultiDimTranslateOptionsForBinary"></span><span class="target" id="gdal__utils_8h_1a2634b67cbcaefb9a7357c47e67c9a64a"></span><em class="property">typedef </em><em class="property">struct</em> <a class="reference internal" href="#_CPPv437GDALMultiDimTranslateOptionsForBinary" title="GDALMultiDimTranslateOptionsForBinary">GDALMultiDimTranslateOptionsForBinary</a> <code class="descname">GDALMultiDimTranslateOptionsForBinary</code><a class="headerlink" href="#_CPPv437GDALMultiDimTranslateOptionsForBinary" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Opaque type. </p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Functions</p>
+<dl class="function">
+<dt id="_CPPv418GDALInfoOptionsNewPPcP24GDALInfoOptionsForBinary">
+<span id="_CPPv318GDALInfoOptionsNewPPcP24GDALInfoOptionsForBinary"></span><span id="_CPPv218GDALInfoOptionsNewPPcP24GDALInfoOptionsForBinary"></span><span id="GDALInfoOptionsNew__cPP.GDALInfoOptionsForBinaryP"></span><span class="target" id="gdal__utils_8h_1a7c046943d55759e5b2f4007edbaaf477"></span><a class="reference internal" href="#_CPPv415GDALInfoOptions" title="GDALInfoOptions">GDALInfoOptions</a> *<code class="descname">GDALInfoOptionsNew</code><span class="sig-paren">(</span>char **<em>papszArgv</em>, <a class="reference internal" href="#_CPPv424GDALInfoOptionsForBinary" title="GDALInfoOptionsForBinary">GDALInfoOptionsForBinary</a> *<em>psOptionsForBinary</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418GDALInfoOptionsNewPPcP24GDALInfoOptionsForBinary" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Allocates a GDALInfoOptions struct. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>pointer to the allocated GDALInfoOptions struct. Must be freed with <a class="reference internal" href="#gdal__utils_8h_1a1cd3535ea95b532ea1b9be4bec155329"><span class="std std-ref">GDALInfoOptionsFree()</span></a>.</p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">papszArgv</span></code>: NULL terminated list of options (potentially including filename and open options too), or NULL. The accepted options are the ones of the <a class="reference external" href="/programs/gdalinfo.html">gdalinfo</a> utility. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptionsForBinary</span></code>: (output) may be NULL (and should generally be NULL), otherwise (gdalinfo_bin.cpp use case) must be allocated with GDALInfoOptionsForBinaryNew() prior to this function. Will be filled with potentially present filename, open options, subdataset number… </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv419GDALInfoOptionsFreeP15GDALInfoOptions">
+<span id="_CPPv319GDALInfoOptionsFreeP15GDALInfoOptions"></span><span id="_CPPv219GDALInfoOptionsFreeP15GDALInfoOptions"></span><span id="GDALInfoOptionsFree__GDALInfoOptionsP"></span><span class="target" id="gdal__utils_8h_1a1cd3535ea95b532ea1b9be4bec155329"></span>void <code class="descname">GDALInfoOptionsFree</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv415GDALInfoOptions" title="GDALInfoOptions">GDALInfoOptions</a> *<em>psOptions</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419GDALInfoOptionsFreeP15GDALInfoOptions" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Frees the GDALInfoOptions struct. </p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptions</span></code>: the options struct for <a class="reference internal" href="#gdal__utils_8h_1a39aaaa537474fead1ef4575e61e9b96d"><span class="std std-ref">GDALInfo()</span></a>.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv48GDALInfo12GDALDatasetHPK15GDALInfoOptions">
+<span id="_CPPv38GDALInfo12GDALDatasetHPK15GDALInfoOptions"></span><span id="_CPPv28GDALInfo12GDALDatasetHPK15GDALInfoOptions"></span><span id="GDALInfo__GDALDatasetH.GDALInfoOptionsCP"></span><span class="target" id="gdal__utils_8h_1a39aaaa537474fead1ef4575e61e9b96d"></span>char *<code class="descname">GDALInfo</code><span class="sig-paren">(</span><a class="reference internal" href="raster_c_api.html#_CPPv412GDALDatasetH" title="GDALDatasetH">GDALDatasetH</a> <em>hDataset</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv415GDALInfoOptions" title="GDALInfoOptions">GDALInfoOptions</a> *<em>psOptions</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48GDALInfo12GDALDatasetHPK15GDALInfoOptions" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Lists various information about a GDAL supported raster dataset. </p>
+<p>This is the equivalent of the <a class="reference external" href="/programs/gdalinfo.html">gdalinfo</a> utility.</p>
+<p>GDALInfoOptions* must be allocated and freed with <a class="reference internal" href="#gdal__utils_8h_1a7c046943d55759e5b2f4007edbaaf477"><span class="std std-ref">GDALInfoOptionsNew()</span></a> and <a class="reference internal" href="#gdal__utils_8h_1a1cd3535ea95b532ea1b9be4bec155329"><span class="std std-ref">GDALInfoOptionsFree()</span></a> respectively.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>string corresponding to the information about the raster dataset (must be freed with <a class="reference internal" href="cpl.html#cpl__conv_8h_1a21b7f312da39ddb0a12bdde06b153b48"><span class="std std-ref">CPLFree()</span></a>), or NULL in case of error.</p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">hDataset</span></code>: the dataset handle. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptions</span></code>: the options structure returned by <a class="reference internal" href="#gdal__utils_8h_1a7c046943d55759e5b2f4007edbaaf477"><span class="std std-ref">GDALInfoOptionsNew()</span></a> or NULL. </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv423GDALTranslateOptionsNewPPcP29GDALTranslateOptionsForBinary">
+<span id="_CPPv323GDALTranslateOptionsNewPPcP29GDALTranslateOptionsForBinary"></span><span id="_CPPv223GDALTranslateOptionsNewPPcP29GDALTranslateOptionsForBinary"></span><span id="GDALTranslateOptionsNew__cPP.GDALTranslateOptionsForBinaryP"></span><span class="target" id="gdal__utils_8h_1a5017b917d047076243af873972731d66"></span><a class="reference internal" href="#_CPPv420GDALTranslateOptions" title="GDALTranslateOptions">GDALTranslateOptions</a> *<code class="descname">GDALTranslateOptionsNew</code><span class="sig-paren">(</span>char **<em>papszArgv</em>, <a class="reference internal" href="#_CPPv429GDALTranslateOptionsForBinary" title="GDALTranslateOptionsForBinary">GDALTranslateOptionsForBinary</a> *<em>psOptionsForBinary</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv423GDALTranslateOptionsNewPPcP29GDALTranslateOptionsForBinary" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Allocates a GDALTranslateOptions struct. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>pointer to the allocated GDALTranslateOptions struct. Must be freed with <a class="reference internal" href="#gdal__utils_8h_1ac748883ff8351e7233a8ee07f3cf19a3"><span class="std std-ref">GDALTranslateOptionsFree()</span></a>.</p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">papszArgv</span></code>: NULL terminated list of options (potentially including filename and open options too), or NULL. The accepted options are the ones of the <a class="reference external" href="/programs/gdal_translate.html">gdal_translate</a> utility. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptionsForBinary</span></code>: (output) may be NULL (and should generally be NULL), otherwise (gdal_translate_bin.cpp use case) must be allocated with GDALTranslateOptionsForBinaryNew() prior to this function. Will be filled with potentially present filename, open options,… </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv424GDALTranslateOptionsFreeP20GDALTranslateOptions">
+<span id="_CPPv324GDALTranslateOptionsFreeP20GDALTranslateOptions"></span><span id="_CPPv224GDALTranslateOptionsFreeP20GDALTranslateOptions"></span><span id="GDALTranslateOptionsFree__GDALTranslateOptionsP"></span><span class="target" id="gdal__utils_8h_1ac748883ff8351e7233a8ee07f3cf19a3"></span>void <code class="descname">GDALTranslateOptionsFree</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv420GDALTranslateOptions" title="GDALTranslateOptions">GDALTranslateOptions</a> *<em>psOptions</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv424GDALTranslateOptionsFreeP20GDALTranslateOptions" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Frees the GDALTranslateOptions struct. </p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptions</span></code>: the options struct for <a class="reference internal" href="#gdal__utils_8h_1a1cf5b30de14ccaf847ae7a77bb546b28"><span class="std std-ref">GDALTranslate()</span></a>.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv431GDALTranslateOptionsSetProgressP20GDALTranslateOptions16GDALProgressFuncPv">
+<span id="_CPPv331GDALTranslateOptionsSetProgressP20GDALTranslateOptions16GDALProgressFuncPv"></span><span id="_CPPv231GDALTranslateOptionsSetProgressP20GDALTranslateOptions16GDALProgressFuncPv"></span><span id="GDALTranslateOptionsSetProgress__GDALTranslateOptionsP.GDALProgressFunc.voidP"></span><span class="target" id="gdal__utils_8h_1ac93207c9d74ce60978dbb5e4f66c49a5"></span>void <code class="descname">GDALTranslateOptionsSetProgress</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv420GDALTranslateOptions" title="GDALTranslateOptions">GDALTranslateOptions</a> *<em>psOptions</em>, <a class="reference internal" href="cpl.html#_CPPv416GDALProgressFunc" title="GDALProgressFunc">GDALProgressFunc</a> <em>pfnProgress</em>, void *<em>pProgressData</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv431GDALTranslateOptionsSetProgressP20GDALTranslateOptions16GDALProgressFuncPv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set a progress function. </p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptions</span></code>: the options struct for <a class="reference internal" href="#gdal__utils_8h_1a1cf5b30de14ccaf847ae7a77bb546b28"><span class="std std-ref">GDALTranslate()</span></a>. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pfnProgress</span></code>: the progress callback. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pProgressData</span></code>: the user data for the progress callback.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv413GDALTranslatePKc12GDALDatasetHPK20GDALTranslateOptionsPi">
+<span id="_CPPv313GDALTranslatePKc12GDALDatasetHPK20GDALTranslateOptionsPi"></span><span id="_CPPv213GDALTranslatePKc12GDALDatasetHPK20GDALTranslateOptionsPi"></span><span id="GDALTranslate__cCP.GDALDatasetH.GDALTranslateOptionsCP.iP"></span><span class="target" id="gdal__utils_8h_1a1cf5b30de14ccaf847ae7a77bb546b28"></span><a class="reference internal" href="raster_c_api.html#_CPPv412GDALDatasetH" title="GDALDatasetH">GDALDatasetH</a> <code class="descname">GDALTranslate</code><span class="sig-paren">(</span><em class="property">const</em> char *<em>pszDestFilename</em>, <a class="reference internal" href="raster_c_api.html#_CPPv412GDALDatasetH" title="GDALDatasetH">GDALDatasetH</a> <em>hSrcDataset</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv420GDALTranslateOptions" title="GDALTranslateOptions">GDALTranslateOptions</a> *<em>psOptions</em>, int *<em>pbUsageError</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413GDALTranslatePKc12GDALDatasetHPK20GDALTranslateOptionsPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Converts raster data between different formats. </p>
+<p>This is the equivalent of the <a class="reference external" href="/programs/gdal_translate.html">gdal_translate</a> utility.</p>
+<p>GDALTranslateOptions* must be allocated and freed with <a class="reference internal" href="#gdal__utils_8h_1a5017b917d047076243af873972731d66"><span class="std std-ref">GDALTranslateOptionsNew()</span></a> and <a class="reference internal" href="#gdal__utils_8h_1ac748883ff8351e7233a8ee07f3cf19a3"><span class="std std-ref">GDALTranslateOptionsFree()</span></a> respectively.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>the output dataset (new dataset that must be closed using <a class="reference internal" href="raster_c_api.html#gdal_8h_1a0984222d45a72028fcbbf1f44831ffbc"><span class="std std-ref">GDALClose()</span></a>) or NULL in case of error.</p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pszDest</span></code>: the destination dataset path. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hSrcDataset</span></code>: the source dataset handle. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptionsIn</span></code>: the options struct returned by <a class="reference internal" href="#gdal__utils_8h_1a5017b917d047076243af873972731d66"><span class="std std-ref">GDALTranslateOptionsNew()</span></a> or NULL. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pbUsageError</span></code>: the pointer to int variable to determine any usage error has occurred or NULL. </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv421GDALWarpAppOptionsNewPPcP27GDALWarpAppOptionsForBinary">
+<span id="_CPPv321GDALWarpAppOptionsNewPPcP27GDALWarpAppOptionsForBinary"></span><span id="_CPPv221GDALWarpAppOptionsNewPPcP27GDALWarpAppOptionsForBinary"></span><span id="GDALWarpAppOptionsNew__cPP.GDALWarpAppOptionsForBinaryP"></span><span class="target" id="gdal__utils_8h_1a02cc73f77d9864f5e94326fee250fa26"></span><a class="reference internal" href="#_CPPv418GDALWarpAppOptions" title="GDALWarpAppOptions">GDALWarpAppOptions</a> *<code class="descname">GDALWarpAppOptionsNew</code><span class="sig-paren">(</span>char **<em>papszArgv</em>, <a class="reference internal" href="#_CPPv427GDALWarpAppOptionsForBinary" title="GDALWarpAppOptionsForBinary">GDALWarpAppOptionsForBinary</a> *<em>psOptionsForBinary</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv421GDALWarpAppOptionsNewPPcP27GDALWarpAppOptionsForBinary" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Allocates a GDALWarpAppOptions struct. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>pointer to the allocated GDALWarpAppOptions struct. Must be freed with <a class="reference internal" href="#gdal__utils_8h_1a0da3e04bb44041ef7291ce758dd87253"><span class="std std-ref">GDALWarpAppOptionsFree()</span></a>.</p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">papszArgv</span></code>: NULL terminated list of options (potentially including filename and open options too), or NULL. The accepted options are the ones of the <a class="reference external" href="/programs/gdal_warp.html">gdalwarp</a> utility. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptionsForBinary</span></code>: (output) may be NULL (and should generally be NULL), otherwise (gdal_translate_bin.cpp use case) must be allocated with GDALWarpAppOptionsForBinaryNew() prior to this function. Will be filled with potentially present filename, open options,… </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv422GDALWarpAppOptionsFreeP18GDALWarpAppOptions">
+<span id="_CPPv322GDALWarpAppOptionsFreeP18GDALWarpAppOptions"></span><span id="_CPPv222GDALWarpAppOptionsFreeP18GDALWarpAppOptions"></span><span id="GDALWarpAppOptionsFree__GDALWarpAppOptionsP"></span><span class="target" id="gdal__utils_8h_1a0da3e04bb44041ef7291ce758dd87253"></span>void <code class="descname">GDALWarpAppOptionsFree</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv418GDALWarpAppOptions" title="GDALWarpAppOptions">GDALWarpAppOptions</a> *<em>psOptions</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv422GDALWarpAppOptionsFreeP18GDALWarpAppOptions" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Frees the GDALWarpAppOptions struct. </p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptions</span></code>: the options struct for <a class="reference internal" href="#gdal__utils_8h_1ab2094d5332364d63e0851dcb12398469"><span class="std std-ref">GDALWarp()</span></a>.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv429GDALWarpAppOptionsSetProgressP18GDALWarpAppOptions16GDALProgressFuncPv">
+<span id="_CPPv329GDALWarpAppOptionsSetProgressP18GDALWarpAppOptions16GDALProgressFuncPv"></span><span id="_CPPv229GDALWarpAppOptionsSetProgressP18GDALWarpAppOptions16GDALProgressFuncPv"></span><span id="GDALWarpAppOptionsSetProgress__GDALWarpAppOptionsP.GDALProgressFunc.voidP"></span><span class="target" id="gdal__utils_8h_1a6ed3c9681cabcfcbd6fc87d427762482"></span>void <code class="descname">GDALWarpAppOptionsSetProgress</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv418GDALWarpAppOptions" title="GDALWarpAppOptions">GDALWarpAppOptions</a> *<em>psOptions</em>, <a class="reference internal" href="cpl.html#_CPPv416GDALProgressFunc" title="GDALProgressFunc">GDALProgressFunc</a> <em>pfnProgress</em>, void *<em>pProgressData</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv429GDALWarpAppOptionsSetProgressP18GDALWarpAppOptions16GDALProgressFuncPv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set a progress function. </p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptions</span></code>: the options struct for <a class="reference internal" href="#gdal__utils_8h_1ab2094d5332364d63e0851dcb12398469"><span class="std std-ref">GDALWarp()</span></a>. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pfnProgress</span></code>: the progress callback. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pProgressData</span></code>: the user data for the progress callback.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv426GDALWarpAppOptionsSetQuietP18GDALWarpAppOptionsi">
+<span id="_CPPv326GDALWarpAppOptionsSetQuietP18GDALWarpAppOptionsi"></span><span id="_CPPv226GDALWarpAppOptionsSetQuietP18GDALWarpAppOptionsi"></span><span id="GDALWarpAppOptionsSetQuiet__GDALWarpAppOptionsP.i"></span><span class="target" id="gdal__utils_8h_1ac2f7c76f8d5cf8538f0401fadb851189"></span>void <code class="descname">GDALWarpAppOptionsSetQuiet</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv418GDALWarpAppOptions" title="GDALWarpAppOptions">GDALWarpAppOptions</a> *<em>psOptions</em>, int <em>bQuiet</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv426GDALWarpAppOptionsSetQuietP18GDALWarpAppOptionsi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set a progress function. </p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.3 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptions</span></code>: the options struct for <a class="reference internal" href="#gdal__utils_8h_1ab2094d5332364d63e0851dcb12398469"><span class="std std-ref">GDALWarp()</span></a>. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bQuiet</span></code>: whether <a class="reference internal" href="#gdal__utils_8h_1ab2094d5332364d63e0851dcb12398469"><span class="std std-ref">GDALWarp()</span></a> should emit messages on stdout.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv431GDALWarpAppOptionsSetWarpOptionP18GDALWarpAppOptionsPKcPKc">
+<span id="_CPPv331GDALWarpAppOptionsSetWarpOptionP18GDALWarpAppOptionsPKcPKc"></span><span id="_CPPv231GDALWarpAppOptionsSetWarpOptionP18GDALWarpAppOptionsPKcPKc"></span><span id="GDALWarpAppOptionsSetWarpOption__GDALWarpAppOptionsP.cCP.cCP"></span><span class="target" id="gdal__utils_8h_1abf69783bd5daa89f4696267cff7b68d7"></span>void <code class="descname">GDALWarpAppOptionsSetWarpOption</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv418GDALWarpAppOptions" title="GDALWarpAppOptions">GDALWarpAppOptions</a> *<em>psOptions</em>, <em class="property">const</em> char *<em>pszKey</em>, <em class="property">const</em> char *<em>pszValue</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv431GDALWarpAppOptionsSetWarpOptionP18GDALWarpAppOptionsPKcPKc" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set a warp option. </p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptions</span></code>: the options struct for <a class="reference internal" href="#gdal__utils_8h_1ab2094d5332364d63e0851dcb12398469"><span class="std std-ref">GDALWarp()</span></a>. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pszKey</span></code>: key. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pszValue</span></code>: value.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv48GDALWarpPKc12GDALDatasetHiP12GDALDatasetHPK18GDALWarpAppOptionsPi">
+<span id="_CPPv38GDALWarpPKc12GDALDatasetHiP12GDALDatasetHPK18GDALWarpAppOptionsPi"></span><span id="_CPPv28GDALWarpPKc12GDALDatasetHiP12GDALDatasetHPK18GDALWarpAppOptionsPi"></span><span id="GDALWarp__cCP.GDALDatasetH.i.GDALDatasetHP.GDALWarpAppOptionsCP.iP"></span><span class="target" id="gdal__utils_8h_1ab2094d5332364d63e0851dcb12398469"></span><a class="reference internal" href="raster_c_api.html#_CPPv412GDALDatasetH" title="GDALDatasetH">GDALDatasetH</a> <code class="descname">GDALWarp</code><span class="sig-paren">(</span><em class="property">const</em> char *<em>pszDest</em>, <a class="reference internal" href="raster_c_api.html#_CPPv412GDALDatasetH" title="GDALDatasetH">GDALDatasetH</a> <em>hDstDS</em>, int <em>nSrcCount</em>, <a class="reference internal" href="raster_c_api.html#_CPPv412GDALDatasetH" title="GDALDatasetH">GDALDatasetH</a> *<em>pahSrcDS</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv418GDALWarpAppOptions" title="GDALWarpAppOptions">GDALWarpAppOptions</a> *<em>psOptions</em>, int *<em>pbUsageError</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48GDALWarpPKc12GDALDatasetHiP12GDALDatasetHPK18GDALWarpAppOptionsPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Image reprojection and warping function. </p>
+<p>This is the equivalent of the <a class="reference external" href="/programs/gdal_warp.html">gdalwarp</a> utility.</p>
+<p>GDALWarpAppOptions* must be allocated and freed with <a class="reference internal" href="#gdal__utils_8h_1a02cc73f77d9864f5e94326fee250fa26"><span class="std std-ref">GDALWarpAppOptionsNew()</span></a> and <a class="reference internal" href="#gdal__utils_8h_1a0da3e04bb44041ef7291ce758dd87253"><span class="std std-ref">GDALWarpAppOptionsFree()</span></a> respectively. pszDest and hDstDS cannot be used at the same time.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>the output dataset (new dataset that must be closed using <a class="reference internal" href="raster_c_api.html#gdal_8h_1a0984222d45a72028fcbbf1f44831ffbc"><span class="std std-ref">GDALClose()</span></a>, or hDstDS if not NULL) or NULL in case of error.</p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pszDest</span></code>: the destination dataset path or NULL. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hDstDS</span></code>: the destination dataset or NULL. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nSrcCount</span></code>: the number of input datasets. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pahSrcDS</span></code>: the list of input datasets. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptionsIn</span></code>: the options struct returned by <a class="reference internal" href="#gdal__utils_8h_1a02cc73f77d9864f5e94326fee250fa26"><span class="std std-ref">GDALWarpAppOptionsNew()</span></a> or NULL. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pbUsageError</span></code>: the pointer to int variable to determine any usage error has occurred. </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv429GDALVectorTranslateOptionsNewPPcP35GDALVectorTranslateOptionsForBinary">
+<span id="_CPPv329GDALVectorTranslateOptionsNewPPcP35GDALVectorTranslateOptionsForBinary"></span><span id="_CPPv229GDALVectorTranslateOptionsNewPPcP35GDALVectorTranslateOptionsForBinary"></span><span id="GDALVectorTranslateOptionsNew__cPP.GDALVectorTranslateOptionsForBinaryP"></span><span class="target" id="gdal__utils_8h_1a350dc41093073352e35c7864608a37ad"></span><a class="reference internal" href="#_CPPv426GDALVectorTranslateOptions" title="GDALVectorTranslateOptions">GDALVectorTranslateOptions</a> *<code class="descname">GDALVectorTranslateOptionsNew</code><span class="sig-paren">(</span>char **<em>papszArgv</em>, <a class="reference internal" href="#_CPPv435GDALVectorTranslateOptionsForBinary" title="GDALVectorTranslateOptionsForBinary">GDALVectorTranslateOptionsForBinary</a> *<em>psOptionsForBinary</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv429GDALVectorTranslateOptionsNewPPcP35GDALVectorTranslateOptionsForBinary" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>allocates a GDALVectorTranslateOptions struct. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>pointer to the allocated GDALVectorTranslateOptions struct. Must be freed with <a class="reference internal" href="#gdal__utils_8h_1a2674effed347d42b28ad2281b6ec9131"><span class="std std-ref">GDALVectorTranslateOptionsFree()</span></a>.</p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">papszArgv</span></code>: NULL terminated list of options (potentially including filename and open options too), or NULL. The accepted options are the ones of the <a class="reference external" href="/programs/ogr2ogr.html">ogr2ogr</a> utility. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptionsForBinary</span></code>: (output) may be NULL (and should generally be NULL), otherwise (gdal_translate_bin.cpp use case) must be allocated with GDALVectorTranslateOptionsForBinaryNew() prior to this function. Will be filled with potentially present filename, open options,… </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv430GDALVectorTranslateOptionsFreeP26GDALVectorTranslateOptions">
+<span id="_CPPv330GDALVectorTranslateOptionsFreeP26GDALVectorTranslateOptions"></span><span id="_CPPv230GDALVectorTranslateOptionsFreeP26GDALVectorTranslateOptions"></span><span id="GDALVectorTranslateOptionsFree__GDALVectorTranslateOptionsP"></span><span class="target" id="gdal__utils_8h_1a2674effed347d42b28ad2281b6ec9131"></span>void <code class="descname">GDALVectorTranslateOptionsFree</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv426GDALVectorTranslateOptions" title="GDALVectorTranslateOptions">GDALVectorTranslateOptions</a> *<em>psOptions</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv430GDALVectorTranslateOptionsFreeP26GDALVectorTranslateOptions" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Frees the GDALVectorTranslateOptions struct. </p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptions</span></code>: the options struct for <a class="reference internal" href="#gdal__utils_8h_1aa176ae667bc857ab9c6016dbe62166eb"><span class="std std-ref">GDALVectorTranslate()</span></a>. </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv437GDALVectorTranslateOptionsSetProgressP26GDALVectorTranslateOptions16GDALProgressFuncPv">
+<span id="_CPPv337GDALVectorTranslateOptionsSetProgressP26GDALVectorTranslateOptions16GDALProgressFuncPv"></span><span id="_CPPv237GDALVectorTranslateOptionsSetProgressP26GDALVectorTranslateOptions16GDALProgressFuncPv"></span><span id="GDALVectorTranslateOptionsSetProgress__GDALVectorTranslateOptionsP.GDALProgressFunc.voidP"></span><span class="target" id="gdal__utils_8h_1a3f8e1ad8e1ef436cd48266a04f84b28e"></span>void <code class="descname">GDALVectorTranslateOptionsSetProgress</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv426GDALVectorTranslateOptions" title="GDALVectorTranslateOptions">GDALVectorTranslateOptions</a> *<em>psOptions</em>, <a class="reference internal" href="cpl.html#_CPPv416GDALProgressFunc" title="GDALProgressFunc">GDALProgressFunc</a> <em>pfnProgress</em>, void *<em>pProgressData</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv437GDALVectorTranslateOptionsSetProgressP26GDALVectorTranslateOptions16GDALProgressFuncPv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set a progress function. </p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptions</span></code>: the options struct for <a class="reference internal" href="#gdal__utils_8h_1aa176ae667bc857ab9c6016dbe62166eb"><span class="std std-ref">GDALVectorTranslate()</span></a>. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pfnProgress</span></code>: the progress callback. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pProgressData</span></code>: the user data for the progress callback.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv419GDALVectorTranslatePKc12GDALDatasetHiP12GDALDatasetHPK26GDALVectorTranslateOptionsPi">
+<span id="_CPPv319GDALVectorTranslatePKc12GDALDatasetHiP12GDALDatasetHPK26GDALVectorTranslateOptionsPi"></span><span id="_CPPv219GDALVectorTranslatePKc12GDALDatasetHiP12GDALDatasetHPK26GDALVectorTranslateOptionsPi"></span><span id="GDALVectorTranslate__cCP.GDALDatasetH.i.GDALDatasetHP.GDALVectorTranslateOptionsCP.iP"></span><span class="target" id="gdal__utils_8h_1aa176ae667bc857ab9c6016dbe62166eb"></span><a class="reference internal" href="raster_c_api.html#_CPPv412GDALDatasetH" title="GDALDatasetH">GDALDatasetH</a> <code class="descname">GDALVectorTranslate</code><span class="sig-paren">(</span><em class="property">const</em> char *<em>pszDest</em>, <a class="reference internal" href="raster_c_api.html#_CPPv412GDALDatasetH" title="GDALDatasetH">GDALDatasetH</a> <em>hDstDS</em>, int <em>nSrcCount</em>, <a class="reference internal" href="raster_c_api.html#_CPPv412GDALDatasetH" title="GDALDatasetH">GDALDatasetH</a> *<em>pahSrcDS</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv426GDALVectorTranslateOptions" title="GDALVectorTranslateOptions">GDALVectorTranslateOptions</a> *<em>psOptions</em>, int *<em>pbUsageError</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419GDALVectorTranslatePKc12GDALDatasetHiP12GDALDatasetHPK26GDALVectorTranslateOptionsPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Converts vector data between file formats. </p>
+<p>This is the equivalent of the <a class="reference external" href="/programs/ogr2ogr.html">ogr2ogr</a> utility.</p>
+<p>GDALVectorTranslateOptions* must be allocated and freed with <a class="reference internal" href="#gdal__utils_8h_1a350dc41093073352e35c7864608a37ad"><span class="std std-ref">GDALVectorTranslateOptionsNew()</span></a> and <a class="reference internal" href="#gdal__utils_8h_1a2674effed347d42b28ad2281b6ec9131"><span class="std std-ref">GDALVectorTranslateOptionsFree()</span></a> respectively. pszDest and hDstDS cannot be used at the same time.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>the output dataset (new dataset that must be closed using <a class="reference internal" href="raster_c_api.html#gdal_8h_1a0984222d45a72028fcbbf1f44831ffbc"><span class="std std-ref">GDALClose()</span></a>, or hDstDS is not NULL) or NULL in case of error.</p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pszDest</span></code>: the destination dataset path or NULL. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hDstDS</span></code>: the destination dataset or NULL. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nSrcCount</span></code>: the number of input datasets (only 1 supported currently) </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pahSrcDS</span></code>: the list of input datasets. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptionsIn</span></code>: the options struct returned by <a class="reference internal" href="#gdal__utils_8h_1a350dc41093073352e35c7864608a37ad"><span class="std std-ref">GDALVectorTranslateOptionsNew()</span></a> or NULL. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pbUsageError</span></code>: the pointer to int variable to determine any usage error has occurred </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv427GDALDEMProcessingOptionsNewPPcP33GDALDEMProcessingOptionsForBinary">
+<span id="_CPPv327GDALDEMProcessingOptionsNewPPcP33GDALDEMProcessingOptionsForBinary"></span><span id="_CPPv227GDALDEMProcessingOptionsNewPPcP33GDALDEMProcessingOptionsForBinary"></span><span id="GDALDEMProcessingOptionsNew__cPP.GDALDEMProcessingOptionsForBinaryP"></span><span class="target" id="gdal__utils_8h_1ac6e67c9ca37448286a6031e626e551ae"></span><a class="reference internal" href="#_CPPv424GDALDEMProcessingOptions" title="GDALDEMProcessingOptions">GDALDEMProcessingOptions</a> *<code class="descname">GDALDEMProcessingOptionsNew</code><span class="sig-paren">(</span>char **<em>papszArgv</em>, <a class="reference internal" href="#_CPPv433GDALDEMProcessingOptionsForBinary" title="GDALDEMProcessingOptionsForBinary">GDALDEMProcessingOptionsForBinary</a> *<em>psOptionsForBinary</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv427GDALDEMProcessingOptionsNewPPcP33GDALDEMProcessingOptionsForBinary" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Allocates a GDALDEMProcessingOptions struct. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>pointer to the allocated GDALDEMProcessingOptions struct. Must be freed with <a class="reference internal" href="#gdal__utils_8h_1ae4634d14044424c5ba731fdcca0b7763"><span class="std std-ref">GDALDEMProcessingOptionsFree()</span></a>.</p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">papszArgv</span></code>: NULL terminated list of options (potentially including filename and open options too), or NULL. The accepted options are the ones of the <a class="reference external" href="/programs/gdaldem.html">gdaldem</a> utility. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptionsForBinary</span></code>: (output) may be NULL (and should generally be NULL), otherwise (gdal_translate_bin.cpp use case) must be allocated with GDALDEMProcessingOptionsForBinaryNew() prior to this function. Will be filled with potentially present filename, open options,… </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv428GDALDEMProcessingOptionsFreeP24GDALDEMProcessingOptions">
+<span id="_CPPv328GDALDEMProcessingOptionsFreeP24GDALDEMProcessingOptions"></span><span id="_CPPv228GDALDEMProcessingOptionsFreeP24GDALDEMProcessingOptions"></span><span id="GDALDEMProcessingOptionsFree__GDALDEMProcessingOptionsP"></span><span class="target" id="gdal__utils_8h_1ae4634d14044424c5ba731fdcca0b7763"></span>void <code class="descname">GDALDEMProcessingOptionsFree</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv424GDALDEMProcessingOptions" title="GDALDEMProcessingOptions">GDALDEMProcessingOptions</a> *<em>psOptions</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv428GDALDEMProcessingOptionsFreeP24GDALDEMProcessingOptions" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Frees the GDALDEMProcessingOptions struct. </p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptions</span></code>: the options struct for <a class="reference internal" href="#gdal__utils_8h_1a5d8486d2fd4a7a39bc954eb7f4410053"><span class="std std-ref">GDALDEMProcessing()</span></a>.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv435GDALDEMProcessingOptionsSetProgressP24GDALDEMProcessingOptions16GDALProgressFuncPv">
+<span id="_CPPv335GDALDEMProcessingOptionsSetProgressP24GDALDEMProcessingOptions16GDALProgressFuncPv"></span><span id="_CPPv235GDALDEMProcessingOptionsSetProgressP24GDALDEMProcessingOptions16GDALProgressFuncPv"></span><span id="GDALDEMProcessingOptionsSetProgress__GDALDEMProcessingOptionsP.GDALProgressFunc.voidP"></span><span class="target" id="gdal__utils_8h_1aaceb03e52c297ca1cb81176fa94791d3"></span>void <code class="descname">GDALDEMProcessingOptionsSetProgress</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv424GDALDEMProcessingOptions" title="GDALDEMProcessingOptions">GDALDEMProcessingOptions</a> *<em>psOptions</em>, <a class="reference internal" href="cpl.html#_CPPv416GDALProgressFunc" title="GDALProgressFunc">GDALProgressFunc</a> <em>pfnProgress</em>, void *<em>pProgressData</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv435GDALDEMProcessingOptionsSetProgressP24GDALDEMProcessingOptions16GDALProgressFuncPv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set a progress function. </p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptions</span></code>: the options struct for <a class="reference internal" href="#gdal__utils_8h_1a5d8486d2fd4a7a39bc954eb7f4410053"><span class="std std-ref">GDALDEMProcessing()</span></a>. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pfnProgress</span></code>: the progress callback. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pProgressData</span></code>: the user data for the progress callback.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv417GDALDEMProcessingPKc12GDALDatasetHPKcPKcPK24GDALDEMProcessingOptionsPi">
+<span id="_CPPv317GDALDEMProcessingPKc12GDALDatasetHPKcPKcPK24GDALDEMProcessingOptionsPi"></span><span id="_CPPv217GDALDEMProcessingPKc12GDALDatasetHPKcPKcPK24GDALDEMProcessingOptionsPi"></span><span id="GDALDEMProcessing__cCP.GDALDatasetH.cCP.cCP.GDALDEMProcessingOptionsCP.iP"></span><span class="target" id="gdal__utils_8h_1a5d8486d2fd4a7a39bc954eb7f4410053"></span><a class="reference internal" href="raster_c_api.html#_CPPv412GDALDatasetH" title="GDALDatasetH">GDALDatasetH</a> <code class="descname">GDALDEMProcessing</code><span class="sig-paren">(</span><em class="property">const</em> char *<em>pszDestFilename</em>, <a class="reference internal" href="raster_c_api.html#_CPPv412GDALDatasetH" title="GDALDatasetH">GDALDatasetH</a> <em>hSrcDataset</em>, <em class="property">const</em> char *<em>pszProcessing</em>, <em class="property">const</em> char *<em>pszColorFilename</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv424GDALDEMProcessingOptions" title="GDALDEMProcessingOptions">GDALDEMProcessingOptions</a> *<em>psOptions</em>, int *<em>pbUsageError</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417GDALDEMProcessingPKc12GDALDatasetHPKcPKcPK24GDALDEMProcessingOptionsPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Apply a DEM processing. </p>
+<p>This is the equivalent of the <a class="reference external" href="/programs/gdaldem.html">gdaldem</a> utility.</p>
+<p>GDALDEMProcessingOptions* must be allocated and freed with <a class="reference internal" href="#gdal__utils_8h_1ac6e67c9ca37448286a6031e626e551ae"><span class="std std-ref">GDALDEMProcessingOptionsNew()</span></a> and <a class="reference internal" href="#gdal__utils_8h_1ae4634d14044424c5ba731fdcca0b7763"><span class="std std-ref">GDALDEMProcessingOptionsFree()</span></a> respectively.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>the output dataset (new dataset that must be closed using <a class="reference internal" href="raster_c_api.html#gdal_8h_1a0984222d45a72028fcbbf1f44831ffbc"><span class="std std-ref">GDALClose()</span></a>) or NULL in case of error.</p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pszDest</span></code>: the destination dataset path. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hSrcDataset</span></code>: the source dataset handle. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pszProcessing</span></code>: the processing to apply (one of “hillshade”, “slope”, “aspect”, “color-relief”, “TRI”, “TPI”, “Roughness”) </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pszColorFilename</span></code>: color file (mandatory for “color-relief” processing, should be NULL otherwise) </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptionsIn</span></code>: the options struct returned by <a class="reference internal" href="#gdal__utils_8h_1ac6e67c9ca37448286a6031e626e551ae"><span class="std std-ref">GDALDEMProcessingOptionsNew()</span></a> or NULL. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pbUsageError</span></code>: the pointer to int variable to determine any usage error has occurred or NULL. </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv423GDALNearblackOptionsNewPPcP29GDALNearblackOptionsForBinary">
+<span id="_CPPv323GDALNearblackOptionsNewPPcP29GDALNearblackOptionsForBinary"></span><span id="_CPPv223GDALNearblackOptionsNewPPcP29GDALNearblackOptionsForBinary"></span><span id="GDALNearblackOptionsNew__cPP.GDALNearblackOptionsForBinaryP"></span><span class="target" id="gdal__utils_8h_1a3cb0ce9bee2574b96d28859319a4e435"></span><a class="reference internal" href="#_CPPv420GDALNearblackOptions" title="GDALNearblackOptions">GDALNearblackOptions</a> *<code class="descname">GDALNearblackOptionsNew</code><span class="sig-paren">(</span>char **<em>papszArgv</em>, <a class="reference internal" href="#_CPPv429GDALNearblackOptionsForBinary" title="GDALNearblackOptionsForBinary">GDALNearblackOptionsForBinary</a> *<em>psOptionsForBinary</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv423GDALNearblackOptionsNewPPcP29GDALNearblackOptionsForBinary" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Allocates a GDALNearblackOptions struct. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>pointer to the allocated GDALNearblackOptions struct. Must be freed with <a class="reference internal" href="#gdal__utils_8h_1ae9e45859b0af60daf54994e54219044e"><span class="std std-ref">GDALNearblackOptionsFree()</span></a>.</p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">papszArgv</span></code>: NULL terminated list of options (potentially including filename and open options too), or NULL. The accepted options are the ones of the <a class="reference external" href="/programs/nearblack.html">nearblack</a> utility. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptionsForBinary</span></code>: (output) may be NULL (and should generally be NULL), otherwise (gdal_translate_bin.cpp use case) must be allocated with GDALNearblackOptionsForBinaryNew() prior to this function. Will be filled with potentially present filename, open options,… </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv424GDALNearblackOptionsFreeP20GDALNearblackOptions">
+<span id="_CPPv324GDALNearblackOptionsFreeP20GDALNearblackOptions"></span><span id="_CPPv224GDALNearblackOptionsFreeP20GDALNearblackOptions"></span><span id="GDALNearblackOptionsFree__GDALNearblackOptionsP"></span><span class="target" id="gdal__utils_8h_1ae9e45859b0af60daf54994e54219044e"></span>void <code class="descname">GDALNearblackOptionsFree</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv420GDALNearblackOptions" title="GDALNearblackOptions">GDALNearblackOptions</a> *<em>psOptions</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv424GDALNearblackOptionsFreeP20GDALNearblackOptions" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Frees the GDALNearblackOptions struct. </p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptions</span></code>: the options struct for <a class="reference internal" href="#gdal__utils_8h_1acc77cd8d180d43d07783dd61c327f1b6"><span class="std std-ref">GDALNearblack()</span></a>.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv431GDALNearblackOptionsSetProgressP20GDALNearblackOptions16GDALProgressFuncPv">
+<span id="_CPPv331GDALNearblackOptionsSetProgressP20GDALNearblackOptions16GDALProgressFuncPv"></span><span id="_CPPv231GDALNearblackOptionsSetProgressP20GDALNearblackOptions16GDALProgressFuncPv"></span><span id="GDALNearblackOptionsSetProgress__GDALNearblackOptionsP.GDALProgressFunc.voidP"></span><span class="target" id="gdal__utils_8h_1a562561a0b0dc956d657ea0b1548e3e6d"></span>void <code class="descname">GDALNearblackOptionsSetProgress</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv420GDALNearblackOptions" title="GDALNearblackOptions">GDALNearblackOptions</a> *<em>psOptions</em>, <a class="reference internal" href="cpl.html#_CPPv416GDALProgressFunc" title="GDALProgressFunc">GDALProgressFunc</a> <em>pfnProgress</em>, void *<em>pProgressData</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv431GDALNearblackOptionsSetProgressP20GDALNearblackOptions16GDALProgressFuncPv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set a progress function. </p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptions</span></code>: the options struct for <a class="reference internal" href="#gdal__utils_8h_1acc77cd8d180d43d07783dd61c327f1b6"><span class="std std-ref">GDALNearblack()</span></a>. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pfnProgress</span></code>: the progress callback. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pProgressData</span></code>: the user data for the progress callback.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv413GDALNearblackPKc12GDALDatasetH12GDALDatasetHPK20GDALNearblackOptionsPi">
+<span id="_CPPv313GDALNearblackPKc12GDALDatasetH12GDALDatasetHPK20GDALNearblackOptionsPi"></span><span id="_CPPv213GDALNearblackPKc12GDALDatasetH12GDALDatasetHPK20GDALNearblackOptionsPi"></span><span id="GDALNearblack__cCP.GDALDatasetH.GDALDatasetH.GDALNearblackOptionsCP.iP"></span><span class="target" id="gdal__utils_8h_1acc77cd8d180d43d07783dd61c327f1b6"></span><a class="reference internal" href="raster_c_api.html#_CPPv412GDALDatasetH" title="GDALDatasetH">GDALDatasetH</a> <code class="descname">GDALNearblack</code><span class="sig-paren">(</span><em class="property">const</em> char *<em>pszDest</em>, <a class="reference internal" href="raster_c_api.html#_CPPv412GDALDatasetH" title="GDALDatasetH">GDALDatasetH</a> <em>hDstDS</em>, <a class="reference internal" href="raster_c_api.html#_CPPv412GDALDatasetH" title="GDALDatasetH">GDALDatasetH</a> <em>hSrcDS</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv420GDALNearblackOptions" title="GDALNearblackOptions">GDALNearblackOptions</a> *<em>psOptions</em>, int *<em>pbUsageError</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413GDALNearblackPKc12GDALDatasetH12GDALDatasetHPK20GDALNearblackOptionsPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Convert nearly black/white borders to exact value. </p>
+<p>This is the equivalent of the <a class="reference external" href="/programs/nearblack.html">nearblack</a> utility.</p>
+<p>GDALNearblackOptions* must be allocated and freed with <a class="reference internal" href="#gdal__utils_8h_1a3cb0ce9bee2574b96d28859319a4e435"><span class="std std-ref">GDALNearblackOptionsNew()</span></a> and <a class="reference internal" href="#gdal__utils_8h_1ae9e45859b0af60daf54994e54219044e"><span class="std std-ref">GDALNearblackOptionsFree()</span></a> respectively. pszDest and hDstDS cannot be used at the same time.</p>
+<p>In-place update (i.e. hDstDS == hSrcDataset) is possible for formats that support it, and if the dataset is opened in update mode.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>the output dataset (new dataset that must be closed using <a class="reference internal" href="raster_c_api.html#gdal_8h_1a0984222d45a72028fcbbf1f44831ffbc"><span class="std std-ref">GDALClose()</span></a>, or hDstDS is not NULL) or NULL in case of error.</p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pszDest</span></code>: the destination dataset path or NULL. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hDstDS</span></code>: the destination dataset or NULL. Might be equal to hSrcDataset. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hSrcDataset</span></code>: the source dataset handle. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptionsIn</span></code>: the options struct returned by <a class="reference internal" href="#gdal__utils_8h_1a3cb0ce9bee2574b96d28859319a4e435"><span class="std std-ref">GDALNearblackOptionsNew()</span></a> or NULL. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pbUsageError</span></code>: the pointer to int variable to determine any usage error has occurred or NULL. </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv418GDALGridOptionsNewPPcP24GDALGridOptionsForBinary">
+<span id="_CPPv318GDALGridOptionsNewPPcP24GDALGridOptionsForBinary"></span><span id="_CPPv218GDALGridOptionsNewPPcP24GDALGridOptionsForBinary"></span><span id="GDALGridOptionsNew__cPP.GDALGridOptionsForBinaryP"></span><span class="target" id="gdal__utils_8h_1a40232b43838197181ddd3547ed00a6a5"></span><a class="reference internal" href="#_CPPv415GDALGridOptions" title="GDALGridOptions">GDALGridOptions</a> *<code class="descname">GDALGridOptionsNew</code><span class="sig-paren">(</span>char **<em>papszArgv</em>, <a class="reference internal" href="#_CPPv424GDALGridOptionsForBinary" title="GDALGridOptionsForBinary">GDALGridOptionsForBinary</a> *<em>psOptionsForBinary</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418GDALGridOptionsNewPPcP24GDALGridOptionsForBinary" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Allocates a GDALGridOptions struct. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>pointer to the allocated GDALGridOptions struct. Must be freed with <a class="reference internal" href="#gdal__utils_8h_1a85a45ae88c5a2d3bf72bbde0d47fe5c1"><span class="std std-ref">GDALGridOptionsFree()</span></a>.</p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">papszArgv</span></code>: NULL terminated list of options (potentially including filename and open options too), or NULL. The accepted options are the ones of the <a class="reference external" href="/programs/gdal_translate.html">gdal_translate</a> utility. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptionsForBinary</span></code>: (output) may be NULL (and should generally be NULL), otherwise (gdal_translate_bin.cpp use case) must be allocated with GDALGridOptionsForBinaryNew() prior to this function. Will be filled with potentially present filename, open options,… </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv419GDALGridOptionsFreeP15GDALGridOptions">
+<span id="_CPPv319GDALGridOptionsFreeP15GDALGridOptions"></span><span id="_CPPv219GDALGridOptionsFreeP15GDALGridOptions"></span><span id="GDALGridOptionsFree__GDALGridOptionsP"></span><span class="target" id="gdal__utils_8h_1a85a45ae88c5a2d3bf72bbde0d47fe5c1"></span>void <code class="descname">GDALGridOptionsFree</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv415GDALGridOptions" title="GDALGridOptions">GDALGridOptions</a> *<em>psOptions</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419GDALGridOptionsFreeP15GDALGridOptions" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Frees the GDALGridOptions struct. </p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptions</span></code>: the options struct for <a class="reference internal" href="#gdal__utils_8h_1aba2c7e659a2fdb180867e3480a8be3a8"><span class="std std-ref">GDALGrid()</span></a>.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv426GDALGridOptionsSetProgressP15GDALGridOptions16GDALProgressFuncPv">
+<span id="_CPPv326GDALGridOptionsSetProgressP15GDALGridOptions16GDALProgressFuncPv"></span><span id="_CPPv226GDALGridOptionsSetProgressP15GDALGridOptions16GDALProgressFuncPv"></span><span id="GDALGridOptionsSetProgress__GDALGridOptionsP.GDALProgressFunc.voidP"></span><span class="target" id="gdal__utils_8h_1afbf447285be6b2d5e63bc495b7348854"></span>void <code class="descname">GDALGridOptionsSetProgress</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv415GDALGridOptions" title="GDALGridOptions">GDALGridOptions</a> *<em>psOptions</em>, <a class="reference internal" href="cpl.html#_CPPv416GDALProgressFunc" title="GDALProgressFunc">GDALProgressFunc</a> <em>pfnProgress</em>, void *<em>pProgressData</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv426GDALGridOptionsSetProgressP15GDALGridOptions16GDALProgressFuncPv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set a progress function. </p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptions</span></code>: the options struct for <a class="reference internal" href="#gdal__utils_8h_1aba2c7e659a2fdb180867e3480a8be3a8"><span class="std std-ref">GDALGrid()</span></a>. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pfnProgress</span></code>: the progress callback. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pProgressData</span></code>: the user data for the progress callback.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv48GDALGridPKc12GDALDatasetHPK15GDALGridOptionsPi">
+<span id="_CPPv38GDALGridPKc12GDALDatasetHPK15GDALGridOptionsPi"></span><span id="_CPPv28GDALGridPKc12GDALDatasetHPK15GDALGridOptionsPi"></span><span id="GDALGrid__cCP.GDALDatasetH.GDALGridOptionsCP.iP"></span><span class="target" id="gdal__utils_8h_1aba2c7e659a2fdb180867e3480a8be3a8"></span><a class="reference internal" href="raster_c_api.html#_CPPv412GDALDatasetH" title="GDALDatasetH">GDALDatasetH</a> <code class="descname">GDALGrid</code><span class="sig-paren">(</span><em class="property">const</em> char *<em>pszDest</em>, <a class="reference internal" href="raster_c_api.html#_CPPv412GDALDatasetH" title="GDALDatasetH">GDALDatasetH</a> <em>hSrcDS</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv415GDALGridOptions" title="GDALGridOptions">GDALGridOptions</a> *<em>psOptions</em>, int *<em>pbUsageError</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv48GDALGridPKc12GDALDatasetHPK15GDALGridOptionsPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Create raster from the scattered data. </p>
+<p>This is the equivalent of the <a class="reference external" href="/programs/gdal_grid.html">gdal_grid</a> utility.</p>
+<p>GDALGridOptions* must be allocated and freed with <a class="reference internal" href="#gdal__utils_8h_1a40232b43838197181ddd3547ed00a6a5"><span class="std std-ref">GDALGridOptionsNew()</span></a> and <a class="reference internal" href="#gdal__utils_8h_1a85a45ae88c5a2d3bf72bbde0d47fe5c1"><span class="std std-ref">GDALGridOptionsFree()</span></a> respectively.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>the output dataset (new dataset that must be closed using <a class="reference internal" href="raster_c_api.html#gdal_8h_1a0984222d45a72028fcbbf1f44831ffbc"><span class="std std-ref">GDALClose()</span></a>) or NULL in case of error.</p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pszDest</span></code>: the destination dataset path. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hSrcDataset</span></code>: the source dataset handle. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptionsIn</span></code>: the options struct returned by <a class="reference internal" href="#gdal__utils_8h_1a40232b43838197181ddd3547ed00a6a5"><span class="std std-ref">GDALGridOptionsNew()</span></a> or NULL. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pbUsageError</span></code>: the pointer to int variable to determine any usage error has occurred or NULL. </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv423GDALRasterizeOptionsNewPPcP29GDALRasterizeOptionsForBinary">
+<span id="_CPPv323GDALRasterizeOptionsNewPPcP29GDALRasterizeOptionsForBinary"></span><span id="_CPPv223GDALRasterizeOptionsNewPPcP29GDALRasterizeOptionsForBinary"></span><span id="GDALRasterizeOptionsNew__cPP.GDALRasterizeOptionsForBinaryP"></span><span class="target" id="gdal__utils_8h_1ad9293ec51bb7071fbe9b692438aca550"></span><a class="reference internal" href="#_CPPv420GDALRasterizeOptions" title="GDALRasterizeOptions">GDALRasterizeOptions</a> *<code class="descname">GDALRasterizeOptionsNew</code><span class="sig-paren">(</span>char **<em>papszArgv</em>, <a class="reference internal" href="#_CPPv429GDALRasterizeOptionsForBinary" title="GDALRasterizeOptionsForBinary">GDALRasterizeOptionsForBinary</a> *<em>psOptionsForBinary</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv423GDALRasterizeOptionsNewPPcP29GDALRasterizeOptionsForBinary" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Allocates a GDALRasterizeOptions struct. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>pointer to the allocated GDALRasterizeOptions struct. Must be freed with <a class="reference internal" href="#gdal__utils_8h_1a59ab99f0b961b924e7c2006216640e23"><span class="std std-ref">GDALRasterizeOptionsFree()</span></a>.</p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">papszArgv</span></code>: NULL terminated list of options (potentially including filename and open options too), or NULL. The accepted options are the ones of the <a class="reference external" href="/programs/gdal_rasterize.html">gdal_rasterize</a> utility. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptionsForBinary</span></code>: (output) may be NULL (and should generally be NULL), otherwise (gdal_translate_bin.cpp use case) must be allocated with GDALRasterizeOptionsForBinaryNew() prior to this function. Will be filled with potentially present filename, open options,… </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv424GDALRasterizeOptionsFreeP20GDALRasterizeOptions">
+<span id="_CPPv324GDALRasterizeOptionsFreeP20GDALRasterizeOptions"></span><span id="_CPPv224GDALRasterizeOptionsFreeP20GDALRasterizeOptions"></span><span id="GDALRasterizeOptionsFree__GDALRasterizeOptionsP"></span><span class="target" id="gdal__utils_8h_1a59ab99f0b961b924e7c2006216640e23"></span>void <code class="descname">GDALRasterizeOptionsFree</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv420GDALRasterizeOptions" title="GDALRasterizeOptions">GDALRasterizeOptions</a> *<em>psOptions</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv424GDALRasterizeOptionsFreeP20GDALRasterizeOptions" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Frees the GDALRasterizeOptions struct. </p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptions</span></code>: the options struct for <a class="reference internal" href="#gdal__utils_8h_1afd3a6dead8773c7716e2a4cbaa4e8d4e"><span class="std std-ref">GDALRasterize()</span></a>.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv431GDALRasterizeOptionsSetProgressP20GDALRasterizeOptions16GDALProgressFuncPv">
+<span id="_CPPv331GDALRasterizeOptionsSetProgressP20GDALRasterizeOptions16GDALProgressFuncPv"></span><span id="_CPPv231GDALRasterizeOptionsSetProgressP20GDALRasterizeOptions16GDALProgressFuncPv"></span><span id="GDALRasterizeOptionsSetProgress__GDALRasterizeOptionsP.GDALProgressFunc.voidP"></span><span class="target" id="gdal__utils_8h_1a7f6453b59d7d41827eac217ee8d26888"></span>void <code class="descname">GDALRasterizeOptionsSetProgress</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv420GDALRasterizeOptions" title="GDALRasterizeOptions">GDALRasterizeOptions</a> *<em>psOptions</em>, <a class="reference internal" href="cpl.html#_CPPv416GDALProgressFunc" title="GDALProgressFunc">GDALProgressFunc</a> <em>pfnProgress</em>, void *<em>pProgressData</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv431GDALRasterizeOptionsSetProgressP20GDALRasterizeOptions16GDALProgressFuncPv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set a progress function. </p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptions</span></code>: the options struct for <a class="reference internal" href="#gdal__utils_8h_1afd3a6dead8773c7716e2a4cbaa4e8d4e"><span class="std std-ref">GDALRasterize()</span></a>. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pfnProgress</span></code>: the progress callback. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pProgressData</span></code>: the user data for the progress callback.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv413GDALRasterizePKc12GDALDatasetH12GDALDatasetHPK20GDALRasterizeOptionsPi">
+<span id="_CPPv313GDALRasterizePKc12GDALDatasetH12GDALDatasetHPK20GDALRasterizeOptionsPi"></span><span id="_CPPv213GDALRasterizePKc12GDALDatasetH12GDALDatasetHPK20GDALRasterizeOptionsPi"></span><span id="GDALRasterize__cCP.GDALDatasetH.GDALDatasetH.GDALRasterizeOptionsCP.iP"></span><span class="target" id="gdal__utils_8h_1afd3a6dead8773c7716e2a4cbaa4e8d4e"></span><a class="reference internal" href="raster_c_api.html#_CPPv412GDALDatasetH" title="GDALDatasetH">GDALDatasetH</a> <code class="descname">GDALRasterize</code><span class="sig-paren">(</span><em class="property">const</em> char *<em>pszDest</em>, <a class="reference internal" href="raster_c_api.html#_CPPv412GDALDatasetH" title="GDALDatasetH">GDALDatasetH</a> <em>hDstDS</em>, <a class="reference internal" href="raster_c_api.html#_CPPv412GDALDatasetH" title="GDALDatasetH">GDALDatasetH</a> <em>hSrcDS</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv420GDALRasterizeOptions" title="GDALRasterizeOptions">GDALRasterizeOptions</a> *<em>psOptions</em>, int *<em>pbUsageError</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413GDALRasterizePKc12GDALDatasetH12GDALDatasetHPK20GDALRasterizeOptionsPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Burns vector geometries into a raster. </p>
+<p>This is the equivalent of the <a class="reference external" href="/programs/gdal_rasterize.html">gdal_rasterize</a> utility.</p>
+<p>GDALRasterizeOptions* must be allocated and freed with <a class="reference internal" href="#gdal__utils_8h_1ad9293ec51bb7071fbe9b692438aca550"><span class="std std-ref">GDALRasterizeOptionsNew()</span></a> and <a class="reference internal" href="#gdal__utils_8h_1a59ab99f0b961b924e7c2006216640e23"><span class="std std-ref">GDALRasterizeOptionsFree()</span></a> respectively. pszDest and hDstDS cannot be used at the same time.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>the output dataset (new dataset that must be closed using <a class="reference internal" href="raster_c_api.html#gdal_8h_1a0984222d45a72028fcbbf1f44831ffbc"><span class="std std-ref">GDALClose()</span></a>, or hDstDS is not NULL) or NULL in case of error.</p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pszDest</span></code>: the destination dataset path or NULL. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hDstDS</span></code>: the destination dataset or NULL. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hSrcDataset</span></code>: the source dataset handle. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptionsIn</span></code>: the options struct returned by <a class="reference internal" href="#gdal__utils_8h_1ad9293ec51bb7071fbe9b692438aca550"><span class="std std-ref">GDALRasterizeOptionsNew()</span></a> or NULL. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pbUsageError</span></code>: the pointer to int variable to determine any usage error has occurred or NULL. </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv422GDALBuildVRTOptionsNewPPcP28GDALBuildVRTOptionsForBinary">
+<span id="_CPPv322GDALBuildVRTOptionsNewPPcP28GDALBuildVRTOptionsForBinary"></span><span id="_CPPv222GDALBuildVRTOptionsNewPPcP28GDALBuildVRTOptionsForBinary"></span><span id="GDALBuildVRTOptionsNew__cPP.GDALBuildVRTOptionsForBinaryP"></span><span class="target" id="gdal__utils_8h_1a90fb1085f167c78ac46dafaf9cfc5449"></span><a class="reference internal" href="#_CPPv419GDALBuildVRTOptions" title="GDALBuildVRTOptions">GDALBuildVRTOptions</a> *<code class="descname">GDALBuildVRTOptionsNew</code><span class="sig-paren">(</span>char **<em>papszArgv</em>, <a class="reference internal" href="#_CPPv428GDALBuildVRTOptionsForBinary" title="GDALBuildVRTOptionsForBinary">GDALBuildVRTOptionsForBinary</a> *<em>psOptionsForBinary</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv422GDALBuildVRTOptionsNewPPcP28GDALBuildVRTOptionsForBinary" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Allocates a GDALBuildVRTOptions struct. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>pointer to the allocated GDALBuildVRTOptions struct. Must be freed with <a class="reference internal" href="#gdal__utils_8h_1a7946e5abf28f1eab0b1632dfd8a29e5f"><span class="std std-ref">GDALBuildVRTOptionsFree()</span></a>.</p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">papszArgv</span></code>: NULL terminated list of options (potentially including filename and open options too), or NULL. The accepted options are the ones of the <a class="reference external" href="/programs/gdalbuildvrt.html">gdalbuildvrt</a> utility. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptionsForBinary</span></code>: (output) may be NULL (and should generally be NULL), otherwise (gdal_translate_bin.cpp use case) must be allocated with GDALBuildVRTOptionsForBinaryNew() prior to this function. Will be filled with potentially present filename, open options,… </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv423GDALBuildVRTOptionsFreeP19GDALBuildVRTOptions">
+<span id="_CPPv323GDALBuildVRTOptionsFreeP19GDALBuildVRTOptions"></span><span id="_CPPv223GDALBuildVRTOptionsFreeP19GDALBuildVRTOptions"></span><span id="GDALBuildVRTOptionsFree__GDALBuildVRTOptionsP"></span><span class="target" id="gdal__utils_8h_1a7946e5abf28f1eab0b1632dfd8a29e5f"></span>void <code class="descname">GDALBuildVRTOptionsFree</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv419GDALBuildVRTOptions" title="GDALBuildVRTOptions">GDALBuildVRTOptions</a> *<em>psOptions</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv423GDALBuildVRTOptionsFreeP19GDALBuildVRTOptions" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Frees the GDALBuildVRTOptions struct. </p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptions</span></code>: the options struct for <a class="reference internal" href="#gdal__utils_8h_1a057aaea8b0ed0476809a781ffa377ea4"><span class="std std-ref">GDALBuildVRT()</span></a>.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv430GDALBuildVRTOptionsSetProgressP19GDALBuildVRTOptions16GDALProgressFuncPv">
+<span id="_CPPv330GDALBuildVRTOptionsSetProgressP19GDALBuildVRTOptions16GDALProgressFuncPv"></span><span id="_CPPv230GDALBuildVRTOptionsSetProgressP19GDALBuildVRTOptions16GDALProgressFuncPv"></span><span id="GDALBuildVRTOptionsSetProgress__GDALBuildVRTOptionsP.GDALProgressFunc.voidP"></span><span class="target" id="gdal__utils_8h_1ac0880ffa8fddb8df56f228d9eb467e26"></span>void <code class="descname">GDALBuildVRTOptionsSetProgress</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv419GDALBuildVRTOptions" title="GDALBuildVRTOptions">GDALBuildVRTOptions</a> *<em>psOptions</em>, <a class="reference internal" href="cpl.html#_CPPv416GDALProgressFunc" title="GDALProgressFunc">GDALProgressFunc</a> <em>pfnProgress</em>, void *<em>pProgressData</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv430GDALBuildVRTOptionsSetProgressP19GDALBuildVRTOptions16GDALProgressFuncPv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set a progress function. </p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptions</span></code>: the options struct for <a class="reference internal" href="#gdal__utils_8h_1a057aaea8b0ed0476809a781ffa377ea4"><span class="std std-ref">GDALBuildVRT()</span></a>. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pfnProgress</span></code>: the progress callback. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pProgressData</span></code>: the user data for the progress callback.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv412GDALBuildVRTPKciP12GDALDatasetHPPCKcPK19GDALBuildVRTOptionsPi">
+<span id="_CPPv312GDALBuildVRTPKciP12GDALDatasetHPPCKcPK19GDALBuildVRTOptionsPi"></span><span id="_CPPv212GDALBuildVRTPKciP12GDALDatasetHPPCKcPK19GDALBuildVRTOptionsPi"></span><span id="GDALBuildVRT__cCP.i.GDALDatasetHP.cCPCP.GDALBuildVRTOptionsCP.iP"></span><span class="target" id="gdal__utils_8h_1a057aaea8b0ed0476809a781ffa377ea4"></span><a class="reference internal" href="raster_c_api.html#_CPPv412GDALDatasetH" title="GDALDatasetH">GDALDatasetH</a> <code class="descname">GDALBuildVRT</code><span class="sig-paren">(</span><em class="property">const</em> char *<em>pszDest</em>, int <em>nSrcCount</em>, <a class="reference internal" href="raster_c_api.html#_CPPv412GDALDatasetH" title="GDALDatasetH">GDALDatasetH</a> *<em>pahSrcDS</em>, <em class="property">const</em> char *<em class="property">const</em> *<em>papszSrcDSNames</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv419GDALBuildVRTOptions" title="GDALBuildVRTOptions">GDALBuildVRTOptions</a> *<em>psOptions</em>, int *<em>pbUsageError</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412GDALBuildVRTPKciP12GDALDatasetHPPCKcPK19GDALBuildVRTOptionsPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Build a VRT from a list of datasets. </p>
+<p>This is the equivalent of the <a class="reference external" href="/programs/gdalbuildvrt.html">gdalbuildvrt</a> utility.</p>
+<p>GDALBuildVRTOptions* must be allocated and freed with <a class="reference internal" href="#gdal__utils_8h_1a90fb1085f167c78ac46dafaf9cfc5449"><span class="std std-ref">GDALBuildVRTOptionsNew()</span></a> and <a class="reference internal" href="#gdal__utils_8h_1a7946e5abf28f1eab0b1632dfd8a29e5f"><span class="std std-ref">GDALBuildVRTOptionsFree()</span></a> respectively. pahSrcDS and papszSrcDSNames cannot be used at the same time.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>the output dataset (new dataset that must be closed using <a class="reference internal" href="raster_c_api.html#gdal_8h_1a0984222d45a72028fcbbf1f44831ffbc"><span class="std std-ref">GDALClose()</span></a>) or NULL in case of error.</p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pszDest</span></code>: the destination dataset path. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nSrcCount</span></code>: the number of input datasets. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pahSrcDS</span></code>: the list of input datasets (or NULL, exclusive with papszSrcDSNames) </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">papszSrcDSNames</span></code>: the list of input dataset names (or NULL, exclusive with pahSrcDS) </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptionsIn</span></code>: the options struct returned by <a class="reference internal" href="#gdal__utils_8h_1a90fb1085f167c78ac46dafaf9cfc5449"><span class="std std-ref">GDALBuildVRTOptionsNew()</span></a> or NULL. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pbUsageError</span></code>: the pointer to int variable to determine any usage error has occurred. </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv426GDALMultiDimInfoOptionsNewPPcP32GDALMultiDimInfoOptionsForBinary">
+<span id="_CPPv326GDALMultiDimInfoOptionsNewPPcP32GDALMultiDimInfoOptionsForBinary"></span><span id="_CPPv226GDALMultiDimInfoOptionsNewPPcP32GDALMultiDimInfoOptionsForBinary"></span><span id="GDALMultiDimInfoOptionsNew__cPP.GDALMultiDimInfoOptionsForBinaryP"></span><span class="target" id="gdal__utils_8h_1a483df6d1dced8ea03b3bf498e1b11167"></span><a class="reference internal" href="#_CPPv423GDALMultiDimInfoOptions" title="GDALMultiDimInfoOptions">GDALMultiDimInfoOptions</a> *<code class="descname">GDALMultiDimInfoOptionsNew</code><span class="sig-paren">(</span>char **<em>papszArgv</em>, <a class="reference internal" href="#_CPPv432GDALMultiDimInfoOptionsForBinary" title="GDALMultiDimInfoOptionsForBinary">GDALMultiDimInfoOptionsForBinary</a> *<em>psOptionsForBinary</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv426GDALMultiDimInfoOptionsNewPPcP32GDALMultiDimInfoOptionsForBinary" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Allocates a GDALMultiDimInfo struct. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>pointer to the allocated GDALMultiDimInfoOptions struct. Must be freed with <a class="reference internal" href="#gdal__utils_8h_1a72bd340396f2aa143e434ed0d668b3fc"><span class="std std-ref">GDALMultiDimInfoOptionsFree()</span></a>.</p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 3.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">papszArgv</span></code>: NULL terminated list of options (potentially including filename and open options too), or NULL. The accepted options are the ones of the <a class="reference external" href="/programs/gdalmdiminfo.html">gdalmdiminfo</a> utility. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptionsForBinary</span></code>: (output) may be NULL (and should generally be NULL), otherwise (gdalmultidiminfo_bin.cpp use case) must be allocated with GDALMultiDimInfoOptionsForBinaryNew() prior to this function. Will be filled with potentially present filename, open options, subdataset number… </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv427GDALMultiDimInfoOptionsFreeP23GDALMultiDimInfoOptions">
+<span id="_CPPv327GDALMultiDimInfoOptionsFreeP23GDALMultiDimInfoOptions"></span><span id="_CPPv227GDALMultiDimInfoOptionsFreeP23GDALMultiDimInfoOptions"></span><span id="GDALMultiDimInfoOptionsFree__GDALMultiDimInfoOptionsP"></span><span class="target" id="gdal__utils_8h_1a72bd340396f2aa143e434ed0d668b3fc"></span>void <code class="descname">GDALMultiDimInfoOptionsFree</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv423GDALMultiDimInfoOptions" title="GDALMultiDimInfoOptions">GDALMultiDimInfoOptions</a> *<em>psOptions</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv427GDALMultiDimInfoOptionsFreeP23GDALMultiDimInfoOptions" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Frees the GDALMultiDimInfoOptions struct. </p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 3.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptions</span></code>: the options struct for <a class="reference internal" href="#gdal__utils_8h_1a0e571d445f7331e5eef62ec859422632"><span class="std std-ref">GDALMultiDimInfo()</span></a>.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv416GDALMultiDimInfo12GDALDatasetHPK23GDALMultiDimInfoOptions">
+<span id="_CPPv316GDALMultiDimInfo12GDALDatasetHPK23GDALMultiDimInfoOptions"></span><span id="_CPPv216GDALMultiDimInfo12GDALDatasetHPK23GDALMultiDimInfoOptions"></span><span id="GDALMultiDimInfo__GDALDatasetH.GDALMultiDimInfoOptionsCP"></span><span class="target" id="gdal__utils_8h_1a0e571d445f7331e5eef62ec859422632"></span>char *<code class="descname">GDALMultiDimInfo</code><span class="sig-paren">(</span><a class="reference internal" href="raster_c_api.html#_CPPv412GDALDatasetH" title="GDALDatasetH">GDALDatasetH</a> <em>hDataset</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv423GDALMultiDimInfoOptions" title="GDALMultiDimInfoOptions">GDALMultiDimInfoOptions</a> *<em>psOptions</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416GDALMultiDimInfo12GDALDatasetHPK23GDALMultiDimInfoOptions" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Lists various information about a GDAL multidimensional dataset. </p>
+<p>This is the equivalent of the <a class="reference external" href="/programs/gdalmdiminfo.html">gdalmdiminfo</a>utility.</p>
+<p>GDALMultiDimInfoOptions* must be allocated and freed with <a class="reference internal" href="#gdal__utils_8h_1a483df6d1dced8ea03b3bf498e1b11167"><span class="std std-ref">GDALMultiDimInfoOptionsNew()</span></a> and <a class="reference internal" href="#gdal__utils_8h_1a72bd340396f2aa143e434ed0d668b3fc"><span class="std std-ref">GDALMultiDimInfoOptionsFree()</span></a> respectively.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>string corresponding to the information about the raster dataset (must be freed with <a class="reference internal" href="cpl.html#cpl__conv_8h_1a21b7f312da39ddb0a12bdde06b153b48"><span class="std std-ref">CPLFree()</span></a>), or NULL in case of error.</p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 3.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">hDataset</span></code>: the dataset handle. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptionsIn</span></code>: the options structure returned by <a class="reference internal" href="#gdal__utils_8h_1a483df6d1dced8ea03b3bf498e1b11167"><span class="std std-ref">GDALMultiDimInfoOptionsNew()</span></a> or NULL. </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv431GDALMultiDimTranslateOptionsNewPPcP37GDALMultiDimTranslateOptionsForBinary">
+<span id="_CPPv331GDALMultiDimTranslateOptionsNewPPcP37GDALMultiDimTranslateOptionsForBinary"></span><span id="_CPPv231GDALMultiDimTranslateOptionsNewPPcP37GDALMultiDimTranslateOptionsForBinary"></span><span id="GDALMultiDimTranslateOptionsNew__cPP.GDALMultiDimTranslateOptionsForBinaryP"></span><span class="target" id="gdal__utils_8h_1a173ae6db429c199b6e897d1ec97913bf"></span><a class="reference internal" href="#_CPPv428GDALMultiDimTranslateOptions" title="GDALMultiDimTranslateOptions">GDALMultiDimTranslateOptions</a> *<code class="descname">GDALMultiDimTranslateOptionsNew</code><span class="sig-paren">(</span>char **<em>papszArgv</em>, <a class="reference internal" href="#_CPPv437GDALMultiDimTranslateOptionsForBinary" title="GDALMultiDimTranslateOptionsForBinary">GDALMultiDimTranslateOptionsForBinary</a> *<em>psOptionsForBinary</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv431GDALMultiDimTranslateOptionsNewPPcP37GDALMultiDimTranslateOptionsForBinary" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Allocates a GDALMultiDimTranslateOptions struct. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>pointer to the allocated GDALMultiDimTranslateOptions struct. Must be freed with <a class="reference internal" href="#gdal__utils_8h_1a4ef8f9606eab9413aec657056d7d63aa"><span class="std std-ref">GDALMultiDimTranslateOptionsFree()</span></a>.</p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 3.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">papszArgv</span></code>: NULL terminated list of options (potentially including filename and open options too), or NULL. The accepted options are the ones of the <a class="reference external" href="/programs/gdalmdimtranslate.html">gdalmdimtranslate</a> utility. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptionsForBinary</span></code>: (output) may be NULL (and should generally be NULL), otherwise (gdalmultidimtranslate_bin.cpp use case) must be allocated with GDALTranslateOptionsForBinaryNew() prior to this function. Will be filled with potentially present filename, open options,… </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv432GDALMultiDimTranslateOptionsFreeP28GDALMultiDimTranslateOptions">
+<span id="_CPPv332GDALMultiDimTranslateOptionsFreeP28GDALMultiDimTranslateOptions"></span><span id="_CPPv232GDALMultiDimTranslateOptionsFreeP28GDALMultiDimTranslateOptions"></span><span id="GDALMultiDimTranslateOptionsFree__GDALMultiDimTranslateOptionsP"></span><span class="target" id="gdal__utils_8h_1a4ef8f9606eab9413aec657056d7d63aa"></span>void <code class="descname">GDALMultiDimTranslateOptionsFree</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv428GDALMultiDimTranslateOptions" title="GDALMultiDimTranslateOptions">GDALMultiDimTranslateOptions</a> *<em>psOptions</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv432GDALMultiDimTranslateOptionsFreeP28GDALMultiDimTranslateOptions" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Frees the GDALMultiDimTranslateOptions struct. </p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 3.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptions</span></code>: the options struct for <a class="reference internal" href="#gdal__utils_8h_1ad90adfbf5cb782945c1c781fe0f9e64a"><span class="std std-ref">GDALMultiDimTranslate()</span></a>.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv439GDALMultiDimTranslateOptionsSetProgressP28GDALMultiDimTranslateOptions16GDALProgressFuncPv">
+<span id="_CPPv339GDALMultiDimTranslateOptionsSetProgressP28GDALMultiDimTranslateOptions16GDALProgressFuncPv"></span><span id="_CPPv239GDALMultiDimTranslateOptionsSetProgressP28GDALMultiDimTranslateOptions16GDALProgressFuncPv"></span><span id="GDALMultiDimTranslateOptionsSetProgress__GDALMultiDimTranslateOptionsP.GDALProgressFunc.voidP"></span><span class="target" id="gdal__utils_8h_1a7c84e247bdb21fc5a69108c40244ae6d"></span>void <code class="descname">GDALMultiDimTranslateOptionsSetProgress</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv428GDALMultiDimTranslateOptions" title="GDALMultiDimTranslateOptions">GDALMultiDimTranslateOptions</a> *<em>psOptions</em>, <a class="reference internal" href="cpl.html#_CPPv416GDALProgressFunc" title="GDALProgressFunc">GDALProgressFunc</a> <em>pfnProgress</em>, void *<em>pProgressData</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv439GDALMultiDimTranslateOptionsSetProgressP28GDALMultiDimTranslateOptions16GDALProgressFuncPv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set a progress function. </p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 3.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptions</span></code>: the options struct for <a class="reference internal" href="#gdal__utils_8h_1ad90adfbf5cb782945c1c781fe0f9e64a"><span class="std std-ref">GDALMultiDimTranslate()</span></a>. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pfnProgress</span></code>: the progress callback. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pProgressData</span></code>: the user data for the progress callback.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv421GDALMultiDimTranslatePKc12GDALDatasetHiP12GDALDatasetHPK28GDALMultiDimTranslateOptionsPi">
+<span id="_CPPv321GDALMultiDimTranslatePKc12GDALDatasetHiP12GDALDatasetHPK28GDALMultiDimTranslateOptionsPi"></span><span id="_CPPv221GDALMultiDimTranslatePKc12GDALDatasetHiP12GDALDatasetHPK28GDALMultiDimTranslateOptionsPi"></span><span id="GDALMultiDimTranslate__cCP.GDALDatasetH.i.GDALDatasetHP.GDALMultiDimTranslateOptionsCP.iP"></span><span class="target" id="gdal__utils_8h_1ad90adfbf5cb782945c1c781fe0f9e64a"></span><a class="reference internal" href="raster_c_api.html#_CPPv412GDALDatasetH" title="GDALDatasetH">GDALDatasetH</a> <code class="descname">GDALMultiDimTranslate</code><span class="sig-paren">(</span><em class="property">const</em> char *<em>pszDest</em>, <a class="reference internal" href="raster_c_api.html#_CPPv412GDALDatasetH" title="GDALDatasetH">GDALDatasetH</a> <em>hDstDataset</em>, int <em>nSrcCount</em>, <a class="reference internal" href="raster_c_api.html#_CPPv412GDALDatasetH" title="GDALDatasetH">GDALDatasetH</a> *<em>pahSrcDS</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv428GDALMultiDimTranslateOptions" title="GDALMultiDimTranslateOptions">GDALMultiDimTranslateOptions</a> *<em>psOptions</em>, int *<em>pbUsageError</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv421GDALMultiDimTranslatePKc12GDALDatasetHiP12GDALDatasetHPK28GDALMultiDimTranslateOptionsPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Converts raster data between different formats. </p>
+<p>This is the equivalent of the <a class="reference external" href="/programs/gdalmdimtranslate.html">gdalmdimtranslate</a> utility.</p>
+<p>GDALMultiDimTranslateOptions* must be allocated and freed with <a class="reference internal" href="#gdal__utils_8h_1a173ae6db429c199b6e897d1ec97913bf"><span class="std std-ref">GDALMultiDimTranslateOptionsNew()</span></a> and <a class="reference internal" href="#gdal__utils_8h_1a4ef8f9606eab9413aec657056d7d63aa"><span class="std std-ref">GDALMultiDimTranslateOptionsFree()</span></a> respectively. pszDest and hDstDS cannot be used at the same time.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>the output dataset (new dataset that must be closed using <a class="reference internal" href="raster_c_api.html#gdal_8h_1a0984222d45a72028fcbbf1f44831ffbc"><span class="std std-ref">GDALClose()</span></a>, or hDstDS is not NULL) or NULL in case of error.</p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 3.1 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pszDest</span></code>: the destination dataset path or NULL. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hDstDS</span></code>: the destination dataset or NULL. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nSrcCount</span></code>: the number of input datasets. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pahSrcDS</span></code>: the list of input datasets. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">psOptions</span></code>: the options struct returned by <a class="reference internal" href="#gdal__utils_8h_1a173ae6db429c199b6e897d1ec97913bf"><span class="std std-ref">GDALMultiDimTranslateOptionsNew()</span></a> or NULL. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pbUsageError</span></code>: the pointer to int variable to determine any usage error has occurred or NULL. </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="gdaldriver_cpp.html" class="btn btn-neutral float-right" title="GDALDriver C++ API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ogr_srs_api.html" class="btn btn-neutral float-left" title="ogr_srs_api.h: Spatial Reference System C API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

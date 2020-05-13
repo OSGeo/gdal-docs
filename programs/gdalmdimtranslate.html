@@ -1,0 +1,416 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gdalmdimtranslate &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgprograms/gdalmdimtranslate.html"/>
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Common options for vector programs" href="vector_common_options.html" />
+    <link rel="prev" title="gdalmdiminfo" href="gdalmdiminfo.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Programs</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#raster-programs">Raster programs</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#multidimensional-raster-programs">Multidimensional Raster programs</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="gdalmdiminfo.html">gdalmdiminfo</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">gdalmdimtranslate</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#synopsis">Synopsis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#description">Description</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#c-api">C API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#vector-programs">Vector programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#geographic-network-programs">Geographic network programs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Programs</a> &raquo;</li>
+      
+      <li>gdalmdimtranslate</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/programs/gdalmdimtranslate.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="vector_common_options.html" class="btn btn-neutral float-right" title="Common options for vector programs" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gdalmdiminfo.html" class="btn btn-neutral float-left" title="gdalmdiminfo" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="gdalmdimtranslate">
+<span id="id1"></span><h1>gdalmdimtranslate<a class="headerlink" href="#gdalmdimtranslate" title="Permalink to this headline">¶</a></h1>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 3.1.</span></p>
+</div>
+<p>Converts multidimensional data between different formats, and perform subsetting.</p>
+<div class="section" id="synopsis">
+<span id="index-0"></span><h2>Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdalmdimtranslate</span> <span class="p">[</span><span class="o">--</span><span class="n">help</span><span class="o">-</span><span class="n">general</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">co</span> <span class="s2">&quot;NAME=VALUE&quot;</span><span class="p">]</span><span class="o">*</span>
+                  <span class="p">[</span><span class="o">-</span><span class="n">of</span> <span class="nb">format</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">array</span> <span class="o">&lt;</span><span class="n">array_spec</span><span class="o">&gt;</span><span class="p">]</span><span class="o">*</span>
+                  <span class="p">[</span><span class="o">-</span><span class="n">group</span> <span class="o">&lt;</span><span class="n">group_spec</span><span class="o">&gt;</span><span class="p">]</span><span class="o">*</span>
+                  <span class="p">[</span><span class="o">-</span><span class="n">subset</span> <span class="o">&lt;</span><span class="n">subset_spec</span><span class="o">&gt;</span><span class="p">]</span><span class="o">*</span>
+                  <span class="p">[</span><span class="o">-</span><span class="n">scaleaxes</span> <span class="o">&lt;</span><span class="n">scaleaxes_spec</span><span class="o">&gt;</span><span class="p">]</span><span class="o">*</span>
+                  <span class="o">&lt;</span><span class="n">src_filename</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">dst_filename</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p><strong class="program">gdalmdimtranslate</strong> program converts multidimensional raster between
+different formats, and/or can perform selective conversion of specific arrays
+and groups, and/or subsetting operations.</p>
+<p>The following command line parameters can appear in any order.</p>
+<dl class="option">
+<dt id="cmdoption-gdalmdimtranslate-of">
+<code class="descname">-of</code><code class="descclassname"> &lt;format&gt;</code><a class="headerlink" href="#cmdoption-gdalmdimtranslate-of" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select the output format. This can be a format that supports multidimensional
+output (such as <a class="reference internal" href="../drivers/raster/netcdf.html#raster-netcdf"><span class="std std-ref">NetCDF: Network Common Data Form</span></a>, <a class="reference internal" href="../drivers/raster/vrt_multidimensional.html#vrt-multidimensional"><span class="std std-ref">Multidimensional VRT</span></a>), or a “classic” 2D formats, if only one single 2D array
+results of the other specified conversion operations. When this option is
+not specified, the format is guessed when possible from the extension of the
+destination filename.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalmdimtranslate-co">
+<code class="descname">-co</code><code class="descclassname"> &lt;NAME=VALUE&gt;</code><a class="headerlink" href="#cmdoption-gdalmdimtranslate-co" title="Permalink to this definition">¶</a></dt>
+<dd><p>Many formats have one or more optional creation options that can be
+used to control particulars about the file created. For instance,
+the GeoTIFF driver supports creation options to control compression,
+and whether the file should be tiled.</p>
+<p>The creation options available vary by format driver, and some
+simple formats have no creation options at all. A list of options
+supported for a format can be listed with the
+<a class="reference internal" href="raster_common_options.html#raster-common-options-formats"><span class="std std-ref">–formats</span></a>
+command line option but the documentation for the format is the
+definitive source of information on driver creation options.
+See <a class="reference internal" href="../drivers/raster/index.html#raster-drivers"><span class="std std-ref">Raster drivers</span></a> format
+specific documentation for legal creation options for each format.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalmdimtranslate-array">
+<code class="descname">-array</code><code class="descclassname"> &lt;array_spec&gt;</code><a class="headerlink" href="#cmdoption-gdalmdimtranslate-array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Instead of converting the whole dataset, select one array, and possibly
+perform operations on it. This option can be specified several times to
+operate on different arrays.</p>
+<p>&lt;array_spec&gt; may be just an array name, potentially using a fully qualified
+syntax (/group/subgroup/array_name). Or it can be a combination of options
+with the syntax:
+name={src_array_name}[,dstname={dst_array_name}][,transpose=[{axis1},{axis2},…][,view={view_expr}]</p>
+<p>[{axis1},{axis2},…] is the argumet of  <a class="reference internal" href="../api/gdalmdarray_cpp.html#_CPPv4NK11GDALMDArray9TransposeERKNSt6vectorIiEE" title="GDALMDArray::Transpose"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALMDArray::Transpose()</span></code></a>.
+For example, transpose=[1,0] switches the axis order of a 2D array.</p>
+<p>{view_expr} is the value of the <em>viewExpr</em> argument of <a class="reference internal" href="../api/gdalmdarray_cpp.html#_CPPv4NK11GDALMDArray7GetViewERKNSt6stringE" title="GDALMDArray::GetView"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALMDArray::GetView()</span></code></a></p>
+<p>When specifying a view_expr that performs a slicing or subsetting on a dimension, the
+equivalent operation will be applied to the corresponding indexing variable.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalmdimtranslate-group">
+<code class="descname">-group</code><code class="descclassname"> &lt;group_spec&gt;</code><a class="headerlink" href="#cmdoption-gdalmdimtranslate-group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Instead of converting the whole dataset, select one group, and possibly
+perform operations on it. This option can be specified several times to
+operate on different groups. If only one group is specified, its contet will be
+copied directly to the target root group. If several ones are specified,
+they are copied under the target root group</p>
+<p>&lt;group_spec&gt; may be just a group name, potentially using a fully qualified
+syntax (/group/subgroup/subsubgroup_name). Or it can be a combination of options
+with the syntax:
+name={src_group_name}[,dstname={dst_group_name}][,recursive=no]</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalmdimtranslate-subset">
+<code class="descname">-subset</code><code class="descclassname"> &lt;subset_spec&gt;</code><a class="headerlink" href="#cmdoption-gdalmdimtranslate-subset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs a subsetting (trimming or slicing) operation along a dimension,
+provided that it is indexed by a 1D variable of numeric or string data type,
+and whose values are monotically sorted.
+&lt;subset_spec&gt; follows exactly the <a class="reference external" href="https://portal.opengeospatial.org/files/09-147r3">OGC WCS 2.0 KVP encoding</a>
+for subsetting.</p>
+<p>That is dim_name(min_val,max_val) or dim_name(sliced_val)
+The first syntax will subset the dimension dim_name to values in the
+[min_val,max_val] range. The second syntax will slice the dimension dim_name
+to value sliced_val (and this dimension will be removed from the arrays
+that reference to it)</p>
+<p>Using -subset is incompatible of specifying a <em>view</em> option in -array.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalmdimtranslate-scaleaxes">
+<code class="descname">-scaleaxes</code><code class="descclassname"> &lt;scaleaxes_spec&gt;</code><a class="headerlink" href="#cmdoption-gdalmdimtranslate-scaleaxes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies a integral scale factor to one or several dimensions, that is
+extract 1 value every N values (without resampling).</p>
+<p>&lt;scaleaxes_spec&gt; follows exactly the syntax of the KVP encoding of the
+SCALEAXES parameter of
+<a class="reference external" href="https://portal.opengeospatial.org/files/12-039">OGC WCS 2.0 Scaling Extension</a>,
+but limited to integer scale factors.</p>
+<p>That is dim1_name(scale_factor)[,dim2_name(scale_factor)]*</p>
+<p>Using -scaleaxes is incompatible of specifying a <em>view</em> option in -array.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalmdimtranslate-arg-src-dataset">
+<code class="descname">&lt;src_dataset&gt;</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gdalmdimtranslate-arg-src-dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>The source dataset name.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalmdimtranslate-arg-dst-dataset">
+<code class="descname">&lt;dst_dataset&gt;</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gdalmdimtranslate-arg-dst-dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>The destination file name.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="c-api">
+<h2>C API<a class="headerlink" href="#c-api" title="Permalink to this headline">¶</a></h2>
+<p>This utility is also callable from C with <a class="reference internal" href="../api/gdal_utils.html#_CPPv421GDALMultiDimTranslatePKc12GDALDatasetHiP12GDALDatasetHPK28GDALMultiDimTranslateOptionsPi" title="GDALMultiDimTranslate"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALMultiDimTranslate()</span></code></a>.</p>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Convert a netCDF file to a multidimensional VRT file</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gdalmdimtranslate in.nc out.vrt
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Extract a 2D slice of a time,Y,X array</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gdalmdimtranslate in.nc out.tif -subset &#39;time(&quot;2010-01-01&quot;)&#39; -array temperature
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Subsample along X and Y axis</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gdalmdimtranslate in.nc out.nc -scaleaxes &quot;X(2),Y(2)&quot;
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Reorder the values of a time,Y,X array along the Y axis from top-to-bottom
+to bottom-to-top (or the reverse)</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gdalmdimtranslate in.nc out.nc -array &quot;name=temperature,view=[:,::-1,:]&quot;
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Transpose an array that has X,Y,time dimension order to time,Y,X</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gdalmdimtranslate in.nc out.nc -array &quot;name=temperature,transpose=[2,1,0]&quot;
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="vector_common_options.html" class="btn btn-neutral float-right" title="Common options for vector programs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gdalmdiminfo.html" class="btn btn-neutral float-left" title="gdalmdiminfo" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

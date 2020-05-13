@@ -1,0 +1,923 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>JP2OpenJPEG – JPEG2000 driver based on OpenJPEG library &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdrivers/raster/jp2openjpeg.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="JPEG2000 – Implementation of the JPEG-2000 part 1" href="jpeg2000.html" />
+    <link rel="prev" title="JP2MrSID – JPEG2000 via MrSID SDK" href="jp2mrsid.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Raster drivers</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="aaigrid.html">AAIGrid – Arc/Info ASCII Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ace2.html">ACE2 – ACE2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adrg.html">ADRG – ADRG/ARC Digitized Raster Graphics (.gen/.thf)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aig.html">AIG – Arc/Info Binary Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="airsar.html">AIRSAR – AIRSAR Polarimetric Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arg.html">ARG – Azavea Raster Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bag.html">BAG – Bathymetry Attributed Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blx.html">BLX – Magellan BLX Topo File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bmp.html">BMP – Microsoft Windows Device Independent Bitmap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bpg.html">BPG – Better Portable Graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bsb.html">BSB – Maptech/NOAA BSB Nautical Chart Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bt.html">BT – VTP .bt Binary Terrain Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="byn.html">BYN - Natural Resources Canada’s Geoid file format (.byn)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cad.html">CAD – AutoCAD DWG raster layer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cals.html">CALS – CALS Type 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ceos.html">CEOS – CEOS Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coasp.html">COASP –  DRDC COASP SAR Processor Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cog.html">COG – Cloud Optimized GeoTIFF generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cosar.html">COSAR – TerraSAR-X Complex SAR Data Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpg.html">CPG – Convair PolGASP data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctable2.html">CTable2 – CTable2 Datum Grid Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctg.html">CTG – USGS LULC Composite Theme Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="daas.html">DAAS (Airbus DS Intelligence Data As A Service driver)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="db2.html">DB2 raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dds.html">DDS – DirectDraw Surface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="derived.html">DERIVED – Derived subdatasets driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dimap.html">DIMAP – Spot DIMAP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dipex.html">DIPEx – ELAS DIPEx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dods.html">DODS – OPeNDAP Grid Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doq1.html">DOQ1 – First Generation USGS DOQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doq2.html">DOQ2 – New Labelled USGS DOQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dted.html">DTED – Military Elevation Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="e00grid.html">E00GRID – Arc/Info Export E00 GRID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ecrgtoc.html">ECRGTOC – ECRG Table Of Contents (TOC.xml)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ecw.html">ECW – Enhanced Compressed Wavelets (.ecw)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eedai.html">EEDAI - Google Earth Engine Data API Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ehdr.html">EHdr – ESRI .hdr Labelled</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eir.html">EIR – Erdas Imagine Raw</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elas.html">ELAS - Earth Resources Laboratory Applications Software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="envi.html">ENVI – ENVI .hdr Labelled Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="epsilon.html">Epsilon - Wavelet compressed images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="esat.html">ESAT – Envisat Image Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ers.html">ERS – ERMapper .ERS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exr.html">EXR – Extended Dynamic Range Image File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fast.html">FAST – EOSAT FAST Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fit.html">FIT – FIT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fits.html">FITS – Flexible Image Transport System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fujibas.html">FujiBAS – Fuji BAS Scanner Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="genbin.html">GenBin – Generic Binary (.hdr labelled)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="georaster.html">Oracle Spatial GeoRaster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gff.html">GFF – Sandia National Laboratories GSAT File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gif.html">GIF – Graphics Interchange Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gmt.html">GMT – GMT Compatible netCDF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpkg.html">GPKG – GeoPackage raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grass.html">GRASS Raster Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grassasciigrid.html">GRASSASCIIGrid – GRASS ASCII Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grib.html">GRIB – WMO General Regularly-distributed Information in Binary form</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gs7bg.html">GS7BG – Golden Software Surfer 7 Binary Grid File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gsag.html">GSAG – Golden Software ASCII Grid File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gsbg.html">GSBG – Golden Software Binary Grid File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gsc.html">GSC – GSC Geogrid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gta.html">GTA - Generic Tagged Arrays</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gtiff.html">GTiff – GeoTIFF File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gxf.html">GXF – Grid eXchange File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hdf4.html">HDF4 – Hierarchical Data Format Release 4 (HDF4)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hdf5.html">HDF5 – Hierarchical Data Format Release 5 (HDF5)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hf2.html">HF2 – HF2/HFZ heightfield raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hfa.html">HFA – Erdas Imagine .img</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ida.html">IDA – Image Display and Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Idrisi.html">RST – Idrisi Raster Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ignfheightasciigrid.html">IGNFHeightASCIIGrid – IGN-France height correction ASCII grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ilwis.html">ILWIS – Raster Map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intergraphraster.html">INGR – Intergraph Raster Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iris.html">IRIS – Vaisala’s weather radar software format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="isce.html">ISCE – ISCE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="isg.html">ISG – International Service for the Geoid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="isis2.html">ISIS2 – USGS Astrogeology ISIS Cube (Version 2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="isis3.html">ISIS3 – USGS Astrogeology ISIS Cube (Version 3)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jdem.html">JDEM – Japanese DEM (.mem)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2ecw.html">JP2ECW – ERDAS JPEG2000 (.jp2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2kak.html">JP2KAK – JPEG-2000 (based on Kakadu)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2lura.html">JP2Lura – JPEG2000 driver based on Lurawave library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2mrsid.html">JP2MrSID – JPEG2000 via MrSID SDK</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">JP2OpenJPEG – JPEG2000 driver based on OpenJPEG library</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#driver-capabilities">Driver capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#georeferencing">Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#thread-support">Thread support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#option-options">Option Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#creation-options">Creation Options</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#lossless-compression">Lossless compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gmljp2v2-definition-file">GMLJP2v2 definition file</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#vector-information">Vector information</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#see-also">See Also</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="jpeg2000.html">JPEG2000 – Implementation of the JPEG-2000 part 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jpegls.html">JPEGLS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jpeg.html">JPEG – JPEG JFIF File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jpipkak.html">JPIPKAK - JPIP Streaming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kea.html">KEA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kmlsuperoverlay.html">KMLSuperoverlay – KMLSuperoverlay</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kro.html">KRO – KOLOR Raw format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lan.html">LAN – Erdas 7.x .LAN and .GIS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="l1b.html">L1B – NOAA Polar Orbiter Level 1b Data Set (AVHRR)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lcp.html">LCP – FARSITE v.4 LCP Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="leveller.html">Leveller – Daylon Leveller Heightfield</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loslas.html">LOSLAS – NADCON .los/.las Datum Grid Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="map.html">MAP – OziExplorer .MAP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="marfa.html">MRF – Meta Raster Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mbtiles.html">MBTiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mem.html">MEM – In Memory Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mff.html">MFF – Vexcel MFF Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mff2.html">MFF2 – Vexcel MFF2 Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mg4lidar.html">MG4Lidar – MrSID/MG4 LiDAR Compression / Point Cloud View files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mrsid.html">MrSID – Multi-resolution Seamless Image Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="msg.html">MSG – Meteosat Second Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="msgn.html">MSGN – Meteosat Second Generation (MSG) Native Archive Format (.nat)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ndf.html">NDF – NLAPS Data Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="netcdf.html">NetCDF: Network Common Data Form</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ngsgeoid.html">NGSGEOID - NOAA NGS Geoid Height Grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ngw.html">NGW – NextGIS Web</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nitf.html">NITF – National Imagery Transmission Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ntv1.html">NTv1 – NTv1 Datum Grid Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ntv2.html">NTv2 – NTv2 Datum Grid Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nwtgrd.html">NWT_GRD/NWT_GRC – Northwood/Vertical Mapper File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ozi.html">OZI – OZF2/OZFX3 raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="palsar.html">JAXA PALSAR Processed Products</a></li>
+<li class="toctree-l2"><a class="reference internal" href="paux.html">PAux – PCI .aux Labelled Raw Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pcidsk.html">PCIDSK – PCI Geomatics Database File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pcraster.html">PCRaster – PCRaster raster file format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pdf.html">PDF – Geospatial PDF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pds.html">PDS – Planetary Data System v3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pds4.html">PDS4 – NASA Planetary Data System (Version 4)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plmosaic.html">PLMosaic (Planet Labs Mosaics API)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="png.html">PNG – Portable Network Graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pnm.html">PNM – Netpbm (.pgm, .ppm)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="postgisraster.html">PostGISRaster – PostGIS Raster driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prf.html">PHOTOMOD Raster File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasdaman.html">Rasdaman GDAL driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasterlite.html">Rasterlite - Rasters in SQLite DB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasterlite2.html">RasterLite2 - Rasters in SQLite DB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="r.html">R – R Object Data Store</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rda.html">RDA (DigitalGlobe Raster Data Access)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rdb.html">RDB - <em>RIEGL</em> Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rik.html">RIK – Swedish Grid Maps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rmf.html">RMF – Raster Matrix Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="roi_pac.html">ROI_PAC – ROI_PAC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpftoc.html">RPFTOC – Raster Product Format/RPF (a.toc)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rraster.html">RRASTER – R Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rs2.html">RS2 – RadarSat 2 XML Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="safe.html">SAFE – Sentinel-1 SAFE XML Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sar_ceos.html">SAR_CEOS – CEOS SAR Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sdat.html">SAGA – SAGA GIS Binary Grid File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sdts.html">SDTS – USGS SDTS DEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sde.html">ESRI ArcSDE Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sentinel2.html">SENTINEL2 – Sentinel-2 Products</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sgi.html">SGI – SGI Image Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sigdem.html">SIGDEM – Scaled Integer Gridded DEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="snodas.html">SNODAS – Snow Data Assimilation System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="srp.html">SRP – Standard Product Format (ASRP/USRP) (.gen)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="srtmhgt.html">SRTMHGT – SRTM HGT Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="terragen.html">Terragen – Terragen™ Terrain File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="til.html">TIL – EarthWatch/DigitalGlobe .TIL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.html">TileDB - TileDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tsx.html">TSX –  TerraSAR-X Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usgsdem.html">USGSDEM – USGS ASCII DEM (and CDED)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vicar.html">VICAR – VICAR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vrt.html">VRT – GDAL Virtual Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wcs.html">WCS – OGC Web Coverage Service</a></li>
+<li class="toctree-l2"><a class="reference internal" href="webp.html">WEBP - WEBP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wms.html">WMS – Web Map Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wmts.html">WMTS – OGC Web Map Tile Service</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xpm.html">XPM – X11 Pixmap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xyz.html">XYZ – ASCII Gridded XYZ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="zmap.html">ZMap – ZMap Plus Grid</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Raster drivers</a> &raquo;</li>
+      
+      <li>JP2OpenJPEG – JPEG2000 driver based on OpenJPEG library</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/drivers/raster/jp2openjpeg.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="jpeg2000.html" class="btn btn-neutral float-right" title="JPEG2000 – Implementation of the JPEG-2000 part 1" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="jp2mrsid.html" class="btn btn-neutral float-left" title="JP2MrSID – JPEG2000 via MrSID SDK" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="jp2openjpeg-jpeg2000-driver-based-on-openjpeg-library">
+<span id="raster-jp2openjpeg"></span><h1>JP2OpenJPEG – JPEG2000 driver based on OpenJPEG library<a class="headerlink" href="#jp2openjpeg-jpeg2000-driver-based-on-openjpeg-library" title="Permalink to this headline">¶</a></h1>
+<div class="admonition shortname" id="shortname-0">
+<p class="admonition-title">Driver short name</p>
+<p>JP2OpenJPEG</p>
+</div>
+<div class="admonition build_dependencies" id="build_dependencies-0">
+<p class="admonition-title">Build dependencies</p>
+<p>openjpeg &gt;= 2.1</p>
+</div>
+<p>This driver is an implementation of a JPEG2000 reader/writer based on
+OpenJPEG library <strong>v2</strong>.</p>
+<p>The driver uses the VSI Virtual File API, so it can read JPEG2000
+compressed NITF files.</p>
+<p>XMP metadata can be extracted from JPEG2000 files, and will be stored as
+XML raw content in the xml:XMP metadata domain.</p>
+<p>The driver supports writing georeferencing information as GeoJP2 and
+GMLJP2 boxes.</p>
+<p>Starting with GDAL 2.0, the driver supports creating files with
+transparency, arbitrary band count, and adding/reading metadata. Update
+of georeferencing or metadata of existing file is also supported.
+Optional intellectual property metadata can be read/written in the
+xml:IPR box.</p>
+<div class="section" id="driver-capabilities">
+<h2>Driver capabilities<a class="headerlink" href="#driver-capabilities" title="Permalink to this headline">¶</a></h2>
+<div class="admonition supports_createcopy" id="supports_createcopy-0">
+<p class="admonition-title">Supports CreateCopy()</p>
+<p>This driver supports the <a class="reference internal" href="../../api/gdaldriver_cpp.html#_CPPv4N10GDALDriver10CreateCopyEPKcP11GDALDatasetiPPc16GDALProgressFuncPv" title="GDALDriver::CreateCopy"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDriver::CreateCopy()</span></code></a> operation</p>
+</div>
+<div class="admonition supports_georeferencing" id="supports_georeferencing-0">
+<p class="admonition-title">Supports Georeferencing</p>
+<p>This driver supports georeferencing</p>
+</div>
+<div class="admonition supports_virtualio" id="supports_virtualio-0">
+<p class="admonition-title">Supports VirtualIO</p>
+<p>This driver supports <a class="reference internal" href="../../user/virtual_file_systems.html#virtual-file-systems"><span class="std std-ref">virtual I/O operations (/vsimem/, etc.)</span></a></p>
+</div>
+</div>
+<div class="section" id="georeferencing">
+<h2>Georeferencing<a class="headerlink" href="#georeferencing" title="Permalink to this headline">¶</a></h2>
+<p>Georeferencing information can come from different sources : internal
+(GeoJP2 or GMLJP2 boxes), worldfile .j2w/.wld sidecar files, or PAM
+(Persistent Auxiliary metadata) .aux.xml sidecar files. By default,
+information is fetched in following order (first listed is the most
+prioritary): PAM, GeoJP2, GMLJP2, WORLDFILE.</p>
+<p>Starting with GDAL 2.2, the allowed sources and their priority order can
+be changed with the GDAL_GEOREF_SOURCES configuration option (or
+GEOREF_SOURCES open option) whose value is a comma-separated list of the
+following keywords : PAM, GEOJP2, GMLJP2, INTERNAL (shortcut for
+GEOJP2,GMLJP2), WORLDFILE, NONE. First mentioned sources are the most
+prioritary over the next ones. A non mentioned source will be ignored.</p>
+<p>For example setting it to “WORLDFILE,PAM,INTERNAL” will make a
+geotransformation matrix from a potential worldfile prioritary over PAM
+or internal JP2 boxes. Setting it to “PAM,WORLDFILE,GEOJP2” will use the
+mentioned sources and ignore GMLJP2 boxes.</p>
+</div>
+<div class="section" id="thread-support">
+<h2>Thread support<a class="headerlink" href="#thread-support" title="Permalink to this headline">¶</a></h2>
+<p>By default, if the JPEG2000 file has internal tiling, GDAL will try to
+decode several tiles in multiple threads if the RasterIO() request it
+receives intersect several tiles. This behavior can be controlled with
+the GDAL_NUM_THREADS configuration option that defaults to ALL_CPUS in
+that context. In case RAM is limited, it can be needed to set this
+configuration option to 1 to disable multi-threading</p>
+<p>Starting with OpenJPEG 2.2.0, multi-threading decoding can also be
+enabld at the code-block level. This must be enabled with the
+OPJ_NUM_THREADS environment variable (note: this is a system environment
+variable, not a GDAL configuration option), which can be set to a
+numeric value or NUM_CPUS. Its default value is 1. Starting with GDAL
+2.3, this multi-threading at code-block level is automatically enabled
+by GDAL</p>
+<p>Both multi-threading mechanism can be combined together.</p>
+</div>
+<div class="section" id="option-options">
+<h2>Option Options<a class="headerlink" href="#option-options" title="Permalink to this headline">¶</a></h2>
+<p>(GDAL &gt;= 2.0 ) The following open option is available:</p>
+<ul class="simple">
+<li><p><strong>1BIT_ALPHA_PROMOTION=YES/NO</strong>: Whether a 1-bit alpha channel should
+be promoted to 8-bit. Defaults to YES.</p></li>
+<li><p><strong>GEOREF_SOURCES=string</strong>: (GDAL &gt; 2.2) Define which georeferencing
+sources are allowed and their priority order. See
+<a class="reference external" href="#georeferencing">Georeferencing</a> paragraph.</p></li>
+<li><p><strong>USE_TILE_AS_BLOCK=YES/NO</strong>: (GDAL &gt; 2.2) Whether to always use the
+JPEG-2000 block size as the GDAL block size Defaults to NO. Setting
+this option can be useful when doing whole image decompression and
+the image is single-tiled. Note however that the tile size must not
+exceed 2 GB since that’s the limit supported by GDAL.</p></li>
+</ul>
+</div>
+<div class="section" id="creation-options">
+<h2>Creation Options<a class="headerlink" href="#creation-options" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p><strong>CODEC=JP2/J2K</strong> : JP2 will add JP2 boxes around the codestream
+data. The value is determined automatically from the file extension.
+If it is neither JP2 nor J2K, J2K codec is used.</p></li>
+<li><p><strong>GMLJP2=YES/NO</strong>: (Starting with GDAL 1.10) Indicates whether a GML
+box conforming to the OGC GML in JPEG2000 specification should be
+included in the file. Unless GMLJP2V2_DEF is used, the version of the
+GMLJP2 box will be version 1. Defaults to YES.</p></li>
+<li><p><strong>GMLJP2V2_DEF=filename</strong>: (Starting with GDAL 2.0) Indicates whether
+a GML box conforming to the <a class="reference external" href="http://docs.opengeospatial.org/is/08-085r5/08-085r5.html">OGC GML in JPEG2000, version
+2.0.1</a>
+specification should be included in the file. <em>filename</em> must point
+to a file with a JSon content that defines how the GMLJP2 v2 box
+should be built. See below section for the syntax of the JSon
+configuration file. It is also possible to directly pass the JSon
+content inlined as a string. If filename is just set to YES, a
+minimal instance will be built. Note: GDAL 2.0 and 2.1 use the older
+<a class="reference external" href="http://docs.opengeospatial.org/is/08-085r4/08-085r4.html">OGC GML in JPEG2000, version
+2.0</a>
+specification, that differ essentially by the content of the
+gml:domainSet, gml:rangeSet and gmlcov:rangeType elements of
+gmljp2:GMLJP2CoverageCollection.</p></li>
+<li><p><strong>GeoJP2=YES/NO</strong>: (Starting with GDAL 1.10) Indicates whether a
+UUID/GeoTIFF box conforming to the GeoJP2 (GeoTIFF in JPEG2000)
+specification should be included in the file. Defaults to YES.</p></li>
+<li><p><strong>QUALITY=float_value,float_value,…</strong> : Percentage between 0 and
+100. A value of 50 means the file will be half-size in comparison to
+uncompressed data, 33 means 1/3, etc.. Defaults to 25 (unless the
+dataset is made of a single band with color table, in which case the
+default quality is 100). Starting with GDAL 2.0, it is possible to
+specify several quality values (comma separated) to ask for several
+quality layers. Quality values should be increasing.</p></li>
+<li><p><strong>REVERSIBLE=YES/NO</strong> : YES means use of reversible 5x3 integer-only
+filter, NO use of the irreversible DWT 9-7. Defaults to NO (unless
+the dataset is made of a single band with color table, in which case
+reversible filter is used).</p></li>
+<li><p><strong>RESOLUTIONS=int_value</strong> : Number of resolution levels. Default
+value is selected such the smallest overview of a tile is no bigger
+than 128x128.</p></li>
+<li><p><strong>BLOCKXSIZE=int_value</strong> : Tile width. Defaults to 1024.</p></li>
+<li><p><strong>BLOCKYSIZE=int_value</strong> : Tile height. Defaults to 1024.</p></li>
+<li><p><strong>PROGRESSION=LRCP/RLCP/RPCL/PCRL/CPRL</strong> : Progession order. Defaults
+to LRCP.</p></li>
+<li><p><strong>SOP=YES/NO</strong> : YES means generate SOP (Start Of Packet) marker
+segments. Defaults to NO.</p></li>
+<li><p><strong>EPH=YES/NO</strong> : YES means generate EPH (End of Packet Header) marker
+segments. Defaults to NO.</p></li>
+<li><p><strong>YCBCR420=YES/NO</strong> : (GDAL &gt;= 1.11) YES if RGB must be resampled to
+YCbCr 4:2:0. Defaults to NO.</p></li>
+<li><p><strong>YCC=YES/NO</strong> : (GDAL &gt;= 2.0) YES if RGB must be transformed to YCC
+color space (“MCT transform”, i.e. internal transform, without visual
+degration). Defaults to YES.</p></li>
+<li><p><strong>NBITS=int_value</strong> : (GDAL &gt;= 2.0) Bits (precision) for sub-byte
+files (1-7), sub-uint16 (9-15), sub-uint32 (17-31).</p></li>
+<li><p><strong>1BIT_ALPHA=YES/NO</strong>: (GDAL &gt;= 2.0) Whether to encode the alpha
+channel as a 1-bit channel (when there’s an alpha channel). Defaults
+to NO, unless INSPIRE_TG=YES. Enabling this option might cause
+compatibility problems with some readers. At the time of writing,
+those based on the MrSID JPEG2000 SDK are unable to open such files.
+And regarding the ECW JPEG2000 SDK, decoding of 1-bit alpha channel
+with lossy/irreversible compression gives visual artifacts (OK with
+lossless encoding).</p></li>
+<li><p><strong>ALPHA=YES/NO</strong>: (GDAL &gt;= 2.0) Whether to force encoding last
+channel as alpha channel. Only useful if the color interpretation of
+that channel is not already Alpha. Defaults to NO.</p></li>
+<li><p><strong>PROFILE=AUTO/UNRESTRICTED/PROFILE_1</strong>: (GDAL &gt;= 2.0) Determine
+which codestream profile to use. UNRESTRICTED corresponds to the
+“Unrestricted JPEG 2000 Part 1 codestream” (RSIZ=0). PROFILE_1
+corresponds to the “JPEG 2000 Part 1 Profile 1 codestream” (RSIZ=2),
+which add constraints on tile dimensions and number of resolutions.
+In AUTO mode, the driver will determine if the BLOCKXSIZE,
+BLOCKYSIZE, RESOLUTIONS, CODEBLOCK_WIDTH and CODEBLOCK_HEIGHT values
+are compatible with PROFILE_1 and advertise it in the relevant case.
+Note that the default values of those options are compatible with
+PROFILE_1. Otherwise UNRESTRICTED is advertized. Defaults to AUTO.</p></li>
+<li><p><strong>INSPIRE_TG=YES/NO</strong>: (GDAL &gt;= 2.0) Whether to use JPEG2000 features
+that comply with <a class="reference external" href="http://inspire.ec.europa.eu/documents/Data_Specifications/INSPIRE_DataSpecification_OI_v3.0.pdf">Inspire Orthoimagery Technical
+Guidelines</a>.
+Defaults to NO. When set to YES, implies PROFILE=PROFILE_1,
+1BIT_ALPHA=YES, GEOBOXES_AFTER_JP2C=YES. The CODEC, BLOCKXSIZE,
+BLOCKYSIZE, RESOLUTIONS, NBITS, PROFILE, CODEBLOCK_WIDTH and
+CODEBLOCK_HEIGHT options will be checked against the requirements and
+recommendations of the Technical Guidelines.</p></li>
+<li><p><strong>JPX=YES/NO</strong>: (GDAL &gt;= 2.0) Whether to advertise JPX features, and
+add a Reader requirement box, when a GMLJP2 box is written. Defaults
+to YES. This option should not be used unless compatibility problems
+with a reader occur.</p></li>
+<li><p><strong>GEOBOXES_AFTER_JP2C=YES/NO</strong>: (GDAL &gt;= 2.0) Whether to place
+GeoJP2/GMLJP2 boxes after the code-stream. Defaults to NO, unless
+INSPIRE_TG=YES. This option should not be used unless compatibility
+problems with a reader occur.</p></li>
+<li><p><strong>PRECINCTS={prec_w,prec_h},{prec_w,prec_h},…</strong>: (GDAL &gt;= 2.0) A
+list of {precincts width,precincts height} tuples to specify
+precincts size. Each value should be a multiple of 2. The maximum
+number of tuples used will be the number of resolutions. The first
+tuple corresponds to the higher resolution level, and the following
+ones to the lower resolution levels. If less tuples are specified,
+the last one is used by dividing its values by 2 for each extra lower
+resolution level. The default value used is
+{512,512},{256,512},{128,512},{64,512},{32,512},{16,512},{8,512},{4,512},{2,512}.
+An empty string may be used to disable precincts ( i.e. the default
+{32767,32767},{32767,32767}, … will then be used).</p></li>
+<li><p><strong>TILEPARTS=DISABLED/RESOLUTIONS/LAYERS/COMPONENTS</strong>: (GDAL &gt;= 2.0)
+Whether to generate tile-parts and according to which criterion.
+Defaults to DISABLED.</p></li>
+<li><p><strong>CODEBLOCK_WIDTH=int_value</strong>: (GDAL &gt;= 2.0) Codeblock width: power
+of two value between 4 and 1024. Defaults to 64. Note that
+CODEBLOCK_WIDTH * CODEBLOCK_HEIGHT must not be greater than 4096.
+For PROFILE_1 compatibility, CODEBLOCK_WIDTH must not be greater than
+64.</p></li>
+<li><p><strong>CODEBLOCK_HEIGHT=int_value</strong>: (GDAL &gt;= 2.0) Codeblock height: power
+of two value between 4 and 1024. Defaults to 64. Note that
+CODEBLOCK_WIDTH * CODEBLOCK_HEIGHT must not be greater than 4096.
+For PROFILE_1 compatibility, CODEBLOCK_HEIGHT must not be greater
+than 64.</p></li>
+<li><p><strong>CODEBLOCK_STYLE=string</strong>: (GDAL &gt;= 2.4 and OpenJPEG &gt;= 2.3.0) Style
+of the code-block coding passes. The following 6 independent settings
+can be combined together (values should be comma separated):</p>
+<ul class="simple">
+<li><p><em>BYPASS</em> (1): enable selective arithmetic coding bypass (can
+substantially improve coding/decoding speed, at the expense of
+larger file size)</p></li>
+<li><p><em>RESET</em> (2): reset context probabilities on coding pass boundaries</p></li>
+<li><p><em>TERMALL</em> (4): enable termination on each coding pass</p></li>
+<li><p><em>VSC</em> (8): enable vertically causal context</p></li>
+<li><p><em>PREDICTABLE</em> (16): enable predictable termination (helps for
+error detection)</p></li>
+<li><p><em>SEGSYM</em> (32): enable segmentation symbols (helps for error
+detection)</p></li>
+</ul>
+<p>Instead of specifying them by text, it is also possible to give the
+corresponding numeric value of the global codeblock style, by adding
+the selected options (for example “BYPASS,TERMALL” is equivalent to
+“5”=1+4)</p>
+<p>By default, none of them are enabled. Enabling them will generally
+increase codestream size, but improve either coding/decoding speed or
+resilience/error detection.</p>
+</li>
+<li><p><strong>WRITE_METADATA=YES/NO</strong>: (GDAL &gt;= 2.0) Whether metadata should be
+written, in a dedicated JP2 ‘xml ‘ box. Defaults to NO. The content
+of the ‘xml ‘ box will be like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">GDALMultiDomainMetadata</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">Metadata</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">MDI</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;foo&quot;</span><span class="o">&gt;</span><span class="n">bar</span><span class="o">&lt;/</span><span class="n">MDI</span><span class="o">&gt;</span>
+  <span class="o">&lt;/</span><span class="n">Metadata</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">Metadata</span> <span class="n">domain</span><span class="o">=</span><span class="s1">&#39;aux_domain&#39;</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">MDI</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;foo&quot;</span><span class="o">&gt;</span><span class="n">bar</span><span class="o">&lt;/</span><span class="n">MDI</span><span class="o">&gt;</span>
+  <span class="o">&lt;/</span><span class="n">Metadata</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">Metadata</span> <span class="n">domain</span><span class="o">=</span><span class="s1">&#39;a_xml_domain&#39;</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;xml&#39;</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">arbitrary_xml_content</span><span class="o">&gt;</span>
+    <span class="o">&lt;/</span><span class="n">arbitrary_xml_content</span><span class="o">&gt;</span>
+  <span class="o">&lt;/</span><span class="n">Metadata</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">GDALMultiDomainMetadata</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>If there are metadata domain whose name starts with “xml:BOX_”, they
+will be written each as separate JP2 ‘xml ‘ box.</p>
+<p>If there is a metadata domain whose name is “xml:XMP”, its content
+will be written as a JP2 ‘uuid’ XMP box.</p>
+<p>If there is a metadata domain whose name is “xml:IPR”, its content
+will be written as a JP2 ‘jp2i’ box.</p>
+</li>
+<li><p><strong>MAIN_MD_DOMAIN_ONLY=YES/NO</strong>: (GDAL &gt;= 2.0) (Only if
+WRITE_METADATA=YES) Whether only metadata from the main domain should
+be written. Defaults to NO.</p></li>
+<li><p><strong>USE_SRC_CODESTREAM=YES/NO</strong>: (GDAL &gt;= 2.0) (EXPERIMENTAL!) When
+source dataset is JPEG2000, whether to reuse the codestream of the
+source dataset unmodified. Defaults to NO. Note that enabling that
+feature might result in inconsistent content of the JP2 boxes w.r.t.
+to the content of the source codestream. Most other creation options
+will be ignored in that mode. Can be useful in some use cases when
+adding/correcting georeferencing, metadata, … INSPIRE_TG and
+PROFILE options will be ignored, and the profile of the codestream
+will be overridden with the one specified/implied by the options
+(which may be inconsistent with the characteristics of the
+codestream).</p></li>
+</ul>
+<div class="section" id="lossless-compression">
+<h3>Lossless compression<a class="headerlink" href="#lossless-compression" title="Permalink to this headline">¶</a></h3>
+<p>Lossless compression can be achieved if ALL the following creation
+options are defined :</p>
+<ul class="simple">
+<li><p>QUALITY=100</p></li>
+<li><p>REVERSIBLE=YES</p></li>
+<li><p>YCBCR420=NO (which is the default)</p></li>
+</ul>
+</div>
+<div class="section" id="gmljp2v2-definition-file">
+<span id="gmjp2v2def"></span><h3>GMLJP2v2 definition file<a class="headerlink" href="#gmljp2v2-definition-file" title="Permalink to this headline">¶</a></h3>
+<p>A GMLJP2v2 box typically contains a GMLJP2RectifiedGridCoverage with the
+SRS information and geotransformation matrix. It is also possible to add
+metadata, vector features (GML feature collections), annotations (KML),
+styles (typically SLD, or other XML format) or any XML content as an
+extension. The value of the GMLJP2V2_DEF creation option should be a
+file that conforms with the below syntax (elements starting with “#” are
+documentation, and can be omitted):</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;#doc&quot;</span> <span class="p">:</span> <span class="s2">&quot;Unless otherwise specified, all elements are optional&quot;</span><span class="p">,</span>
+
+    <span class="nt">&quot;#root_instance_doc&quot;</span><span class="p">:</span> <span class="s2">&quot;Describe content of the GMLJP2CoverageCollection&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;root_instance&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;#gml_id_doc&quot;</span><span class="p">:</span> <span class="s2">&quot;Specify GMLJP2CoverageCollection gml:id. Default is ID_GMLJP2_0&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;gml_id&quot;</span><span class="p">:</span> <span class="s2">&quot;some_gml_id&quot;</span><span class="p">,</span>
+
+        <span class="nt">&quot;#grid_coverage_file_doc&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;External XML file, whose root might be a GMLJP2GridCoverage, &quot;</span><span class="p">,</span>
+            <span class="s2">&quot;GMLJP2RectifiedGridCoverage or a GMLJP2ReferenceableGridCoverage.&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;If not specified, GDAL will auto-generate a GMLJP2RectifiedGridCoverage&quot;</span> <span class="p">],</span>
+        <span class="nt">&quot;grid_coverage_file&quot;</span><span class="p">:</span> <span class="s2">&quot;gmljp2gridcoverage.xml&quot;</span><span class="p">,</span>
+
+        <span class="nt">&quot;#grid_coverage_range_type_field_predefined_name_doc&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;New in GDAL 2.2&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;One of Color, Elevation_meter or Panchromatic &quot;</span><span class="p">,</span>
+            <span class="s2">&quot;to fill gmlcov:rangeType/swe:DataRecord/swe:field&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Only used if grid_coverage_file is not defined.&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Exclusive with grid_coverage_range_type_file&quot;</span> <span class="p">],</span>
+        <span class="nt">&quot;grid_coverage_range_type_field_predefined_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Color&quot;</span><span class="p">,</span>
+
+        <span class="nt">&quot;#grid_coverage_range_type_file_doc&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;New in GDAL 2.2&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;File that is XML content to put under gml:RectifiedGrid/gmlcov:rangeType&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Only used if grid_coverage_file is not defined.&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Exclusive with grid_coverage_range_type_field_predefined_name&quot;</span> <span class="p">],</span>
+        <span class="nt">&quot;grid_coverage_range_type_file&quot;</span><span class="p">:</span> <span class="s2">&quot;grid_coverage_range_type.xml&quot;</span><span class="p">,</span>
+
+        <span class="nt">&quot;#crs_url_doc&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;true for http://www.opengis.net/def/crs/EPSG/0/XXXX CRS URL.&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;If false, use CRS URN. Default value is true&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Only taken into account for a auto-generated GMLJP2RectifiedGridCoverage&quot;</span><span class="p">],</span>
+        <span class="nt">&quot;crs_url&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+
+        <span class="nt">&quot;#metadata_doc&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="s2">&quot;An array of metadata items. Can be either strings, with &quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;a filename or directly inline XML content, or either &quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;a more complete description.&quot;</span> <span class="p">],</span>
+        <span class="nt">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">[</span>
+
+            <span class="s2">&quot;dcmetadata.xml&quot;</span><span class="p">,</span>
+
+            <span class="p">{</span>
+                <span class="nt">&quot;#file_doc&quot;</span><span class="p">:</span> <span class="s2">&quot;Can use relative or absolute paths. Exclusive of content, gdal_metadata and generated_metadata.&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;file&quot;</span><span class="p">:</span> <span class="s2">&quot;dcmetadata.xml&quot;</span><span class="p">,</span>
+
+                <span class="nt">&quot;#gdal_metadata_doc&quot;</span><span class="p">:</span> <span class="s2">&quot;Whether to serialize GDAL metadata as GDALMultiDomainMetadata&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;gdal_metadata&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+
+                <span class="nt">&quot;#dynamic_metadata_doc&quot;</span><span class="p">:</span>
+                    <span class="p">[</span> <span class="s2">&quot;The metadata file will be generated from a template and a source file.&quot;</span><span class="p">,</span>
+                      <span class="s2">&quot;The template is a valid GMLJP2 metadata XML tree with placeholders like&quot;</span><span class="p">,</span>
+                      <span class="s2">&quot;{{{XPATH(some_xpath_expression)}}}&quot;</span><span class="p">,</span>
+                      <span class="s2">&quot;that are evaluated from the source XML file. Typical use case&quot;</span><span class="p">,</span>
+                      <span class="s2">&quot;is to generate a gmljp2:eopMetadata from the XML metadata&quot;</span><span class="p">,</span>
+                      <span class="s2">&quot;provided by the image provider in their own particular format.&quot;</span> <span class="p">],</span>
+                <span class="nt">&quot;dynamic_metadata&quot;</span> <span class="p">:</span>
+                <span class="p">{</span>
+                    <span class="nt">&quot;template&quot;</span><span class="p">:</span> <span class="s2">&quot;my_template.xml&quot;</span><span class="p">,</span>
+                    <span class="nt">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;my_source.xml&quot;</span>
+                <span class="p">},</span>
+
+                <span class="nt">&quot;#content&quot;</span><span class="p">:</span> <span class="s2">&quot;Exclusive of file. Inline XML metadata content&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;gmljp2:metadata&gt;Some simple textual metadata&lt;/gmljp2:metadata&gt;&quot;</span><span class="p">,</span>
+
+                <span class="nt">&quot;#parent_node&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Where to put the metadata.&quot;</span><span class="p">,</span>
+                                 <span class="s2">&quot;Under CoverageCollection (default) or GridCoverage&quot;</span> <span class="p">],</span>
+                <span class="nt">&quot;parent_node&quot;</span><span class="p">:</span> <span class="s2">&quot;CoverageCollection&quot;</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+
+        <span class="nt">&quot;#annotations_doc&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="s2">&quot;An array of filenames, either directly KML files&quot;</span><span class="p">,</span>
+                              <span class="s2">&quot;or other vector files recognized by GDAL that &quot;</span><span class="p">,</span>
+                              <span class="s2">&quot;will be translated on-the-fly as KML&quot;</span> <span class="p">],</span>
+        <span class="nt">&quot;annotations&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;my.kml&quot;</span>
+        <span class="p">],</span>
+
+        <span class="nt">&quot;#gml_filelist_doc&quot;</span> <span class="p">:[</span>
+            <span class="s2">&quot;An array of GML files or vector files that will be on-the-fly converted&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;to GML 3.2. Can be either GML filenames (or other OGR datasource names), &quot;</span><span class="p">,</span>
+            <span class="s2">&quot;or a more complete description&quot;</span> <span class="p">],</span>
+        <span class="nt">&quot;gml_filelist&quot;</span><span class="p">:</span> <span class="p">[</span>
+
+            <span class="s2">&quot;my.gml&quot;</span><span class="p">,</span>
+
+            <span class="s2">&quot;my.shp&quot;</span><span class="p">,</span>
+
+            <span class="p">{</span>
+                <span class="nt">&quot;#file_doc&quot;</span><span class="p">:</span> <span class="s2">&quot;OGR datasource. Can use relative or absolute paths. Exclusive of remote_resource&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;file&quot;</span><span class="p">:</span> <span class="s2">&quot;converted/test_0.gml&quot;</span><span class="p">,</span>
+
+                <span class="nt">&quot;#remote_resource_doc&quot;</span><span class="p">:</span> <span class="s2">&quot;URL of a feature collection that must be referenced through a xlink:href&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;remote_resource&quot;</span><span class="p">:</span> <span class="s2">&quot;https://github.com/OSGeo/gdal/blob/master/autotest/ogr/data/expected_gml_gml32.gml&quot;</span><span class="p">,</span>
+
+                <span class="nt">&quot;#namespace_doc&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;The namespace in schemaLocation for which to substitute&quot;</span><span class="p">,</span>
+                                  <span class="s2">&quot;its original schemaLocation with the one provided below.&quot;</span><span class="p">,</span>
+                                  <span class="s2">&quot;Ignored for a remote_resource&quot;</span><span class="p">],</span>
+                <span class="nt">&quot;namespace&quot;</span><span class="p">:</span> <span class="s2">&quot;http://example.com&quot;</span><span class="p">,</span>
+
+                <span class="nt">&quot;#schema_location_doc&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Value of the substituted schemaLocation. &quot;</span><span class="p">,</span>
+                                         <span class="s2">&quot;Typically a schema box label (link)&quot;</span><span class="p">,</span>
+                                         <span class="s2">&quot;Ignored for a remote_resource&quot;</span><span class="p">],</span>
+                <span class="nt">&quot;schema_location&quot;</span><span class="p">:</span> <span class="s2">&quot;gmljp2://xml/schema_0.xsd&quot;</span><span class="p">,</span>
+
+                <span class="nt">&quot;#inline_doc&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="s2">&quot;Whether to inline the content, or put it in a separate xml box. Default is true&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Ignored for a remote_resource.&quot;</span> <span class="p">],</span>
+                <span class="nt">&quot;inline&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+
+                <span class="nt">&quot;#parent_node&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Where to put the FeatureCollection.&quot;</span><span class="p">,</span>
+                                 <span class="s2">&quot;Under CoverageCollection (default) or GridCoverage&quot;</span> <span class="p">],</span>
+                <span class="nt">&quot;parent_node&quot;</span><span class="p">:</span> <span class="s2">&quot;CoverageCollection&quot;</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+
+
+        <span class="nt">&quot;#styles_doc&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="s2">&quot;An array of styles. For example SLD files&quot;</span> <span class="p">],</span>
+        <span class="nt">&quot;styles&quot;</span> <span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="nt">&quot;#file_doc&quot;</span><span class="p">:</span> <span class="s2">&quot;Can use relative or absolute paths.&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;file&quot;</span><span class="p">:</span> <span class="s2">&quot;my.sld&quot;</span><span class="p">,</span>
+
+                <span class="nt">&quot;#parent_node&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Where to put the FeatureCollection.&quot;</span><span class="p">,</span>
+                                 <span class="s2">&quot;Under CoverageCollection (default) or GridCoverage&quot;</span> <span class="p">],</span>
+                <span class="nt">&quot;parent_node&quot;</span><span class="p">:</span> <span class="s2">&quot;CoverageCollection&quot;</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+
+        <span class="nt">&quot;#extensions_doc&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="s2">&quot;An array of extensions.&quot;</span> <span class="p">],</span>
+        <span class="nt">&quot;extensions&quot;</span> <span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="nt">&quot;#file_doc&quot;</span><span class="p">:</span> <span class="s2">&quot;Can use relative or absolute paths.&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;file&quot;</span><span class="p">:</span> <span class="s2">&quot;my.xml&quot;</span><span class="p">,</span>
+
+                <span class="nt">&quot;#parent_node&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Where to put the FeatureCollection.&quot;</span><span class="p">,</span>
+                                 <span class="s2">&quot;Under CoverageCollection (default) or GridCoverage&quot;</span> <span class="p">],</span>
+                <span class="nt">&quot;parent_node&quot;</span><span class="p">:</span> <span class="s2">&quot;CoverageCollection&quot;</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">},</span>
+
+    <span class="nt">&quot;#boxes_doc&quot;</span><span class="p">:</span> <span class="s2">&quot;An array to describe the content of XML asoc boxes&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;boxes&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;#file_doc&quot;</span><span class="p">:</span> <span class="s2">&quot;can use relative or absolute paths. Required&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;file&quot;</span><span class="p">:</span> <span class="s2">&quot;converted/test_0.xsd&quot;</span><span class="p">,</span>
+
+            <span class="nt">&quot;#label_doc&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;the label of the XML box. If not specified, will be the &quot;</span><span class="p">,</span>
+                          <span class="s2">&quot;filename without the directory part.&quot;</span> <span class="p">],</span>
+            <span class="nt">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;schema_0.xsd&quot;</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Metadata can be dynamically generated from a template file (in that
+context, with a XML structure) and a XML source file. The template file
+is processed by searching for patterns like {{{XPATH(xpath_expr)}}} and
+replacing them by their evaluation against the content of the source
+file. xpath_expr must be a XPath 1.0 compatible expression, with the
+addition of the following functions :</p>
+<ul class="simple">
+<li><p><strong>if(cond_expr,expr_if_true,expr_if_false)</strong>: if cond_expr evaluates
+to true, returns expr_if_true. Otherwise returns expr_if_false</p></li>
+<li><p><strong>uuid()</strong>: evaluates to a random UUID</p></li>
+</ul>
+<p>A template file to process XML metadata of Pleiades imagery can be found
+<a class="reference external" href="eoptemplate_pleiades.xml">here</a>, and a template file to process XML
+metadata of GeoEye/WorldView imagery can be found
+<a class="reference external" href="eoptemplate_worldviewgeoeye.xml">here</a>.</p>
+</div>
+</div>
+<div class="section" id="vector-information">
+<h2>Vector information<a class="headerlink" href="#vector-information" title="Permalink to this headline">¶</a></h2>
+<p>Starting with GDAL 2.0, a JPEG2000 file containing a GMLJP2 v2 box with
+GML feature collections and/or KML annotations embedded can be opened as
+a vector file with the OGR API. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>ogrinfo -ro my.jp2
+
+INFO: Open of my.jp2&#39;
+      using driver `JP2OpenJPEG&#39; successful.
+1: FC_GridCoverage_1_rivers (LineString)
+2: FC_GridCoverage_1_borders (LineString)
+3: Annotation_1_poly
+</pre></div>
+</div>
+<p>Feature collections can be linked from the GMLJP2 v2 box to a remote
+location. By default, the link is not followed. It will be followed if
+the open option OPEN_REMOTE_GML is set to YES.</p>
+</div>
+<div class="section" id="see-also">
+<h2>See Also<a class="headerlink" href="#see-also" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Implemented as <code class="docutils literal notranslate"><span class="pre">gdal/frmts/openjpeg/openjpegdataset.cpp</span></code>.</p></li>
+<li><p><a class="reference external" href="http://www.jpeg.org/jpeg2000/index.html">Official JPEG-2000 page</a></p></li>
+<li><p><a class="reference external" href="https://github.com/uclouvain/openjpeg">The OpenJPEG library home
+page</a></p></li>
+<li><p><a class="reference external" href="http://docs.opengeospatial.org/is/08-085r4/08-085r4.html">OGC GML in JPEG2000, version
+2.0</a>
+(GDAL 2.0 and 2.1)</p></li>
+<li><p><a class="reference external" href="http://docs.opengeospatial.org/is/08-085r5/08-085r5.html">OGC GML in JPEG2000, version
+2.0.1</a>
+(GDAL 2.2 and above)</p></li>
+<li><p><a class="reference external" href="http://inspire.ec.europa.eu/documents/Data_Specifications/INSPIRE_DataSpecification_OI_v3.0.pdf">Inspire Data Specification on Orthoimagery - Technical
+Guidelines</a></p></li>
+</ul>
+<p>Other JPEG2000 GDAL drivers :</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="jpeg2000.html#raster-jpeg2000"><span class="std std-ref">JPEG2000: based on Jasper library (open
+source)</span></a></p></li>
+<li><p><a class="reference internal" href="jp2ecw.html#raster-jp2ecw"><span class="std std-ref">JP2ECW: based on Erdas ECW library
+(proprietary)</span></a></p></li>
+<li><p><a class="reference internal" href="jp2mrsid.html#raster-jp2mrsid"><span class="std std-ref">JP2MRSID: based on LizardTech MrSID library
+(proprietary)</span></a></p></li>
+<li><p><a class="reference internal" href="jp2kak.html#raster-jp2kak"><span class="std std-ref">JP2KAK: based on Kakadu library (proprietary)</span></a></p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="jpeg2000.html" class="btn btn-neutral float-right" title="JPEG2000 – Implementation of the JPEG-2000 part 1" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="jp2mrsid.html" class="btn btn-neutral float-left" title="JP2MrSID – JPEG2000 via MrSID SDK" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

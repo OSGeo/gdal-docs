@@ -1,0 +1,490 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RFC 56: OFTTime/OFTDateTime millisecond accuracy &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdevelopment/rfc/rfc56_millisecond_precision.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="RFC 57: 64-bit bucket counts for histograms" href="rfc57_histogram_64bit_count.html" />
+    <link rel="prev" title="RFC 55: Refined SetFeature() and DeleteFeature() semantics" href="rfc55_refined_setfeature_deletefeature_semantics.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#core-changes">Core changes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#changes-in-drivers">Changes in drivers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#changes-in-swig-bindings">Changes in SWIG bindings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#compatibility">Compatibility</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#related-ticket">Related ticket</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#testing">Testing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voting-history">Voting history</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 56: OFTTime/OFTDateTime millisecond accuracy</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/development/rfc/rfc56_millisecond_precision.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="rfc57_histogram_64bit_count.html" class="btn btn-neutral float-right" title="RFC 57: 64-bit bucket counts for histograms" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc55_refined_setfeature_deletefeature_semantics.html" class="btn btn-neutral float-left" title="RFC 55: Refined SetFeature() and DeleteFeature() semantics" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rfc-56-ofttime-oftdatetime-millisecond-accuracy">
+<span id="rfc-56"></span><h1>RFC 56: OFTTime/OFTDateTime millisecond accuracy<a class="headerlink" href="#rfc-56-ofttime-oftdatetime-millisecond-accuracy" title="Permalink to this headline">¶</a></h1>
+<p>Author: Even Rouault</p>
+<p>Contact: even dot rouault at spatialys dot com</p>
+<p>Status: Adopted, implemented</p>
+<p>Version: 2.0</p>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>This RFC aims at adding millisecond accuracy to OFTTime and OFTDateTime
+fields, as a number of formats support it explicitly or implicitly :
+MapInfo, GPX, Atom (GeoRSS driver), GeoPackage, SQLite, PostgreSQL, CSV,
+GeoJSON, ODS, XLSX, KML (potentially GML too)…</p>
+</div>
+<div class="section" id="core-changes">
+<h2>Core changes<a class="headerlink" href="#core-changes" title="Permalink to this headline">¶</a></h2>
+<p>The OGRField enumeration is modified as such :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">typedef</span> <span class="n">union</span> <span class="p">{</span>
+    <span class="p">[</span><span class="o">...</span> <span class="n">unchanged</span> <span class="o">...</span> <span class="p">]</span>
+
+    <span class="n">struct</span> <span class="p">{</span>
+        <span class="n">GInt16</span>  <span class="n">Year</span><span class="p">;</span>
+        <span class="n">GByte</span>   <span class="n">Month</span><span class="p">;</span>
+        <span class="n">GByte</span>   <span class="n">Day</span><span class="p">;</span>
+        <span class="n">GByte</span>   <span class="n">Hour</span><span class="p">;</span>
+        <span class="n">GByte</span>   <span class="n">Minute</span><span class="p">;</span>
+        <span class="n">GByte</span>   <span class="n">TZFlag</span><span class="p">;</span> <span class="o">/*</span> <span class="mi">0</span><span class="o">=</span><span class="n">unknown</span><span class="p">,</span> <span class="mi">1</span><span class="o">=</span><span class="n">localtime</span><span class="p">(</span><span class="n">ambiguous</span><span class="p">),</span>
+                           <span class="mi">100</span><span class="o">=</span><span class="n">GMT</span><span class="p">,</span> <span class="mi">104</span><span class="o">=</span><span class="n">GMT</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">80</span><span class="o">=</span><span class="n">GMT</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="n">etc</span> <span class="o">*/</span>
+        <span class="n">GByte</span>   <span class="n">Reserved</span><span class="p">;</span> <span class="o">/*</span> <span class="n">must</span> <span class="n">be</span> <span class="nb">set</span> <span class="n">to</span> <span class="mi">0</span> <span class="o">*/</span>
+        <span class="nb">float</span>   <span class="n">Second</span><span class="p">;</span> <span class="o">/*</span> <span class="k">with</span> <span class="n">millisecond</span> <span class="n">accuracy</span><span class="o">.</span> <span class="n">at</span> <span class="n">the</span> <span class="n">end</span> <span class="n">of</span> <span class="n">the</span> <span class="n">structure</span><span class="p">,</span> <span class="n">so</span> <span class="k">as</span> <span class="n">to</span> <span class="n">keep</span> <span class="n">it</span> <span class="mi">12</span> <span class="nb">bytes</span> <span class="n">on</span> <span class="mi">32</span> <span class="n">bit</span> <span class="o">*/</span>
+    <span class="p">}</span> <span class="n">Date</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">OGRField</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>So the “GByte Second” field is removed and replaced by a padding Byte
+reserved for potential later uses. A “float Second” field is added.</p>
+<p>On 32 bit builds, the size of OGRField is now 12 bytes instead of 8
+bytes. On 64 bit builds, the size of OGRField remains 16 bytes.</p>
+<div class="section" id="new-modified-methods">
+<h3>New/modified methods<a class="headerlink" href="#new-modified-methods" title="Permalink to this headline">¶</a></h3>
+<p>OGRFeature::SetFieldAsDateTime() methods that took a int nSecond now
+take a float fSecond parameter. The GetFieldAsDateTime() method that
+took a int* pnSecond is kept, and a new GetFieldAsDateTime() method
+that takes a float* pfSecond is added.</p>
+<ul class="simple">
+<li><p>In OGRFeature class :</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">int</span>                 <span class="n">GetFieldAsDateTime</span><span class="p">(</span> <span class="nb">int</span> <span class="n">i</span><span class="p">,</span>
+                                 <span class="nb">int</span> <span class="o">*</span><span class="n">pnYear</span><span class="p">,</span> <span class="nb">int</span> <span class="o">*</span><span class="n">pnMonth</span><span class="p">,</span> <span class="nb">int</span> <span class="o">*</span><span class="n">pnDay</span><span class="p">,</span>
+                                 <span class="nb">int</span> <span class="o">*</span><span class="n">pnHour</span><span class="p">,</span> <span class="nb">int</span> <span class="o">*</span><span class="n">pnMinute</span><span class="p">,</span> <span class="nb">int</span> <span class="o">*</span><span class="n">pnSecond</span><span class="p">,</span>
+                                 <span class="nb">int</span> <span class="o">*</span><span class="n">pnTZFlag</span> <span class="p">);</span> <span class="o">/*</span> <span class="n">unchanged</span> <span class="kn">from</span> <span class="nn">GDAL</span> <span class="mf">1.</span><span class="n">X</span> <span class="o">*/</span>
+<span class="nb">int</span>                 <span class="n">GetFieldAsDateTime</span><span class="p">(</span> <span class="nb">int</span> <span class="n">i</span><span class="p">,</span>
+                                 <span class="nb">int</span> <span class="o">*</span><span class="n">pnYear</span><span class="p">,</span> <span class="nb">int</span> <span class="o">*</span><span class="n">pnMonth</span><span class="p">,</span> <span class="nb">int</span> <span class="o">*</span><span class="n">pnDay</span><span class="p">,</span>
+                                 <span class="nb">int</span> <span class="o">*</span><span class="n">pnHour</span><span class="p">,</span> <span class="nb">int</span> <span class="o">*</span><span class="n">pnMinute</span><span class="p">,</span> <span class="nb">float</span> <span class="o">*</span><span class="n">pfSecond</span><span class="p">,</span>
+                                 <span class="nb">int</span> <span class="o">*</span><span class="n">pnTZFlag</span> <span class="p">);</span> <span class="o">/*</span> <span class="n">new</span> <span class="o">*/</span>
+<span class="n">void</span>                <span class="n">SetField</span><span class="p">(</span> <span class="nb">int</span> <span class="n">i</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nYear</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nMonth</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nDay</span><span class="p">,</span>
+                              <span class="nb">int</span> <span class="n">nHour</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nMinute</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">float</span> <span class="n">fSecond</span><span class="o">=</span><span class="mf">0.</span><span class="n">f</span><span class="p">,</span>
+                              <span class="nb">int</span> <span class="n">nTZFlag</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">);</span> <span class="o">/*</span> <span class="n">modified</span> <span class="o">*/</span>
+<span class="n">void</span>                <span class="n">SetField</span><span class="p">(</span> <span class="n">const</span> <span class="n">char</span> <span class="o">*</span><span class="n">pszFName</span><span class="p">,</span>
+                              <span class="nb">int</span> <span class="n">nYear</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nMonth</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nDay</span><span class="p">,</span>
+                              <span class="nb">int</span> <span class="n">nHour</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nMinute</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">float</span> <span class="n">fSecond</span><span class="o">=</span><span class="mf">0.</span><span class="n">f</span><span class="p">,</span>
+                              <span class="nb">int</span> <span class="n">nTZFlag</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">);</span> <span class="o">/*</span> <span class="n">modified</span> <span class="o">*/</span>
+</pre></div>
+</div>
+<p>OGRFeature::GetFieldAsString() is modified to output milliseconds if the
+Second member of OGRField.Date is not integral</p>
+<p>OGRParseDate() is modified to parse second as floating point number.</p>
+<p>The following utility functions have their signature modified to take a
+OGRField (instead of the full year, month, day, hour, minute, second,
+TZFlag decomposition) and accept decimal seconds as input/output :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">int</span> <span class="n">CPL_DLL</span> <span class="n">OGRParseXMLDateTime</span><span class="p">(</span> <span class="n">const</span> <span class="n">char</span><span class="o">*</span> <span class="n">pszXMLDateTime</span><span class="p">,</span>
+                                 <span class="n">OGRField</span><span class="o">*</span> <span class="n">psField</span> <span class="p">);</span>
+<span class="nb">int</span> <span class="n">CPL_DLL</span> <span class="n">OGRParseRFC822DateTime</span><span class="p">(</span> <span class="n">const</span> <span class="n">char</span><span class="o">*</span> <span class="n">pszRFC822DateTime</span><span class="p">,</span>
+                                    <span class="n">OGRField</span><span class="o">*</span> <span class="n">psField</span> <span class="p">);</span>
+<span class="n">char</span> <span class="n">CPL_DLL</span> <span class="o">*</span> <span class="n">OGRGetRFC822DateTime</span><span class="p">(</span><span class="n">const</span> <span class="n">OGRField</span><span class="o">*</span> <span class="n">psField</span><span class="p">);</span>
+<span class="n">char</span> <span class="n">CPL_DLL</span> <span class="o">*</span> <span class="n">OGRGetXMLDateTime</span><span class="p">(</span><span class="n">const</span> <span class="n">OGRField</span><span class="o">*</span> <span class="n">psField</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="c-api-changes">
+<h3>C API changes<a class="headerlink" href="#c-api-changes" title="Permalink to this headline">¶</a></h3>
+<p>Only additions :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">int</span>   <span class="n">CPL_DLL</span> <span class="n">OGR_F_GetFieldAsDateTimeEx</span><span class="p">(</span> <span class="n">OGRFeatureH</span> <span class="n">hFeat</span><span class="p">,</span> <span class="nb">int</span> <span class="n">iField</span><span class="p">,</span>
+                                <span class="nb">int</span> <span class="o">*</span><span class="n">pnYear</span><span class="p">,</span> <span class="nb">int</span> <span class="o">*</span><span class="n">pnMonth</span><span class="p">,</span> <span class="nb">int</span> <span class="o">*</span><span class="n">pnDay</span><span class="p">,</span>
+                                <span class="nb">int</span> <span class="o">*</span><span class="n">pnHour</span><span class="p">,</span> <span class="nb">int</span> <span class="o">*</span><span class="n">pnMinute</span><span class="p">,</span> <span class="nb">float</span> <span class="o">*</span><span class="n">pfSecond</span><span class="p">,</span>
+                                <span class="nb">int</span> <span class="o">*</span><span class="n">pnTZFlag</span> <span class="p">);</span>
+<span class="n">void</span>   <span class="n">CPL_DLL</span> <span class="n">OGR_F_SetFieldDateTimeEx</span><span class="p">(</span> <span class="n">OGRFeatureH</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span>
+                                       <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">int</span> <span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="changes-in-drivers">
+<h2>Changes in drivers<a class="headerlink" href="#changes-in-drivers" title="Permalink to this headline">¶</a></h2>
+<p>The following drivers now accept milliseconds as input/output :</p>
+<ul class="simple">
+<li><p>GeoJSON</p></li>
+<li><p>CSV</p></li>
+<li><p>PG</p></li>
+<li><p>PGDump (output only)</p></li>
+<li><p>CartoDB</p></li>
+<li><p>GeoPackage</p></li>
+<li><p>SQLite</p></li>
+<li><p>MapInfo .tab and .mif</p></li>
+<li><p>LIBKML</p></li>
+<li><p>ODS</p></li>
+<li><p>XLSX</p></li>
+<li><p>GeoRSS (Atom format)</p></li>
+<li><p>GPX</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-swig-bindings">
+<h2>Changes in SWIG bindings<a class="headerlink" href="#changes-in-swig-bindings" title="Permalink to this headline">¶</a></h2>
+<p>Feature.GetFieldAsDateTime() and Feature.SetFieldAsDateTime() now
+takes/returns a floating point number for seconds</p>
+</div>
+<div class="section" id="compatibility">
+<h2>Compatibility<a class="headerlink" href="#compatibility" title="Permalink to this headline">¶</a></h2>
+<p>This modifies the C/C++ API and ABI.</p>
+<p>Output of above mentioned drivers will now include milliseconds if a
+DateTime/Time field has such precision.</p>
+</div>
+<div class="section" id="related-ticket">
+<h2>Related ticket<a class="headerlink" href="#related-ticket" title="Permalink to this headline">¶</a></h2>
+<p>The need came from
+<a class="reference external" href="http://trac.osgeo.org/gdal/ticket/2680">http://trac.osgeo.org/gdal/ticket/2680</a>
+for MapInfo driver.</p>
+</div>
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<p>All new/modified methods are documented. MIGRATION_GUIDE.TXT is updated
+with a new section for this RFC.</p>
+</div>
+<div class="section" id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
+<p>The various aspects of this RFC are tested:</p>
+<ul class="simple">
+<li><p>core changes</p></li>
+<li><p>driver changes</p></li>
+</ul>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>Implementation will be done by Even Rouault
+(<a class="reference external" href="http://spatialys.com">Spatialys</a>).</p>
+<p>The proposed implementation lies in the “subsecond_accuracy” branch of
+the
+<a class="reference external" href="https://github.com/rouault/gdal2/tree/subsecond_accuracy">https://github.com/rouault/gdal2/tree/subsecond_accuracy</a>
+repository.</p>
+<p>The list of changes :
+<a class="reference external" href="https://github.com/rouault/gdal2/compare/subsecond_accuracy">https://github.com/rouault/gdal2/compare/subsecond_accuracy</a></p>
+</div>
+<div class="section" id="voting-history">
+<h2>Voting history<a class="headerlink" href="#voting-history" title="Permalink to this headline">¶</a></h2>
+<p>+1 from DanielM, JukkaR and EvenR</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rfc57_histogram_64bit_count.html" class="btn btn-neutral float-right" title="RFC 57: 64-bit bucket counts for histograms" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc55_refined_setfeature_deletefeature_semantics.html" class="btn btn-neutral float-left" title="RFC 55: Refined SetFeature() and DeleteFeature() semantics" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

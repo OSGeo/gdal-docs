@@ -1,0 +1,1879 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>GDALDataset C++ API &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgapi/gdaldataset_cpp.html"/>
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="GDALRasterBand C++ API" href="gdalrasterband_cpp.html" />
+    <link rel="prev" title="GDALDriver C++ API" href="gdaldriver_cpp.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#id2">Full Doxygen output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#c-api">C API</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#id3">C++ API</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="index.html#raster-api">Raster API</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="gdaldriver_cpp.html">GDALDriver C++ API</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">GDALDataset C++ API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gdalrasterband_cpp.html">GDALRasterBand C++ API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gdalwarp_cpp.html">Warper C++ API</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#vector-api">Vector API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#spatial-reference-system-api">Spatial reference system API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#multi-dimensional-array-api">Multi-dimensional array API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#geographic-networks-api">Geographic networks API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#python-api">Python API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id4">Java API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">API</a> &raquo;</li>
+      
+      <li>GDALDataset C++ API</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/api/gdaldataset_cpp.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="gdalrasterband_cpp.html" class="btn btn-neutral float-right" title="GDALRasterBand C++ API" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gdaldriver_cpp.html" class="btn btn-neutral float-left" title="GDALDriver C++ API" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="gdaldataset-c-api">
+<span id="gdaldataset-cpp"></span><h1>GDALDataset C++ API<a class="headerlink" href="#gdaldataset-c-api" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="_CPPv411GDALDataset">
+<span id="_CPPv311GDALDataset"></span><span id="_CPPv211GDALDataset"></span><span id="GDALDataset"></span><span class="target" id="classGDALDataset"></span><em class="property">class </em><code class="descname">GDALDataset</code> : <em class="property">public</em> GDALMajorObject<a class="headerlink" href="#_CPPv411GDALDataset" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A set of associated raster bands, usually from one file. </p>
+<p>A dataset encapsulating one or more raster bands.</p>
+<p>Details are further discussed in the <a class="reference external" href="gdal_datamodel.html#GDALDataset">GDAL Data Model</a>.</p>
+<p>Use <a class="reference internal" href="raster_c_api.html#gdal_8h_1a6836f0f810396c5e45622c8ef94624d4"><span class="std std-ref">GDALOpen()</span></a> or <a class="reference internal" href="raster_c_api.html#gdal_8h_1a46a02c21047d78f88f8abb1ff6b14ae2"><span class="std std-ref">GDALOpenShared()</span></a> to create a <a class="reference internal" href="#classGDALDataset"><span class="std std-ref">GDALDataset</span></a> for a named file, or <a class="reference internal" href="gdaldriver_cpp.html#classGDALDriver_1adb7bff9007fa5190d6cf742cf76942a8"><span class="std std-ref">GDALDriver::Create()</span></a> or <a class="reference internal" href="gdaldriver_cpp.html#classGDALDriver_1a2c897da2a6e25169cccc49ef48797ce1"><span class="std std-ref">GDALDriver::CreateCopy()</span></a> to create a new dataset. </p>
+<p>Subclassed by GDALApplyVSGDataset, GDALColorReliefDataset, GDALDatasetFromArray, GDALGeneric3x3Dataset&lt; T &gt;, GDALOverviewDataset, GDALPamDataset, GDALVectorTranslateWrappedDataset, <a class="reference internal" href="gnm_cpp.html#classGNMNetwork"><span class="std std-ref">GNMNetwork</span></a>, OGRDataSource, PythonPluginDataset</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="function">
+<dt id="_CPPv4N11GDALDatasetD0Ev">
+<span id="_CPPv3N11GDALDatasetD0Ev"></span><span id="_CPPv2N11GDALDatasetD0Ev"></span><span id="GDALDataset::~GDALDataset"></span><span class="target" id="classGDALDataset_1aab419e0bbf21c58a7e3a43682cb26663"></span><code class="descname">~GDALDataset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDatasetD0Ev" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Destroy an open <a class="reference internal" href="#classGDALDataset"><span class="std std-ref">GDALDataset</span></a>. </p>
+<p>This is the accepted method of closing a GDAL dataset and deallocating all resources associated with it.</p>
+<p>Equivalent of the C callable GDALClose(). Except that GDALClose() first decrements the reference count, and then closes only if it has dropped to zero.</p>
+<p>For Windows users, it is not recommended to use the delete operator on the dataset object because of known issues when allocating and freeing memory across module boundaries. Calling GDALClose() is then a better option. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset14GetRasterXSizeEv">
+<span id="_CPPv3N11GDALDataset14GetRasterXSizeEv"></span><span id="_CPPv2N11GDALDataset14GetRasterXSizeEv"></span><span id="GDALDataset::GetRasterXSize"></span><span class="target" id="classGDALDataset_1ab82b1dc1a187f5444dfcd6b0bb4448bf"></span>int <code class="descname">GetRasterXSize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset14GetRasterXSizeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Fetch raster width in pixels. </p>
+<p>Equivalent of the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a4ef08b38a70b6e04f25a81bd82ef0138"><span class="std std-ref">GDALGetRasterXSize()</span></a>.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>the width in pixels of raster bands in this <a class="reference internal" href="#classGDALDataset"><span class="std std-ref">GDALDataset</span></a>. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset14GetRasterYSizeEv">
+<span id="_CPPv3N11GDALDataset14GetRasterYSizeEv"></span><span id="_CPPv2N11GDALDataset14GetRasterYSizeEv"></span><span id="GDALDataset::GetRasterYSize"></span><span class="target" id="classGDALDataset_1af69445d483f2751fda614e3d79d50179"></span>int <code class="descname">GetRasterYSize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset14GetRasterYSizeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Fetch raster height in pixels. </p>
+<p>Equivalent of the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1ae0c0af31441c6bac994f35ac26c82f99"><span class="std std-ref">GDALGetRasterYSize()</span></a>.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>the height in pixels of raster bands in this <a class="reference internal" href="#classGDALDataset"><span class="std std-ref">GDALDataset</span></a>. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset14GetRasterCountEv">
+<span id="_CPPv3N11GDALDataset14GetRasterCountEv"></span><span id="_CPPv2N11GDALDataset14GetRasterCountEv"></span><span id="GDALDataset::GetRasterCount"></span><span class="target" id="classGDALDataset_1a636b5086ec36ca97873833c20cd37bea"></span>int <code class="descname">GetRasterCount</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset14GetRasterCountEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Fetch the number of raster bands on this dataset. </p>
+<p>Same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a1b9f888aac1cb4dbc99dc1dc023174b7"><span class="std std-ref">GDALGetRasterCount()</span></a>.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>the number of raster bands. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset13GetRasterBandEi">
+<span id="_CPPv3N11GDALDataset13GetRasterBandEi"></span><span id="_CPPv2N11GDALDataset13GetRasterBandEi"></span><span id="GDALDataset::GetRasterBand__i"></span><span class="target" id="classGDALDataset_1ad96adcf07f2979ad176e37a7f8638fb6"></span><a class="reference internal" href="gdalrasterband_cpp.html#_CPPv414GDALRasterBand" title="GDALRasterBand">GDALRasterBand</a> *<code class="descname">GetRasterBand</code><span class="sig-paren">(</span>int <em>nBandId</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset13GetRasterBandEi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Fetch a band object for a dataset. </p>
+<p>See <a class="reference internal" href="#classGDALDataset_1ae282430c4da57aae527f6afbddb8afd9"><span class="std std-ref">GetBands()</span></a> for a C++ iterator version of this method.</p>
+<p>Equivalent of the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a2a74e5e34528589303c1521ebfb9c162"><span class="std std-ref">GDALGetRasterBand()</span></a>.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>the nBandId th band object </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">nBandId</span></code>: the index number of the band to fetch, from 1 to <a class="reference internal" href="#classGDALDataset_1a636b5086ec36ca97873833c20cd37bea"><span class="std std-ref">GetRasterCount()</span></a>.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset8GetBandsEv">
+<span id="_CPPv3N11GDALDataset8GetBandsEv"></span><span id="_CPPv2N11GDALDataset8GetBandsEv"></span><span id="GDALDataset::GetBands"></span><span class="target" id="classGDALDataset_1ae282430c4da57aae527f6afbddb8afd9"></span><a class="reference internal" href="#_CPPv411GDALDataset" title="GDALDataset">GDALDataset</a>::<a class="reference internal" href="#_CPPv4N11GDALDataset5BandsE" title="GDALDataset::Bands">Bands</a> <code class="descname">GetBands</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset8GetBandsEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Function that returns an iterable object over <a class="reference internal" href="gdalrasterband_cpp.html#classGDALRasterBand"><span class="std std-ref">GDALRasterBand</span></a> in the dataset. </p>
+<p>This is a C++ iterator friendly version of <a class="reference internal" href="#classGDALDataset_1ad96adcf07f2979ad176e37a7f8638fb6"><span class="std std-ref">GetRasterBand()</span></a>.</p>
+<p>Typical use is: <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="p">(</span> <span class="n">auto</span><span class="o">&amp;&amp;</span> <span class="n">poBand</span><span class="p">:</span> <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">GetBands</span><span class="p">()</span> <span class="p">)</span>
+<span class="p">{</span>
+      <span class="n">std</span><span class="p">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s2">&quot;Band  &lt;&lt; poBand-&gt;GetDescription() &lt;&lt; std::endl;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</p>
+<p><dl class="simple">
+<dt><strong>See</strong></dt><dd><p><a class="reference internal" href="#classGDALDataset_1ad96adcf07f2979ad176e37a7f8638fb6"><span class="std std-ref">GetRasterBand()</span></a></p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.3 </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset10FlushCacheEv">
+<span id="_CPPv3N11GDALDataset10FlushCacheEv"></span><span id="_CPPv2N11GDALDataset10FlushCacheEv"></span><span id="GDALDataset::FlushCache__void"></span><span class="target" id="classGDALDataset_1ab6421c7ec7068c274a030e22aa6609e1"></span>void <code class="descname">FlushCache</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset10FlushCacheEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Flush all write cached data to disk. </p>
+<p>Any raster (or other GDAL) data written via GDAL calls, but buffered internally will be written to disk.</p>
+<p>The default implementation of this method just calls the <a class="reference internal" href="#classGDALDataset_1ab6421c7ec7068c274a030e22aa6609e1"><span class="std std-ref">FlushCache()</span></a> method on each of the raster bands and the SyncToDisk() method on each of the layers. Conceptionally, calling <a class="reference internal" href="#classGDALDataset_1ab6421c7ec7068c274a030e22aa6609e1"><span class="std std-ref">FlushCache()</span></a> on a dataset should include any work that might be accomplished by calling SyncToDisk() on layers in that dataset.</p>
+<p>Using this method does not prevent use from calling GDALClose() to properly close a dataset and ensure that important data not addressed by <a class="reference internal" href="#classGDALDataset_1ab6421c7ec7068c274a030e22aa6609e1"><span class="std std-ref">FlushCache()</span></a> is written in the file.</p>
+<p>This method is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a68383ad68c98ba0ef6c3a75637f585b9"><span class="std std-ref">GDALFlushCache()</span></a>. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK11GDALDataset13GetSpatialRefEv">
+<span id="_CPPv3NK11GDALDataset13GetSpatialRefEv"></span><span id="_CPPv2NK11GDALDataset13GetSpatialRefEv"></span><span id="GDALDataset::GetSpatialRefC"></span><span class="target" id="classGDALDataset_1a9bd7f8b54ff4c12756976c7a0116d49a"></span><em class="property">const</em> <a class="reference internal" href="ogrspatialref.html#_CPPv419OGRSpatialReference" title="OGRSpatialReference">OGRSpatialReference</a> *<code class="descname">GetSpatialRef</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK11GDALDataset13GetSpatialRefEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Fetch the spatial reference for this dataset. </p>
+<p>Same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a1647a3fc0871363ce8e35ddf4a48b341"><span class="std std-ref">GDALGetSpatialRef()</span></a>.</p>
+<p>When a projection definition is not available, null is returned</p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 3.0</p>
+</dd>
+<dt><strong>Return</strong></dt><dd><p>a pointer to an internal object. It should not be altered or freed. Its lifetime will be the one of the dataset object, or until the next call to this method.</p>
+</dd>
+<dt><strong>See</strong></dt><dd><p><a class="reference external" href="http://www.gdal.org/osr_tutorial.html">http://www.gdal.org/osr_tutorial.html</a> </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset13SetSpatialRefEPK19OGRSpatialReference">
+<span id="_CPPv3N11GDALDataset13SetSpatialRefEPK19OGRSpatialReference"></span><span id="_CPPv2N11GDALDataset13SetSpatialRefEPK19OGRSpatialReference"></span><span id="GDALDataset::SetSpatialRef__OGRSpatialReferenceCP"></span><span class="target" id="classGDALDataset_1a6cebbb2fb091ebf263fea53b5f2b219e"></span><a class="reference internal" href="cpl.html#_CPPv46CPLErr" title="CPLErr">CPLErr</a> <code class="descname">SetSpatialRef</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="ogrspatialref.html#_CPPv419OGRSpatialReference" title="OGRSpatialReference">OGRSpatialReference</a> *<em>poSRS</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset13SetSpatialRefEPK19OGRSpatialReference" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the spatial reference system for this dataset. </p>
+<p>An error may occur because the dataset is not writable, or because the dataset does not support the indicated projection. Many formats do not support writing projections.</p>
+<p>This method is the same as the C <a class="reference internal" href="raster_c_api.html#gdal_8h_1af5942c63fc11865628ab5807913a3802"><span class="std std-ref">GDALSetSpatialRef()</span></a> function.</p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 3.0</p>
+</dd>
+<dt><strong>Return</strong></dt><dd><p>CE_Failure if an error occurs, otherwise CE_None. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">poSRS</span></code>: spatial reference system object. nullptr can potentially be passed for drivers that support unsetting the SRS.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK11GDALDataset16GetProjectionRefEv">
+<span id="_CPPv3NK11GDALDataset16GetProjectionRefEv"></span><span id="_CPPv2NK11GDALDataset16GetProjectionRefEv"></span><span id="GDALDataset::GetProjectionRef__voidC"></span><span class="target" id="classGDALDataset_1ae6765f379a7ecf38b24c1ff5a06573a7"></span><em class="property">const</em> char *<code class="descname">GetProjectionRef</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK11GDALDataset16GetProjectionRefEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Fetch the projection definition string for this dataset. </p>
+<p>Same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a639a11014cf6c4ff30df6f21d5db9da2"><span class="std std-ref">GDALGetProjectionRef()</span></a>.</p>
+<p>The returned string defines the projection coordinate system of the image in OpenGIS WKT format. It should be suitable for use with the <a class="reference internal" href="ogrspatialref.html#classOGRSpatialReference"><span class="std std-ref">OGRSpatialReference</span></a> class.</p>
+<p>When a projection definition is not available an empty (but not NULL) string is returned.</p>
+<p><dl class="simple">
+<dt><strong>Note</strong></dt><dd><p>Startig with GDAL 3.0, this is a compatibility layer around <a class="reference internal" href="#classGDALDataset_1a9bd7f8b54ff4c12756976c7a0116d49a"><span class="std std-ref">GetSpatialRef()</span></a></p>
+</dd>
+<dt><strong>Return</strong></dt><dd><p>a pointer to an internal projection reference string. It should not be altered, freed or expected to last for long.</p>
+</dd>
+<dt><strong>See</strong></dt><dd><p><a class="reference external" href="http://www.gdal.org/osr_tutorial.html">http://www.gdal.org/osr_tutorial.html</a> </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset13SetProjectionEPKc">
+<span id="_CPPv3N11GDALDataset13SetProjectionEPKc"></span><span id="_CPPv2N11GDALDataset13SetProjectionEPKc"></span><span id="GDALDataset::SetProjection__cCP"></span><span class="target" id="classGDALDataset_1a657b36d2bf33eed862e494ac433d56e2"></span><a class="reference internal" href="cpl.html#_CPPv46CPLErr" title="CPLErr">CPLErr</a> <code class="descname">SetProjection</code><span class="sig-paren">(</span><em class="property">const</em> char *<em>pszProjection</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset13SetProjectionEPKc" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the projection reference string for this dataset. </p>
+<p>The string should be in OGC WKT or PROJ.4 format. An error may occur because of incorrectly specified projection strings, because the dataset is not writable, or because the dataset does not support the indicated projection. Many formats do not support writing projections.</p>
+<p>This method is the same as the C <a class="reference internal" href="raster_c_api.html#gdal_8h_1a145f2be5db1ac31a07a9d4389f4ace65"><span class="std std-ref">GDALSetProjection()</span></a> function.</p>
+<p><dl class="simple">
+<dt><strong>Note</strong></dt><dd><p>Startig with GDAL 3.0, this is a compatibility layer around <a class="reference internal" href="#classGDALDataset_1a6cebbb2fb091ebf263fea53b5f2b219e"><span class="std std-ref">SetSpatialRef()</span></a></p>
+</dd>
+<dt><strong>Return</strong></dt><dd><p>CE_Failure if an error occurs, otherwise CE_None. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pszProjection</span></code>: projection reference string.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset15GetGeoTransformEPd">
+<span id="_CPPv3N11GDALDataset15GetGeoTransformEPd"></span><span id="_CPPv2N11GDALDataset15GetGeoTransformEPd"></span><span id="GDALDataset::GetGeoTransform__doubleP"></span><span class="target" id="classGDALDataset_1a5101119705f5fa2bc1344ab26f66fd1d"></span><a class="reference internal" href="cpl.html#_CPPv46CPLErr" title="CPLErr">CPLErr</a> <code class="descname">GetGeoTransform</code><span class="sig-paren">(</span>double *<em>padfTransform</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset15GetGeoTransformEPd" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Fetch the affine transformation coefficients. </p>
+<p>Fetches the coefficients for transforming between pixel/line (P,L) raster space, and projection coordinates (Xp,Yp) space.</p>
+<p><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Xp</span> <span class="o">=</span> <span class="n">padfTransform</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">P</span><span class="o">*</span><span class="n">padfTransform</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">L</span><span class="o">*</span><span class="n">padfTransform</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+<span class="n">Yp</span> <span class="o">=</span> <span class="n">padfTransform</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="n">P</span><span class="o">*</span><span class="n">padfTransform</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="n">L</span><span class="o">*</span><span class="n">padfTransform</span><span class="p">[</span><span class="mi">5</span><span class="p">];</span>
+</pre></div>
+</div>
+</p>
+<p>In a north up image, padfTransform[1] is the pixel width, and padfTransform[5] is the pixel height. The upper left corner of the upper left pixel is at position (padfTransform[0],padfTransform[3]).</p>
+<p>The default transform is (0,1,0,0,0,1) and should be returned even when a CE_Failure error is returned, such as for formats that don’t support transformation to projection coordinates.</p>
+<p>This method does the same thing as the C <a class="reference internal" href="raster_c_api.html#gdal_8h_1adf94718221d264fc798043e13adf8c8f"><span class="std std-ref">GDALGetGeoTransform()</span></a> function.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>CE_None on success, or CE_Failure if no transform can be fetched. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">padfTransform</span></code>: an existing six double buffer into which the transformation will be placed.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset15SetGeoTransformEPd">
+<span id="_CPPv3N11GDALDataset15SetGeoTransformEPd"></span><span id="_CPPv2N11GDALDataset15SetGeoTransformEPd"></span><span id="GDALDataset::SetGeoTransform__doubleP"></span><span class="target" id="classGDALDataset_1a94df345d803afa2a9ac92108d5b131b4"></span><a class="reference internal" href="cpl.html#_CPPv46CPLErr" title="CPLErr">CPLErr</a> <code class="descname">SetGeoTransform</code><span class="sig-paren">(</span>double *<em>padfTransform</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset15SetGeoTransformEPd" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the affine transformation coefficients. </p>
+<p>See <a class="reference internal" href="#classGDALDataset_1a5101119705f5fa2bc1344ab26f66fd1d"><span class="std std-ref">GetGeoTransform()</span></a> for details on the meaning of the padfTransform coefficients.</p>
+<p>This method does the same thing as the C <a class="reference internal" href="raster_c_api.html#gdal_8h_1ae93448112c1a7e69f2764c1aa3c6c8b5"><span class="std std-ref">GDALSetGeoTransform()</span></a> function.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>CE_None on success, or CE_Failure if this transform cannot be written. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">padfTransform</span></code>: a six double buffer containing the transformation coefficients to be written with the dataset.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset7AddBandE12GDALDataTypePPc">
+<span id="_CPPv3N11GDALDataset7AddBandE12GDALDataTypePPc"></span><span id="_CPPv2N11GDALDataset7AddBandE12GDALDataTypePPc"></span><span id="GDALDataset::AddBand__GDALDataType.cPP"></span><span class="target" id="classGDALDataset_1a145e0c1642d2bb979076e34f27d3556c"></span><a class="reference internal" href="cpl.html#_CPPv46CPLErr" title="CPLErr">CPLErr</a> <code class="descname">AddBand</code><span class="sig-paren">(</span><a class="reference internal" href="raster_c_api.html#_CPPv412GDALDataType" title="GDALDataType">GDALDataType</a> <em>eType</em>, char **<em>papszOptions</em> = nullptr<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset7AddBandE12GDALDataTypePPc" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Add a band to a dataset. </p>
+<p>This method will add a new band to the dataset if the underlying format supports this action. Most formats do not.</p>
+<p>Note that the new <a class="reference internal" href="gdalrasterband_cpp.html#classGDALRasterBand"><span class="std std-ref">GDALRasterBand</span></a> is not returned. It may be fetched after successful completion of the method by calling GDALDataset::GetRasterBand(GDALDataset::GetRasterCount()) as the newest band will always be the last band.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>CE_None on success or CE_Failure on failure. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">eType</span></code>: the data type of the pixels in the new band.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">papszOptions</span></code>: a list of NAME=VALUE option strings. The supported options are format specific. NULL may be passed by default.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset17GetInternalHandleEPKc">
+<span id="_CPPv3N11GDALDataset17GetInternalHandleEPKc"></span><span id="_CPPv2N11GDALDataset17GetInternalHandleEPKc"></span><span id="GDALDataset::GetInternalHandle__cCP"></span><span class="target" id="classGDALDataset_1a10656483c8433893df0c8283157ca3e6"></span>void *<code class="descname">GetInternalHandle</code><span class="sig-paren">(</span><em class="property">const</em> char *<em>pszHandleName</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset17GetInternalHandleEPKc" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Fetch a format specific internally meaningful handle. </p>
+<p>This method is the same as the C <a class="reference internal" href="raster_c_api.html#gdal_8h_1ad2a5c715e49ab94c9842ef62d3fc061f"><span class="std std-ref">GDALGetInternalHandle()</span></a> method.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>the desired handle value, or NULL if not recognized/supported. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pszHandleName</span></code>: the handle name desired. The meaningful names will be specific to the file format.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset9GetDriverEv">
+<span id="_CPPv3N11GDALDataset9GetDriverEv"></span><span id="_CPPv2N11GDALDataset9GetDriverEv"></span><span id="GDALDataset::GetDriver__void"></span><span class="target" id="classGDALDataset_1a86db47943e47ae71e97d6ba7a30213d0"></span><a class="reference internal" href="gdaldriver_cpp.html#_CPPv410GDALDriver" title="GDALDriver">GDALDriver</a> *<code class="descname">GetDriver</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset9GetDriverEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Fetch the driver to which this dataset relates. </p>
+<p>This method is the same as the C <a class="reference internal" href="raster_c_api.html#gdal_8h_1a115e56894fda0a51ad99820b1bc38391"><span class="std std-ref">GDALGetDatasetDriver()</span></a> function.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>the driver on which the dataset was created with <a class="reference internal" href="raster_c_api.html#gdal_8h_1a6836f0f810396c5e45622c8ef94624d4"><span class="std std-ref">GDALOpen()</span></a> or <a class="reference internal" href="raster_c_api.html#gdal_8h_1a791083781fefae0bb4b289c4b1b838e9"><span class="std std-ref">GDALCreate()</span></a>. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset11GetFileListEv">
+<span id="_CPPv3N11GDALDataset11GetFileListEv"></span><span id="_CPPv2N11GDALDataset11GetFileListEv"></span><span id="GDALDataset::GetFileList__void"></span><span class="target" id="classGDALDataset_1aefe21eb2d1c87304a14f81ee2e6d9717"></span>char **<code class="descname">GetFileList</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset11GetFileListEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Fetch files forming dataset. </p>
+<p>Returns a list of files believed to be part of this dataset. If it returns an empty list of files it means there is believed to be no local file system files associated with the dataset (for instance a virtual dataset). The returned file list is owned by the caller and should be deallocated with <a class="reference internal" href="cpl.html#cpl__string_8h_1a5a39b9c5896a273cc6f06c1d5be93238"><span class="std std-ref">CSLDestroy()</span></a>.</p>
+<p>The returned filenames will normally be relative or absolute paths depending on the path used to originally open the dataset. The strings will be UTF-8 encoded.</p>
+<p>This method is the same as the C <a class="reference internal" href="raster_c_api.html#gdal_8h_1a3e833f20787e138cbeee23ff78ccf76d"><span class="std std-ref">GDALGetFileList()</span></a> function.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>NULL or a NULL terminated array of file names. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset13GetDriverNameEv">
+<span id="_CPPv3N11GDALDataset13GetDriverNameEv"></span><span id="_CPPv2N11GDALDataset13GetDriverNameEv"></span><span id="GDALDataset::GetDriverName"></span><span class="target" id="classGDALDataset_1a4a68ba5dda5c2c5779015e8ea2952605"></span><em class="property">const</em> char *<code class="descname">GetDriverName</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset13GetDriverNameEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return driver name. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>driver name. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK11GDALDataset16GetGCPSpatialRefEv">
+<span id="_CPPv3NK11GDALDataset16GetGCPSpatialRefEv"></span><span id="_CPPv2NK11GDALDataset16GetGCPSpatialRefEv"></span><span id="GDALDataset::GetGCPSpatialRefC"></span><span class="target" id="classGDALDataset_1a6a2560997e2a8adf7aa111d0f69eec83"></span><em class="property">const</em> <a class="reference internal" href="ogrspatialref.html#_CPPv419OGRSpatialReference" title="OGRSpatialReference">OGRSpatialReference</a> *<code class="descname">GetGCPSpatialRef</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK11GDALDataset16GetGCPSpatialRefEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get output spatial reference system for GCPs. </p>
+<p>Same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a2bb17f958a735f6657895d14123e53b7"><span class="std std-ref">GDALGetGCPSpatialRef()</span></a>.</p>
+<p>When a SRS is not available, null is returned</p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 3.0</p>
+</dd>
+<dt><strong>Return</strong></dt><dd><p>a pointer to an internal object. It should not be altered or freed. Its lifetime will be the one of the dataset object, or until the next call to this method. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset11GetGCPCountEv">
+<span id="_CPPv3N11GDALDataset11GetGCPCountEv"></span><span id="_CPPv2N11GDALDataset11GetGCPCountEv"></span><span id="GDALDataset::GetGCPCount"></span><span class="target" id="classGDALDataset_1a499a33ef83b64c38fa218c83a113bd09"></span>int <code class="descname">GetGCPCount</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset11GetGCPCountEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get number of GCPs. </p>
+<p>This method is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1acb5f3db440085f54402d9ba842bf1fc3"><span class="std std-ref">GDALGetGCPCount()</span></a>.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>number of GCPs for this dataset. Zero if there are none. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset7GetGCPsEv">
+<span id="_CPPv3N11GDALDataset7GetGCPsEv"></span><span id="_CPPv2N11GDALDataset7GetGCPsEv"></span><span id="GDALDataset::GetGCPs"></span><span class="target" id="classGDALDataset_1ac91ea1fc26dd19f14d31baec4988d5b6"></span><em class="property">const</em> <a class="reference internal" href="raster_c_api.html#_CPPv48GDAL_GCP" title="GDAL_GCP">GDAL_GCP</a> *<code class="descname">GetGCPs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset7GetGCPsEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Fetch GCPs. </p>
+<p>This method is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1ac301b5c545843cf2ef672a831153d1e3"><span class="std std-ref">GDALGetGCPs()</span></a>.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>pointer to internal GCP structure list. It should not be modified, and may change on the next GDAL call. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset7SetGCPsEiPK8GDAL_GCPPK19OGRSpatialReference">
+<span id="_CPPv3N11GDALDataset7SetGCPsEiPK8GDAL_GCPPK19OGRSpatialReference"></span><span id="_CPPv2N11GDALDataset7SetGCPsEiPK8GDAL_GCPPK19OGRSpatialReference"></span><span id="GDALDataset::SetGCPs__i.GDAL_GCPCP.OGRSpatialReferenceCP"></span><span class="target" id="classGDALDataset_1a95b0caaaeb97d475af849df7167df3e1"></span><a class="reference internal" href="cpl.html#_CPPv46CPLErr" title="CPLErr">CPLErr</a> <code class="descname">SetGCPs</code><span class="sig-paren">(</span>int <em>nGCPCount</em>, <em class="property">const</em> <a class="reference internal" href="raster_c_api.html#_CPPv48GDAL_GCP" title="GDAL_GCP">GDAL_GCP</a> *<em>pasGCPList</em>, <em class="property">const</em> <a class="reference internal" href="ogrspatialref.html#_CPPv419OGRSpatialReference" title="OGRSpatialReference">OGRSpatialReference</a> *<em>poGCP_SRS</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset7SetGCPsEiPK8GDAL_GCPPK19OGRSpatialReference" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Assign GCPs. </p>
+<p>This method is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1acd47aa85ca5751fbe9ea09c1a2341ef8"><span class="std std-ref">GDALSetGCPs()</span></a>.</p>
+<p>This method assigns the passed set of GCPs to this dataset, as well as setting their coordinate system. Internally copies are made of the coordinate system and list of points, so the caller remains responsible for deallocating these arguments if appropriate.</p>
+<p>Most formats do not support setting of GCPs, even formats that can handle GCPs. These formats will return CE_Failure.</p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 3.0</p>
+</dd>
+<dt><strong>Return</strong></dt><dd><p>CE_None on success, CE_Failure on failure (including if action is not supported for this format). </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">nGCPCount</span></code>: number of GCPs being assigned.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pasGCPList</span></code>: array of GCP structures being assign (nGCPCount in array).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">poGCP_SRS</span></code>: the new coordinate reference system to assign for the GCP output coordinates. This parameter should be null if no output coordinate system is known.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset16GetGCPProjectionEv">
+<span id="_CPPv3N11GDALDataset16GetGCPProjectionEv"></span><span id="_CPPv2N11GDALDataset16GetGCPProjectionEv"></span><span id="GDALDataset::GetGCPProjection"></span><span class="target" id="classGDALDataset_1a35ea63c2f9ea12afd190ca2446d02ddb"></span><em class="property">const</em> char *<code class="descname">GetGCPProjection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset16GetGCPProjectionEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get output projection for GCPs. </p>
+<p>This method is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a9de50ea77a57cb6bc84afdc658288c08"><span class="std std-ref">GDALGetGCPProjection()</span></a>.</p>
+<p>The projection string follows the normal rules from <a class="reference internal" href="#classGDALDataset_1ae6765f379a7ecf38b24c1ff5a06573a7"><span class="std std-ref">GetProjectionRef()</span></a>.</p>
+<p><dl class="simple">
+<dt><strong>Note</strong></dt><dd><p>Startig with GDAL 3.0, this is a compatibility layer around <a class="reference internal" href="#classGDALDataset_1a6a2560997e2a8adf7aa111d0f69eec83"><span class="std std-ref">GetGCPSpatialRef()</span></a></p>
+</dd>
+<dt><strong>Return</strong></dt><dd><p>internal projection string or “” if there are no GCPs. It should not be altered, freed or expected to last for long. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset7SetGCPsEiPK8GDAL_GCPPKc">
+<span id="_CPPv3N11GDALDataset7SetGCPsEiPK8GDAL_GCPPKc"></span><span id="_CPPv2N11GDALDataset7SetGCPsEiPK8GDAL_GCPPKc"></span><span id="GDALDataset::SetGCPs__i.GDAL_GCPCP.cCP"></span><span class="target" id="classGDALDataset_1a3c812b05467213f05055c1f18438d874"></span><a class="reference internal" href="cpl.html#_CPPv46CPLErr" title="CPLErr">CPLErr</a> <code class="descname">SetGCPs</code><span class="sig-paren">(</span>int <em>nGCPCount</em>, <em class="property">const</em> <a class="reference internal" href="raster_c_api.html#_CPPv48GDAL_GCP" title="GDAL_GCP">GDAL_GCP</a> *<em>pasGCPList</em>, <em class="property">const</em> char *<em>pszGCPProjection</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset7SetGCPsEiPK8GDAL_GCPPKc" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Assign GCPs. </p>
+<p>This method is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1acd47aa85ca5751fbe9ea09c1a2341ef8"><span class="std std-ref">GDALSetGCPs()</span></a>.</p>
+<p>This method assigns the passed set of GCPs to this dataset, as well as setting their coordinate system. Internally copies are made of the coordinate system and list of points, so the caller remains responsible for deallocating these arguments if appropriate.</p>
+<p>Most formats do not support setting of GCPs, even formats that can handle GCPs. These formats will return CE_Failure.</p>
+<p><dl class="simple">
+<dt><strong>Note</strong></dt><dd><p>Startig with GDAL 3.0, this is a compatibility layer around <a class="reference internal" href="#classGDALDataset_1a3c812b05467213f05055c1f18438d874"><span class="std std-ref">SetGCPs(int, const GDAL_GCP*, const char*)</span></a></p>
+</dd>
+<dt><strong>Return</strong></dt><dd><p>CE_None on success, CE_Failure on failure (including if action is not supported for this format). </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">nGCPCount</span></code>: number of GCPs being assigned.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pasGCPList</span></code>: array of GCP structures being assign (nGCPCount in array).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pszGCPProjection</span></code>: the new OGC WKT coordinate system to assign for the GCP output coordinates. This parameter should be “” if no output coordinate system is known.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset10AdviseReadEiiiiii12GDALDataTypeiPiPPc">
+<span id="_CPPv3N11GDALDataset10AdviseReadEiiiiii12GDALDataTypeiPiPPc"></span><span id="_CPPv2N11GDALDataset10AdviseReadEiiiiii12GDALDataTypeiPiPPc"></span><span id="GDALDataset::AdviseRead__i.i.i.i.i.i.GDALDataType.i.iP.cPP"></span><span class="target" id="classGDALDataset_1a03a02a76682d883b378a2241528775c7"></span><a class="reference internal" href="cpl.html#_CPPv46CPLErr" title="CPLErr">CPLErr</a> <code class="descname">AdviseRead</code><span class="sig-paren">(</span>int <em>nXOff</em>, int <em>nYOff</em>, int <em>nXSize</em>, int <em>nYSize</em>, int <em>nBufXSize</em>, int <em>nBufYSize</em>, <a class="reference internal" href="raster_c_api.html#_CPPv412GDALDataType" title="GDALDataType">GDALDataType</a> <em>eDT</em>, int <em>nBandCount</em>, int *<em>panBandList</em>, char **<em>papszOptions</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset10AdviseReadEiiiiii12GDALDataTypeiPiPPc" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Advise driver of upcoming read requests. </p>
+<p>Some GDAL drivers operate more efficiently if they know in advance what set of upcoming read requests will be made. The <a class="reference internal" href="#classGDALDataset_1a03a02a76682d883b378a2241528775c7"><span class="std std-ref">AdviseRead()</span></a> method allows an application to notify the driver of the region and bands of interest, and at what resolution the region will be read.</p>
+<p>Many drivers just ignore the <a class="reference internal" href="#classGDALDataset_1a03a02a76682d883b378a2241528775c7"><span class="std std-ref">AdviseRead()</span></a> call, but it can dramatically accelerate access via some drivers.</p>
+<p>Depending on call paths, drivers might receive several calls to <a class="reference internal" href="#classGDALDataset_1a03a02a76682d883b378a2241528775c7"><span class="std std-ref">AdviseRead()</span></a> with the same parameters.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>CE_Failure if the request is invalid and CE_None if it works or is ignored. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">nXOff</span></code>: The pixel offset to the top left corner of the region of the band to be accessed. This would be zero to start from the left side.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nYOff</span></code>: The line offset to the top left corner of the region of the band to be accessed. This would be zero to start from the top.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nXSize</span></code>: The width of the region of the band to be accessed in pixels.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nYSize</span></code>: The height of the region of the band to be accessed in lines.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nBufXSize</span></code>: the width of the buffer image into which the desired region is to be read, or from which it is to be written.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nBufYSize</span></code>: the height of the buffer image into which the desired region is to be read, or from which it is to be written.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">eBufType</span></code>: the type of the pixel values in the pData data buffer. The pixel values will automatically be translated to/from the <a class="reference internal" href="gdalrasterband_cpp.html#classGDALRasterBand"><span class="std std-ref">GDALRasterBand</span></a> data type as needed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nBandCount</span></code>: the number of bands being read or written.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">panBandMap</span></code>: the list of nBandCount band numbers being read/written. Note band numbers are 1 based. This may be NULL to select the first nBandCount bands.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">papszOptions</span></code>: a list of name=value strings with special control options. Normally this is NULL.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset14CreateMaskBandEi">
+<span id="_CPPv3N11GDALDataset14CreateMaskBandEi"></span><span id="_CPPv2N11GDALDataset14CreateMaskBandEi"></span><span id="GDALDataset::CreateMaskBand__i"></span><span class="target" id="classGDALDataset_1a2f2873516be70447762e9caf2122ed4f"></span><a class="reference internal" href="cpl.html#_CPPv46CPLErr" title="CPLErr">CPLErr</a> <code class="descname">CreateMaskBand</code><span class="sig-paren">(</span>int <em>nFlagsIn</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset14CreateMaskBandEi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Adds a mask band to the dataset. </p>
+<p>The default implementation of the <a class="reference internal" href="#classGDALDataset_1a2f2873516be70447762e9caf2122ed4f"><span class="std std-ref">CreateMaskBand()</span></a> method is implemented based on similar rules to the .ovr handling implemented using the GDALDefaultOverviews object. A TIFF file with the extension .msk will be created with the same basename as the original file, and it will have one band. The mask images will be deflate compressed tiled images with the same block size as the original image if possible. It will have INTERNAL_MASK_FLAGS_xx metadata items set at the dataset level, where xx matches the band number of a band of the main dataset. The value of those items will be the one of the nFlagsIn parameter.</p>
+<p>Note that if you got a mask band with a previous call to GetMaskBand(), it might be invalidated by <a class="reference internal" href="#classGDALDataset_1a2f2873516be70447762e9caf2122ed4f"><span class="std std-ref">CreateMaskBand()</span></a>. So you have to call GetMaskBand() again.</p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 1.5.0</p>
+</dd>
+<dt><strong>Return</strong></dt><dd><p>CE_None on success or CE_Failure on an error.</p>
+</dd>
+<dt><strong>See</strong></dt><dd><p><a class="reference external" href="http://trac.osgeo.org/gdal/wiki/rfc15_nodatabitmask">http://trac.osgeo.org/gdal/wiki/rfc15_nodatabitmask</a> </p>
+</dd>
+<dt><strong>See</strong></dt><dd><p><a class="reference internal" href="gdalrasterband_cpp.html#classGDALRasterBand_1a021cde274591f3e44c1fadea6914d0e8"><span class="std std-ref">GDALRasterBand::CreateMaskBand()</span></a> </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">nFlagsIn</span></code>: 0 or combination of GMF_PER_DATASET / GMF_ALPHA. GMF_PER_DATASET will be always set, even if not explicitly specified. </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset16BeginAsyncReaderEiiiiPvii12GDALDataTypeiPiiiiPPc">
+<span id="_CPPv3N11GDALDataset16BeginAsyncReaderEiiiiPvii12GDALDataTypeiPiiiiPPc"></span><span id="_CPPv2N11GDALDataset16BeginAsyncReaderEiiiiPvii12GDALDataTypeiPiiiiPPc"></span><span id="GDALDataset::BeginAsyncReader__i.i.i.i.voidP.i.i.GDALDataType.i.iP.i.i.i.cPP"></span><span class="target" id="classGDALDataset_1a7fdf0e367a52d375a33d4b5ab5d63c5e"></span>GDALAsyncReader *<code class="descname">BeginAsyncReader</code><span class="sig-paren">(</span>int <em>nXOff</em>, int <em>nYOff</em>, int <em>nXSize</em>, int <em>nYSize</em>, void *<em>pBuf</em>, int <em>nBufXSize</em>, int <em>nBufYSize</em>, <a class="reference internal" href="raster_c_api.html#_CPPv412GDALDataType" title="GDALDataType">GDALDataType</a> <em>eBufType</em>, int <em>nBandCount</em>, int *<em>panBandMap</em>, int <em>nPixelSpace</em>, int <em>nLineSpace</em>, int <em>nBandSpace</em>, char **<em>papszOptions</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset16BeginAsyncReaderEiiiiPvii12GDALDataTypeiPiiiiPPc" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets up an asynchronous data request. </p>
+<p>This method establish an asynchronous raster read request for the indicated window on the dataset into the indicated buffer. The parameters for windowing, buffer size, buffer type and buffer organization are similar to those for <a class="reference internal" href="#classGDALDataset_1a80d005ed10aefafa8a55dc539c2f69da"><span class="std std-ref">GDALDataset::RasterIO()</span></a>; however, this call only launches the request and filling the buffer is accomplished via calls to GetNextUpdatedRegion() on the return GDALAsyncReader session object.</p>
+<p>Once all processing for the created session is complete, or if no further refinement of the request is required, the GDALAsyncReader object should be destroyed with the <a class="reference internal" href="#classGDALDataset_1a92f0e84f2560c44830f240e00d2e894f"><span class="std std-ref">GDALDataset::EndAsyncReader()</span></a> method.</p>
+<p>Note that the data buffer (pData) will potentially continue to be updated as long as the session lives, but it is not deallocated when the session (GDALAsyncReader) is destroyed with <a class="reference internal" href="#classGDALDataset_1a92f0e84f2560c44830f240e00d2e894f"><span class="std std-ref">EndAsyncReader()</span></a>. It should be deallocated by the application at that point.</p>
+<p>Additional information on asynchronous IO in GDAL may be found at: <a class="reference external" href="http://trac.osgeo.org/gdal/wiki/rfc24_progressive_data_support">http://trac.osgeo.org/gdal/wiki/rfc24_progressive_data_support</a></p>
+<p>This method is the same as the C <a class="reference internal" href="raster_c_api.html#gdal_8h_1a7d104e372bfa37f29ed61e715f2e6511"><span class="std std-ref">GDALBeginAsyncReader()</span></a> function.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>The GDALAsyncReader object representing the request. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">nXOff</span></code>: The pixel offset to the top left corner of the region of the band to be accessed. This would be zero to start from the left side.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nYOff</span></code>: The line offset to the top left corner of the region of the band to be accessed. This would be zero to start from the top.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nXSize</span></code>: The width of the region of the band to be accessed in pixels.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nYSize</span></code>: The height of the region of the band to be accessed in lines.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pBuf</span></code>: The buffer into which the data should be read. This buffer must contain at least nBufXSize * nBufYSize * nBandCount words of type eBufType. It is organized in left to right,top to bottom pixel order. Spacing is controlled by the nPixelSpace, and nLineSpace parameters.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nBufXSize</span></code>: the width of the buffer image into which the desired region is to be read, or from which it is to be written.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nBufYSize</span></code>: the height of the buffer image into which the desired region is to be read, or from which it is to be written.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">eBufType</span></code>: the type of the pixel values in the pData data buffer. The pixel values will automatically be translated to/from the <a class="reference internal" href="gdalrasterband_cpp.html#classGDALRasterBand"><span class="std std-ref">GDALRasterBand</span></a> data type as needed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nBandCount</span></code>: the number of bands being read or written.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">panBandMap</span></code>: the list of nBandCount band numbers being read/written. Note band numbers are 1 based. This may be NULL to select the first nBandCount bands.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nPixelSpace</span></code>: The byte offset from the start of one pixel value in pData to the start of the next pixel value within a scanline. If defaulted (0) the size of the datatype eBufType is used.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nLineSpace</span></code>: The byte offset from the start of one scanline in pData to the start of the next. If defaulted the size of the datatype eBufType * nBufXSize is used.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nBandSpace</span></code>: the byte offset from the start of one bands data to the start of the next. If defaulted (zero) the value will be nLineSpace * nBufYSize implying band sequential organization of the data buffer.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">papszOptions</span></code>: Driver specific control options in a string list or NULL. Consult driver documentation for options supported.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset14EndAsyncReaderEP15GDALAsyncReader">
+<span id="_CPPv3N11GDALDataset14EndAsyncReaderEP15GDALAsyncReader"></span><span id="_CPPv2N11GDALDataset14EndAsyncReaderEP15GDALAsyncReader"></span><span id="GDALDataset::EndAsyncReader__GDALAsyncReaderP"></span><span class="target" id="classGDALDataset_1a92f0e84f2560c44830f240e00d2e894f"></span>void <code class="descname">EndAsyncReader</code><span class="sig-paren">(</span>GDALAsyncReader *<em>poARIO</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset14EndAsyncReaderEP15GDALAsyncReader" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>End asynchronous request. </p>
+<p>This method destroys an asynchronous io request and recovers all resources associated with it.</p>
+<p>This method is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a91979c746d6a47983d054e79bb2f8d59"><span class="std std-ref">GDALEndAsyncReader()</span></a>.</p>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">poARIO</span></code>: pointer to a GDALAsyncReader </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset8RasterIOE10GDALRWFlagiiiiPvii12GDALDataTypeiPi8GSpacing8GSpacing8GSpacingP20GDALRasterIOExtraArg">
+<span id="_CPPv3N11GDALDataset8RasterIOE10GDALRWFlagiiiiPvii12GDALDataTypeiPi8GSpacing8GSpacing8GSpacingP20GDALRasterIOExtraArg"></span><span id="_CPPv2N11GDALDataset8RasterIOE10GDALRWFlagiiiiPvii12GDALDataTypeiPi8GSpacing8GSpacing8GSpacingP20GDALRasterIOExtraArg"></span><span id="GDALDataset::RasterIO__GDALRWFlag.i.i.i.i.voidP.i.i.GDALDataType.i.iP.GSpacing.GSpacing.GSpacing.GDALRasterIOExtraArgP"></span><span class="target" id="classGDALDataset_1a80d005ed10aefafa8a55dc539c2f69da"></span><a class="reference internal" href="cpl.html#_CPPv46CPLErr" title="CPLErr">CPLErr</a> <code class="descname">RasterIO</code><span class="sig-paren">(</span><a class="reference internal" href="raster_c_api.html#_CPPv410GDALRWFlag" title="GDALRWFlag">GDALRWFlag</a> <em>eRWFlag</em>, int <em>nXOff</em>, int <em>nYOff</em>, int <em>nXSize</em>, int <em>nYSize</em>, void *<em>pData</em>, int <em>nBufXSize</em>, int <em>nBufYSize</em>, <a class="reference internal" href="raster_c_api.html#_CPPv412GDALDataType" title="GDALDataType">GDALDataType</a> <em>eBufType</em>, int <em>nBandCount</em>, int *<em>panBandMap</em>, <a class="reference internal" href="raster_c_api.html#_CPPv48GSpacing" title="GSpacing">GSpacing</a> <em>nPixelSpace</em>, <a class="reference internal" href="raster_c_api.html#_CPPv48GSpacing" title="GSpacing">GSpacing</a> <em>nLineSpace</em>, <a class="reference internal" href="raster_c_api.html#_CPPv48GSpacing" title="GSpacing">GSpacing</a> <em>nBandSpace</em>, <a class="reference internal" href="raster_c_api.html#_CPPv420GDALRasterIOExtraArg" title="GDALRasterIOExtraArg">GDALRasterIOExtraArg</a> *<em>psExtraArg</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset8RasterIOE10GDALRWFlagiiiiPvii12GDALDataTypeiPi8GSpacing8GSpacing8GSpacingP20GDALRasterIOExtraArg" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Read/write a region of image data from multiple bands. </p>
+<p>This method allows reading a region of one or more GDALRasterBands from this dataset into a buffer, or writing data from a buffer into a region of the GDALRasterBands. It automatically takes care of data type translation if the data type (eBufType) of the buffer is different than that of the <a class="reference internal" href="gdalrasterband_cpp.html#classGDALRasterBand"><span class="std std-ref">GDALRasterBand</span></a>. The method also takes care of image decimation / replication if the buffer size (nBufXSize x nBufYSize) is different than the size of the region being accessed (nXSize x nYSize).</p>
+<p>The nPixelSpace, nLineSpace and nBandSpace parameters allow reading into or writing from various organization of buffers.</p>
+<p>For highest performance full resolution data access, read and write on “block boundaries” as returned by GetBlockSize(), or use the ReadBlock() and WriteBlock() methods.</p>
+<p>This method is the same as the C <a class="reference internal" href="raster_c_api.html#gdal_8h_1aaffc6d9720dcb3c89ad0b88560bdf407"><span class="std std-ref">GDALDatasetRasterIO()</span></a> or <a class="reference internal" href="raster_c_api.html#gdal_8h_1a3bada1cfc6676040e8d9bbfb4d1a00c3"><span class="std std-ref">GDALDatasetRasterIOEx()</span></a> functions.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>CE_Failure if the access fails, otherwise CE_None. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">eRWFlag</span></code>: Either GF_Read to read a region of data, or GF_Write to write a region of data.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nXOff</span></code>: The pixel offset to the top left corner of the region of the band to be accessed. This would be zero to start from the left side.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nYOff</span></code>: The line offset to the top left corner of the region of the band to be accessed. This would be zero to start from the top.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nXSize</span></code>: The width of the region of the band to be accessed in pixels.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nYSize</span></code>: The height of the region of the band to be accessed in lines.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pData</span></code>: The buffer into which the data should be read, or from which it should be written. This buffer must contain at least nBufXSize * nBufYSize * nBandCount words of type eBufType. It is organized in left to right,top to bottom pixel order. Spacing is controlled by the nPixelSpace, and nLineSpace parameters.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nBufXSize</span></code>: the width of the buffer image into which the desired region is to be read, or from which it is to be written.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nBufYSize</span></code>: the height of the buffer image into which the desired region is to be read, or from which it is to be written.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">eBufType</span></code>: the type of the pixel values in the pData data buffer. The pixel values will automatically be translated to/from the <a class="reference internal" href="gdalrasterband_cpp.html#classGDALRasterBand"><span class="std std-ref">GDALRasterBand</span></a> data type as needed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nBandCount</span></code>: the number of bands being read or written.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">panBandMap</span></code>: the list of nBandCount band numbers being read/written. Note band numbers are 1 based. This may be NULL to select the first nBandCount bands.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nPixelSpace</span></code>: The byte offset from the start of one pixel value in pData to the start of the next pixel value within a scanline. If defaulted (0) the size of the datatype eBufType is used.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nLineSpace</span></code>: The byte offset from the start of one scanline in pData to the start of the next. If defaulted (0) the size of the datatype eBufType * nBufXSize is used.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nBandSpace</span></code>: the byte offset from the start of one bands data to the start of the next. If defaulted (0) the value will be nLineSpace * nBufYSize implying band sequential organization of the data buffer.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">psExtraArg</span></code>: (new in GDAL 2.0) pointer to a <a class="reference internal" href="raster_c_api.html#structGDALRasterIOExtraArg"><span class="std std-ref">GDALRasterIOExtraArg</span></a> structure with additional arguments to specify resampling and progress callback, or NULL for default behavior. The GDAL_RASTERIO_RESAMPLING configuration option can also be defined to override the default resampling to one of BILINEAR, CUBIC, CUBICSPLINE, LANCZOS, AVERAGE or MODE.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset9ReferenceEv">
+<span id="_CPPv3N11GDALDataset9ReferenceEv"></span><span id="_CPPv2N11GDALDataset9ReferenceEv"></span><span id="GDALDataset::Reference"></span><span class="target" id="classGDALDataset_1a2d135664382507ae0eac0ab1cff07deb"></span>int <code class="descname">Reference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset9ReferenceEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Add one to dataset reference count. </p>
+<p>The reference is one after instantiation.</p>
+<p>This method is the same as the C <a class="reference internal" href="raster_c_api.html#gdal_8h_1ac87a46aba65684a3a699de186b01feda"><span class="std std-ref">GDALReferenceDataset()</span></a> function.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>the post-increment reference count. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset11DereferenceEv">
+<span id="_CPPv3N11GDALDataset11DereferenceEv"></span><span id="_CPPv2N11GDALDataset11DereferenceEv"></span><span id="GDALDataset::Dereference"></span><span class="target" id="classGDALDataset_1a8e820fe1ed71f288e20dd9ef697405c2"></span>int <code class="descname">Dereference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset11DereferenceEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Subtract one from dataset reference count. </p>
+<p>The reference is one after instantiation. Generally when the reference count has dropped to zero the dataset may be safely deleted (closed).</p>
+<p>This method is the same as the C <a class="reference internal" href="raster_c_api.html#gdal_8h_1abbf12b073c2936b45b0ee8031e70b460"><span class="std std-ref">GDALDereferenceDataset()</span></a> function.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>the post-decrement reference count. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset10ReleaseRefEv">
+<span id="_CPPv3N11GDALDataset10ReleaseRefEv"></span><span id="_CPPv2N11GDALDataset10ReleaseRefEv"></span><span id="GDALDataset::ReleaseRef"></span><span class="target" id="classGDALDataset_1aca7e7e07f491282d1d98c6f472e106eb"></span>int <code class="descname">ReleaseRef</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset10ReleaseRefEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Drop a reference to this object, and destroy if no longer referenced. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>TRUE if the object has been destroyed. </p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.2 </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK11GDALDataset9GetAccessEv">
+<span id="_CPPv3NK11GDALDataset9GetAccessEv"></span><span id="_CPPv2NK11GDALDataset9GetAccessEv"></span><span id="GDALDataset::GetAccessC"></span><span class="target" id="classGDALDataset_1affcc83ad8a75ea5e5e318c8bebf34ae3"></span><a class="reference internal" href="raster_c_api.html#_CPPv410GDALAccess" title="GDALAccess">GDALAccess</a> <code class="descname">GetAccess</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK11GDALDataset9GetAccessEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return access mode. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>access mode. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK11GDALDataset9GetSharedEv">
+<span id="_CPPv3NK11GDALDataset9GetSharedEv"></span><span id="_CPPv2NK11GDALDataset9GetSharedEv"></span><span id="GDALDataset::GetSharedC"></span><span class="target" id="classGDALDataset_1ab4bde0576421f5863e6db5365665975e"></span>int <code class="descname">GetShared</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK11GDALDataset9GetSharedEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns shared flag. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>TRUE if the <a class="reference internal" href="#classGDALDataset"><span class="std std-ref">GDALDataset</span></a> is available for sharing, or FALSE if not. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset12MarkAsSharedEv">
+<span id="_CPPv3N11GDALDataset12MarkAsSharedEv"></span><span id="_CPPv2N11GDALDataset12MarkAsSharedEv"></span><span id="GDALDataset::MarkAsShared"></span><span class="target" id="classGDALDataset_1aa79c37e02ed2ff16d654b2be27eea286"></span>void <code class="descname">MarkAsShared</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset12MarkAsSharedEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Mark this dataset as available for sharing. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset19MarkSuppressOnCloseEv">
+<span id="_CPPv3N11GDALDataset19MarkSuppressOnCloseEv"></span><span id="_CPPv2N11GDALDataset19MarkSuppressOnCloseEv"></span><span id="GDALDataset::MarkSuppressOnClose"></span><span class="target" id="classGDALDataset_1a3595bf39a98048eb478097ba059c83ea"></span>void <code class="descname">MarkSuppressOnClose</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset19MarkSuppressOnCloseEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set that the dataset must be deleted on close. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset14GetOpenOptionsEv">
+<span id="_CPPv3N11GDALDataset14GetOpenOptionsEv"></span><span id="_CPPv2N11GDALDataset14GetOpenOptionsEv"></span><span id="GDALDataset::GetOpenOptions"></span><span class="target" id="classGDALDataset_1a8b3e6fc22cf795ebeabafa57096e224a"></span>char **<code class="descname">GetOpenOptions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset14GetOpenOptionsEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return open options. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>open options. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset14BuildOverviewsEPKciPiiPi16GDALProgressFuncPv">
+<span id="_CPPv3N11GDALDataset14BuildOverviewsEPKciPiiPi16GDALProgressFuncPv"></span><span id="_CPPv2N11GDALDataset14BuildOverviewsEPKciPiiPi16GDALProgressFuncPv"></span><span id="GDALDataset::BuildOverviews__cCP.i.iP.i.iP.GDALProgressFunc.voidP"></span><span class="target" id="classGDALDataset_1a2aa6f88b3bbc840a5696236af11dde15"></span><a class="reference internal" href="cpl.html#_CPPv46CPLErr" title="CPLErr">CPLErr</a> <code class="descname">BuildOverviews</code><span class="sig-paren">(</span><em class="property">const</em> char *<em>pszResampling</em>, int <em>nOverviews</em>, int *<em>panOverviewList</em>, int <em>nListBands</em>, int *<em>panBandList</em>, <a class="reference internal" href="cpl.html#_CPPv416GDALProgressFunc" title="GDALProgressFunc">GDALProgressFunc</a> <em>pfnProgress</em>, void *<em>pProgressData</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset14BuildOverviewsEPKciPiiPi16GDALProgressFuncPv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Build raster overview(s) </p>
+<p>If the operation is unsupported for the indicated dataset, then CE_Failure is returned, and <a class="reference internal" href="cpl.html#cpl__error_8h_1a4a583fe987b8f1a7b2468805578fa8d4"><span class="std std-ref">CPLGetLastErrorNo()</span></a> will return CPLE_NotSupported.</p>
+<p>Depending on the actual file format, all overviews level can be also deleted by specifying nOverviews == 0. This works at least for external overviews (.ovr), TIFF internal overviews, etc.</p>
+<p>This method is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1ac2c7164bb3ba2bf0a5e92baeca59c6b8"><span class="std std-ref">GDALBuildOverviews()</span></a>.</p>
+<p><p>For example, to build overview level 2, 4 and 8 on all bands the following call could be made: </p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">int</span>       <span class="n">anOverviewList</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span> <span class="p">};</span>
+
+<span class="n">poDataset</span><span class="o">-&gt;</span><span class="n">BuildOverviews</span><span class="p">(</span> <span class="s2">&quot;NEAREST&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">anOverviewList</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">nullptr</span><span class="p">,</span>
+                           <span class="n">GDALDummyProgress</span><span class="p">,</span> <span class="n">nullptr</span> <span class="p">);</span>
+</pre></div>
+</div>
+<dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>CE_None on success or CE_Failure if the operation doesn’t work.</p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pszResampling</span></code>: one of “AVERAGE”, “AVERAGE_MAGPHASE”, “BILINEAR”, “CUBIC”, “CUBICSPLINE”, “GAUSS”, “LANCZOS”, “MODE”, “NEAREST”, or “NONE” controlling the downsampling method applied. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nOverviews</span></code>: number of overviews to build, or 0 to clean overviews. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">panOverviewList</span></code>: the list of overview decimation factors to build, or NULL if nOverviews == 0. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nListBands</span></code>: number of bands to build overviews for in panBandList. Build for all bands if this is 0. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">panBandList</span></code>: list of band numbers. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pfnProgress</span></code>: a function to call to report progress, or NULL. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pProgressData</span></code>: application data to pass to the progress function.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+<p><dl class="simple">
+<dt><strong>See</strong></dt><dd><p><a class="reference internal" href="raster_c_api.html#gdal_8h_1af42fd5ddd2d160492b23d62e75e42c82"><span class="std std-ref">GDALRegenerateOverviews()</span></a> </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset11ReportErrorE6CPLErr11CPLErrorNumPKcz">
+<span id="_CPPv3N11GDALDataset11ReportErrorE6CPLErr11CPLErrorNumPKcz"></span><span id="_CPPv2N11GDALDataset11ReportErrorE6CPLErr11CPLErrorNumPKcz"></span><span id="GDALDataset::ReportError__CPLErr.CPLErrorNum.cCP.z"></span><span class="target" id="classGDALDataset_1aa069340ebfffad8d5689b77075e1f969"></span>void <code class="descname">ReportError</code><span class="sig-paren">(</span><a class="reference internal" href="cpl.html#_CPPv46CPLErr" title="CPLErr">CPLErr</a> <em>eErrClass</em>, <a class="reference internal" href="cpl.html#_CPPv411CPLErrorNum" title="CPLErrorNum">CPLErrorNum</a> <em>err_no</em>, <em class="property">const</em> char *<em>fmt</em>, ...<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset11ReportErrorE6CPLErr11CPLErrorNumPKcz" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Emits an error related to a dataset. </p>
+<p>This function is a wrapper for regular <a class="reference internal" href="cpl.html#cpl__error_8h_1afda4d86428c1c533449ae6a69cdf430d"><span class="std std-ref">CPLError()</span></a>. The only difference with <a class="reference internal" href="cpl.html#cpl__error_8h_1afda4d86428c1c533449ae6a69cdf430d"><span class="std std-ref">CPLError()</span></a> is that it prepends the error message with the dataset name.</p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 1.9.0 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">eErrClass</span></code>: one of CE_Warning, CE_Failure or CE_Fatal. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">err_no</span></code>: the error number (CPLE_*) from cpl_error.h. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fmt</span></code>: a printf() style format string. Any additional arguments will be treated as arguments to fill in this format in a manner similar to printf().</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset11GetMetadataEPKc">
+<span id="_CPPv3N11GDALDataset11GetMetadataEPKc"></span><span id="_CPPv2N11GDALDataset11GetMetadataEPKc"></span><span id="GDALDataset::GetMetadata__cCP"></span><span class="target" id="classGDALDataset_1ac7e1eb677dcaf096d8f09034f47e1496"></span>char **<code class="descname">GetMetadata</code><span class="sig-paren">(</span><em class="property">const</em> char *<em>pszDomain</em> = &quot;&quot;<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset11GetMetadataEPKc" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Fetch metadata. </p>
+<p>The returned string list is owned by the object, and may change at any time. It is formatted as a “Name=value” list with the last pointer value being NULL. Use the CPL StringList functions such as <a class="reference internal" href="cpl.html#cpl__string_8h_1a94ca3f1c515330277c31b06d2a061ccd"><span class="std std-ref">CSLFetchNameValue()</span></a> to manipulate it.</p>
+<p>Note that relatively few formats return any metadata at this time.</p>
+<p>This method does the same thing as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a25929a66e99d92c2788485ecf13e2e82"><span class="std std-ref">GDALGetMetadata()</span></a>.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>NULL or a string list. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pszDomain</span></code>: the domain of interest. Use “” or NULL for the default domain.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset11SetMetadataEPPcPKc">
+<span id="_CPPv3N11GDALDataset11SetMetadataEPPcPKc"></span><span id="_CPPv2N11GDALDataset11SetMetadataEPPcPKc"></span><span id="GDALDataset::SetMetadata__cPP.cCP"></span><span class="target" id="classGDALDataset_1a6c748856779f5337e4c32a11875b28dd"></span><code class="descname">SetMetadata</code><span class="sig-paren">(</span>char **<em>papszMetadata</em>, <em class="property">const</em> char *<em>pszDomain</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset11SetMetadataEPPcPKc" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set metadata. </p>
+<p>CAUTION: depending on the format, older values of the updated information might still be found in the file in a “ghost” state, even if no longer accessible through the GDAL API. This is for example the case of the GTiff format (this is not a exhaustive list)</p>
+<p>The C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a8cb466200cb98e3313dc131de37cb0d6"><span class="std std-ref">GDALSetMetadata()</span></a> does the same thing as this method.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>CE_None on success, CE_Failure on failure and CE_Warning if the metadata has been accepted, but is likely not maintained persistently by the underlying object between sessions. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">papszMetadata</span></code>: the metadata in name=value string list format to apply. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pszDomain</span></code>: the domain of interest. Use “” or NULL for the default domain. </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset15GetMetadataItemEPKcPKc">
+<span id="_CPPv3N11GDALDataset15GetMetadataItemEPKcPKc"></span><span id="_CPPv2N11GDALDataset15GetMetadataItemEPKcPKc"></span><span id="GDALDataset::GetMetadataItem__cCP.cCP"></span><span class="target" id="classGDALDataset_1ad0ad71089c3a90e23e254be8b822ab2b"></span><em class="property">const</em> char *<code class="descname">GetMetadataItem</code><span class="sig-paren">(</span><em class="property">const</em> char *<em>pszName</em>, <em class="property">const</em> char *<em>pszDomain</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset15GetMetadataItemEPKcPKc" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Fetch single metadata item. </p>
+<p>The C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1ac24dd49918d985568fa2d97da1080215"><span class="std std-ref">GDALGetMetadataItem()</span></a> does the same thing as this method.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>NULL on failure to find the key, or a pointer to an internal copy of the value string on success. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pszName</span></code>: the key for the metadata item to fetch. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pszDomain</span></code>: the domain to fetch for, use NULL for the default domain.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset15SetMetadataItemEPKcPKcPKc">
+<span id="_CPPv3N11GDALDataset15SetMetadataItemEPKcPKcPKc"></span><span id="_CPPv2N11GDALDataset15SetMetadataItemEPKcPKcPKc"></span><span id="GDALDataset::SetMetadataItem__cCP.cCP.cCP"></span><span class="target" id="classGDALDataset_1ab49ab9b272c8aa6ce076a49a0f01df46"></span><code class="descname">SetMetadataItem</code><span class="sig-paren">(</span><em class="property">const</em> char *<em>pszName</em>, <em class="property">const</em> char *<em>pszValue</em>, <em class="property">const</em> char *<em>pszDomain</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset15SetMetadataItemEPKcPKcPKc" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set single metadata item. </p>
+<p>CAUTION: depending on the format, older values of the updated information might still be found in the file in a “ghost” state, even if no longer accessible through the GDAL API. This is for example the case of the GTiff format (this is not a exhaustive list)</p>
+<p>The C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a55f0b4c5192d18deb4dcf1a89ed59bbe"><span class="std std-ref">GDALSetMetadataItem()</span></a> does the same thing as this method.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>CE_None on success, or an error code on failure. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pszName</span></code>: the key for the metadata item to fetch. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pszValue</span></code>: the value to assign to the key. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pszDomain</span></code>: the domain to set within, use NULL for the default domain.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset21GetMetadataDomainListEv">
+<span id="_CPPv3N11GDALDataset21GetMetadataDomainListEv"></span><span id="_CPPv2N11GDALDataset21GetMetadataDomainListEv"></span><span id="GDALDataset::GetMetadataDomainList"></span><span class="target" id="classGDALDataset_1a04aab087a4963089cca739a6920beac9"></span>char **<code class="descname">GetMetadataDomainList</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset21GetMetadataDomainListEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Fetch list of metadata domains. </p>
+<p>The returned string list is the list of (non-empty) metadata domains.</p>
+<p>This method does the same thing as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a61cb7f834334fca47e72e9b096639f98"><span class="std std-ref">GDALGetMetadataDomainList()</span></a>.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>NULL or a string list. Must be freed with <a class="reference internal" href="cpl.html#cpl__string_8h_1a5a39b9c5896a273cc6f06c1d5be93238"><span class="std std-ref">CSLDestroy()</span></a></p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 1.11 </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset13GetLayerCountEv">
+<span id="_CPPv3N11GDALDataset13GetLayerCountEv"></span><span id="_CPPv2N11GDALDataset13GetLayerCountEv"></span><span id="GDALDataset::GetLayerCount"></span><span class="target" id="classGDALDataset_1a1cf5c6be551f8e16b0c0f677789b188d"></span>int <code class="descname">GetLayerCount</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset13GetLayerCountEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get the number of layers in this dataset. </p>
+<p>This method is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a8c9297e5115d559b27267b14122043ee"><span class="std std-ref">GDALDatasetGetLayerCount()</span></a>, and the deprecated <a class="reference internal" href="vector_c_api.html#ogr__api_8h_1ac6da541cb655ab631df729e71da2e762"><span class="std std-ref">OGR_DS_GetLayerCount()</span></a>.</p>
+<p>In GDAL 1.X, this method used to be in the OGRDataSource class.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>layer count. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset8GetLayerEi">
+<span id="_CPPv3N11GDALDataset8GetLayerEi"></span><span id="_CPPv2N11GDALDataset8GetLayerEi"></span><span id="GDALDataset::GetLayer__i"></span><span class="target" id="classGDALDataset_1a8e97c359216425a5d8fc4a8ef5b314d0"></span><a class="reference internal" href="ogrlayer_cpp.html#_CPPv48OGRLayer" title="OGRLayer">OGRLayer</a> *<code class="descname">GetLayer</code><span class="sig-paren">(</span>int <em>iLayer</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset8GetLayerEi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Fetch a layer by index. </p>
+<p>The returned layer remains owned by the <a class="reference internal" href="#classGDALDataset"><span class="std std-ref">GDALDataset</span></a> and should not be deleted by the application.</p>
+<p>See <a class="reference internal" href="#classGDALDataset_1a8cfa4d17c68e441614118931b17cd7fa"><span class="std std-ref">GetLayers()</span></a> for a C++ iterator version of this method.</p>
+<p>This method is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a4c42c52e24e02fead69a3189db5585ab"><span class="std std-ref">GDALDatasetGetLayer()</span></a> and the deprecated <a class="reference internal" href="vector_c_api.html#ogr__api_8h_1a03998029f904d1c3b12de40114e7503e"><span class="std std-ref">OGR_DS_GetLayer()</span></a>.</p>
+<p>In GDAL 1.X, this method used to be in the OGRDataSource class.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>the layer, or NULL if iLayer is out of range or an error occurs.</p>
+</dd>
+<dt><strong>See</strong></dt><dd><p><a class="reference internal" href="#classGDALDataset_1a8cfa4d17c68e441614118931b17cd7fa"><span class="std std-ref">GetLayers()</span></a> </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">iLayer</span></code>: a layer number between 0 and <a class="reference internal" href="#classGDALDataset_1a1cf5c6be551f8e16b0c0f677789b188d"><span class="std std-ref">GetLayerCount()</span></a>-1.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset9GetLayersEv">
+<span id="_CPPv3N11GDALDataset9GetLayersEv"></span><span id="_CPPv2N11GDALDataset9GetLayersEv"></span><span id="GDALDataset::GetLayers"></span><span class="target" id="classGDALDataset_1a8cfa4d17c68e441614118931b17cd7fa"></span><a class="reference internal" href="#_CPPv411GDALDataset" title="GDALDataset">GDALDataset</a>::<a class="reference internal" href="#_CPPv4N11GDALDataset6LayersE" title="GDALDataset::Layers">Layers</a> <code class="descname">GetLayers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset9GetLayersEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Function that returns an iterable object over layers in the dataset. </p>
+<p>This is a C++ iterator friendly version of <a class="reference internal" href="#classGDALDataset_1a8e97c359216425a5d8fc4a8ef5b314d0"><span class="std std-ref">GetLayer()</span></a>.</p>
+<p>Typical use is: <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="p">(</span> <span class="n">auto</span><span class="o">&amp;&amp;</span> <span class="n">poLayer</span><span class="p">:</span> <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">GetLayers</span><span class="p">()</span> <span class="p">)</span>
+<span class="p">{</span>
+      <span class="n">std</span><span class="p">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s2">&quot;Layer  &lt;&lt; poLayer-&gt;GetName() &lt;&lt; std::endl;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</p>
+<p><dl class="simple">
+<dt><strong>See</strong></dt><dd><p><a class="reference internal" href="#classGDALDataset_1a8e97c359216425a5d8fc4a8ef5b314d0"><span class="std std-ref">GetLayer()</span></a></p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.3 </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset14GetLayerByNameEPKc">
+<span id="_CPPv3N11GDALDataset14GetLayerByNameEPKc"></span><span id="_CPPv2N11GDALDataset14GetLayerByNameEPKc"></span><span id="GDALDataset::GetLayerByName__cCP"></span><span class="target" id="classGDALDataset_1a576978fecfad68741b44719605cf637e"></span><a class="reference internal" href="ogrlayer_cpp.html#_CPPv48OGRLayer" title="OGRLayer">OGRLayer</a> *<code class="descname">GetLayerByName</code><span class="sig-paren">(</span><em class="property">const</em> char *<em>pszName</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset14GetLayerByNameEPKc" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Fetch a layer by name. </p>
+<p>The returned layer remains owned by the <a class="reference internal" href="#classGDALDataset"><span class="std std-ref">GDALDataset</span></a> and should not be deleted by the application.</p>
+<p>This method is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a06e1dfa7103356cbb11929a36c2ec139"><span class="std std-ref">GDALDatasetGetLayerByName()</span></a> and the deprecated <a class="reference internal" href="vector_c_api.html#ogr__api_8h_1a74af4912b67bf2a7b6e3230711a40d0e"><span class="std std-ref">OGR_DS_GetLayerByName()</span></a>.</p>
+<p>In GDAL 1.X, this method used to be in the OGRDataSource class.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>the layer, or NULL if Layer is not found or an error occurs. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pszName</span></code>: the layer name of the layer to fetch.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset11DeleteLayerEi">
+<span id="_CPPv3N11GDALDataset11DeleteLayerEi"></span><span id="_CPPv2N11GDALDataset11DeleteLayerEi"></span><span id="GDALDataset::DeleteLayer__i"></span><span class="target" id="classGDALDataset_1ae14b2da058a45d1da620f113e3f96968"></span><a class="reference internal" href="vector_c_api.html#_CPPv46OGRErr" title="OGRErr">OGRErr</a> <code class="descname">DeleteLayer</code><span class="sig-paren">(</span>int <em>iLayer</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset11DeleteLayerEi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Delete the indicated layer from the datasource. </p>
+<p>If this method is supported the ODsCDeleteLayer capability will test TRUE on the <a class="reference internal" href="#classGDALDataset"><span class="std std-ref">GDALDataset</span></a>.</p>
+<p>This method is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a6c71ac6976dbf150a5131f509669e56e"><span class="std std-ref">GDALDatasetDeleteLayer()</span></a> and the deprecated <a class="reference internal" href="vector_c_api.html#ogr__api_8h_1a85827a79cd2ddb5a55126e785bee427d"><span class="std std-ref">OGR_DS_DeleteLayer()</span></a>.</p>
+<p>In GDAL 1.X, this method used to be in the OGRDataSource class.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>OGRERR_NONE on success, or OGRERR_UNSUPPORTED_OPERATION if deleting layers is not supported for this datasource. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">iLayer</span></code>: the index of the layer to delete.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset12ResetReadingEv">
+<span id="_CPPv3N11GDALDataset12ResetReadingEv"></span><span id="_CPPv2N11GDALDataset12ResetReadingEv"></span><span id="GDALDataset::ResetReading"></span><span class="target" id="classGDALDataset_1a569f5ac98d8a54a34102e28e01f71836"></span>void <code class="descname">ResetReading</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset12ResetReadingEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Reset feature reading to start on the first feature. </p>
+<p>This affects <a class="reference internal" href="#classGDALDataset_1ac71c86b48ecb54fc2c1a844ee1ca33e7"><span class="std std-ref">GetNextFeature()</span></a>.</p>
+<p>Depending on drivers, this may also have the side effect of calling <a class="reference internal" href="ogrlayer_cpp.html#classOGRLayer_1aad0f2cd7f0587584b8f382c6a913583c"><span class="std std-ref">OGRLayer::ResetReading()</span></a> on the layers of this dataset.</p>
+<p>This method is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a81eee67bd7b9263e3bc2d514504f7834"><span class="std std-ref">GDALDatasetResetReading()</span></a>.</p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.2 </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset14GetNextFeatureEPP8OGRLayerPd16GDALProgressFuncPv">
+<span id="_CPPv3N11GDALDataset14GetNextFeatureEPP8OGRLayerPd16GDALProgressFuncPv"></span><span id="_CPPv2N11GDALDataset14GetNextFeatureEPP8OGRLayerPd16GDALProgressFuncPv"></span><span id="GDALDataset::GetNextFeature__OGRLayerPP.doubleP.GDALProgressFunc.voidP"></span><span class="target" id="classGDALDataset_1ac71c86b48ecb54fc2c1a844ee1ca33e7"></span><a class="reference internal" href="ogrfeature_cpp.html#_CPPv410OGRFeature" title="OGRFeature">OGRFeature</a> *<code class="descname">GetNextFeature</code><span class="sig-paren">(</span><a class="reference internal" href="ogrlayer_cpp.html#_CPPv48OGRLayer" title="OGRLayer">OGRLayer</a> **<em>ppoBelongingLayer</em>, double *<em>pdfProgressPct</em>, <a class="reference internal" href="cpl.html#_CPPv416GDALProgressFunc" title="GDALProgressFunc">GDALProgressFunc</a> <em>pfnProgress</em>, void *<em>pProgressData</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset14GetNextFeatureEPP8OGRLayerPd16GDALProgressFuncPv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Fetch the next available feature from this dataset. </p>
+<p>This method is intended for the few drivers where <a class="reference internal" href="ogrlayer_cpp.html#classOGRLayer_1a466c14ed1b3cca83abda52729d590dd2"><span class="std std-ref">OGRLayer::GetNextFeature()</span></a> is not efficient, but in general <a class="reference internal" href="ogrlayer_cpp.html#classOGRLayer_1a466c14ed1b3cca83abda52729d590dd2"><span class="std std-ref">OGRLayer::GetNextFeature()</span></a> is a more natural API.</p>
+<p>See <a class="reference internal" href="#classGDALDataset_1a2ca5b40f20462e43cea84c40f39bbfca"><span class="std std-ref">GetFeatures()</span></a> for a C++ iterator version of this method.</p>
+<p>The returned feature becomes the responsibility of the caller to delete with <a class="reference internal" href="ogrfeature_cpp.html#classOGRFeature_1a5d2602d11f21567119da0ca6b6c5ad45"><span class="std std-ref">OGRFeature::DestroyFeature()</span></a>.</p>
+<p>Depending on the driver, this method may return features from layers in a non sequential way. This is what may happen when the ODsCRandomLayerRead capability is declared (for example for the OSM and GMLAS drivers). When datasets declare this capability, it is strongly advised to use <a class="reference internal" href="#classGDALDataset_1ac71c86b48ecb54fc2c1a844ee1ca33e7"><span class="std std-ref">GDALDataset::GetNextFeature()</span></a> instead of <a class="reference internal" href="ogrlayer_cpp.html#classOGRLayer_1a466c14ed1b3cca83abda52729d590dd2"><span class="std std-ref">OGRLayer::GetNextFeature()</span></a>, as the later might have a slow, incomplete or stub implementation.</p>
+<p>The default implementation, used by most drivers, will however iterate over each layer, and then over each feature within this layer.</p>
+<p>This method takes into account spatial and attribute filters set on layers that will be iterated upon.</p>
+<p>The <a class="reference internal" href="#classGDALDataset_1a569f5ac98d8a54a34102e28e01f71836"><span class="std std-ref">ResetReading()</span></a> method can be used to start at the beginning again.</p>
+<p>Depending on drivers, this may also have the side effect of calling <a class="reference internal" href="ogrlayer_cpp.html#classOGRLayer_1a466c14ed1b3cca83abda52729d590dd2"><span class="std std-ref">OGRLayer::GetNextFeature()</span></a> on the layers of this dataset.</p>
+<p>This method is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a56c5f5f8e7ab01f7ee3838ba774c0b10"><span class="std std-ref">GDALDatasetGetNextFeature()</span></a>.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>a feature, or NULL if no more features are available. </p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.2 </p>
+</dd>
+<dt><strong>See</strong></dt><dd><p><a class="reference internal" href="#classGDALDataset_1a2ca5b40f20462e43cea84c40f39bbfca"><span class="std std-ref">GetFeatures()</span></a> </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ppoBelongingLayer</span></code>: a pointer to a OGRLayer* variable to receive the layer to which the object belongs to, or NULL. It is possible that the output of *ppoBelongingLayer to be NULL despite the feature not being NULL. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pdfProgressPct</span></code>: a pointer to a double variable to receive the percentage progress (in [0,1] range), or NULL. On return, the pointed value might be negative if determining the progress is not possible. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pfnProgress</span></code>: a progress callback to report progress (for <a class="reference internal" href="#classGDALDataset_1ac71c86b48ecb54fc2c1a844ee1ca33e7"><span class="std std-ref">GetNextFeature()</span></a> calls that might have a long duration) and offer cancellation possibility, or NULL. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pProgressData</span></code>: user data provided to pfnProgress, or NULL </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset11GetFeaturesEv">
+<span id="_CPPv3N11GDALDataset11GetFeaturesEv"></span><span id="_CPPv2N11GDALDataset11GetFeaturesEv"></span><span id="GDALDataset::GetFeatures"></span><span class="target" id="classGDALDataset_1a2ca5b40f20462e43cea84c40f39bbfca"></span><a class="reference internal" href="#_CPPv411GDALDataset" title="GDALDataset">GDALDataset</a>::<a class="reference internal" href="#_CPPv4N11GDALDataset8FeaturesE" title="GDALDataset::Features">Features</a> <code class="descname">GetFeatures</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset11GetFeaturesEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Function that return an iterable object over features in the dataset layer. </p>
+<p>This is a C++ iterator friendly version of <a class="reference internal" href="#classGDALDataset_1ac71c86b48ecb54fc2c1a844ee1ca33e7"><span class="std std-ref">GetNextFeature()</span></a>.</p>
+<p>Using this iterator for standard range-based loops is safe, but due to implementation limitations, you shouldn’t try to access (dereference) more than one iterator step at a time, since the <a class="reference internal" href="#structGDALDataset_1_1FeatureLayerPair"><span class="std std-ref">FeatureLayerPair</span></a> reference which is returned is reused.</p>
+<p>Typical use is: <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="p">(</span> <span class="n">auto</span><span class="o">&amp;&amp;</span> <span class="n">oFeatureLayerPair</span><span class="p">:</span> <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">GetFeatures</span><span class="p">()</span> <span class="p">)</span>
+<span class="p">{</span>
+      <span class="n">std</span><span class="p">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s2">&quot;Feature of layer &quot;</span> <span class="o">&lt;&lt;</span>
+              <span class="n">oFeatureLayerPair</span><span class="o">.</span><span class="n">layer</span><span class="o">-&gt;</span><span class="n">GetName</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="p">::</span><span class="n">endl</span><span class="p">;</span>
+      <span class="n">oFeatureLayerPair</span><span class="o">.</span><span class="n">feature</span><span class="o">-&gt;</span><span class="n">DumpReadable</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</p>
+<p><dl class="simple">
+<dt><strong>See</strong></dt><dd><p><a class="reference internal" href="#classGDALDataset_1ac71c86b48ecb54fc2c1a844ee1ca33e7"><span class="std std-ref">GetNextFeature()</span></a></p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.3 </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset14TestCapabilityEPKc">
+<span id="_CPPv3N11GDALDataset14TestCapabilityEPKc"></span><span id="_CPPv2N11GDALDataset14TestCapabilityEPKc"></span><span id="GDALDataset::TestCapability__cCP"></span><span class="target" id="classGDALDataset_1ae2eee7686621c516581a415822d83b2a"></span>int <code class="descname">TestCapability</code><span class="sig-paren">(</span><em class="property">const</em> char *<em>pszCap</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset14TestCapabilityEPKc" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Test if capability is available. </p>
+<p>One of the following dataset capability names can be passed into this method, and a TRUE or FALSE value will be returned indicating whether or not the capability is available for this object.</p>
+<p><ul>
+<li><p><strong>ODsCCreateLayer</strong>: True if this datasource can create new layers.</p>
+<p></p>
+</li>
+<li><p><strong>ODsCDeleteLayer</strong>: True if this datasource can delete existing layers.</p>
+<p></p>
+</li>
+<li><p><strong>ODsCCreateGeomFieldAfterCreateLayer</strong>: True if the layers of this datasource support CreateGeomField() just after layer creation.</p>
+<p></p>
+</li>
+<li><p><strong>ODsCCurveGeometries</strong>: True if this datasource supports curve geometries.</p>
+<p></p>
+</li>
+<li><p><strong>ODsCTransactions</strong>: True if this datasource supports (efficient) transactions.</p>
+<p></p>
+</li>
+<li><p><strong>ODsCEmulatedTransactions</strong>: True if this datasource supports transactions through emulation.</p>
+<p></p>
+</li>
+<li><p><strong>ODsCRandomLayerRead</strong>: True if this datasource has a dedicated <a class="reference internal" href="#classGDALDataset_1ac71c86b48ecb54fc2c1a844ee1ca33e7"><span class="std std-ref">GetNextFeature()</span></a> implementation, potentially returning features from layers in a non sequential way.</p>
+<p></p>
+</li>
+<li><p><strong>ODsCRandomLayerWrite</strong>: True if this datasource supports calling CreateFeature() on layers in a non sequential way.</p>
+<p></p>
+</li>
+</ul>
+</p>
+<p>The #define macro forms of the capability names should be used in preference to the strings themselves to avoid misspelling.</p>
+<p>This method is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a8dc635a536f123e1b03004dc74b4da86"><span class="std std-ref">GDALDatasetTestCapability()</span></a> and the deprecated <a class="reference internal" href="vector_c_api.html#ogr__api_8h_1ad0fefab726442fa71ab5ef74fe8549a6"><span class="std std-ref">OGR_DS_TestCapability()</span></a>.</p>
+<p>In GDAL 1.X, this method used to be in the OGRDataSource class.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>TRUE if capability available otherwise FALSE. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pszCap</span></code>: the capability to test.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset11CreateLayerEPKcP19OGRSpatialReference18OGRwkbGeometryTypePPc">
+<span id="_CPPv3N11GDALDataset11CreateLayerEPKcP19OGRSpatialReference18OGRwkbGeometryTypePPc"></span><span id="_CPPv2N11GDALDataset11CreateLayerEPKcP19OGRSpatialReference18OGRwkbGeometryTypePPc"></span><span id="GDALDataset::CreateLayer__cCP.OGRSpatialReferenceP.OGRwkbGeometryType.cPP"></span><span class="target" id="classGDALDataset_1afec5fd0fffddbdf530cd6294caa66a7d"></span><a class="reference internal" href="ogrlayer_cpp.html#_CPPv48OGRLayer" title="OGRLayer">OGRLayer</a> *<code class="descname">CreateLayer</code><span class="sig-paren">(</span><em class="property">const</em> char *<em>pszName</em>, <a class="reference internal" href="ogrspatialref.html#_CPPv419OGRSpatialReference" title="OGRSpatialReference">OGRSpatialReference</a> *<em>poSpatialRef</em> = nullptr, <a class="reference internal" href="vector_c_api.html#_CPPv418OGRwkbGeometryType" title="OGRwkbGeometryType">OGRwkbGeometryType</a> <em>eGType</em> = <a class="reference internal" href="vector_c_api.html#_CPPv410wkbUnknown" title="wkbUnknown">wkbUnknown</a>, char **<em>papszOptions</em> = nullptr<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset11CreateLayerEPKcP19OGRSpatialReference18OGRwkbGeometryTypePPc" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>This method attempts to create a new layer on the dataset with the indicated name, coordinate system, geometry type. </p>
+<p>The papszOptions argument can be used to control driver specific creation options. These options are normally documented in the format specific documentation.</p>
+<p>In GDAL 2.0, drivers should extend the ICreateLayer() method and not <a class="reference internal" href="#classGDALDataset_1afec5fd0fffddbdf530cd6294caa66a7d"><span class="std std-ref">CreateLayer()</span></a>. <a class="reference internal" href="#classGDALDataset_1afec5fd0fffddbdf530cd6294caa66a7d"><span class="std std-ref">CreateLayer()</span></a> adds validation of layer creation options, before delegating the actual work to ICreateLayer().</p>
+<p>This method is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a7f01d3d8584f29e4ef3c56b5af49d816"><span class="std std-ref">GDALDatasetCreateLayer()</span></a> and the deprecated <a class="reference internal" href="vector_c_api.html#ogr__api_8h_1a424d383a37fbeaea58acaea11717f320"><span class="std std-ref">OGR_DS_CreateLayer()</span></a>.</p>
+<p>In GDAL 1.X, this method used to be in the OGRDataSource class.</p>
+<p>Example:</p>
+<p><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>#include &quot;gdal.h&quot;
+#include &quot;cpl_string.h&quot;
+
+...
+
+        OGRLayer *poLayer;
+        char     **papszOptions;
+
+        if( !poDS-&gt;TestCapability( ODsCCreateLayer ) )
+        {
+        ...
+        }
+
+        papszOptions = CSLSetNameValue( papszOptions, &quot;DIM&quot;, &quot;2&quot; );
+        poLayer = poDS-&gt;CreateLayer( &quot;NewLayer&quot;, nullptr, wkbUnknown,
+                                     papszOptions );
+        CSLDestroy( papszOptions );
+
+        if( poLayer == NULL )
+        {
+            ...
+        }
+</pre></div>
+</div>
+</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>NULL is returned on failure, or a new <a class="reference internal" href="ogrlayer_cpp.html#classOGRLayer"><span class="std std-ref">OGRLayer</span></a> handle on success. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pszName</span></code>: the name for the new layer. This should ideally not match any existing layer on the datasource. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">poSpatialRef</span></code>: the coordinate system to use for the new layer, or NULL if no coordinate system is available. The driver might only increase the reference counter of the object to take ownership, and not make a full copy, so do not use <a class="reference internal" href="ogr_srs_api.html#ogr__srs__api_8h_1aa1485e7c17fb7edc15a0dfda63f77333"><span class="std std-ref">OSRDestroySpatialReference()</span></a>, but <a class="reference internal" href="ogr_srs_api.html#ogr__srs__api_8h_1adb5e564701dab4e83b3d353745f4a054"><span class="std std-ref">OSRRelease()</span></a> instead when you are done with the object. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">eGType</span></code>: the geometry type for the layer. Use wkbUnknown if there are no constraints on the types geometry to be written. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">papszOptions</span></code>: a StringList of name=value options. Options are driver specific.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset9CopyLayerEP8OGRLayerPKcPPc">
+<span id="_CPPv3N11GDALDataset9CopyLayerEP8OGRLayerPKcPPc"></span><span id="_CPPv2N11GDALDataset9CopyLayerEP8OGRLayerPKcPPc"></span><span id="GDALDataset::CopyLayer__OGRLayerP.cCP.cPP"></span><span class="target" id="classGDALDataset_1afcaabd6468b256fda99bd50db34ceff1"></span><a class="reference internal" href="ogrlayer_cpp.html#_CPPv48OGRLayer" title="OGRLayer">OGRLayer</a> *<code class="descname">CopyLayer</code><span class="sig-paren">(</span><a class="reference internal" href="ogrlayer_cpp.html#_CPPv48OGRLayer" title="OGRLayer">OGRLayer</a> *<em>poSrcLayer</em>, <em class="property">const</em> char *<em>pszNewName</em>, char **<em>papszOptions</em> = nullptr<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset9CopyLayerEP8OGRLayerPKcPPc" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Duplicate an existing layer. </p>
+<p>This method creates a new layer, duplicate the field definitions of the source layer and then duplicate each features of the source layer. The papszOptions argument can be used to control driver specific creation options. These options are normally documented in the format specific documentation. The source layer may come from another dataset.</p>
+<p>This method is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1ad6bbc8895f27768a4ad644231b22cb24"><span class="std std-ref">GDALDatasetCopyLayer()</span></a> and the deprecated <a class="reference internal" href="vector_c_api.html#ogr__api_8h_1a628d34530517b618696c97b73de31df7"><span class="std std-ref">OGR_DS_CopyLayer()</span></a>.</p>
+<p>In GDAL 1.X, this method used to be in the OGRDataSource class.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>an handle to the layer, or NULL if an error occurs. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">poSrcLayer</span></code>: source layer. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pszNewName</span></code>: the name of the layer to create. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">papszOptions</span></code>: a StringList of name=value options. Options are driver specific. There is a common option to set output layer spatial reference: DST_SRSWKT. The option should be in WKT format.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset13GetStyleTableEv">
+<span id="_CPPv3N11GDALDataset13GetStyleTableEv"></span><span id="_CPPv2N11GDALDataset13GetStyleTableEv"></span><span id="GDALDataset::GetStyleTable"></span><span class="target" id="classGDALDataset_1a323d65be6b1ba5918f194794fc26f878"></span><a class="reference internal" href="ogrfeaturestyle_cpp.html#_CPPv413OGRStyleTable" title="OGRStyleTable">OGRStyleTable</a> *<code class="descname">GetStyleTable</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset13GetStyleTableEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns dataset style table. </p>
+<p>This method is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1ac580abf6d71dfda2ff42a8a6c2bf2a3f"><span class="std std-ref">GDALDatasetGetStyleTable()</span></a> and the deprecated <a class="reference internal" href="vector_c_api.html#ogr__api_8h_1a6164ac434dcd9660089c97fd59bab558"><span class="std std-ref">OGR_DS_GetStyleTable()</span></a>.</p>
+<p>In GDAL 1.X, this method used to be in the OGRDataSource class.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>pointer to a style table which should not be modified or freed by the caller. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset21SetStyleTableDirectlyEP13OGRStyleTable">
+<span id="_CPPv3N11GDALDataset21SetStyleTableDirectlyEP13OGRStyleTable"></span><span id="_CPPv2N11GDALDataset21SetStyleTableDirectlyEP13OGRStyleTable"></span><span id="GDALDataset::SetStyleTableDirectly__OGRStyleTableP"></span><span class="target" id="classGDALDataset_1a0964c3a5d727e37843a3380b0eb1a8b1"></span>void <code class="descname">SetStyleTableDirectly</code><span class="sig-paren">(</span><a class="reference internal" href="ogrfeaturestyle_cpp.html#_CPPv413OGRStyleTable" title="OGRStyleTable">OGRStyleTable</a> *<em>poStyleTable</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset21SetStyleTableDirectlyEP13OGRStyleTable" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set dataset style table. </p>
+<p>This method operate exactly as <a class="reference internal" href="#classGDALDataset_1a5946351d7571ced8fed6c51d7a2f7dda"><span class="std std-ref">SetStyleTable()</span></a> except that it assumes ownership of the passed table.</p>
+<p>This method is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a21615091ef7ab3ee1211c80c3a640682"><span class="std std-ref">GDALDatasetSetStyleTableDirectly()</span></a> and the deprecated <a class="reference internal" href="vector_c_api.html#ogr__api_8h_1aaf553bb35c9f1707b3c727af166c8a0a"><span class="std std-ref">OGR_DS_SetStyleTableDirectly()</span></a>.</p>
+<p>In GDAL 1.X, this method used to be in the OGRDataSource class.</p>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">poStyleTable</span></code>: pointer to style table to set </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset13SetStyleTableEP13OGRStyleTable">
+<span id="_CPPv3N11GDALDataset13SetStyleTableEP13OGRStyleTable"></span><span id="_CPPv2N11GDALDataset13SetStyleTableEP13OGRStyleTable"></span><span id="GDALDataset::SetStyleTable__OGRStyleTableP"></span><span class="target" id="classGDALDataset_1a5946351d7571ced8fed6c51d7a2f7dda"></span>void <code class="descname">SetStyleTable</code><span class="sig-paren">(</span><a class="reference internal" href="ogrfeaturestyle_cpp.html#_CPPv413OGRStyleTable" title="OGRStyleTable">OGRStyleTable</a> *<em>poStyleTable</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset13SetStyleTableEP13OGRStyleTable" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set dataset style table. </p>
+<p>This method operate exactly as <a class="reference internal" href="#classGDALDataset_1a0964c3a5d727e37843a3380b0eb1a8b1"><span class="std std-ref">SetStyleTableDirectly()</span></a> except that it does not assume ownership of the passed table.</p>
+<p>This method is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1af54a18539ac561fe1078068d400174b1"><span class="std std-ref">GDALDatasetSetStyleTable()</span></a> and the deprecated <a class="reference internal" href="vector_c_api.html#ogr__api_8h_1a03947d4ec069a83526274780c8a6f48b"><span class="std std-ref">OGR_DS_SetStyleTable()</span></a>.</p>
+<p>In GDAL 1.X, this method used to be in the OGRDataSource class.</p>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">poStyleTable</span></code>: pointer to style table to set </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset10ExecuteSQLEPKcP11OGRGeometryPKc">
+<span id="_CPPv3N11GDALDataset10ExecuteSQLEPKcP11OGRGeometryPKc"></span><span id="_CPPv2N11GDALDataset10ExecuteSQLEPKcP11OGRGeometryPKc"></span><span id="GDALDataset::ExecuteSQL__cCP.OGRGeometryP.cCP"></span><span class="target" id="classGDALDataset_1a5b65948b1e15fa63e96c0640eb6c5d7c"></span><a class="reference internal" href="ogrlayer_cpp.html#_CPPv48OGRLayer" title="OGRLayer">OGRLayer</a> *<code class="descname">ExecuteSQL</code><span class="sig-paren">(</span><em class="property">const</em> char *<em>pszStatement</em>, <a class="reference internal" href="ogrgeometry_cpp.html#_CPPv411OGRGeometry" title="OGRGeometry">OGRGeometry</a> *<em>poSpatialFilter</em>, <em class="property">const</em> char *<em>pszDialect</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset10ExecuteSQLEPKcP11OGRGeometryPKc" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Execute an SQL statement against the data store. </p>
+<p>The result of an SQL query is either NULL for statements that are in error, or that have no results set, or an <a class="reference internal" href="ogrlayer_cpp.html#classOGRLayer"><span class="std std-ref">OGRLayer</span></a> pointer representing a results set from the query. Note that this <a class="reference internal" href="ogrlayer_cpp.html#classOGRLayer"><span class="std std-ref">OGRLayer</span></a> is in addition to the layers in the data store and must be destroyed with <a class="reference internal" href="#classGDALDataset_1ab2c2b105b8f76a279e6a53b9b4a182e0"><span class="std std-ref">ReleaseResultSet()</span></a> before the dataset is closed (destroyed).</p>
+<p>This method is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1aac9f2b65105d825901bc6cbe07a4b298"><span class="std std-ref">GDALDatasetExecuteSQL()</span></a> and the deprecated <a class="reference internal" href="vector_c_api.html#ogr__api_8h_1a9892ecb0bf61add295bd9decdb13797a"><span class="std std-ref">OGR_DS_ExecuteSQL()</span></a>.</p>
+<p>For more information on the SQL dialect supported internally by OGR review the <a class="reference external" href="ogr_sql.html">OGR SQL</a> document. Some drivers (i.e. Oracle and PostGIS) pass the SQL directly through to the underlying RDBMS.</p>
+<p>Starting with OGR 1.10, the <a class="reference external" href="ogr_sql_sqlite.html">SQLITE dialect</a> can also be used.</p>
+<p>In GDAL 1.X, this method used to be in the OGRDataSource class.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>an <a class="reference internal" href="ogrlayer_cpp.html#classOGRLayer"><span class="std std-ref">OGRLayer</span></a> containing the results of the query. Deallocate with <a class="reference internal" href="#classGDALDataset_1ab2c2b105b8f76a279e6a53b9b4a182e0"><span class="std std-ref">ReleaseResultSet()</span></a>. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pszStatement</span></code>: the SQL statement to execute. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">poSpatialFilter</span></code>: geometry which represents a spatial filter. Can be NULL. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pszDialect</span></code>: allows control of the statement dialect. If set to NULL, the OGR SQL engine will be used, except for RDBMS drivers that will use their dedicated SQL engine, unless OGRSQL is explicitly passed as the dialect. Starting with OGR 1.10, the SQLITE dialect can also be used.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset16ReleaseResultSetEP8OGRLayer">
+<span id="_CPPv3N11GDALDataset16ReleaseResultSetEP8OGRLayer"></span><span id="_CPPv2N11GDALDataset16ReleaseResultSetEP8OGRLayer"></span><span id="GDALDataset::ReleaseResultSet__OGRLayerP"></span><span class="target" id="classGDALDataset_1ab2c2b105b8f76a279e6a53b9b4a182e0"></span>void <code class="descname">ReleaseResultSet</code><span class="sig-paren">(</span><a class="reference internal" href="ogrlayer_cpp.html#_CPPv48OGRLayer" title="OGRLayer">OGRLayer</a> *<em>poResultsSet</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset16ReleaseResultSetEP8OGRLayer" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Release results of <a class="reference internal" href="#classGDALDataset_1a5b65948b1e15fa63e96c0640eb6c5d7c"><span class="std std-ref">ExecuteSQL()</span></a>. </p>
+<p>This method should only be used to deallocate OGRLayers resulting from an <a class="reference internal" href="#classGDALDataset_1a5b65948b1e15fa63e96c0640eb6c5d7c"><span class="std std-ref">ExecuteSQL()</span></a> call on the same <a class="reference internal" href="#classGDALDataset"><span class="std std-ref">GDALDataset</span></a>. Failure to deallocate a results set before destroying the <a class="reference internal" href="#classGDALDataset"><span class="std std-ref">GDALDataset</span></a> may cause errors.</p>
+<p>This method is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1ac2fa4282c61ee085edefdd485efad952"><span class="std std-ref">GDALDatasetReleaseResultSet()</span></a> and the deprecated <a class="reference internal" href="vector_c_api.html#ogr__api_8h_1afc7b521a05c1207e298a2b9dbf4a1181"><span class="std std-ref">OGR_DS_ReleaseResultSet()</span></a>.</p>
+<p>In GDAL 1.X, this method used to be in the OGRDataSource class.</p>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">poResultsSet</span></code>: the result of a previous <a class="reference internal" href="#classGDALDataset_1a5b65948b1e15fa63e96c0640eb6c5d7c"><span class="std std-ref">ExecuteSQL()</span></a> call. </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK11GDALDataset11GetRefCountEv">
+<span id="_CPPv3NK11GDALDataset11GetRefCountEv"></span><span id="_CPPv2NK11GDALDataset11GetRefCountEv"></span><span id="GDALDataset::GetRefCountC"></span><span class="target" id="classGDALDataset_1acd61e2e384b8ce802e2c392a1ca65044"></span>int <code class="descname">GetRefCount</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK11GDALDataset11GetRefCountEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Fetch reference count. </p>
+<p>This method is the same as the C function OGR_DS_GetRefCount().</p>
+<p>In GDAL 1.X, this method used to be in the OGRDataSource class.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>the current reference count for the datasource object itself. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK11GDALDataset18GetSummaryRefCountEv">
+<span id="_CPPv3NK11GDALDataset18GetSummaryRefCountEv"></span><span id="_CPPv2NK11GDALDataset18GetSummaryRefCountEv"></span><span id="GDALDataset::GetSummaryRefCountC"></span><span class="target" id="classGDALDataset_1a47be975d5844d7f23f9a5039de6f7160"></span>int <code class="descname">GetSummaryRefCount</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK11GDALDataset18GetSummaryRefCountEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Fetch reference count of datasource and all owned layers. </p>
+<p>This method is the same as the C function OGR_DS_GetSummaryRefCount().</p>
+<p>In GDAL 1.X, this method used to be in the OGRDataSource class.</p>
+<p></p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>the current summary reference count for the datasource and its layers. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset7ReleaseEv">
+<span id="_CPPv3N11GDALDataset7ReleaseEv"></span><span id="_CPPv2N11GDALDataset7ReleaseEv"></span><span id="GDALDataset::Release"></span><span class="target" id="classGDALDataset_1a5c02dc6df32bf464a6a83bb28809a802"></span><a class="reference internal" href="vector_c_api.html#_CPPv46OGRErr" title="OGRErr">OGRErr</a> <code class="descname">Release</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset7ReleaseEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Drop a reference to this dataset, and if the reference count drops to one close (destroy) the dataset. </p>
+<p>This method is the same as the C function <a class="reference internal" href="vector_c_api.html#ogr__api_8h_1ad3abed0c3b232fe55a580726536fe6fa"><span class="std std-ref">OGRReleaseDataSource()</span></a>.</p>
+<p></p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>OGRERR_NONE on success or an error code. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset16StartTransactionEi">
+<span id="_CPPv3N11GDALDataset16StartTransactionEi"></span><span id="_CPPv2N11GDALDataset16StartTransactionEi"></span><span id="GDALDataset::StartTransaction__i"></span><span class="target" id="classGDALDataset_1a3e4161f148fac57dac5cfe4900421348"></span><a class="reference internal" href="vector_c_api.html#_CPPv46OGRErr" title="OGRErr">OGRErr</a> <code class="descname">StartTransaction</code><span class="sig-paren">(</span>int <em>bForce</em> = FALSE<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset16StartTransactionEi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>For datasources which support transactions, StartTransaction creates a `transaction. </p>
+<p>If starting the transaction fails, will return OGRERR_FAILURE. Datasources which do not support transactions will always return OGRERR_UNSUPPORTED_OPERATION.</p>
+<p>Nested transactions are not supported.</p>
+<p>All changes done after the start of the transaction are definitely applied in the datasource if <a class="reference internal" href="#classGDALDataset_1ae2d05e3218bc115d575426130c8866b1"><span class="std std-ref">CommitTransaction()</span></a> is called. They may be canceled by calling <a class="reference internal" href="#classGDALDataset_1a67eb20cc07f1a8a82841415eaf4bbac4"><span class="std std-ref">RollbackTransaction()</span></a> instead.</p>
+<p>At the time of writing, transactions only apply on vector layers.</p>
+<p>Datasets that support transactions will advertise the ODsCTransactions capability. Use of transactions at dataset level is generally preferred to transactions at layer level, whose scope is rarely limited to the layer from which it was started.</p>
+<p>In case <a class="reference internal" href="#classGDALDataset_1a3e4161f148fac57dac5cfe4900421348"><span class="std std-ref">StartTransaction()</span></a> fails, neither <a class="reference internal" href="#classGDALDataset_1ae2d05e3218bc115d575426130c8866b1"><span class="std std-ref">CommitTransaction()</span></a> or <a class="reference internal" href="#classGDALDataset_1a67eb20cc07f1a8a82841415eaf4bbac4"><span class="std std-ref">RollbackTransaction()</span></a> should be called.</p>
+<p>If an error occurs after a successful <a class="reference internal" href="#classGDALDataset_1a3e4161f148fac57dac5cfe4900421348"><span class="std std-ref">StartTransaction()</span></a>, the whole transaction may or may not be implicitly canceled, depending on drivers. (e.g. the PG driver will cancel it, SQLite/GPKG not). In any case, in the event of an error, an explicit call to <a class="reference internal" href="#classGDALDataset_1a67eb20cc07f1a8a82841415eaf4bbac4"><span class="std std-ref">RollbackTransaction()</span></a> should be done to keep things balanced.</p>
+<p>By default, when bForce is set to FALSE, only “efficient” transactions will be attempted. Some drivers may offer an emulation of transactions, but sometimes with significant overhead, in which case the user must explicitly allow for such an emulation by setting bForce to TRUE. Drivers that offer emulated transactions should advertise the ODsCEmulatedTransactions capability (and not ODsCTransactions).</p>
+<p>This function is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a57e354633ef531d521b674b4e5321369"><span class="std std-ref">GDALDatasetStartTransaction()</span></a>.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>OGRERR_NONE on success. </p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.0 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">bForce</span></code>: can be set to TRUE if an emulation, possibly slow, of a transaction mechanism is acceptable.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset17CommitTransactionEv">
+<span id="_CPPv3N11GDALDataset17CommitTransactionEv"></span><span id="_CPPv2N11GDALDataset17CommitTransactionEv"></span><span id="GDALDataset::CommitTransaction"></span><span class="target" id="classGDALDataset_1ae2d05e3218bc115d575426130c8866b1"></span><a class="reference internal" href="vector_c_api.html#_CPPv46OGRErr" title="OGRErr">OGRErr</a> <code class="descname">CommitTransaction</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset17CommitTransactionEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>For datasources which support transactions, CommitTransaction commits a transaction. </p>
+<p>If no transaction is active, or the commit fails, will return OGRERR_FAILURE. Datasources which do not support transactions will always return OGRERR_UNSUPPORTED_OPERATION.</p>
+<p>Depending on drivers, this may or may not abort layer sequential readings that are active.</p>
+<p>This function is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a23124f30f5725d890df43745a42f6fcb"><span class="std std-ref">GDALDatasetCommitTransaction()</span></a>.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>OGRERR_NONE on success. </p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.0 </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset19RollbackTransactionEv">
+<span id="_CPPv3N11GDALDataset19RollbackTransactionEv"></span><span id="_CPPv2N11GDALDataset19RollbackTransactionEv"></span><span id="GDALDataset::RollbackTransaction"></span><span class="target" id="classGDALDataset_1a67eb20cc07f1a8a82841415eaf4bbac4"></span><a class="reference internal" href="vector_c_api.html#_CPPv46OGRErr" title="OGRErr">OGRErr</a> <code class="descname">RollbackTransaction</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset19RollbackTransactionEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>For datasources which support transactions, RollbackTransaction will roll back a datasource to its state before the start of the current transaction. </p>
+<p>If no transaction is active, or the rollback fails, will return OGRERR_FAILURE. Datasources which do not support transactions will always return OGRERR_UNSUPPORTED_OPERATION.</p>
+<p>This function is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a4e826e0652fd850057d5d12c683510cd"><span class="std std-ref">GDALDatasetRollbackTransaction()</span></a>.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>OGRERR_NONE on success. </p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.0 </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK11GDALDataset12GetRootGroupEv">
+<span id="_CPPv3NK11GDALDataset12GetRootGroupEv"></span><span id="_CPPv2NK11GDALDataset12GetRootGroupEv"></span><span id="GDALDataset::GetRootGroupC"></span><span class="target" id="classGDALDataset_1ad36bdc803d8f60f8d9e10bf3025b569c"></span>std::shared_ptr&lt;<a class="reference internal" href="gdalgroup_cpp.html#_CPPv49GDALGroup" title="GDALGroup">GDALGroup</a>&gt; <code class="descname">GetRootGroup</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK11GDALDataset12GetRootGroupEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the root <a class="reference internal" href="gdalgroup_cpp.html#classGDALGroup"><span class="std std-ref">GDALGroup</span></a> of this dataset. </p>
+<p>Only valid for multidimensional datasets.</p>
+<p>This is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a134ecce12a4b645e48add312916a2a29"><span class="std std-ref">GDALDatasetGetRootGroup()</span></a>.</p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 3.1 </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Static Functions</p>
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset15GetOpenDatasetsEPi">
+<span id="_CPPv3N11GDALDataset15GetOpenDatasetsEPi"></span><span id="_CPPv2N11GDALDataset15GetOpenDatasetsEPi"></span><span id="GDALDataset::GetOpenDatasets__iP"></span><span class="target" id="classGDALDataset_1a7943fb46c770e2ed35357e7883bb1814"></span><a class="reference internal" href="#_CPPv411GDALDataset" title="GDALDataset">GDALDataset</a> **<code class="descname">GetOpenDatasets</code><span class="sig-paren">(</span>int *<em>pnDatasetCount</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset15GetOpenDatasetsEPi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Fetch all open GDAL dataset handles. </p>
+<p>This method is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1ae3e17b1b12d55da2815a951900dc412e"><span class="std std-ref">GDALGetOpenDatasets()</span></a>.</p>
+<p>NOTE: This method is not thread safe. The returned list may change at any time and it should not be freed.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>a pointer to an array of dataset handles. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pnCount</span></code>: integer into which to place the count of dataset pointers being returned.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset8ToHandleEP11GDALDataset">
+<span id="_CPPv3N11GDALDataset8ToHandleEP11GDALDataset"></span><span id="_CPPv2N11GDALDataset8ToHandleEP11GDALDataset"></span><span id="GDALDataset::ToHandle__GDALDatasetP"></span><span class="target" id="classGDALDataset_1ae2c601f12b1f102db4b3f1950f3c247b"></span><em class="property">static</em> <a class="reference internal" href="raster_c_api.html#_CPPv412GDALDatasetH" title="GDALDatasetH">GDALDatasetH</a> <code class="descname">ToHandle</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv411GDALDataset" title="GDALDataset">GDALDataset</a> *<em>poDS</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset8ToHandleEP11GDALDataset" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Convert a GDALDataset* to a GDALDatasetH. </p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.3 </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset10FromHandleE12GDALDatasetH">
+<span id="_CPPv3N11GDALDataset10FromHandleE12GDALDatasetH"></span><span id="_CPPv2N11GDALDataset10FromHandleE12GDALDatasetH"></span><span id="GDALDataset::FromHandle__GDALDatasetH"></span><span class="target" id="classGDALDataset_1a225bf8a91339dcd2f3438fa7e353e6aa"></span><em class="property">static</em> <a class="reference internal" href="#_CPPv411GDALDataset" title="GDALDataset">GDALDataset</a> *<code class="descname">FromHandle</code><span class="sig-paren">(</span><a class="reference internal" href="raster_c_api.html#_CPPv412GDALDatasetH" title="GDALDatasetH">GDALDatasetH</a> <em>hDS</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset10FromHandleE12GDALDatasetH" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Convert a GDALDatasetH to a GDALDataset*. </p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.3 </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset4OpenEPKcjPPCKcPPCKcPPCKc">
+<span id="_CPPv3N11GDALDataset4OpenEPKcjPPCKcPPCKcPPCKc"></span><span id="_CPPv2N11GDALDataset4OpenEPKcjPPCKcPPCKcPPCKc"></span><span id="GDALDataset::Open__cCP.unsigned-i.cCPCP.cCPCP.cCPCP"></span><span class="target" id="classGDALDataset_1a5379df6aeeebe76a985365acaeab756d"></span><em class="property">static</em> <a class="reference internal" href="#_CPPv411GDALDataset" title="GDALDataset">GDALDataset</a> *<code class="descname">Open</code><span class="sig-paren">(</span><em class="property">const</em> char *<em>pszFilename</em>, unsigned int <em>nOpenFlags</em> = 0, <em class="property">const</em> char *<em class="property">const</em> *<em>papszAllowedDrivers</em> = nullptr, <em class="property">const</em> char *<em class="property">const</em> *<em>papszOpenOptions</em> = nullptr, <em class="property">const</em> char *<em class="property">const</em> *<em>papszSiblingFiles</em> = nullptr<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset4OpenEPKcjPPCKcPPCKcPPCKc" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><dl class="simple">
+<dt><strong>See</strong></dt><dd><p>GDALOpenEx(). </p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.3 </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+<dl class="class">
+<dt id="_CPPv4N11GDALDataset5BandsE">
+<span id="_CPPv3N11GDALDataset5BandsE"></span><span id="_CPPv2N11GDALDataset5BandsE"></span><span id="GDALDataset::Bands"></span><span class="target" id="classGDALDataset_1_1Bands"></span><em class="property">class </em><code class="descname">Bands</code><a class="headerlink" href="#_CPPv4N11GDALDataset5BandsE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Class returned by <a class="reference internal" href="#classGDALDataset_1ae282430c4da57aae527f6afbddb8afd9"><span class="std std-ref">GetBands()</span></a> that act as a container for raster bands. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="function">
+<dt id="_CPPv4NK11GDALDataset5Bands5beginEv">
+<span id="_CPPv3NK11GDALDataset5Bands5beginEv"></span><span id="_CPPv2NK11GDALDataset5Bands5beginEv"></span><span id="GDALDataset::Bands::beginC"></span><span class="target" id="classGDALDataset_1_1Bands_1a7d8a64c42e05eff0370a7483f9d0ebe3"></span><em class="property">const</em> <a class="reference internal" href="#_CPPv411GDALDataset" title="GDALDataset">GDALDataset</a>::<a class="reference internal" href="#_CPPv4N11GDALDataset5BandsE" title="GDALDataset::Bands">Bands</a>::Iterator <code class="descname">begin</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK11GDALDataset5Bands5beginEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return beginning of band iterator. </p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.3 </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK11GDALDataset5Bands3endEv">
+<span id="_CPPv3NK11GDALDataset5Bands3endEv"></span><span id="_CPPv2NK11GDALDataset5Bands3endEv"></span><span id="GDALDataset::Bands::endC"></span><span class="target" id="classGDALDataset_1_1Bands_1a58dbf2dab9d4781ed1ae67d27e7469bf"></span><em class="property">const</em> <a class="reference internal" href="#_CPPv411GDALDataset" title="GDALDataset">GDALDataset</a>::<a class="reference internal" href="#_CPPv4N11GDALDataset5BandsE" title="GDALDataset::Bands">Bands</a>::Iterator <code class="descname">end</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK11GDALDataset5Bands3endEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return end of band iterator. </p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.3 </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK11GDALDataset5Bands4sizeEv">
+<span id="_CPPv3NK11GDALDataset5Bands4sizeEv"></span><span id="_CPPv2NK11GDALDataset5Bands4sizeEv"></span><span id="GDALDataset::Bands::sizeC"></span><span class="target" id="classGDALDataset_1_1Bands_1a6335bd4a7abfcef7a096120ee0f01388"></span>size_t <code class="descname">size</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK11GDALDataset5Bands4sizeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get the number of raster bands in this dataset. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>raster band count.</p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.3 </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset5BandsixEi">
+<span id="_CPPv3N11GDALDataset5BandsixEi"></span><span id="_CPPv2N11GDALDataset5BandsixEi"></span><span id="GDALDataset::Bands::subscript-operator__i"></span><span class="target" id="classGDALDataset_1_1Bands_1a91b8bac5dc393e561429ad09a684462b"></span><a class="reference internal" href="gdalrasterband_cpp.html#_CPPv414GDALRasterBand" title="GDALRasterBand">GDALRasterBand</a> *<code class="descname">operator[]</code><span class="sig-paren">(</span>int <em>iBand</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset5BandsixEi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Fetch a raster band by index. </p>
+<p>The returned band remains owned by the <a class="reference internal" href="#classGDALDataset"><span class="std std-ref">GDALDataset</span></a> and should not be deleted by the application.</p>
+<p><dl class="simple">
+<dt><strong>Warning</strong></dt><dd><p>Contrary to <a class="reference internal" href="#classGDALDataset_1ad96adcf07f2979ad176e37a7f8638fb6"><span class="std std-ref">GDALDataset::GetRasterBand()</span></a>, the indexing here is consistent with the conventions of C/C++, i.e. starting at 0.</p>
+</dd>
+<dt><strong>Return</strong></dt><dd><p>the band, or nullptr if iBand is out of range or an error occurs.</p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.3 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">iBand</span></code>: a band index between 0 and <a class="reference internal" href="#classGDALDataset_1_1Bands_1a6335bd4a7abfcef7a096120ee0f01388"><span class="std std-ref">size()</span></a>-1.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset5BandsixE6size_t">
+<span id="_CPPv3N11GDALDataset5BandsixE6size_t"></span><span id="_CPPv2N11GDALDataset5BandsixE6size_t"></span><span id="GDALDataset::Bands::subscript-operator__s"></span><span class="target" id="classGDALDataset_1_1Bands_1a268b697cd3b71d9e261e9da98e202e58"></span><a class="reference internal" href="gdalrasterband_cpp.html#_CPPv414GDALRasterBand" title="GDALRasterBand">GDALRasterBand</a> *<code class="descname">operator[]</code><span class="sig-paren">(</span>size_t <em>iBand</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset5BandsixE6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Fetch a raster band by index. </p>
+<p>The returned band remains owned by the <a class="reference internal" href="#classGDALDataset"><span class="std std-ref">GDALDataset</span></a> and should not be deleted by the application.</p>
+<p><dl class="simple">
+<dt><strong>Warning</strong></dt><dd><p>Contrary to <a class="reference internal" href="#classGDALDataset_1ad96adcf07f2979ad176e37a7f8638fb6"><span class="std std-ref">GDALDataset::GetRasterBand()</span></a>, the indexing here is consistent with the conventions of C/C++, i.e. starting at 0.</p>
+</dd>
+<dt><strong>Return</strong></dt><dd><p>the band, or nullptr if iBand is out of range or an error occurs.</p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.3 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">iBand</span></code>: a band index between 0 and <a class="reference internal" href="#classGDALDataset_1_1Bands_1a6335bd4a7abfcef7a096120ee0f01388"><span class="std std-ref">size()</span></a>-1.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="_CPPv4N11GDALDataset16FeatureLayerPairE">
+<span id="_CPPv3N11GDALDataset16FeatureLayerPairE"></span><span id="_CPPv2N11GDALDataset16FeatureLayerPairE"></span><span id="GDALDataset::FeatureLayerPair"></span><span class="target" id="structGDALDataset_1_1FeatureLayerPair"></span><em class="property">struct </em><code class="descname">FeatureLayerPair</code><a class="headerlink" href="#_CPPv4N11GDALDataset16FeatureLayerPairE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Object returned by <a class="reference internal" href="#classGDALDataset_1a2ca5b40f20462e43cea84c40f39bbfca"><span class="std std-ref">GetFeatures()</span></a> iterators. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Members</p>
+<dl class="member">
+<dt id="_CPPv4N11GDALDataset16FeatureLayerPair7featureE">
+<span id="_CPPv3N11GDALDataset16FeatureLayerPair7featureE"></span><span id="_CPPv2N11GDALDataset16FeatureLayerPair7featureE"></span><span id="GDALDataset::FeatureLayerPair::feature__OGRFeatureUniquePtr"></span><span class="target" id="structGDALDataset_1_1FeatureLayerPair_1a2aafd263d2f9f71c6eb27bdc8d8fe66b"></span>OGRFeatureUniquePtr <code class="descname">feature</code> = {}<a class="headerlink" href="#_CPPv4N11GDALDataset16FeatureLayerPair7featureE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Unique pointer to a <a class="reference internal" href="ogrfeature_cpp.html#classOGRFeature"><span class="std std-ref">OGRFeature</span></a>. </p>
+</dd></dl>
+
+<dl class="member">
+<dt id="_CPPv4N11GDALDataset16FeatureLayerPair5layerE">
+<span id="_CPPv3N11GDALDataset16FeatureLayerPair5layerE"></span><span id="_CPPv2N11GDALDataset16FeatureLayerPair5layerE"></span><span id="GDALDataset::FeatureLayerPair::layer__OGRLayerP"></span><span class="target" id="structGDALDataset_1_1FeatureLayerPair_1a93a0d225ed1c09d3a53543e667f800fd"></span><a class="reference internal" href="ogrlayer_cpp.html#_CPPv48OGRLayer" title="OGRLayer">OGRLayer</a> *<code class="descname">layer</code> = nullptr<a class="headerlink" href="#_CPPv4N11GDALDataset16FeatureLayerPair5layerE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Layer to which the feature belongs to. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="_CPPv4N11GDALDataset8FeaturesE">
+<span id="_CPPv3N11GDALDataset8FeaturesE"></span><span id="_CPPv2N11GDALDataset8FeaturesE"></span><span id="GDALDataset::Features"></span><span class="target" id="classGDALDataset_1_1Features"></span><em class="property">class </em><code class="descname">Features</code><a class="headerlink" href="#_CPPv4N11GDALDataset8FeaturesE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Class returned by <a class="reference internal" href="#classGDALDataset_1a2ca5b40f20462e43cea84c40f39bbfca"><span class="std std-ref">GetFeatures()</span></a> that act as a container for vector features. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="function">
+<dt id="_CPPv4NK11GDALDataset8Features5beginEv">
+<span id="_CPPv3NK11GDALDataset8Features5beginEv"></span><span id="_CPPv2NK11GDALDataset8Features5beginEv"></span><span id="GDALDataset::Features::beginC"></span><span class="target" id="classGDALDataset_1_1Features_1a2a171afb1d643d8f1b4423243d99e904"></span><em class="property">const</em> <a class="reference internal" href="#_CPPv411GDALDataset" title="GDALDataset">GDALDataset</a>::<a class="reference internal" href="#_CPPv4N11GDALDataset8FeaturesE" title="GDALDataset::Features">Features</a>::Iterator <code class="descname">begin</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK11GDALDataset8Features5beginEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return beginning of feature iterator. </p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.3 </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK11GDALDataset8Features3endEv">
+<span id="_CPPv3NK11GDALDataset8Features3endEv"></span><span id="_CPPv2NK11GDALDataset8Features3endEv"></span><span id="GDALDataset::Features::endC"></span><span class="target" id="classGDALDataset_1_1Features_1a41bfb831a2bf51cc3faf35ae50217d00"></span><em class="property">const</em> <a class="reference internal" href="#_CPPv411GDALDataset" title="GDALDataset">GDALDataset</a>::<a class="reference internal" href="#_CPPv4N11GDALDataset8FeaturesE" title="GDALDataset::Features">Features</a>::Iterator <code class="descname">end</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK11GDALDataset8Features3endEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return end of feature iterator. </p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.3 </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="_CPPv4N11GDALDataset6LayersE">
+<span id="_CPPv3N11GDALDataset6LayersE"></span><span id="_CPPv2N11GDALDataset6LayersE"></span><span id="GDALDataset::Layers"></span><span class="target" id="classGDALDataset_1_1Layers"></span><em class="property">class </em><code class="descname">Layers</code><a class="headerlink" href="#_CPPv4N11GDALDataset6LayersE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Class returned by <a class="reference internal" href="#classGDALDataset_1a8cfa4d17c68e441614118931b17cd7fa"><span class="std std-ref">GetLayers()</span></a> that acts as a range of layers. </p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.3 </p>
+</dd>
+</dl>
+</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="function">
+<dt id="_CPPv4NK11GDALDataset6Layers5beginEv">
+<span id="_CPPv3NK11GDALDataset6Layers5beginEv"></span><span id="_CPPv2NK11GDALDataset6Layers5beginEv"></span><span id="GDALDataset::Layers::beginC"></span><span class="target" id="classGDALDataset_1_1Layers_1a416348d5e7f9e72026bbe64521b45144"></span><a class="reference internal" href="#_CPPv411GDALDataset" title="GDALDataset">GDALDataset</a>::<a class="reference internal" href="#_CPPv4N11GDALDataset6LayersE" title="GDALDataset::Layers">Layers</a>::<a class="reference internal" href="#_CPPv4N11GDALDataset6Layers8IteratorE" title="GDALDataset::Layers::Iterator">Iterator</a> <code class="descname">begin</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK11GDALDataset6Layers5beginEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return beginning of layer iterator. </p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.3 </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK11GDALDataset6Layers3endEv">
+<span id="_CPPv3NK11GDALDataset6Layers3endEv"></span><span id="_CPPv2NK11GDALDataset6Layers3endEv"></span><span id="GDALDataset::Layers::endC"></span><span class="target" id="classGDALDataset_1_1Layers_1a048632a85cbd91c96dbc3d51304b340e"></span><a class="reference internal" href="#_CPPv411GDALDataset" title="GDALDataset">GDALDataset</a>::<a class="reference internal" href="#_CPPv4N11GDALDataset6LayersE" title="GDALDataset::Layers">Layers</a>::<a class="reference internal" href="#_CPPv4N11GDALDataset6Layers8IteratorE" title="GDALDataset::Layers::Iterator">Iterator</a> <code class="descname">end</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK11GDALDataset6Layers3endEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return end of layer iterator. </p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.3 </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK11GDALDataset6Layers4sizeEv">
+<span id="_CPPv3NK11GDALDataset6Layers4sizeEv"></span><span id="_CPPv2NK11GDALDataset6Layers4sizeEv"></span><span id="GDALDataset::Layers::sizeC"></span><span class="target" id="classGDALDataset_1_1Layers_1a73ef32a25c990c57f18278fa7fdc265d"></span>size_t <code class="descname">size</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK11GDALDataset6Layers4sizeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get the number of layers in this dataset. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>layer count.</p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.3 </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset6LayersixEi">
+<span id="_CPPv3N11GDALDataset6LayersixEi"></span><span id="_CPPv2N11GDALDataset6LayersixEi"></span><span id="GDALDataset::Layers::subscript-operator__i"></span><span class="target" id="classGDALDataset_1_1Layers_1aec1070355b9c665eb1b8c1d9a36b046f"></span><a class="reference internal" href="ogrlayer_cpp.html#_CPPv48OGRLayer" title="OGRLayer">OGRLayer</a> *<code class="descname">operator[]</code><span class="sig-paren">(</span>int <em>iLayer</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset6LayersixEi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Fetch a layer by index. </p>
+<p>The returned layer remains owned by the <a class="reference internal" href="#classGDALDataset"><span class="std std-ref">GDALDataset</span></a> and should not be deleted by the application.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>the layer, or nullptr if iLayer is out of range or an error occurs.</p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.3 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">iLayer</span></code>: a layer number between 0 and <a class="reference internal" href="#classGDALDataset_1_1Layers_1a73ef32a25c990c57f18278fa7fdc265d"><span class="std std-ref">size()</span></a>-1.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset6LayersixE6size_t">
+<span id="_CPPv3N11GDALDataset6LayersixE6size_t"></span><span id="_CPPv2N11GDALDataset6LayersixE6size_t"></span><span id="GDALDataset::Layers::subscript-operator__s"></span><span class="target" id="classGDALDataset_1_1Layers_1ac93c9fd3a3a127913687adc97f093feb"></span><a class="reference internal" href="ogrlayer_cpp.html#_CPPv48OGRLayer" title="OGRLayer">OGRLayer</a> *<code class="descname">operator[]</code><span class="sig-paren">(</span>size_t <em>iLayer</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset6LayersixE6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Fetch a layer by index. </p>
+<p>The returned layer remains owned by the <a class="reference internal" href="#classGDALDataset"><span class="std std-ref">GDALDataset</span></a> and should not be deleted by the application.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>the layer, or nullptr if iLayer is out of range or an error occurs.</p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.3 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">iLayer</span></code>: a layer number between 0 and <a class="reference internal" href="#classGDALDataset_1_1Layers_1a73ef32a25c990c57f18278fa7fdc265d"><span class="std std-ref">size()</span></a>-1.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset6LayersixEPKc">
+<span id="_CPPv3N11GDALDataset6LayersixEPKc"></span><span id="_CPPv2N11GDALDataset6LayersixEPKc"></span><span id="GDALDataset::Layers::subscript-operator__cCP"></span><span class="target" id="classGDALDataset_1_1Layers_1a3643146af888bfeaa7c8f362460113c2"></span><a class="reference internal" href="ogrlayer_cpp.html#_CPPv48OGRLayer" title="OGRLayer">OGRLayer</a> *<code class="descname">operator[]</code><span class="sig-paren">(</span><em class="property">const</em> char *<em>pszLayername</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset6LayersixEPKc" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Fetch a layer by name. </p>
+<p>The returned layer remains owned by the <a class="reference internal" href="#classGDALDataset"><span class="std std-ref">GDALDataset</span></a> and should not be deleted by the application.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>the layer, or nullptr if pszLayerName does not match with a layer</p>
+</dd>
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.3 </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pszLayerName</span></code>: layer name</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+<dl class="class">
+<dt id="_CPPv4N11GDALDataset6Layers8IteratorE">
+<span id="_CPPv3N11GDALDataset6Layers8IteratorE"></span><span id="_CPPv2N11GDALDataset6Layers8IteratorE"></span><span id="GDALDataset::Layers::Iterator"></span><span class="target" id="classGDALDataset_1_1Layers_1_1Iterator"></span><em class="property">class </em><code class="descname">Iterator</code><a class="headerlink" href="#_CPPv4N11GDALDataset6Layers8IteratorE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Layer iterator. </p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.3 </p>
+</dd>
+</dl>
+</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Types</p>
+<dl class="type">
+<dt id="_CPPv4N11GDALDataset6Layers8Iterator10value_typeE">
+<span id="_CPPv3N11GDALDataset6Layers8Iterator10value_typeE"></span><span id="_CPPv2N11GDALDataset6Layers8Iterator10value_typeE"></span><span class="target" id="classGDALDataset_1_1Layers_1_1Iterator_1a2abad784162e4657a21c24be7d74040f"></span><em class="property">using </em><code class="descname">value_type</code> = <a class="reference internal" href="ogrlayer_cpp.html#_CPPv48OGRLayer" title="OGRLayer">OGRLayer</a> *<a class="headerlink" href="#_CPPv4N11GDALDataset6Layers8Iterator10value_typeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>value_type </p>
+</dd></dl>
+
+<dl class="type">
+<dt id="_CPPv4N11GDALDataset6Layers8Iterator9referenceE">
+<span id="_CPPv3N11GDALDataset6Layers8Iterator9referenceE"></span><span id="_CPPv2N11GDALDataset6Layers8Iterator9referenceE"></span><span class="target" id="classGDALDataset_1_1Layers_1_1Iterator_1a8d47fdff0850793e6c68f29855a974a5"></span><em class="property">using </em><code class="descname">reference</code> = <a class="reference internal" href="ogrlayer_cpp.html#_CPPv48OGRLayer" title="OGRLayer">OGRLayer</a> *<a class="headerlink" href="#_CPPv4N11GDALDataset6Layers8Iterator9referenceE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>reference </p>
+</dd></dl>
+
+<dl class="type">
+<dt id="_CPPv4N11GDALDataset6Layers8Iterator15difference_typeE">
+<span id="_CPPv3N11GDALDataset6Layers8Iterator15difference_typeE"></span><span id="_CPPv2N11GDALDataset6Layers8Iterator15difference_typeE"></span><span class="target" id="classGDALDataset_1_1Layers_1_1Iterator_1a5a8a1b2e5d5753dc32aa369655408dbb"></span><em class="property">using </em><code class="descname">difference_type</code> = void<a class="headerlink" href="#_CPPv4N11GDALDataset6Layers8Iterator15difference_typeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>difference_type </p>
+</dd></dl>
+
+<dl class="type">
+<dt id="_CPPv4N11GDALDataset6Layers8Iterator7pointerE">
+<span id="_CPPv3N11GDALDataset6Layers8Iterator7pointerE"></span><span id="_CPPv2N11GDALDataset6Layers8Iterator7pointerE"></span><span class="target" id="classGDALDataset_1_1Layers_1_1Iterator_1a2eb54b8c816c0bbeb6106837a2f08638"></span><em class="property">using </em><code class="descname">pointer</code> = void<a class="headerlink" href="#_CPPv4N11GDALDataset6Layers8Iterator7pointerE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>pointer </p>
+</dd></dl>
+
+<dl class="type">
+<dt id="_CPPv4N11GDALDataset6Layers8Iterator17iterator_categoryE">
+<span id="_CPPv3N11GDALDataset6Layers8Iterator17iterator_categoryE"></span><span id="_CPPv2N11GDALDataset6Layers8Iterator17iterator_categoryE"></span><span class="target" id="classGDALDataset_1_1Layers_1_1Iterator_1ab4e5ae01b063991aeabbf930c34fae78"></span><em class="property">using </em><code class="descname">iterator_category</code> = std::input_iterator_tag<a class="headerlink" href="#_CPPv4N11GDALDataset6Layers8Iterator17iterator_categoryE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>iterator_category </p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset6Layers8Iterator8IteratorEv">
+<span id="_CPPv3N11GDALDataset6Layers8Iterator8IteratorEv"></span><span id="_CPPv2N11GDALDataset6Layers8Iterator8IteratorEv"></span><span id="GDALDataset::Layers::Iterator::Iterator"></span><span class="target" id="classGDALDataset_1_1Layers_1_1Iterator_1aec718f320b91f851cb015cf9ba33c11f"></span><code class="descname">Iterator</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset6Layers8Iterator8IteratorEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Default constructor. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset6Layers8Iterator8IteratorEP11GDALDatasetb">
+<span id="_CPPv3N11GDALDataset6Layers8Iterator8IteratorEP11GDALDatasetb"></span><span id="_CPPv2N11GDALDataset6Layers8Iterator8IteratorEP11GDALDatasetb"></span><span id="GDALDataset::Layers::Iterator::Iterator__GDALDatasetP.b"></span><span class="target" id="classGDALDataset_1_1Layers_1_1Iterator_1a61b10f0e0a66a58bbe5d8676845ca41f"></span><code class="descname">Iterator</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv411GDALDataset" title="GDALDataset">GDALDataset</a> *<em>poDS</em>, bool <em>bStart</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset6Layers8Iterator8IteratorEP11GDALDatasetb" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Constructor. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset6Layers8Iterator8IteratorERK8Iterator">
+<span id="_CPPv3N11GDALDataset6Layers8Iterator8IteratorERK8Iterator"></span><span id="_CPPv2N11GDALDataset6Layers8Iterator8IteratorERK8Iterator"></span><span id="GDALDataset::Layers::Iterator::Iterator__IteratorCR"></span><span class="target" id="classGDALDataset_1_1Layers_1_1Iterator_1a0eb29d3808c7a6e93d1b802a4840f30e"></span><code class="descname">Iterator</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N11GDALDataset6Layers8Iterator8IteratorEv" title="GDALDataset::Layers::Iterator::Iterator">Iterator</a> &amp;<em>oOther</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset6Layers8Iterator8IteratorERK8Iterator" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Copy constructor. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset6Layers8Iterator8IteratorERR8Iterator">
+<span id="_CPPv3N11GDALDataset6Layers8Iterator8IteratorERR8Iterator"></span><span id="_CPPv2N11GDALDataset6Layers8Iterator8IteratorERR8Iterator"></span><span id="GDALDataset::Layers::Iterator::Iterator__IteratorRR"></span><span class="target" id="classGDALDataset_1_1Layers_1_1Iterator_1ac5263fa5e7429e8a3dd6d65228989e9f"></span><code class="descname">Iterator</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N11GDALDataset6Layers8Iterator8IteratorEv" title="GDALDataset::Layers::Iterator::Iterator">Iterator</a> &amp;&amp;<em>oOther</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset6Layers8Iterator8IteratorERR8Iterator" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Move constructor. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset6Layers8IteratorD0Ev">
+<span id="_CPPv3N11GDALDataset6Layers8IteratorD0Ev"></span><span id="_CPPv2N11GDALDataset6Layers8IteratorD0Ev"></span><span id="GDALDataset::Layers::Iterator::~Iterator"></span><span class="target" id="classGDALDataset_1_1Layers_1_1Iterator_1a0d231a24ffa646d110c53b2c2a9ebc6f"></span><code class="descname">~Iterator</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset6Layers8IteratorD0Ev" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Destructor. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset6Layers8IteratoraSERK8Iterator">
+<span id="_CPPv3N11GDALDataset6Layers8IteratoraSERK8Iterator"></span><span id="_CPPv2N11GDALDataset6Layers8IteratoraSERK8Iterator"></span><span id="GDALDataset::Layers::Iterator::assign-operator__IteratorCR"></span><span class="target" id="classGDALDataset_1_1Layers_1_1Iterator_1a78fa67bbe81311f02cdeaad59037eee3"></span><a class="reference internal" href="#_CPPv411GDALDataset" title="GDALDataset">GDALDataset</a>::<a class="reference internal" href="#_CPPv4N11GDALDataset6LayersE" title="GDALDataset::Layers">Layers</a>::<a class="reference internal" href="#_CPPv4N11GDALDataset6Layers8IteratorE" title="GDALDataset::Layers::Iterator">Iterator</a> &amp;<code class="descname">operator=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N11GDALDataset6Layers8IteratorE" title="GDALDataset::Layers::Iterator">Iterator</a> &amp;<em>oOther</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset6Layers8IteratoraSERK8Iterator" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Assignment operator. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset6Layers8IteratoraSERR8Iterator">
+<span id="_CPPv3N11GDALDataset6Layers8IteratoraSERR8Iterator"></span><span id="_CPPv2N11GDALDataset6Layers8IteratoraSERR8Iterator"></span><span id="GDALDataset::Layers::Iterator::assign-operator__IteratorRR"></span><span class="target" id="classGDALDataset_1_1Layers_1_1Iterator_1a2099d532a717590886404cb59e79c8cd"></span><a class="reference internal" href="#_CPPv411GDALDataset" title="GDALDataset">GDALDataset</a>::<a class="reference internal" href="#_CPPv4N11GDALDataset6LayersE" title="GDALDataset::Layers">Layers</a>::<a class="reference internal" href="#_CPPv4N11GDALDataset6Layers8IteratorE" title="GDALDataset::Layers::Iterator">Iterator</a> &amp;<code class="descname">operator=</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N11GDALDataset6Layers8IteratorE" title="GDALDataset::Layers::Iterator">Iterator</a> &amp;&amp;<em>oOther</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset6Layers8IteratoraSERR8Iterator" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Move assignment operator. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK11GDALDataset6Layers8IteratormlEv">
+<span id="_CPPv3NK11GDALDataset6Layers8IteratormlEv"></span><span id="_CPPv2NK11GDALDataset6Layers8IteratormlEv"></span><span id="GDALDataset::Layers::Iterator::mul-operatorC"></span><span class="target" id="classGDALDataset_1_1Layers_1_1Iterator_1a0d3b531c9aef2b513f37a6e45795b8e6"></span><a class="reference internal" href="ogrlayer_cpp.html#_CPPv48OGRLayer" title="OGRLayer">OGRLayer</a> *<code class="descname">operator*</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK11GDALDataset6Layers8IteratormlEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Dereference operator. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset6Layers8IteratorppEv">
+<span id="_CPPv3N11GDALDataset6Layers8IteratorppEv"></span><span id="_CPPv2N11GDALDataset6Layers8IteratorppEv"></span><span id="GDALDataset::Layers::Iterator::inc-operator"></span><span class="target" id="classGDALDataset_1_1Layers_1_1Iterator_1ab12949108baf289bfd6f08acf6bccad7"></span><a class="reference internal" href="#_CPPv411GDALDataset" title="GDALDataset">GDALDataset</a>::<a class="reference internal" href="#_CPPv4N11GDALDataset6LayersE" title="GDALDataset::Layers">Layers</a>::<a class="reference internal" href="#_CPPv4N11GDALDataset6Layers8IteratorE" title="GDALDataset::Layers::Iterator">Iterator</a> &amp;<code class="descname">operator++</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset6Layers8IteratorppEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Pre-increment operator. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALDataset6Layers8IteratorppEi">
+<span id="_CPPv3N11GDALDataset6Layers8IteratorppEi"></span><span id="_CPPv2N11GDALDataset6Layers8IteratorppEi"></span><span id="GDALDataset::Layers::Iterator::inc-operator__i"></span><span class="target" id="classGDALDataset_1_1Layers_1_1Iterator_1a0229a845c04261b97140f66128bc3c20"></span><a class="reference internal" href="#_CPPv411GDALDataset" title="GDALDataset">GDALDataset</a>::<a class="reference internal" href="#_CPPv4N11GDALDataset6LayersE" title="GDALDataset::Layers">Layers</a>::<a class="reference internal" href="#_CPPv4N11GDALDataset6Layers8IteratorE" title="GDALDataset::Layers::Iterator">Iterator</a> <code class="descname">operator++</code><span class="sig-paren">(</span>int<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALDataset6Layers8IteratorppEi" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Post-increment operator. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK11GDALDataset6Layers8IteratorneERK8Iterator">
+<span id="_CPPv3NK11GDALDataset6Layers8IteratorneERK8Iterator"></span><span id="_CPPv2NK11GDALDataset6Layers8IteratorneERK8Iterator"></span><span id="GDALDataset::Layers::Iterator::neq-operator__IteratorCRC"></span><span class="target" id="classGDALDataset_1_1Layers_1_1Iterator_1a13f24c8150fa2331386c07907eba5283"></span>bool <code class="descname">operator!=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N11GDALDataset6Layers8IteratorE" title="GDALDataset::Layers::Iterator">Iterator</a> &amp;<em>it</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK11GDALDataset6Layers8IteratorneERK8Iterator" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Difference comparison operator. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="gdalrasterband_cpp.html" class="btn btn-neutral float-right" title="GDALRasterBand C++ API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gdaldriver_cpp.html" class="btn btn-neutral float-left" title="GDALDriver C++ API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

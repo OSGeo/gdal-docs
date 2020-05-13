@@ -1,0 +1,633 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>GDALMDArray C++ API &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgapi/gdalmdarray_cpp.html"/>
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="GDALAttribute C++ API" href="gdalattribute_cpp.html" />
+    <link rel="prev" title="GDALAbstractMDArray C++ API" href="gdalabstractmdarray_cpp.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#id2">Full Doxygen output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#c-api">C API</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#id3">C++ API</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="index.html#raster-api">Raster API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#vector-api">Vector API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#spatial-reference-system-api">Spatial reference system API</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html#multi-dimensional-array-api">Multi-dimensional array API</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="gdalgroup_cpp.html">GDALGroup C++ API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gdaldimension_cpp.html">GDALDimension C++ API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gdalabstractmdarray_cpp.html">GDALAbstractMDArray C++ API</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">GDALMDArray C++ API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gdalattribute_cpp.html">GDALAttribute C++ API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gdalextendeddatatype_cpp.html">GDALExtendedDataType C++ API</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#geographic-networks-api">Geographic networks API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#python-api">Python API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id4">Java API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">API</a> &raquo;</li>
+      
+      <li>GDALMDArray C++ API</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/api/gdalmdarray_cpp.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="gdalattribute_cpp.html" class="btn btn-neutral float-right" title="GDALAttribute C++ API" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gdalabstractmdarray_cpp.html" class="btn btn-neutral float-left" title="GDALAbstractMDArray C++ API" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="gdalmdarray-c-api">
+<span id="gdalmdarray-cpp"></span><h1>GDALMDArray C++ API<a class="headerlink" href="#gdalmdarray-c-api" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="_CPPv411GDALMDArray">
+<span id="_CPPv311GDALMDArray"></span><span id="_CPPv211GDALMDArray"></span><span id="GDALMDArray"></span><span class="target" id="classGDALMDArray"></span><em class="property">class </em><code class="descname">GDALMDArray</code> : <em class="property">public</em> <em class="property">virtual</em> <a class="reference internal" href="gdalabstractmdarray_cpp.html#_CPPv419GDALAbstractMDArray" title="GDALAbstractMDArray">GDALAbstractMDArray</a>, <em class="property">public</em> <a class="reference internal" href="gdalattribute_cpp.html#_CPPv417GDALIHasAttribute" title="GDALIHasAttribute">GDALIHasAttribute</a><a class="headerlink" href="#_CPPv411GDALMDArray" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Class modeling a multi-dimensional array. </p>
+<p>It has a name, values organized as an array and a list of <a class="reference internal" href="gdalattribute_cpp.html#classGDALAttribute"><span class="std std-ref">GDALAttribute</span></a>.</p>
+<p>This is based on the <a class="reference external" href="https://portal.opengeospatial.org/files/81716#_hdf5_dataset">HDF5 dataset concept</a></p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 3.1 </p>
+</dd>
+</dl>
+</p>
+<p>Subclassed by GDALExtractFieldMDArray, GDALMDArrayFromRasterBand, GDALMDArrayMask, GDALMDArrayTransposed, GDALMDArrayUnscaled, GDALSlicedMDArray</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="function">
+<dt id="_CPPv4NK11GDALMDArray16GetTotalCopyCostEv">
+<span id="_CPPv3NK11GDALMDArray16GetTotalCopyCostEv"></span><span id="_CPPv2NK11GDALMDArray16GetTotalCopyCostEv"></span><span id="GDALMDArray::GetTotalCopyCostC"></span><span class="target" id="classGDALMDArray_1a3b97752cc115cb44d6339cdfad97b222"></span><a class="reference internal" href="cpl.html#_CPPv47GUInt64" title="GUInt64">GUInt64</a> <code class="descname">GetTotalCopyCost</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK11GDALMDArray16GetTotalCopyCostEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return a total “cost” to copy the array. </p>
+<p>Used as a parameter for <a class="reference internal" href="#classGDALMDArray_1a37c7e7f8a659f3090b9366e75e256fdb"><span class="std std-ref">CopyFrom()</span></a> </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALMDArray8CopyFromEP11GDALDatasetPK11GDALMDArraybR7GUInt64K7GUInt6416GDALProgressFuncPv">
+<span id="_CPPv3N11GDALMDArray8CopyFromEP11GDALDatasetPK11GDALMDArraybR7GUInt64K7GUInt6416GDALProgressFuncPv"></span><span id="_CPPv2N11GDALMDArray8CopyFromEP11GDALDatasetPK11GDALMDArraybR7GUInt64K7GUInt6416GDALProgressFuncPv"></span><span id="GDALMDArray::CopyFrom__GDALDatasetP.GDALMDArrayCP.b.GUInt64R.GUInt64C.GDALProgressFunc.voidP"></span><span class="target" id="classGDALMDArray_1a37c7e7f8a659f3090b9366e75e256fdb"></span>bool <code class="descname">CopyFrom</code><span class="sig-paren">(</span><a class="reference internal" href="gdaldataset_cpp.html#_CPPv411GDALDataset" title="GDALDataset">GDALDataset</a> *<em>poSrcDS</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv411GDALMDArray" title="GDALMDArray">GDALMDArray</a> *<em>poSrcArray</em>, bool <em>bStrict</em>, <a class="reference internal" href="cpl.html#_CPPv47GUInt64" title="GUInt64">GUInt64</a> &amp;<em>nCurCost</em>, <em class="property">const</em> <a class="reference internal" href="cpl.html#_CPPv47GUInt64" title="GUInt64">GUInt64</a> <em>nTotalCost</em>, <a class="reference internal" href="cpl.html#_CPPv416GDALProgressFunc" title="GDALProgressFunc">GDALProgressFunc</a> <em>pfnProgress</em>, void *<em>pProgressData</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALMDArray8CopyFromEP11GDALDatasetPK11GDALMDArraybR7GUInt64K7GUInt6416GDALProgressFuncPv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Copy the content of an array into a new (generally empty) array. </p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>true in case of success (or partial success if bStrict == false). </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">poSrcDS</span></code>: Source dataset. Migt be nullptr (but for correct behavior of some output drivers this is not recommended) </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">poSrcArray</span></code>: Source array. Should NOT be nullptr. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bStrict</span></code>: Whether to enable stict mode. In strict mode, any error will stop the copy. In relaxed mode, the copy will be attempted to be pursued. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nCurCost</span></code>: Should be provided as a variable initially set to 0. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nTotalCost</span></code>: Total cost from <a class="reference internal" href="#classGDALMDArray_1a3b97752cc115cb44d6339cdfad97b222"><span class="std std-ref">GetTotalCopyCost()</span></a>. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pfnProgress</span></code>: Progress callback, or nullptr. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pProgressData</span></code>: Progress user data, or nulptr.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK11GDALMDArray10IsWritableEv">
+<span id="_CPPv3NK11GDALMDArray10IsWritableEv"></span><span id="_CPPv2NK11GDALMDArray10IsWritableEv"></span><span id="GDALMDArray::IsWritableC"></span><span class="target" id="classGDALMDArray_1a43462b586a92d4b4aac0e776030f93a9"></span><em class="property">virtual</em> bool <code class="descname">IsWritable</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em> = 0<a class="headerlink" href="#_CPPv4NK11GDALMDArray10IsWritableEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return whether an array is writable;. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK11GDALMDArray17GetStructuralInfoEv">
+<span id="_CPPv3NK11GDALMDArray17GetStructuralInfoEv"></span><span id="_CPPv2NK11GDALMDArray17GetStructuralInfoEv"></span><span id="GDALMDArray::GetStructuralInfoC"></span><span class="target" id="classGDALMDArray_1abeeef7e6e43553b8d35b39a7f031b79f"></span><a class="reference internal" href="cpl.html#_CPPv412CSLConstList" title="CSLConstList">CSLConstList</a> <code class="descname">GetStructuralInfo</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK11GDALMDArray17GetStructuralInfoEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return structural information on the array. </p>
+<p>This may be the compression, etc..</p>
+<p>The return value should not be freed and is valid until <a class="reference internal" href="#classGDALMDArray"><span class="std std-ref">GDALMDArray</span></a> is released or this function called again.</p>
+<p>This is the same as the C function GDALMDArrayGetStruturalInfo(). </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK11GDALMDArray7GetUnitEv">
+<span id="_CPPv3NK11GDALMDArray7GetUnitEv"></span><span id="_CPPv2NK11GDALMDArray7GetUnitEv"></span><span id="GDALMDArray::GetUnitC"></span><span class="target" id="classGDALMDArray_1af8e01f44fa53c78da06924994252fb62"></span><em class="property">const</em> std::string &amp;<code class="descname">GetUnit</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK11GDALMDArray7GetUnitEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the array unit. </p>
+<p>Values should conform as much as possible with those allowed by the NetCDF CF conventions: <a class="reference external" href="http://cfconventions.org/Data/cf-conventions/cf-conventions-1.7/cf-conventions.html#units">http://cfconventions.org/Data/cf-conventions/cf-conventions-1.7/cf-conventions.html#units</a> but others might be returned.</p>
+<p>Few examples are “meter”, “degrees”, “second”, … Empty value means unknown.</p>
+<p>This is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a0d369a77b8e48958577c38464f0b37ba"><span class="std std-ref">GDALMDArrayGetUnit()</span></a> </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALMDArray7SetUnitERKNSt6stringE">
+<span id="_CPPv3N11GDALMDArray7SetUnitERKNSt6stringE"></span><span id="_CPPv2N11GDALMDArray7SetUnitERKNSt6stringE"></span><span id="GDALMDArray::SetUnit__ssCR"></span><span class="target" id="classGDALMDArray_1a0a98fe64fd967cfe83c0d912d06bd745"></span>bool <code class="descname">SetUnit</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>osUnit</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALMDArray7SetUnitERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the variable unit. </p>
+<p>Values should conform as much as possible with those allowed by the NetCDF CF conventions: <a class="reference external" href="http://cfconventions.org/Data/cf-conventions/cf-conventions-1.7/cf-conventions.html#units">http://cfconventions.org/Data/cf-conventions/cf-conventions-1.7/cf-conventions.html#units</a> but others might be returned.</p>
+<p>Few examples are “meter”, “degrees”, “second”, … Empty value means unknown.</p>
+<p>This is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a480dbbdc18f5138d4837a9d43da85b89"><span class="std std-ref">GDALMDArraySetUnit()</span></a></p>
+<p><dl class="simple">
+<dt><strong>Note</strong></dt><dd><p>Driver implementation: optionally implemented.</p>
+</dd>
+<dt><strong>Return</strong></dt><dd><p>true in case of success. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">osUnit</span></code>: unit name. </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALMDArray13SetSpatialRefEPK19OGRSpatialReference">
+<span id="_CPPv3N11GDALMDArray13SetSpatialRefEPK19OGRSpatialReference"></span><span id="_CPPv2N11GDALMDArray13SetSpatialRefEPK19OGRSpatialReference"></span><span id="GDALMDArray::SetSpatialRef__OGRSpatialReferenceCP"></span><span class="target" id="classGDALMDArray_1aaff0099cee1c017f139024e801020bc9"></span>bool <code class="descname">SetSpatialRef</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="ogrspatialref.html#_CPPv419OGRSpatialReference" title="OGRSpatialReference">OGRSpatialReference</a> *<em>poSRS</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALMDArray13SetSpatialRefEPK19OGRSpatialReference" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Assign a spatial reference system object to the the array. </p>
+<p>This is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1ae807945e461f5ca8617e92338b9c4e30"><span class="std std-ref">GDALMDArraySetSpatialRef()</span></a>. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK11GDALMDArray13GetSpatialRefEv">
+<span id="_CPPv3NK11GDALMDArray13GetSpatialRefEv"></span><span id="_CPPv2NK11GDALMDArray13GetSpatialRefEv"></span><span id="GDALMDArray::GetSpatialRefC"></span><span class="target" id="classGDALMDArray_1a6f5cbdeba243c3590826ffd89f33172e"></span>std::shared_ptr&lt;<a class="reference internal" href="ogrspatialref.html#_CPPv419OGRSpatialReference" title="OGRSpatialReference">OGRSpatialReference</a>&gt; <code class="descname">GetSpatialRef</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK11GDALMDArray13GetSpatialRefEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the spatial reference system object associated with the array. </p>
+<p>This is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a6e583bfa937bfb9ff723853a14ec375f"><span class="std std-ref">GDALMDArrayGetSpatialRef()</span></a>. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK11GDALMDArray17GetRawNoDataValueEv">
+<span id="_CPPv3NK11GDALMDArray17GetRawNoDataValueEv"></span><span id="_CPPv2NK11GDALMDArray17GetRawNoDataValueEv"></span><span id="GDALMDArray::GetRawNoDataValueC"></span><span class="target" id="classGDALMDArray_1a6399f8a7f49bb0dafab283aa14f03029"></span><em class="property">const</em> void *<code class="descname">GetRawNoDataValue</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK11GDALMDArray17GetRawNoDataValueEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the nodata value as a “raw” value. </p>
+<p>The value returned might be nullptr in case of no nodata value. When a nodata value is registered, a non-nullptr will be returned whose size in bytes is <a class="reference internal" href="gdalabstractmdarray_cpp.html#classGDALAbstractMDArray_1a79fe433024efc083ddf2e7d1c25a6428"><span class="std std-ref">GetDataType()</span></a>.GetSize().</p>
+<p>The returned value should not be modified or freed. It is valid until the array is destroyed, or the next call to <a class="reference internal" href="#classGDALMDArray_1a6399f8a7f49bb0dafab283aa14f03029"><span class="std std-ref">GetRawNoDataValue()</span></a> or <a class="reference internal" href="#classGDALMDArray_1a55b1b33d01c41f75c88a0173979728d5"><span class="std std-ref">SetRawNoDataValue()</span></a>, or any similar methods.</p>
+<p><p>This is the same as the C function </p>
+<a class="reference internal" href="raster_c_api.html#gdal_8h_1a23b9976a4a58db4905ffa15616ba8064"><span class="std std-ref">GDALMDArrayGetRawNoDataValue()</span></a>.<dl class="simple">
+<dt><strong>Note</strong></dt><dd><p>Driver implementation: this method shall be implemented if nodata is supported.</p>
+</dd>
+</dl>
+</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>nullptr or a pointer to <a class="reference internal" href="gdalabstractmdarray_cpp.html#classGDALAbstractMDArray_1a79fe433024efc083ddf2e7d1c25a6428"><span class="std std-ref">GetDataType()</span></a>.GetSize() bytes. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK11GDALMDArray22GetNoDataValueAsDoubleEPb">
+<span id="_CPPv3NK11GDALMDArray22GetNoDataValueAsDoubleEPb"></span><span id="_CPPv2NK11GDALMDArray22GetNoDataValueAsDoubleEPb"></span><span id="GDALMDArray::GetNoDataValueAsDouble__bPC"></span><span class="target" id="classGDALMDArray_1ad92b9b2782cd90c9f65dff0e1205be08"></span>double <code class="descname">GetNoDataValueAsDouble</code><span class="sig-paren">(</span>bool *<em>pbHasNoData</em> = nullptr<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK11GDALMDArray22GetNoDataValueAsDoubleEPb" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return the nodata value as a double. </p>
+<p>The value returned might be nullptr in case of no nodata value. When a nodata value is registered, a non-nullptr will be returned whose size in bytes is <a class="reference internal" href="gdalabstractmdarray_cpp.html#classGDALAbstractMDArray_1a79fe433024efc083ddf2e7d1c25a6428"><span class="std std-ref">GetDataType()</span></a>.GetSize().</p>
+<p>This is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1afaf387481e7aa947c5ab08df98c70bd1"><span class="std std-ref">GDALMDArrayGetNoDataValueAsDouble()</span></a>.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>the nodata value as a double. A 0.0 value might also indicate the absence of a nodata value or an error in the conversion (*pbHasNoData will be set to false then). </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pbHasNoData</span></code>: Pointer to a output boolean that will be set to true if a nodata value exists and can be converted to double. Might be nullptr.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALMDArray17SetRawNoDataValueEPKv">
+<span id="_CPPv3N11GDALMDArray17SetRawNoDataValueEPKv"></span><span id="_CPPv2N11GDALMDArray17SetRawNoDataValueEPKv"></span><span id="GDALMDArray::SetRawNoDataValue__voidCP"></span><span class="target" id="classGDALMDArray_1a55b1b33d01c41f75c88a0173979728d5"></span>bool <code class="descname">SetRawNoDataValue</code><span class="sig-paren">(</span><em class="property">const</em> void *<em>pRawNoData</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALMDArray17SetRawNoDataValueEPKv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the nodata value as a “raw” value. </p>
+<p>The value passed might be nullptr in case of no nodata value. When a nodata value is registered, a non-nullptr whose size in bytes is <a class="reference internal" href="gdalabstractmdarray_cpp.html#classGDALAbstractMDArray_1a79fe433024efc083ddf2e7d1c25a6428"><span class="std std-ref">GetDataType()</span></a>.GetSize() must be passed.</p>
+<p>This is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a08af3e9f92bdf941e9fe485067465273"><span class="std std-ref">GDALMDArraySetRawNoDataValue()</span></a>.</p>
+<p><dl class="simple">
+<dt><strong>Note</strong></dt><dd><p>Driver implementation: this method shall be implemented if setting nodata is supported.</p>
+</dd>
+<dt><strong>Return</strong></dt><dd><p>true in case of success. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALMDArray14SetNoDataValueEd">
+<span id="_CPPv3N11GDALMDArray14SetNoDataValueEd"></span><span id="_CPPv2N11GDALMDArray14SetNoDataValueEd"></span><span id="GDALMDArray::SetNoDataValue__double"></span><span class="target" id="classGDALMDArray_1a2cf673408d25ce00272e7b5a19707741"></span>bool <code class="descname">SetNoDataValue</code><span class="sig-paren">(</span>double <em>dfNoData</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALMDArray14SetNoDataValueEd" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the nodata value as a double. </p>
+<p>If the natural data type of the attribute/array is not double, type conversion will occur to the type returned by <a class="reference internal" href="gdalabstractmdarray_cpp.html#classGDALAbstractMDArray_1a79fe433024efc083ddf2e7d1c25a6428"><span class="std std-ref">GetDataType()</span></a>.</p>
+<p>This is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1acbc644f729cdda0a771787afd96cd4e2"><span class="std std-ref">GDALMDArraySetNoDataValueAsDouble()</span></a>.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>true in case of success. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK11GDALMDArray9GetOffsetEPb">
+<span id="_CPPv3NK11GDALMDArray9GetOffsetEPb"></span><span id="_CPPv2NK11GDALMDArray9GetOffsetEPb"></span><span id="GDALMDArray::GetOffset__bPC"></span><span class="target" id="classGDALMDArray_1add6549f088b9e9fd60241625bb4fb4ab"></span>double <code class="descname">GetOffset</code><span class="sig-paren">(</span>bool *<em>pbHasOffset</em> = nullptr<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK11GDALMDArray9GetOffsetEPb" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get the offset value to apply to raw values. </p>
+<p>unscaled_value = raw_value * <a class="reference internal" href="#classGDALMDArray_1a30cc8d011264105bbe64b63036caf035"><span class="std std-ref">GetScale()</span></a> + <a class="reference internal" href="#classGDALMDArray_1add6549f088b9e9fd60241625bb4fb4ab"><span class="std std-ref">GetOffset()</span></a></p>
+<p>This is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a9f126027c38fcd647966995d952db9e7"><span class="std std-ref">GDALMDArrayGetOffset()</span></a>.</p>
+<p><dl class="simple">
+<dt><strong>Note</strong></dt><dd><p>Driver implementation: this method shall be implemented if gettings offset is supported.</p>
+</dd>
+<dt><strong>Return</strong></dt><dd><p>the offset value. A 0.0 value might also indicate the absence of a offset value. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pbHasOffset</span></code>: Pointer to a output boolean that will be set to true if a offset value exists. Might be nullptr.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK11GDALMDArray8GetScaleEPb">
+<span id="_CPPv3NK11GDALMDArray8GetScaleEPb"></span><span id="_CPPv2NK11GDALMDArray8GetScaleEPb"></span><span id="GDALMDArray::GetScale__bPC"></span><span class="target" id="classGDALMDArray_1a30cc8d011264105bbe64b63036caf035"></span>double <code class="descname">GetScale</code><span class="sig-paren">(</span>bool *<em>pbHasScale</em> = nullptr<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK11GDALMDArray8GetScaleEPb" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Get the scale value to apply to raw values. </p>
+<p>unscaled_value = raw_value * <a class="reference internal" href="#classGDALMDArray_1a30cc8d011264105bbe64b63036caf035"><span class="std std-ref">GetScale()</span></a> + <a class="reference internal" href="#classGDALMDArray_1add6549f088b9e9fd60241625bb4fb4ab"><span class="std std-ref">GetOffset()</span></a></p>
+<p>This is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1abcd91754cc0278153eae36084803d8d5"><span class="std std-ref">GDALMDArrayGetScale()</span></a>.</p>
+<p><dl class="simple">
+<dt><strong>Note</strong></dt><dd><p>Driver implementation: this method shall be implemented if gettings scale is supported.</p>
+</dd>
+<dt><strong>Return</strong></dt><dd><p>the scale value. A 1.0 value might also indicate the absence of a scale value. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pbHasScale</span></code>: Pointer to a output boolean that will be set to true if a scale value exists. Might be nullptr.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALMDArray9SetOffsetEd">
+<span id="_CPPv3N11GDALMDArray9SetOffsetEd"></span><span id="_CPPv2N11GDALMDArray9SetOffsetEd"></span><span id="GDALMDArray::SetOffset__double"></span><span class="target" id="classGDALMDArray_1a1132fa753ba9b6fa6ce630ad87367711"></span>bool <code class="descname">SetOffset</code><span class="sig-paren">(</span>double <em>dfOffset</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALMDArray9SetOffsetEd" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the offset value to apply to raw values. </p>
+<p>unscaled_value = raw_value * <a class="reference internal" href="#classGDALMDArray_1a30cc8d011264105bbe64b63036caf035"><span class="std std-ref">GetScale()</span></a> + <a class="reference internal" href="#classGDALMDArray_1add6549f088b9e9fd60241625bb4fb4ab"><span class="std std-ref">GetOffset()</span></a></p>
+<p>This is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1af37c50656c28be8412112799c8eb9620"><span class="std std-ref">GDALMDArraySetOffset()</span></a>.</p>
+<p><dl class="simple">
+<dt><strong>Note</strong></dt><dd><p>Driver implementation: this method shall be implemented if setting offset is supported.</p>
+</dd>
+<dt><strong>Return</strong></dt><dd><p>true in case of success. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N11GDALMDArray8SetScaleEd">
+<span id="_CPPv3N11GDALMDArray8SetScaleEd"></span><span id="_CPPv2N11GDALMDArray8SetScaleEd"></span><span id="GDALMDArray::SetScale__double"></span><span class="target" id="classGDALMDArray_1ae2e940a03190d16919caea9671f72cf8"></span>bool <code class="descname">SetScale</code><span class="sig-paren">(</span>double <em>dfScale</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11GDALMDArray8SetScaleEd" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Set the scale value to apply to raw values. </p>
+<p>unscaled_value = raw_value * <a class="reference internal" href="#classGDALMDArray_1a30cc8d011264105bbe64b63036caf035"><span class="std std-ref">GetScale()</span></a> + <a class="reference internal" href="#classGDALMDArray_1add6549f088b9e9fd60241625bb4fb4ab"><span class="std std-ref">GetOffset()</span></a></p>
+<p>This is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a7a3dc343fdd18e5177593a5d66f1f545"><span class="std std-ref">GDALMDArraySetScale()</span></a>.</p>
+<p><dl class="simple">
+<dt><strong>Note</strong></dt><dd><p>Driver implementation: this method shall be implemented if setting scale is supported.</p>
+</dd>
+<dt><strong>Return</strong></dt><dd><p>true in case of success. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK11GDALMDArray7GetViewERKNSt6stringE">
+<span id="_CPPv3NK11GDALMDArray7GetViewERKNSt6stringE"></span><span id="_CPPv2NK11GDALMDArray7GetViewERKNSt6stringE"></span><span id="GDALMDArray::GetView__ssCRC"></span><span class="target" id="classGDALMDArray_1a14b7d70b8dbc404e6a6cb0c257d47bdd"></span>std::shared_ptr&lt;<a class="reference internal" href="#_CPPv411GDALMDArray" title="GDALMDArray">GDALMDArray</a>&gt; <code class="descname">GetView</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>viewExpr</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK11GDALMDArray7GetViewERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return a view of the array using slicing or field access. </p>
+<p>The slice expression uses the same syntax as NumPy basic slicing and indexing. See <a class="reference external" href="https://www.numpy.org/devdocs/reference/arrays.indexing.html#basic-slicing-and-indexing">https://www.numpy.org/devdocs/reference/arrays.indexing.html#basic-slicing-and-indexing</a> Or it can use field access by name. See <a class="reference external" href="https://www.numpy.org/devdocs/reference/arrays.indexing.html#field-access">https://www.numpy.org/devdocs/reference/arrays.indexing.html#field-access</a></p>
+<p>Multiple [] bracket elements can be concatenated, with a slice expression or field name inside each.</p>
+<p>For basic slicing and indexing, inside each [] bracket element, a list of indexes that apply to successive source dimensions, can be specified, using integer indexing (e.g. 1), range indexing (start:stop:step), ellipsis (…) or newaxis, using a comma separator.</p>
+<p>Examples with a 2-dimensional array whose content is [[0,1,2,3],[4,5,6,7]]. <ul class="simple">
+<li><p>GetView(“[1][2]”): returns a 0-dimensional/scalar array with the value at index 1 in the first dimension, and index 2 in the second dimension from the source array. That is 5 </p></li>
+<li><p>GetView(“[1]”)-&gt;GetView(“[2]”): same as above. Above is actually implemented internally doing this intermediate slicing approach. </p></li>
+<li><p>GetView(“[1,2]”): same as above, but a bit more performant. </p></li>
+<li><p>GetView(“[1]”): returns a 1-dimensional array, sliced at index 1 in the first dimension. That is [4,5,6,7]. </p></li>
+<li><p>GetView(“[:,2]”): returns a 1-dimensional array, sliced at index 2 in the second dimension. That is [2,6]. </p></li>
+<li><p>GetView(“[:,2:3:]”): returns a 2-dimensional array, sliced at index 2 in the second dimension. That is [[2],[6]]. </p></li>
+<li><p>GetView(“[::,2]”): Same as above. </p></li>
+<li><p>GetView(“[…,2]”): same as above, in that case, since the ellipsis only expands to one dimension here. </p></li>
+<li><p>GetView(“[:,::2]”): returns a 2-dimensional array, with even-indexed elements of the second dimension. That is [[0,2],[4,6]]. </p></li>
+<li><p>GetView(“[:,1::2]”): returns a 2-dimensional array, with odd-indexed elements of the second dimension. That is [[1,3],[5,7]]. </p></li>
+<li><p>GetView(“[:,1:3:]”): returns a 2-dimensional array, with elements of the second dimension with index in the range [1,3[. That is [[1,2],[5,6]]. </p></li>
+<li><p>GetView(“[::-1,:]”): returns a 2-dimensional array, with the values in first dimension reversed. That is [[4,5,6,7],[0,1,2,3]]. </p></li>
+<li><p>GetView(“[newaxis,…]”): returns a 3-dimensional array, with an addditional dimension of size 1 put at the beginning. That is [[[0,1,2,3],[4,5,6,7]]]. </p></li>
+</ul>
+</p>
+<p>One difference with NumPy behavior is that ranges that would result in zero elements are not allowed (dimensions of size 0 not being allowed in the GDAL multidimensional model).</p>
+<p>For field access, the syntax to use is [“field_name”] or [‘field_name’]. Multiple field specification is not supported currently.</p>
+<p>Both type of access can be combined, e.g. GetView(“[1][‘field_name’]”)</p>
+<p><p>The returned array holds a reference to the original one, and thus is a view of it (not a copy). If the content of the original array changes, the content of the view array too. When using basic slicing and indexing, the view can be written if the underlying array is writable.</p>
+<dl class="simple">
+<dt><strong>Note</strong></dt><dd><p>When using the GDAL Python bindings, natural Python syntax can be used. That is ar[0,::,1][“foo”] will be internally translated to ar.GetView(“[0,::,1][‘foo’]”) </p>
+</dd>
+<dt><strong>Note</strong></dt><dd><p>When using the C++ API and integer indexing only, you may use the at(idx0, idx1, …) method.</p>
+</dd>
+</dl>
+</p>
+<p>This is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a1834e55cba67c1d56034511ba7c9e145"><span class="std std-ref">GDALMDArrayGetView()</span></a></p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>a new array, that holds a reference to the original one, and thus is a view of it (not a copy), or nullptr in case of error. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">viewExpr</span></code>: Expression expressing basic slicing and indexing, or field access. </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK11GDALMDArrayixERKNSt6stringE">
+<span id="_CPPv3NK11GDALMDArrayixERKNSt6stringE"></span><span id="_CPPv2NK11GDALMDArrayixERKNSt6stringE"></span><span id="GDALMDArray::subscript-operator__ssCRC"></span><span class="target" id="classGDALMDArray_1a6c88d3103cee12a1f9557bd1d3fe1ab7"></span>std::shared_ptr&lt;<a class="reference internal" href="#_CPPv411GDALMDArray" title="GDALMDArray">GDALMDArray</a>&gt; <code class="descname">operator[]</code><span class="sig-paren">(</span><em class="property">const</em> std::string &amp;<em>fieldName</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK11GDALMDArrayixERKNSt6stringE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return a view of the array using field access. </p>
+<p>Equivalent of GetView(“[‘fieldName’]”)</p>
+<p><dl class="simple">
+<dt><strong>Note</strong></dt><dd><p>When operationg on a shared_ptr, use (*array)[“fieldName”] syntax. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4IDpENK11GDALMDArray2atENSt10shared_ptrI11GDALMDArrayEE7GUInt64Dp13GUInt64VarArg">
+<span id="_CPPv3IDpENK11GDALMDArray2atE7GUInt64Dp13GUInt64VarArg"></span><span id="_CPPv2IDpENK11GDALMDArray2atE7GUInt64Dp13GUInt64VarArg"></span><span class="target" id="classGDALMDArray_1a55e83df13fbd549f5dca2719a8cb6075"></span>template&lt;typename ...<code class="descname">GUInt64VarArg</code>&gt;<br />std::shared_ptr&lt;<a class="reference internal" href="#_CPPv411GDALMDArray" title="GDALMDArray">GDALMDArray</a>&gt; <code class="descname">at</code><span class="sig-paren">(</span><a class="reference internal" href="cpl.html#_CPPv47GUInt64" title="GUInt64">GUInt64</a> <em>idx</em>, <a class="reference internal" href="#_CPPv4IDpENK11GDALMDArray2atENSt10shared_ptrI11GDALMDArrayEE7GUInt64Dp13GUInt64VarArg" title="GDALMDArray::at::GUInt64VarArg">GUInt64VarArg</a>... <em>tail</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4IDpENK11GDALMDArray2atENSt10shared_ptrI11GDALMDArrayEE7GUInt64Dp13GUInt64VarArg" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return a view of the array using integer indexing. </p>
+<p>Equivalent of GetView(“[indices_0,indices_1,…..,indices_last]”)</p>
+<p>Example: <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ar</span><span class="o">-&gt;</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+ </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK11GDALMDArray9TransposeERKNSt6vectorIiEE">
+<span id="_CPPv3NK11GDALMDArray9TransposeERKNSt6vectorIiEE"></span><span id="_CPPv2NK11GDALMDArray9TransposeERKNSt6vectorIiEE"></span><span id="GDALMDArray::Transpose__std::vector:i:CRC"></span><span class="target" id="classGDALMDArray_1acb2e2f9a792329c7e0fe1b35bf756882"></span>std::shared_ptr&lt;<a class="reference internal" href="#_CPPv411GDALMDArray" title="GDALMDArray">GDALMDArray</a>&gt; <code class="descname">Transpose</code><span class="sig-paren">(</span><em class="property">const</em> std::vector&lt;int&gt; &amp;<em>anMapNewAxisToOldAxis</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK11GDALMDArray9TransposeERKNSt6vectorIiEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return a view of the array whose axis have been reordered. </p>
+<p>The anMapNewAxisToOldAxis parameter should contain all the values between 0 and <a class="reference internal" href="gdalabstractmdarray_cpp.html#classGDALAbstractMDArray_1ad187a612ebbf1369954af77ad57f7ade"><span class="std std-ref">GetDimensionCount()</span></a> - 1, and each only once. -1 can be used as a special index value to ask for the insertion of a new axis of size 1. The new array will have anMapNewAxisToOldAxis.size() axis, and if i is the index of one of its dimension, it corresponds to the axis of index anMapNewAxisToOldAxis[i] from the current array.</p>
+<p>This is similar to the numpy.transpose() method</p>
+<p>The returned array holds a reference to the original one, and thus is a view of it (not a copy). If the content of the original array changes, the content of the view array too. The view can be written if the underlying array is writable.</p>
+<p>Note that I/O performance in such a transposed view might be poor.</p>
+<p>This is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a9b9e126aec5306379ba837ccf402ef8c"><span class="std std-ref">GDALMDArrayTranspose()</span></a>.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>a new array, that holds a reference to the original one, and thus is a view of it (not a copy), or nullptr in case of error. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK11GDALMDArray11GetUnscaledEv">
+<span id="_CPPv3NK11GDALMDArray11GetUnscaledEv"></span><span id="_CPPv2NK11GDALMDArray11GetUnscaledEv"></span><span id="GDALMDArray::GetUnscaledC"></span><span class="target" id="classGDALMDArray_1a142e382ab1d25fe0207b34de3c493b0d"></span>std::shared_ptr&lt;<a class="reference internal" href="#_CPPv411GDALMDArray" title="GDALMDArray">GDALMDArray</a>&gt; <code class="descname">GetUnscaled</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK11GDALMDArray11GetUnscaledEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return an array that is the unscaled version of the current one. </p>
+<p>That is each value of the unscaled array will be unscaled_value = raw_value * <a class="reference internal" href="#classGDALMDArray_1a30cc8d011264105bbe64b63036caf035"><span class="std std-ref">GetScale()</span></a> + <a class="reference internal" href="#classGDALMDArray_1add6549f088b9e9fd60241625bb4fb4ab"><span class="std std-ref">GetOffset()</span></a></p>
+<p>This is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1afa55faee55047d7026382fb2b9d4cd50"><span class="std std-ref">GDALMDArrayGetUnscaled()</span></a>.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>a new array, that holds a reference to the original one, and thus is a view of it (not a copy), or nullptr in case of error. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK11GDALMDArray7GetMaskE12CSLConstList">
+<span id="_CPPv3NK11GDALMDArray7GetMaskE12CSLConstList"></span><span id="_CPPv2NK11GDALMDArray7GetMaskE12CSLConstList"></span><span id="GDALMDArray::GetMask__CSLConstListC"></span><span class="target" id="classGDALMDArray_1aa4f5ba8fb8dab129d6813fb8cda59365"></span>std::shared_ptr&lt;<a class="reference internal" href="#_CPPv411GDALMDArray" title="GDALMDArray">GDALMDArray</a>&gt; <code class="descname">GetMask</code><span class="sig-paren">(</span><a class="reference internal" href="cpl.html#_CPPv412CSLConstList" title="CSLConstList">CSLConstList</a> <em>papszOptions</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK11GDALMDArray7GetMaskE12CSLConstList" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return an array that is a mask for the current array. </p>
+<p>This array will be of type Byte, with values set to 0 to indicate invalid pixels of the current array, and values set to 1 to indicate valid pixels.</p>
+<p>The generic implementation honours the NoDataValue, as well as various netCDF CF attributes: missing_value, _FillValue, valid_min, valid_max and valid_range.</p>
+<p>This is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a9fd27c509a05c2dc663309ee20f8fff3"><span class="std std-ref">GDALMDArrayGetMask()</span></a>.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>a new array, that holds a reference to the original one, and thus is a view of it (not a copy), or nullptr in case of error. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">papszOptions</span></code>: NULL-terminated list of options, or NULL.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK11GDALMDArray16AsClassicDatasetE6size_t6size_t">
+<span id="_CPPv3NK11GDALMDArray16AsClassicDatasetE6size_t6size_t"></span><span id="_CPPv2NK11GDALMDArray16AsClassicDatasetE6size_t6size_t"></span><span id="GDALMDArray::AsClassicDataset__s.sC"></span><span class="target" id="classGDALMDArray_1a4c52c624707f9c6f12bc7c597761057a"></span><a class="reference internal" href="gdaldataset_cpp.html#_CPPv411GDALDataset" title="GDALDataset">GDALDataset</a> *<code class="descname">AsClassicDataset</code><span class="sig-paren">(</span>size_t <em>iXDim</em>, size_t <em>iYDim</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK11GDALMDArray16AsClassicDatasetE6size_t6size_t" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Return a view of this array as a “classic” <a class="reference internal" href="gdaldataset_cpp.html#classGDALDataset"><span class="std std-ref">GDALDataset</span></a> (ie 2D) </p>
+<p>In the case of &gt; 2D arrays, additional dimensions will be represented as raster bands.</p>
+<p>The “reverse” method is <a class="reference internal" href="gdalrasterband_cpp.html#classGDALRasterBand_1ac7a295ea7fcf39223133ae7da075fafe"><span class="std std-ref">GDALRasterBand::AsMDArray()</span></a>.</p>
+<p>This is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1aa924e231ebd5dcc3807f366172bbfc37"><span class="std std-ref">GDALMDArrayAsClassicDataset()</span></a>.</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>a new <a class="reference internal" href="gdaldataset_cpp.html#classGDALDataset"><span class="std std-ref">GDALDataset</span></a> that must be freed with <a class="reference internal" href="raster_c_api.html#gdal_8h_1a0984222d45a72028fcbbf1f44831ffbc"><span class="std std-ref">GDALClose()</span></a>, or nullptr </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">iXDim</span></code>: Index of the dimension that will be used as the X/width axis. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">iYDim</span></code>: Index of the dimension that will be used as the Y/height axis. Ignored if the dimension count is 1. </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="gdalattribute_cpp.html" class="btn btn-neutral float-right" title="GDALAttribute C++ API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gdalabstractmdarray_cpp.html" class="btn btn-neutral float-left" title="GDALAbstractMDArray C++ API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

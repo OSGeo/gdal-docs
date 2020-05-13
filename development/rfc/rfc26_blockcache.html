@@ -1,0 +1,523 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RFC 26: GDAL Block Cache Improvements &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdevelopment/rfc/rfc26_blockcache.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="RFC 27: Improved Supporting Data File Options" href="rfc27_supportdata.html" />
+    <link rel="prev" title="RFC 25: Fast Open" href="rfc25_fast_open.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 26: GDAL Block Cache Improvements</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary-and-rationale">Summary and rationale</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main-concepts">Main concepts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#backward-compatibility">Backward Compatibility</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#performance-impacts">Performance impacts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#testing">Testing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id1">Implementation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#references">References</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voting-history">Voting History</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 26: GDAL Block Cache Improvements</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/development/rfc/rfc26_blockcache.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="rfc27_supportdata.html" class="btn btn-neutral float-right" title="RFC 27: Improved Supporting Data File Options" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc25_fast_open.html" class="btn btn-neutral float-left" title="RFC 25: Fast Open" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rfc-26-gdal-block-cache-improvements">
+<span id="rfc-26"></span><h1>RFC 26: GDAL Block Cache Improvements<a class="headerlink" href="#rfc-26-gdal-block-cache-improvements" title="Permalink to this headline">¶</a></h1>
+<p>Authors: Tamas Szekeres, Even Rouault</p>
+<p>Contact: <a class="reference external" href="mailto:szekerest&#37;&#52;&#48;gmail&#46;com">szekerest<span>&#64;</span>gmail<span>&#46;</span>com</a>, even.rouault at spatialys.com</p>
+<p>Status: Adopted, implemented</p>
+<p>Implementation version: GDAL 2.1</p>
+<div class="section" id="summary-and-rationale">
+<h2>Summary and rationale<a class="headerlink" href="#summary-and-rationale" title="Permalink to this headline">¶</a></h2>
+<p>GDAL maintains an in-memory cache for the raster blocks fetched from the
+drivers and ensures that the second attempt to access the same block
+will be served from the cache instead of the driver. This cache is
+maintained in a per-band fashion and an array is allocated for the
+pointers for each blocks (or sub-blocks). This approach is not
+sufficient with large raster dimensions (or large virtual rasters ie.
+with the WMS/TMS driver), which may cause out of memory errors in
+GDALRasterBand::InitBlockInfo, as raised in #3224</p>
+<p>For example, a band of a dataset at level 21 with a GoogleMaps tiling
+requires 2097152x2097152 tiles of 256x256 pixels. This means that GDAL
+will try to allocate an array of 32768x32768 = 1 billion elements (32768
+= 2097152 / 64). The size of this array is 4 GB on a 32-bit build, so it
+cannot be allocated at all. And it is 8 GB on a 64-bit build (even if
+this is generally only virtual memory reservation but not actually
+allocation of physical pages of memory, due to over-commit mechanism of
+the operating system). At dataset closing, this means that those 1
+billion cells will have to be explored to discover remaining cached
+blocks. In reality, all above figures must be multiplied by 3 for a RGB
+(or 4 for a RGBA) dataset.</p>
+<p>In the hash set implementation, memory allocation depends directly on
+the number of cached blocks. Typically with the default GDAL_CACHEMAX
+size of 40 MB, only 640 blocks of 256x256 pixels can be simultaneously
+cached (for all datasets).</p>
+</div>
+<div class="section" id="main-concepts">
+<h2>Main concepts<a class="headerlink" href="#main-concepts" title="Permalink to this headline">¶</a></h2>
+<p>Awareness of thread-safety issues is crucial in the design of block
+caching. In gdalrasterblock.cpp, a static linked list is maintained so
+as to track the access order of the blocks and keep the size of the
+cache within a desired limit by dropping the oldest blocks out of the
+list. This linked list is shared among all the datasets and bands in
+GDAL (protected by a hRBMutex) and a thread on each band, when reading a
+new block, may also trigger a GDALRasterBand::UnreferenceBlock call on
+another band within the scope of this mutex. GDALRasterBand::FlushBlock
+will also access the data structure of the band level cache by removing
+the corresponding tile from the array or the hashtable.</p>
+<p>In GDAL 2.0, some issues related to thread-safety (#3225, #3226) have
+been fixed and this RFC still preserves those scenarios as safe.</p>
+<p>The changes of this RFC consist in moving away from the GDALRasterBand
+class the logic to access to a cached block, to add or remove it. This
+is done with the new GDALAbstractBandBlockCache class. The current array
+based logic is moved into the new GDALArrayBandBlockCache class, and the
+new hashset based logic in GDALHashsetBandBlockCache.</p>
+<p>For the array based implementation, due to the “static” nature of the
+hosting structure (an array), no special care is needed when reading or
+writing a cell from concurrent threads. The only special care that must
+be taken is to prevent a given cell (block) to be accessed concurrently.
+For example we want to avoid TryGetLockedBlockRef() to return a block
+that is being freed by another thread from
+GDALRasterBlock::FlushCacheBlock() or Internalize(). For that, the
+nRefCount member of GDALRasterBlock is now accessed and modified only
+through atomic functions to increase, decrease or compare-and-swap its
+value.</p>
+<p>For the hash set based implementation, the base implementation of hash
+set data structure done in in cpl_hash_set.h / cpl_hash_set.cpp is not
+thread safe by default. So GDALHashsetBandBlockCache has a dedicated
+mutex to protect all reads, additions and removals from the hash set. No
+dead-lock with the hRBMutex can occurs since no operations done under
+the hashset mutex involves calling any method from GDALRasterBlock.</p>
+<p>We could potentially have reused the hRBMutex to protect the hash set,
+but this would have increased the contention of the hRBMutex
+unnecessarily.</p>
+<p>By default, the selection between the array based and the hashtable
+based approaches is based on the following rule: if the dataset has more
+than 1 million blocks, the hashset based implementation is used,
+otherwise the array based implementation is used. The new
+GDAL_OF_ARRAY_BLOCK_ACCESS and GDAL_OF_HASHSET_BLOCK_ACCESS open flags
+can also be passed to GDALOpenEx() to override this choice. The
+GDAL_BAND_BLOCK_CACHE configuration option can also be set to ARRAY or
+HASHSET.</p>
+<p>The hashset based implementation could potentially be the default
+implementation in all cases (performance comparisons done with the
+autotest/cpp/testblockcache utility with 4 or 8 cores show non
+measurable differences), but in theory the array based implementation
+offers less contention of the hRBMutex, so should be more scalable when
+using lots of cores. And as work has been done during GDAL 2.0 to
+improve the scalability, it might be prudent for now to remain on the
+array based implementation on rasters of modest size.</p>
+<p>Not completely linked with this RFC, a few changes have been done to
+limit the number of allocation/deallocation of objects (GDALRasterBlock
+instances, as well as an internal element of CPLHashSet), which has an
+effect on scalability since memory allocation routines involve
+synchronization between threads.</p>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>To implement the addition the following changes is made in the GDAL
+codebase:</p>
+<ul class="simple">
+<li><p>port/cpl_hash_set.cpp / port/cpl_hash_set.h: CPLHashSetClear()
+function added to remove all the elements in one operation.</p></li>
+<li><p>port/cpl_hash_set.cpp / port/cpl_hash_set.h:
+CPLHashSetRemoveDeferRehash() function added to remove one element
+quickly. That is to say the potential resizing of the array used
+internally is deferred to a later operation</p></li>
+<li><p>port/cpl_hash_set.cpp / port/cpl_hash_set.h: improvements to
+“recycle” links from the linked lists and avoid useless
+malloc()/free().</p></li>
+<li><p>port/cpl_atomic_ops.cpp: addition of CPLAtomicCompareAndExchange()</p></li>
+<li><p>gcore/gdal.h: additions of GDAL_OF_DEFAULT_BLOCK_ACCESS,
+GDAL_OF_ARRAY_BLOCK_ACCESS and GDAL_OF_HASHSET_BLOCK_ACCESS values.</p></li>
+<li><p>gcore/gdal_priv.h: definition of GDALAbstractBandBlockCache class,
+and GDALArrayBandBlockCacheCreate() and
+GDALHashSetBandBlockCacheCreate() functions. Modifications of
+GDALRasterBand, GDALDataset and GDALRasterBlock definitions.</p></li>
+<li><p>gcore/gdalrasterband.cpp: InitBlockInfo() instantiates the
+appropriate band block cache implementation.</p></li>
+<li><p>gcore/gdalrasterband.cpp: the AdoptBlock(), UnreferenceBlock(),
+FlushBlock() and TryGetLockedBlockRef() methods delegate to the
+actual band block cache implementation.</p></li>
+<li><p>gcore/gdalrasterband.cpp: AddBlockToFreeList() is added and delegate
+to GDALAbstractBandBlockCache</p></li>
+<li><p>gcore/gdalrasterblock.cpp: SafeLockBlock() is replaced by TakeLock()</p></li>
+<li><p>gcore/gdalrasterblock.cpp: RecycleFor() method added to recycle an
+existing block object to save a few new/delete calls (used by
+GDALAbstractBandBlockCache::CreateBlock())</p></li>
+<li><p>gcore/gdalrasterblock.cpp: Internalize() or FlushCacheBlock() no
+longer directly free a block (they still free or recycle its pData
+member), but provide it to GDALRasterBand::AddBlockToFreeList() for
+layer reuse.</p></li>
+<li><p>gcore/gdalrasterblock.cpp: DropLockForRemovalFromStorage() is added
+to avoid racing destruction of blocks between
+GDALRasterBand::FlushCache() or FlushBlock() with
+GDALRasterBlock::Internalize() or FlushCacheBlock().</p></li>
+<li><p>gcore/gdalabstractbandblockcache.cpp: added. Contains logic to keep
+instantiated GDALRasterBlock that were discarded by the global block
+manager for their later reuse. Saves a few new/delete calls.</p></li>
+<li><p>gcore/gdalarraybandblockcache.cpp: the GDALArrayBandBlockCache class
+implementation with mostly the existing code</p></li>
+<li><p>gcore/gdalhashsetbandblockcache.cpp: the new
+GDALHashsetBandBlockCache class implementation</p></li>
+</ul>
+</div>
+<div class="section" id="backward-compatibility">
+<h2>Backward Compatibility<a class="headerlink" href="#backward-compatibility" title="Permalink to this headline">¶</a></h2>
+<p>This implementation retains the backward compatibility with the existing
+API. The C++ ABI of GDALRasterBand, GDALDataset and GDALRasterBlock is
+modified.</p>
+</div>
+<div class="section" id="performance-impacts">
+<h2>Performance impacts<a class="headerlink" href="#performance-impacts" title="Permalink to this headline">¶</a></h2>
+<p>The array based implementation after this RFC should still show the same
+performance than the current implementation (potentially very slightly
+improved with the recycling of blocks). Confirmed by tests with
+autotest/cpp/testblockcache.</p>
+</div>
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<p>This change doesn’t affect the existing user documentation.</p>
+</div>
+<div class="section" id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
+<p>The autotest/cpp/testblockcache utility is now run by the “quick_test”
+target of autotest/cpp/Makefile with GDAL_BAND_BLOCK_CACHE=HASHSET in
+additions to the array based implementation.</p>
+<p>A new autotest/cpp/testblockcachelimits utility has been developed to
+test a few racing situations. As races are hard to trigger, the code of
+GDALRasterBlock has been instrumented to allow sleeping in particular
+places, enabling races to be reliably simulated.</p>
+</div>
+<div class="section" id="id1">
+<h2>Implementation<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>Tamas Szekeres had provided an initial version of this RFC. It has been
+restructured and ported on GDAL 2.0 by Even Rouault (sponsored by <a class="reference external" href="http://www.linz.govt.nz/">LINZ
+(Land Information New Zealand)</a>)</p>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<p>The proposed implementation lies in the “rfc26_bandblockcache” branch of
+the
+<a class="reference external" href="https://github.com/rouault/gdal2/tree/rfc26_bandblockcache">https://github.com/rouault/gdal2/tree/rfc26_bandblockcache</a>
+repository.</p>
+<p>The list of changes:
+<a class="reference external" href="https://github.com/rouault/gdal2/compare/rfc26_bandblockcache">https://github.com/rouault/gdal2/compare/rfc26_bandblockcache</a></p>
+<p>Related bugs: #3264, #3224.</p>
+</div>
+<div class="section" id="voting-history">
+<h2>Voting History<a class="headerlink" href="#voting-history" title="Permalink to this headline">¶</a></h2>
+<p>+1 from EvenR, DanielM, TamasS. +0 from JukkaR</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rfc27_supportdata.html" class="btn btn-neutral float-right" title="RFC 27: Improved Supporting Data File Options" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc25_fast_open.html" class="btn btn-neutral float-left" title="RFC 25: Fast Open" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

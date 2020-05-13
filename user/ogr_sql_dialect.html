@@ -1,0 +1,844 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>OGR SQL dialect &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orguser/ogr_sql_dialect.html"/>
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="SQL SQLite dialect" href="sql_sqlite_dialect.html" />
+    <link rel="prev" title="OGR SQL dialect and SQLITE SQL dialect" href="ogr_sql_sqlite_dialect.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">User</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="raster_data_model.html">Raster Data Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multidim_raster_data_model.html">Multidimensional Raster Data Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vector_data_model.html">Vector Data Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gnm_data_model.html">Geographic Networks Data Model</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="ogr_sql_sqlite_dialect.html">OGR SQL dialect and SQLITE SQL dialect</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">OGR SQL dialect</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#select">SELECT</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#special-fields">SPECIAL FIELDS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#create-index">CREATE INDEX</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#drop-index">DROP INDEX</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#alter-table">ALTER TABLE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#drop-table">DROP TABLE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#executesql">ExecuteSQL()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#non-ogr-sql">Non-OGR SQL</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="sql_sqlite_dialect.html">SQL SQLite dialect</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="virtual_file_systems.html">GDAL Virtual File Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ogr_feature_style.html">Feature Style Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configoptions.html">Configuration options</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">User oriented documentation</a> &raquo;</li>
+      
+          <li><a href="ogr_sql_sqlite_dialect.html">OGR SQL dialect and SQLITE SQL dialect</a> &raquo;</li>
+      
+      <li>OGR SQL dialect</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/user/ogr_sql_dialect.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="sql_sqlite_dialect.html" class="btn btn-neutral float-right" title="SQL SQLite dialect" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ogr_sql_sqlite_dialect.html" class="btn btn-neutral float-left" title="OGR SQL dialect and SQLITE SQL dialect" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="ogr-sql-dialect">
+<span id="id1"></span><h1>OGR SQL dialect<a class="headerlink" href="#ogr-sql-dialect" title="Permalink to this headline">¶</a></h1>
+<p>The GDALDataset supports executing commands against a datasource via the
+<a class="reference internal" href="../api/gdaldataset_cpp.html#_CPPv4N11GDALDataset10ExecuteSQLEPKcP11OGRGeometryPKc" title="GDALDataset::ExecuteSQL"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDataset::ExecuteSQL()</span></code></a> method.  While in theory
+any sort of command could be handled this way, in practice the mechanism is
+used to provide a subset of SQL SELECT capability to applications.  This
+page discusses the generic SQL implementation implemented within OGR, and
+issue with driver specific SQL support.</p>
+<p>Since GDAL/OGR 1.10, an alternate “dialect”, the SQLite dialect, can be used
+instead of the OGRSQL dialect. Refer to the <a class="reference internal" href="sql_sqlite_dialect.html#sql-sqlite-dialect"><span class="std std-ref">SQL SQLite dialect</span></a> page for more details.</p>
+<p>The OGRLayer class also supports applying an attribute query filter to
+features returned using the OGRLayer::SetAttributeFilter() method.  The
+syntax for the attribute filter is the same as the WHERE clause in the
+OGR SQL SELECT statement.  So everything here with regard to the WHERE
+clause applies in the context of the SetAttributeFilter() method.</p>
+<p>NOTE: OGR SQL has been reimplemented for GDAL/OGR 1.8.0.  Many features
+discussed below, notably arithmetic expressions, and expressions in the
+field list, were not support in GDAL/OGR 1.7.x and earlier.  See RFC 28 for
+details of the new features in GDAL/OGR 1.8.0.</p>
+<div class="section" id="select">
+<h2>SELECT<a class="headerlink" href="#select" title="Permalink to this headline">¶</a></h2>
+<p>The SELECT statement is used to fetch layer features (analogous to table
+rows in an RDBMS) with the result of the query represented as a temporary layer
+of features.   The layers of the datasource are analogous to tables in an
+RDBMS and feature attributes are analogous to column values.  The simplest
+form of OGR SQL SELECT statement looks like this:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">polylayer</span>
+</pre></div>
+</div>
+<p>In this case all features are fetched from the layer named “polylayer”, and
+all attributes of those features are returned.  This is essentially
+equivalent to accessing the layer directly.  In this example the “*”
+is the list of fields to fetch from the layer, with “*” meaning that all
+fields should be fetched.</p>
+<p>This slightly more sophisticated form still pulls all features from the layer
+but the schema will only contain the EAS_ID and PROP_VALUE attributes.   Any
+other attributes would be discarded.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="n">eas_id</span><span class="p">,</span> <span class="n">prop_value</span> <span class="k">FROM</span> <span class="n">polylayer</span>
+</pre></div>
+</div>
+<p>A much more ambitious SELECT, restricting the features fetched with a
+WHERE clause, and sorting the results might look like:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="o">*</span> <span class="k">from</span> <span class="n">polylayer</span> <span class="k">WHERE</span> <span class="n">prop_value</span> <span class="o">&gt;</span> <span class="mi">220000</span><span class="p">.</span><span class="mi">0</span> <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">prop_value</span> <span class="k">DESC</span>
+</pre></div>
+</div>
+<p>This select statement will produce a table with just one feature, with one
+attribute (named something like “count_eas_id”) containing the number of
+distinct values of the eas_id attribute.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="k">COUNT</span><span class="p">(</span><span class="k">DISTINCT</span> <span class="n">eas_id</span><span class="p">)</span> <span class="k">FROM</span> <span class="n">polylayer</span>
+</pre></div>
+</div>
+<div class="section" id="general-syntax">
+<h3>General syntax<a class="headerlink" href="#general-syntax" title="Permalink to this headline">¶</a></h3>
+<p>The general syntax of a SELECT statement is:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="p">[</span><span class="n">fields</span><span class="p">]</span> <span class="k">FROM</span> <span class="n">layer_name</span> <span class="p">[</span><span class="k">JOIN</span> <span class="p">...]</span> <span class="p">[</span><span class="k">WHERE</span> <span class="p">...]</span> <span class="p">[</span><span class="k">ORDER</span> <span class="k">BY</span> <span class="p">...]</span> <span class="p">[</span><span class="k">LIMIT</span> <span class="p">...]</span> <span class="p">[</span><span class="k">OFFSET</span> <span class="p">...]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="list-operators">
+<h3>List Operators<a class="headerlink" href="#list-operators" title="Permalink to this headline">¶</a></h3>
+<p>The field list is a comma separate list of the fields to be carried into
+the output features from the source layer.  They will appear on output features
+in the order they appear on in the field list, so the field list may be used
+to re-order the fields.</p>
+<p>A special form of the field list uses the DISTINCT keyword.  This returns a
+list of all the distinct values of the named attribute.  When the DISTINCT
+keyword is used, only one attribute may appear in the field list.  The DISTINCT
+keyword may be used against any type of field.  Currently the distinctness
+test against a string value is case insensitive in OGR SQL.  The result of
+a SELECT with a DISTINCT keyword is a layer with one column (named the same
+as the field operated on), and one feature per distinct value.  Geometries
+are discarded.  The distinct values are assembled in memory, so a lot of
+memory may be used for datasets with a large number of distinct values.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="k">DISTINCT</span> <span class="n">areacode</span> <span class="k">FROM</span> <span class="n">polylayer</span>
+</pre></div>
+</div>
+<p>There are also several summarization operators that may be applied to columns.
+When a summarization operator is applied to any field, then all fields must
+have summarization operators applied.   The summarization operators are
+COUNT (a count of instances), AVG (numerical average), SUM (numerical sum),
+MIN (lexical or numerical minimum), and MAX (lexical or numerical maximum).
+This example produces a variety of summarization information on parcel
+property values:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="k">MIN</span><span class="p">(</span><span class="n">prop_value</span><span class="p">),</span> <span class="k">MAX</span><span class="p">(</span><span class="n">prop_value</span><span class="p">),</span> <span class="k">AVG</span><span class="p">(</span><span class="n">prop_value</span><span class="p">),</span> <span class="k">SUM</span><span class="p">(</span><span class="n">prop_value</span><span class="p">),</span>
+    <span class="k">COUNT</span><span class="p">(</span><span class="n">prop_value</span><span class="p">)</span> <span class="k">FROM</span> <span class="n">polylayer</span> <span class="k">WHERE</span> <span class="n">prov_name</span> <span class="o">=</span> <span class="s1">&#39;Ontario&#39;</span>
+</pre></div>
+</div>
+<p>It is also possible to apply the COUNT() operator to a DISTINCT SELECT to get
+a count of distinct values, for instance:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="k">COUNT</span><span class="p">(</span><span class="k">DISTINCT</span> <span class="n">areacode</span><span class="p">)</span> <span class="k">FROM</span> <span class="n">polylayer</span>
+</pre></div>
+</div>
+<p>Note: prior to OGR 1.9.0, null values were counted in COUNT(column_name) or
+COUNT(DISTINCT column_name), which was not conformant with the SQL standard. Since
+OGR 1.9.0, only non-null values are counted.</p>
+<p>As a special case, the COUNT() operator can be given a “*” argument instead
+of a field name which is a short form for count all the records.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">FROM</span> <span class="n">polylayer</span>
+</pre></div>
+</div>
+<p>Field names can also be prefixed by a table name though this is only
+really meaningful when performing joins.  It is further demonstrated in
+the JOIN section.</p>
+<p>Field definitions can also be complex expressions using arithmetic, and
+functional operators.   However, the DISTINCT keyword, and summarization
+operators like MIN, MAX, AVG and SUM may not be applied to expression fields.
+Starting with GDAL 2.0, boolean resulting expressions (comparisons, logical
+operators) can also be used.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="n">cost</span><span class="o">+</span><span class="n">tax</span> <span class="k">from</span> <span class="n">invoice</span>
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="n">CONCAT</span><span class="p">(</span><span class="n">owner_first_name</span><span class="p">,</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="n">owner_last_name</span><span class="p">)</span> <span class="k">from</span> <span class="n">properties</span>
+</pre></div>
+</div>
+<div class="section" id="functions">
+<h4>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h4>
+<p>Starting with OGR 1.8.2, the SUBSTR function can be used to extract a substring from a string.
+Its syntax is the following one : SUBSTR(string_expr, start_offset [, length]). It extracts a substring of string_expr,
+starting at offset start_offset (1 being the first character of string_expr, 2 the second one, etc…).
+If start_offset is a negative value, the substring is extracted from the end of the string (-1 is the
+last character of the string, -2 the character before the last character, …).
+If length is specified, up to length characters are extracted from the string. Otherwise the
+remainder of the string is extracted.</p>
+<p>Note: for the time being, the character as considered to be equivalent to bytes, which may not be
+appropriate for multi-byte encodings like UTF-8.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="n">SUBSTR</span><span class="p">(</span><span class="s1">&#39;abcdef&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="k">FROM</span> <span class="n">xxx</span>   <span class="c1">--&gt; &#39;ab&#39;</span>
+<span class="k">SELECT</span> <span class="n">SUBSTR</span><span class="p">(</span><span class="s1">&#39;abcdef&#39;</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>   <span class="k">FROM</span> <span class="n">xxx</span>   <span class="c1">--&gt; &#39;def&#39;</span>
+<span class="k">SELECT</span> <span class="n">SUBSTR</span><span class="p">(</span><span class="s1">&#39;abcdef&#39;</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>  <span class="k">FROM</span> <span class="n">xxx</span>   <span class="c1">--&gt; &#39;ef&#39;</span>
+</pre></div>
+</div>
+<p>Starting with OGR 2.0, the <code class="docutils literal notranslate"><span class="pre">hstore_get_value()</span></code> function can be used to extract
+a value associate to a key from a HSTORE string, formatted like ‘key=&gt;value,other_key=&gt;other_value,…’</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="n">hstore_get_value</span><span class="p">(</span><span class="s1">&#39;a =&gt; b, &quot;key with space&quot;=&gt; &quot;value with space&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;key with space&#39;</span><span class="p">)</span> <span class="k">FROM</span> <span class="n">xxx</span> <span class="c1">--&gt; &#39;value with space&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="using-the-field-name-alias">
+<h4>Using the field name alias<a class="headerlink" href="#using-the-field-name-alias" title="Permalink to this headline">¶</a></h4>
+<p>OGR SQL supports renaming the fields following the SQL92 specification by
+using the AS keyword according to the following example:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="o">*</span><span class="p">,</span> <span class="n">OGR_STYLE</span> <span class="k">AS</span> <span class="n">STYLE</span> <span class="k">FROM</span> <span class="n">polylayer</span>
+</pre></div>
+</div>
+<p>The field name alias can be used as the last operation in the column specification.
+Therefore we cannot rename the fields inside an operator, but we can
+rename whole column expression, like these two:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="k">COUNT</span><span class="p">(</span><span class="n">areacode</span><span class="p">)</span> <span class="k">AS</span> <span class="ss">&quot;count&quot;</span> <span class="k">FROM</span> <span class="n">polylayer</span>
+<span class="k">SELECT</span> <span class="n">dollars</span><span class="o">/</span><span class="mi">100</span><span class="p">.</span><span class="mi">0</span> <span class="k">AS</span> <span class="n">cents</span> <span class="k">FROM</span> <span class="n">polylayer</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="changing-the-type-of-the-fields">
+<h4>Changing the type of the fields<a class="headerlink" href="#changing-the-type-of-the-fields" title="Permalink to this headline">¶</a></h4>
+<p>Starting with GDAL 1.6.0, OGR SQL supports changing the type of the columns by using the SQL92 compliant CAST
+operator according to the following example:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="o">*</span><span class="p">,</span> <span class="k">CAST</span><span class="p">(</span><span class="n">OGR_STYLE</span> <span class="k">AS</span> <span class="nb">character</span><span class="p">(</span><span class="mi">255</span><span class="p">))</span> <span class="k">FROM</span> <span class="n">rivers</span>
+</pre></div>
+</div>
+<p>Currently casting to the following target types are supported:</p>
+<ul class="simple">
+<li><p>boolean (GDAL &gt;= 2.0)</p></li>
+<li><p>character(field_length). By default, field_length=1.</p></li>
+<li><p>float(field_length)</p></li>
+<li><p>numeric(field_length, field_precision)</p></li>
+<li><p>smallint(field_length) : 16 bit signed integer (GDAL &gt;= 2.0)</p></li>
+<li><p>integer(field_length)</p></li>
+<li><p>bigint(field_length), 64 bit integer, extension to SQL92 (GDAL &gt;= 2.0)</p></li>
+<li><p>date(field_length)</p></li>
+<li><p>time(field_length)</p></li>
+<li><p>timestamp(field_length)</p></li>
+<li><p>geometry, geometry(geometry_type), geometry(geometry_type,epsg_code)</p></li>
+</ul>
+<p>Specifying the field_length and/or the field_precision is optional.  An
+explicit value of zero can be used as the width for character() to indicate
+variable width.  Conversion to the ‘integer list’, ‘double list’
+and ‘string list’ OGR data types are not supported, which doesn’t conform to
+the SQL92 specification.</p>
+<p>While the CAST operator can be applied anywhere in an expression, including
+in a WHERE clause, the detailed control of output field format is only
+supported if the CAST operator is the “outer most” operators on a field
+in the field definition list.  In other contexts it is still useful to
+convert between numeric, string and date data types.</p>
+<p>Starting with OGR 1.11, casting a WKT string to a geometry is allowed.
+geometry_type can be POINT[Z], LINESTRING[Z], POLYGON[Z], MULTIPOINT[Z],
+MULTILINESTRING[Z], MULTIPOLYGON[Z], GEOMETRYCOLLECTION[Z] or GEOMETRY[Z].</p>
+</div>
+<div class="section" id="string-literals-and-identifiers-quoting">
+<h4>String literals and identifiers quoting<a class="headerlink" href="#string-literals-and-identifiers-quoting" title="Permalink to this headline">¶</a></h4>
+<p>Starting with GDAL 2.0, strict SQL92 rules are applied regarding string literals
+and identifiers quoting.</p>
+<p>String literals (constants) must be surrounded with single-quote characters. e.g.
+WHERE a_field = ‘a_value’</p>
+<p>Identifiers (column names and tables names) can be used unquoted if they don’t
+contain special characters or are not a SQL reserved keyword. Otherwise they must
+be surrounded with double-quote characters. e.g. WHERE “from” = 5.</p>
+</div>
+</div>
+<div class="section" id="where">
+<h3>WHERE<a class="headerlink" href="#where" title="Permalink to this headline">¶</a></h3>
+<p>The argument to the WHERE clause is a logical expression used select records
+from the source layer.  In addition to its use within the WHERE statement,
+the WHERE clause handling is also used for OGR attribute queries on regular
+layers via <a class="reference internal" href="../api/ogrlayer_cpp.html#_CPPv4N8OGRLayer18SetAttributeFilterEPKc" title="OGRLayer::SetAttributeFilter"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRLayer::SetAttributeFilter()</span></code></a>.</p>
+<p>In addition to the arithmetic and other functional operators available in
+expressions in the field selection clause of the SELECT statement, in the
+WHERE context logical operators are also available and the evaluated value
+of the expression should be logical (true or false).</p>
+<p>The available logical operators are
+<code class="docutils literal notranslate"><span class="pre">=</span></code>,
+<code class="docutils literal notranslate"><span class="pre">!=</span></code>,
+<code class="docutils literal notranslate"><span class="pre">&lt;&gt;</span></code>,
+<code class="docutils literal notranslate"><span class="pre">&lt;</span></code>,
+<code class="docutils literal notranslate"><span class="pre">&gt;</span></code>,
+<code class="docutils literal notranslate"><span class="pre">&lt;=</span></code>,
+<code class="docutils literal notranslate"><span class="pre">&gt;=</span></code>,
+<code class="docutils literal notranslate"><span class="pre">LIKE</span></code> and
+<code class="docutils literal notranslate"><span class="pre">ILIKE</span></code>,
+<code class="docutils literal notranslate"><span class="pre">BETWEEN</span></code> and
+<code class="docutils literal notranslate"><span class="pre">IN</span></code>.
+Most of the operators are self explanatory, but it is worth noting that <code class="docutils literal notranslate"><span class="pre">!=</span></code>
+is the same as <code class="docutils literal notranslate"><span class="pre">&lt;&gt;</span></code>, the string equality is
+case insensitive, but the <code class="docutils literal notranslate"><span class="pre">&lt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;=</span></code> and <code class="docutils literal notranslate"><span class="pre">&gt;=</span></code> operators <em>are</em> case sensitive.</p>
+<p>Starting with GDAL 3.1, LIKE is case sensitive, and ILIKE is case insensitive.
+In previous versions, LIKE was also case insensitive. If the old behavior is
+wished in GDAL 3.1, the <code class="decl_configoption docutils literal notranslate"><span class="pre">OGR_SQL_LIKE_AS_ILIKE</span></code> can be set to <code class="docutils literal notranslate"><span class="pre">YES</span></code>.</p>
+<p>The value argument to the <code class="docutils literal notranslate"><span class="pre">LIKE</span></code> and <code class="docutils literal notranslate"><span class="pre">ILIKE</span></code> operators is a pattern against which
+the value string is matched.  In this pattern percent (%) matches any number of
+characters, and underscore ( _ ) matches any one character. An optional ESCAPE escape_char
+clause can be added so that the percent or underscore characters can be searched
+as regular characters, by being preceded with the escape_char.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">String</span>             <span class="n">Pattern</span>       <span class="n">Matches</span><span class="o">?</span>
+<span class="c1">------             -------       --------</span>
+<span class="n">Alberta</span>            <span class="n">ALB</span><span class="o">%</span>          <span class="n">Yes</span>
+<span class="n">Alberta</span>            <span class="n">_lberta</span>       <span class="n">Yes</span>
+<span class="n">St</span><span class="p">.</span> <span class="n">Alberta</span>        <span class="n">_lberta</span>       <span class="k">No</span>
+<span class="n">St</span><span class="p">.</span> <span class="n">Alberta</span>        <span class="o">%</span><span class="n">lberta</span>       <span class="n">Yes</span>
+<span class="n">Robarts</span> <span class="n">St</span><span class="p">.</span>        <span class="o">%</span><span class="n">Robarts</span><span class="o">%</span>     <span class="n">Yes</span>
+<span class="mi">12345</span>              <span class="mi">123</span><span class="o">%</span><span class="mi">45</span>        <span class="n">Yes</span>
+<span class="mi">123</span><span class="p">.</span><span class="mi">45</span>             <span class="mi">12</span><span class="o">?</span><span class="mi">45</span>         <span class="k">No</span>
+<span class="n">N0N</span> <span class="mi">1</span><span class="n">P0</span>            <span class="o">%</span><span class="n">N0N</span><span class="o">%</span>         <span class="n">Yes</span>
+<span class="n">L4C</span> <span class="mi">5</span><span class="n">E2</span>            <span class="o">%</span><span class="n">N0N</span><span class="o">%</span>         <span class="k">No</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">IN</span></code> takes a list of values as its argument and tests the attribute
+value for membership in the provided set.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">Value</span>              <span class="n">Value</span> <span class="k">Set</span>            <span class="n">Matches</span><span class="o">?</span>
+<span class="c1">------             -------              --------</span>
+<span class="mi">321</span>                <span class="k">IN</span> <span class="p">(</span><span class="mi">456</span><span class="p">,</span><span class="mi">123</span><span class="p">)</span>         <span class="k">No</span>
+<span class="s1">&#39;Ontario&#39;</span>          <span class="k">IN</span> <span class="p">(</span><span class="s1">&#39;Ontario&#39;</span><span class="p">,</span><span class="s1">&#39;BC&#39;</span><span class="p">)</span>  <span class="n">Yes</span>
+<span class="s1">&#39;Ont&#39;</span>              <span class="k">IN</span> <span class="p">(</span><span class="s1">&#39;Ontario&#39;</span><span class="p">,</span><span class="s1">&#39;BC&#39;</span><span class="p">)</span>  <span class="k">No</span>
+<span class="mi">1</span>                  <span class="k">IN</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span>         <span class="k">No</span>
+</pre></div>
+</div>
+<p>The syntax of the <code class="docutils literal notranslate"><span class="pre">BETWEEN</span></code> operator is “field_name BETWEEN value1 AND value2”
+and it is equivalent to “field_name &gt;= value1 AND field_name &lt;= value2”.</p>
+<p>In addition to the above binary operators, there are additional operators
+for testing if a field is null or not. These are the <code class="docutils literal notranslate"><span class="pre">IS</span> <span class="pre">NULL</span></code>
+and <code class="docutils literal notranslate"><span class="pre">IS</span> <span class="pre">NOT</span> <span class="pre">NULL</span></code> operators.</p>
+<p>Basic field tests can be combined in more complicated predicates using logical
+operators include <code class="docutils literal notranslate"><span class="pre">AND</span></code>, <code class="docutils literal notranslate"><span class="pre">OR</span></code>, and the unary logical <code class="docutils literal notranslate"><span class="pre">NOT</span></code>.
+Subexpressions should be bracketed to make precedence
+clear.  Some more complicated predicates are:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">poly</span> <span class="k">WHERE</span> <span class="p">(</span><span class="n">prop_value</span> <span class="o">&gt;=</span> <span class="mi">100000</span><span class="p">)</span> <span class="k">AND</span> <span class="p">(</span><span class="n">prop_value</span> <span class="o">&lt;</span> <span class="mi">200000</span><span class="p">)</span>
+<span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">poly</span> <span class="k">WHERE</span> <span class="k">NOT</span> <span class="p">(</span><span class="n">area_code</span> <span class="k">LIKE</span> <span class="s1">&#39;N0N%&#39;</span><span class="p">)</span>
+<span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">poly</span> <span class="k">WHERE</span> <span class="p">(</span><span class="n">prop_value</span> <span class="k">IS</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">)</span> <span class="k">AND</span> <span class="p">(</span><span class="n">prop_value</span> <span class="o">&lt;</span> <span class="mi">100000</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="where-limitations">
+<h3>WHERE Limitations<a class="headerlink" href="#where-limitations" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Fields must all come from the primary table (the one listed in the FROM clause).</p></li>
+<li><p>All string comparisons are case insensitive except for <code class="docutils literal notranslate"><span class="pre">&lt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;=</span></code> and <code class="docutils literal notranslate"><span class="pre">&gt;=</span></code></p></li>
+</ul>
+</div>
+<div class="section" id="order-by">
+<h3>ORDER BY<a class="headerlink" href="#order-by" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">ORDER</span> <span class="pre">BY</span></code> clause is used force the returned features to be reordered
+into sorted order (ascending or descending) on one of the field values.
+Ascending (increasing) order is the default if neither the ASC or DESC keyword
+is provided.  For example:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">property</span> <span class="k">WHERE</span> <span class="n">class_code</span> <span class="o">=</span> <span class="mi">7</span> <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">prop_value</span> <span class="k">DESC</span>
+<span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">property</span> <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">prop_value</span>
+<span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">property</span> <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">prop_value</span> <span class="k">ASC</span>
+<span class="k">SELECT</span> <span class="k">DISTINCT</span> <span class="n">zip_code</span> <span class="k">FROM</span> <span class="n">property</span> <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">zip_code</span>
+</pre></div>
+</div>
+<p>Note that ORDER BY clauses cause two passes through the feature set.  One to
+build an in-memory table of field values corresponded with feature ids, and
+a second pass to fetch the features by feature id in the sorted order. For
+formats which cannot efficiently randomly read features by feature id this can
+be a very expensive operation.</p>
+<p>Sorting of string field values is case sensitive, not case insensitive like in
+most other parts of OGR SQL.</p>
+</div>
+<div class="section" id="limit-and-offset">
+<h3>LIMIT and OFFSET<a class="headerlink" href="#limit-and-offset" title="Permalink to this headline">¶</a></h3>
+<p>Starting with GDAL 2.2, the <code class="docutils literal notranslate"><span class="pre">LIMIT</span></code> clause can be used to limit the
+number of features returned. For example</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">poly</span> <span class="k">LIMIT</span> <span class="mi">5</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">OFFSET</span></code> clause can be used to skip the first features of the result
+set. The value after OFFSET is the number of features skipped. For example, to
+skip the first 3 features from the result set:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">poly</span> <span class="k">OFFSET</span> <span class="mi">3</span>
+</pre></div>
+</div>
+<p>Both clauses can be combined:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">poly</span> <span class="k">LIMIT</span> <span class="mi">5</span> <span class="k">OFFSET</span> <span class="mi">3</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="joins">
+<h3>JOINs<a class="headerlink" href="#joins" title="Permalink to this headline">¶</a></h3>
+<p>OGR SQL supports a limited form of one to one JOIN.  This allows records from
+a secondary table to be looked up based on a shared key between it and the
+primary table being queried.  For instance, a table of city locations might
+include a <strong>nation_id</strong> column that can be used as a reference into a
+secondary <strong>nation</strong> table to fetch a nation name.  A joined query might
+look like:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="n">city</span><span class="p">.</span><span class="o">*</span><span class="p">,</span> <span class="n">nation</span><span class="p">.</span><span class="n">name</span> <span class="k">FROM</span> <span class="n">city</span>
+    <span class="k">LEFT</span> <span class="k">JOIN</span> <span class="n">nation</span> <span class="k">ON</span> <span class="n">city</span><span class="p">.</span><span class="n">nation_id</span> <span class="o">=</span> <span class="n">nation</span><span class="p">.</span><span class="n">id</span>
+</pre></div>
+</div>
+<p>This query would result in a table with all the fields from the city table,
+and an additional “nation.name” field with the nation name pulled from the
+nation table by looking for the record in the nation table that has the “id”
+field with the same value as the city.nation_id field.</p>
+<p>Joins introduce a number of additional issues.  One is the concept of table
+qualifiers on field names.  For instance, referring to city.nation_id instead
+of just nation_id to indicate the nation_id field from the city layer.  The
+table name qualifiers may only be used in the field list, and within the
+<code class="docutils literal notranslate"><span class="pre">ON</span></code> clause of the join.</p>
+<p>Wildcards are also somewhat more involved.  All fields from the primary table
+(<strong>city</strong> in this case) and the secondary table (<strong>nation</strong> in this
+case) may be selected using the usual <code class="docutils literal notranslate"><span class="pre">*</span></code> wildcard.  But the fields of
+just one of the primary or secondary table may be selected by prefixing the
+asterix with the table name.</p>
+<p>The field names in the resulting query layer will be qualified by the table
+name, if the table name is given as a qualifier in the field list.  In addition
+field names will be qualified with a table name if they would conflict with
+earlier fields.  For instance, the following select would result might result
+in a results set with a <strong>name, nation_id, nation.nation_id</strong> and **
+nation.name** field if the city and nation tables both have the
+<strong>nation_id</strong> and <strong>name</strong> fieldnames.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">city</span> <span class="k">LEFT</span> <span class="k">JOIN</span> <span class="n">nation</span> <span class="k">ON</span> <span class="n">city</span><span class="p">.</span><span class="n">nation_id</span> <span class="o">=</span> <span class="n">nation</span><span class="p">.</span><span class="n">nation_id</span>
+</pre></div>
+</div>
+<p>On the other hand if the nation table had a <strong>continent_id</strong> field, but
+the city table did not, then that field would not need to be qualified in
+the result set.  However, if the selected instead looked like the following
+statement, all result fields would be qualified by the table name.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="n">city</span><span class="p">.</span><span class="o">*</span><span class="p">,</span> <span class="n">nation</span><span class="p">.</span><span class="o">*</span> <span class="k">FROM</span> <span class="n">city</span>
+    <span class="k">LEFT</span> <span class="k">JOIN</span> <span class="n">nation</span> <span class="k">ON</span> <span class="n">city</span><span class="p">.</span><span class="n">nation_id</span> <span class="o">=</span> <span class="n">nation</span><span class="p">.</span><span class="n">nation_id</span>
+</pre></div>
+</div>
+<p>In the above examples, the <strong>nation</strong> table was found in the same
+datasource as the <strong>city</strong> table.   However, the OGR join support
+includes the ability to join against a table in a different data source,
+potentially of a different format.  This is indicated by qualifying the
+secondary table name with a datasource name.  In this case the secondary
+datasource is opened using normal OGR semantics and utilized to access the
+secondary table until the query result is no longer needed.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">city</span>
+<span class="k">LEFT</span> <span class="k">JOIN</span> <span class="s1">&#39;/usr2/data/nation.dbf&#39;</span><span class="p">.</span><span class="n">nation</span> <span class="k">ON</span> <span class="n">city</span><span class="p">.</span><span class="n">nation_id</span> <span class="o">=</span> <span class="n">nation</span><span class="p">.</span><span class="n">nation_id</span>
+</pre></div>
+</div>
+<p>While not necessarily very useful, it is also possible to introduce table
+aliases to simplify some SELECT statements.  This can also be useful to
+disambiguate situations where tables of the same name are being used from
+different data sources.  For instance, if the actual
+tables names were messy we might want to do something like:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="k">c</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="n">n</span><span class="p">.</span><span class="n">name</span> <span class="k">FROM</span> <span class="n">project_615_city</span> <span class="k">c</span>
+<span class="k">LEFT</span> <span class="k">JOIN</span> <span class="s1">&#39;/usr2/data/project_615_nation.dbf&#39;</span><span class="p">.</span><span class="n">project_615_nation</span> <span class="n">n</span>
+            <span class="k">ON</span> <span class="k">c</span><span class="p">.</span><span class="n">nation_id</span> <span class="o">=</span> <span class="n">n</span><span class="p">.</span><span class="n">nation_id</span>
+</pre></div>
+</div>
+<p>It is possible to do multiple joins in a single query.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="n">city</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="n">prov</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="n">nation</span><span class="p">.</span><span class="n">name</span> <span class="k">FROM</span> <span class="n">city</span>
+<span class="k">LEFT</span> <span class="k">JOIN</span> <span class="n">province</span> <span class="k">ON</span> <span class="n">city</span><span class="p">.</span><span class="n">prov_id</span> <span class="o">=</span> <span class="n">province</span><span class="p">.</span><span class="n">id</span>
+<span class="k">LEFT</span> <span class="k">JOIN</span> <span class="n">nation</span> <span class="k">ON</span> <span class="n">city</span><span class="p">.</span><span class="n">nation_id</span> <span class="o">=</span> <span class="n">nation</span><span class="p">.</span><span class="n">id</span>
+</pre></div>
+</div>
+<p>Before GDAL 2.0, the expression after ON should necessarily be of the form
+“{primary_table}.{field_name} = {secondary_table}.{field_name}”, and in that
+order.
+Starting with GDAL 2.0, it is possible to use a more complex boolean expression,
+involving multiple comparison operators, but with the restrictions mentioned
+in the below “JOIN limitations” section. In particular, in case of multiple joins (3 tables
+or more) the fields compared in a JOIN must belong to the primary table (the one
+after FROM) and the table of the active JOIN.</p>
+</div>
+<div class="section" id="join-limitations">
+<h3>JOIN Limitations<a class="headerlink" href="#join-limitations" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Joins can be very expensive operations if the secondary table is not indexed on the key field being used.</p></li>
+<li><p>Joined fields may not be used in WHERE clauses, or ORDER BY clauses at this time.  The join is essentially evaluated after all primary table subsetting is complete, and after the ORDER BY pass.</p></li>
+<li><p>Joined fields may not be used as keys in later joins.  So you could not use the province id in a city to lookup the province record, and then use a nation id from the province id to lookup the nation record.  This is a sensible thing to want and could be implemented, but is not currently supported.</p></li>
+<li><p>Datasource names for joined tables are evaluated relative to the current processes working directory, not the path to the primary datasource.</p></li>
+<li><p>These are not true LEFT or RIGHT joins in the RDBMS sense.  Whether or not a secondary record exists for the join key or not, one and only one copy of the primary record is returned in the result set.  If a secondary record cannot be found, the secondary derived fields will be NULL.  If more than one matching secondary field is found only the first will be used.</p></li>
+</ul>
+</div>
+<div class="section" id="union-all">
+<h3>UNION ALL<a class="headerlink" href="#union-all" title="Permalink to this headline">¶</a></h3>
+<p>The SQL engine can deal with several SELECT combined with
+UNION ALL. The effect of UNION ALL is to concatenate the rows returned by the right SELECT
+statement to the rows returned by the left SELECT statement.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="p">[(]</span> <span class="k">SELECT</span> <span class="n">field_list</span> <span class="k">FROM</span> <span class="n">first_layer</span> <span class="p">[</span><span class="k">WHERE</span> <span class="n">where_expr</span><span class="p">]</span> <span class="p">[)]</span>
+<span class="k">UNION</span> <span class="k">ALL</span> <span class="p">[(]</span> <span class="k">SELECT</span> <span class="n">field_list</span> <span class="k">FROM</span> <span class="n">second_layer</span> <span class="p">[</span><span class="k">WHERE</span> <span class="n">where_expr</span><span class="p">]</span> <span class="p">[)]</span>
+<span class="p">[</span><span class="k">UNION</span> <span class="k">ALL</span> <span class="p">[(]</span> <span class="k">SELECT</span> <span class="n">field_list</span> <span class="k">FROM</span> <span class="n">third_layer</span> <span class="p">[</span><span class="k">WHERE</span> <span class="n">where_expr</span><span class="p">]</span> <span class="p">[)]]</span><span class="o">*</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="union-all-restrictions">
+<h3>UNION ALL restrictions<a class="headerlink" href="#union-all-restrictions" title="Permalink to this headline">¶</a></h3>
+<p>The processing of UNION ALL in OGR differs from the SQL standard, in which it accepts
+that the columns from the various SELECT are not identical. In that case, it will return
+a super-set of all the fields from each SELECT statement.</p>
+<p>There is also a restriction : ORDER BY can only be specified for each SELECT, and
+not at the level of the result of the union.</p>
+</div>
+</div>
+<div class="section" id="special-fields">
+<h2>SPECIAL FIELDS<a class="headerlink" href="#special-fields" title="Permalink to this headline">¶</a></h2>
+<p>The OGR SQL query processor treats some of the attributes of the features as
+built-in special fields can be used in the SQL statements likewise the
+other fields. These fields can be placed in the select list, the WHERE clause
+and the ORDER BY clause respectively. The special field will not be included
+in the result by default but it may be explicitly included by adding it to
+the select list.
+When accessing the field values the special fields will take precedence over
+the other fields with the same names in the data source.</p>
+<div class="section" id="fid">
+<h3>FID<a class="headerlink" href="#fid" title="Permalink to this headline">¶</a></h3>
+<p>Normally the feature id is a special property of a feature and not treated
+as an attribute of the feature.  In some cases it is convenient to be able to
+utilize the feature id in queries and result sets as a regular field.  To do
+so use the name <code class="docutils literal notranslate"><span class="pre">FID</span></code>.  The field wildcard expansions will not include
+the feature id, but it may be explicitly included using a syntax like:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="n">FID</span><span class="p">,</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">nation</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="ogr-geometry">
+<h3>OGR_GEOMETRY<a class="headerlink" href="#ogr-geometry" title="Permalink to this headline">¶</a></h3>
+<p>Some of the data sources (like MapInfo tab) can handle geometries of different
+types within the same layer. The <code class="docutils literal notranslate"><span class="pre">OGR_GEOMETRY</span></code> special field represents
+the geometry type returned by OGRGeometry::getGeometryName() and can be used to
+distinguish the various types. By using this field one can select particular
+types of the geometries like:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">nation</span> <span class="k">WHERE</span> <span class="n">OGR_GEOMETRY</span><span class="o">=</span><span class="s1">&#39;POINT&#39;</span> <span class="k">OR</span> <span class="n">OGR_GEOMETRY</span><span class="o">=</span><span class="s1">&#39;POLYGON&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="ogr-geom-wkt">
+<h3>OGR_GEOM_WKT<a class="headerlink" href="#ogr-geom-wkt" title="Permalink to this headline">¶</a></h3>
+<p>The Well Known Text representation of the geometry can also be used as
+a special field. To select the WKT of the geometry <code class="docutils literal notranslate"><span class="pre">OGR_GEOM_WKT</span></code>
+might be included in the select list, like:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="n">OGR_GEOM_WKT</span><span class="p">,</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">nation</span>
+</pre></div>
+</div>
+<p>Using the <code class="docutils literal notranslate"><span class="pre">OGR_GEOM_WKT</span></code> and the <code class="docutils literal notranslate"><span class="pre">LIKE</span></code> operator in the WHERE
+clause we can get similar effect as using OGR_GEOMETRY:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="n">OGR_GEOM_WKT</span><span class="p">,</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">nation</span> <span class="k">WHERE</span> <span class="n">OGR_GEOM_WKT</span>
+<span class="k">LIKE</span> <span class="s1">&#39;POINT%&#39;</span> <span class="k">OR</span> <span class="n">OGR_GEOM_WKT</span> <span class="k">LIKE</span> <span class="s1">&#39;POLYGON%&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="ogr-geom-area">
+<h3>OGR_GEOM_AREA<a class="headerlink" href="#ogr-geom-area" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">OGR_GEOM_AREA</span></code> special field returns the area of the feature’s
+geometry computed by the OGRSurface::get_Area() method. For
+OGRGeometryCollection and OGRMultiPolygon the value is the sum of the
+areas of its members. For non-surface geometries the returned area is 0.0.</p>
+<p>For example, to select only polygon features larger than a given area:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">nation</span> <span class="k">WHERE</span> <span class="n">OGR_GEOM_AREA</span> <span class="o">&gt;</span> <span class="mi">10000000</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="ogr-style">
+<h3>OGR_STYLE<a class="headerlink" href="#ogr-style" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">OGR_STYLE</span></code> special field represents the style string of the feature
+returned by OGRFeature::GetStyleString(). By using this field and the
+<code class="docutils literal notranslate"><span class="pre">LIKE</span></code> operator the result of the query can be filtered by the style.
+For example we can select the annotation features as:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">nation</span> <span class="k">WHERE</span> <span class="n">OGR_STYLE</span> <span class="k">LIKE</span> <span class="s1">&#39;LABEL%&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="create-index">
+<h2>CREATE INDEX<a class="headerlink" href="#create-index" title="Permalink to this headline">¶</a></h2>
+<p>Some OGR SQL drivers support creating of attribute indexes.  Currently
+this includes the Shapefile driver.  An index accelerates very simple
+attribute queries of the form <strong>fieldname = value</strong>, which is what
+is used by the <code class="docutils literal notranslate"><span class="pre">JOIN</span></code> capability.  To create an attribute index on
+the nation_id field of the nation table a command like this would be used:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span> <span class="k">INDEX</span> <span class="k">ON</span> <span class="n">nation</span> <span class="k">USING</span> <span class="n">nation_id</span>
+</pre></div>
+</div>
+<div class="section" id="index-limitations">
+<h3>Index Limitations<a class="headerlink" href="#index-limitations" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Indexes are not maintained dynamically when new features are added to or removed from a layer.</p></li>
+<li><p>Very long strings (longer than 256 characters?) cannot currently be indexed.</p></li>
+<li><p>To recreate an index it is necessary to drop all indexes on a layer and then recreate all the indexes.</p></li>
+<li><p>Indexes are not used in any complex queries.   Currently the only query the will accelerate is a simple “field = value” query.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="drop-index">
+<h2>DROP INDEX<a class="headerlink" href="#drop-index" title="Permalink to this headline">¶</a></h2>
+<p>The OGR SQL DROP INDEX command can be used to drop all indexes on a particular
+table, or just the index for a particular column.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">DROP</span> <span class="k">INDEX</span> <span class="k">ON</span> <span class="n">nation</span> <span class="k">USING</span> <span class="n">nation_id</span>
+<span class="k">DROP</span> <span class="k">INDEX</span> <span class="k">ON</span> <span class="n">nation</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="alter-table">
+<h2>ALTER TABLE<a class="headerlink" href="#alter-table" title="Permalink to this headline">¶</a></h2>
+<p>The following OGR SQL ALTER TABLE commands can be used.</p>
+<p>-“ALTER TABLE tablename ADD [COLUMN] columnname columntype” to add a new field. Supported if the layer declares the OLCCreateField capability.
+-“ALTER TABLE tablename RENAME [COLUMN] oldcolumnname TO newcolumnname” to rename an existing field. Supported if the layer declares the OLCAlterFieldDefn capability.
+-“ALTER TABLE tablename ALTER [COLUMN] columnname TYPE columntype” to change the type of an existing field. Supported if the layer declares the OLCAlterFieldDefn capability.
+-“ALTER TABLE tablename DROP [COLUMN] columnname” to delete an existing field. Supported if the layer declares the OLCDeleteField capability.</p>
+<p>The columntype value follows the syntax of the types supported by the CAST operator described above.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">nation</span> <span class="k">ADD</span> <span class="k">COLUMN</span> <span class="n">myfield</span> <span class="nb">integer</span>
+<span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">nation</span> <span class="k">RENAME</span> <span class="k">COLUMN</span> <span class="n">myfield</span> <span class="k">TO</span> <span class="n">myfield2</span>
+<span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">nation</span> <span class="k">ALTER</span> <span class="k">COLUMN</span> <span class="n">myfield2</span> <span class="k">TYPE</span> <span class="nb">character</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+<span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">nation</span> <span class="k">DROP</span> <span class="k">COLUMN</span> <span class="n">myfield2</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="drop-table">
+<h2>DROP TABLE<a class="headerlink" href="#drop-table" title="Permalink to this headline">¶</a></h2>
+<p>The OGR SQL DROP TABLE command can be used to delete a table. This is only
+supported on datasources that declare the ODsCDeleteLayer capability.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">DROP</span> <span class="k">TABLE</span> <span class="n">nation</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="executesql">
+<h2>ExecuteSQL()<a class="headerlink" href="#executesql" title="Permalink to this headline">¶</a></h2>
+<p>SQL is executed against an GDALDataset, not against a specific layer.  The
+call looks like this:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">OGRLayer</span> <span class="o">*</span> <span class="n">GDALDataset</span><span class="o">::</span><span class="n">ExecuteSQL</span><span class="p">(</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">pszSQLCommand</span><span class="p">,</span>
+                                    <span class="n">OGRGeometry</span> <span class="o">*</span><span class="n">poSpatialFilter</span><span class="p">,</span>
+                                    <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">pszDialect</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">pszDialect</span></code> argument is in theory intended to allow for support of
+different command languages against a provider, but for now applications
+should always pass an empty (not NULL) string to get the default dialect.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">poSpatialFilter</span></code> argument is a geometry used to select a bounding rectangle
+for features to be returned in a manner similar to the
+<a class="reference internal" href="../api/ogrlayer_cpp.html#_CPPv4N8OGRLayer16SetSpatialFilterEP11OGRGeometry" title="OGRLayer::SetSpatialFilter"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRLayer::SetSpatialFilter()</span></code></a> method.  It may be NULL for no special spatial
+restriction.</p>
+<p>The result of an ExecuteSQL() call is usually a temporary OGRLayer representing
+the results set from the statement.  This is the case for a SELECT statement
+for instance.  The returned temporary layer should be released with
+<code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDataset::ReleaseResultsSet()</span></code> method when no longer needed.  Failure
+to release it before the datasource is destroyed may result in a crash.</p>
+</div>
+<div class="section" id="non-ogr-sql">
+<h2>Non-OGR SQL<a class="headerlink" href="#non-ogr-sql" title="Permalink to this headline">¶</a></h2>
+<p>All OGR drivers for database systems: <a class="reference internal" href="../drivers/vector/mysql.html#vector-mysql"><span class="std std-ref">MySQL</span></a>, <a class="reference internal" href="../drivers/vector/pg.html#vector-pg"><span class="std std-ref">PostgreSQL / PostGIS</span></a>,
+<a class="reference internal" href="../drivers/vector/oci.html#vector-oci"><span class="std std-ref">Oracle Spatial</span></a>, <a class="reference internal" href="../drivers/vector/sqlite.html#vector-sqlite"><span class="std std-ref">SQLite / Spatialite RDBMS</span></a>, <a class="reference internal" href="../drivers/vector/odbc.html#vector-odbc"><span class="std std-ref">ODBC RDBMS</span></a>, <a class="reference internal" href="../drivers/vector/pgeo.html#vector-pgeo"><span class="std std-ref">ESRI Personal GeoDatabase</span></a>,
+and <a class="reference internal" href="../drivers/vector/mssqlspatial.html#vector-mssqlspatial"><span class="std std-ref">MSSQLSpatial - Microsoft SQL Server Spatial Database</span></a>,
+override the <a class="reference internal" href="../api/gdaldataset_cpp.html#_CPPv4N11GDALDataset10ExecuteSQLEPKcP11OGRGeometryPKc" title="GDALDataset::ExecuteSQL"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDataset::ExecuteSQL()</span></code></a> function with dedicated implementation
+and, by default, pass the SQL statements directly to the underlying RDBMS.
+In these cases the SQL syntax varies in some particulars from OGR SQL.
+Also, anything possible in SQL can then be accomplished for these particular
+databases.  Only the result of SQL WHERE statements will be returned as
+layers.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="sql_sqlite_dialect.html" class="btn btn-neutral float-right" title="SQL SQLite dialect" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ogr_sql_sqlite_dialect.html" class="btn btn-neutral float-left" title="OGR SQL dialect and SQLITE SQL dialect" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,546 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RFC 24: GDAL Progressive Data Support &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdevelopment/rfc/rfc24_progressive_data_support.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="RFC 25: Fast Open" href="rfc25_fast_open.html" />
+    <link rel="prev" title="RFC 23.1: Unicode support in OGR" href="rfc23_ogr_unicode.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 24: GDAL Progressive Data Support</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#interfaces">Interfaces</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#c-api">C API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#swig">SWIG</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#driver-implementations">Driver Implementations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#testing">Testing</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 24: GDAL Progressive Data Support</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/development/rfc/rfc24_progressive_data_support.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="rfc25_fast_open.html" class="btn btn-neutral float-right" title="RFC 25: Fast Open" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc23_ogr_unicode.html" class="btn btn-neutral float-left" title="RFC 23.1: Unicode support in OGR" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rfc-24-gdal-progressive-data-support">
+<span id="rfc-24"></span><h1>RFC 24: GDAL Progressive Data Support<a class="headerlink" href="#rfc-24-gdal-progressive-data-support" title="Permalink to this headline">¶</a></h1>
+<p>Author: Norman Barker, Frank Warmerdam</p>
+<p>Contact: <a class="reference external" href="mailto:nbarker&#37;&#52;&#48;ittvis&#46;com">nbarker<span>&#64;</span>ittvis<span>&#46;</span>com</a>, <a class="reference external" href="mailto:warmerdam&#37;&#52;&#48;pobox&#46;com">warmerdam<span>&#64;</span>pobox<span>&#46;</span>com</a></p>
+<p>Status: Adopted</p>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>Provide an interface for asynchronous/streaming data access in GDAL. The
+initial implementation is for JPIP, but should be generic enough to
+apply to other streaming / progressive approaches. Background on the
+JPIP (Kakadu) implementation can be found in [wiki:rfc24_jpipkak].</p>
+</div>
+<div class="section" id="interfaces">
+<h2>Interfaces<a class="headerlink" href="#interfaces" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="gdalasyncreader">
+<h3>GDALAsyncReader<a class="headerlink" href="#gdalasyncreader" title="Permalink to this headline">¶</a></h3>
+<p>This new class is intended to represent an active asynchronous raster
+imagery request. The request includes information on a source window on
+the dataset, a target buffer size (implies level of decimation or
+replication), the buffer type, buffer interleaving, data buffer and
+bands being requested. Essentially the same sort of information that is
+passed in a GDALDataset::!RasterIO() request.</p>
+<p>The GetNextUpdatedRegion() method can be used to wait for an update to
+the imagery buffer, and to find out what area was updated. The
+LockBuffer() and UnlockBuffer() methods can be used to temporarily
+disable updates to the buffer while application code accesses the
+buffer.</p>
+<p>While an implementation of the simple accessors is provided as part of
+the class, it is intended that the class be subclassed as part of
+implementation of a particular driver, and custom implementations of
+GetNextUpdatedRegion(), LockBuffer() and UnlockBuffer() provided.</p>
+<p>{{{ class CPL_DLL GDALAsyncReader { protected: GDALDataset* poDS; int
+nXOff; int nYOff; int nXSize; int nYSize; void * pBuf; int nBufXSize;
+int nBufYSize; GDALDataType eBufType; int nBandCount; int* panBandMap;
+int nPixelSpace; int nLineSpace; int nBandSpace; long nDataRead;</p>
+<p>public: GDALAsyncReader(GDALDataset* poDS = NULL); virtual
+~GDALAsyncReader();</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">GDALDataset</span><span class="o">*</span> <span class="n">GetGDALDataset</span><span class="p">()</span> <span class="p">{</span><span class="k">return</span> <span class="n">poDS</span><span class="p">;}</span>
+<span class="nb">int</span> <span class="n">GetXOffset</span><span class="p">()</span> <span class="p">{</span><span class="k">return</span> <span class="n">nXOff</span><span class="p">;}</span>
+<span class="nb">int</span> <span class="n">GetYOffset</span><span class="p">()</span> <span class="p">{</span><span class="k">return</span> <span class="n">nYOff</span><span class="p">;}</span>
+<span class="nb">int</span> <span class="n">GetXSize</span><span class="p">()</span> <span class="p">{</span><span class="k">return</span> <span class="n">nXSize</span><span class="p">;}</span>
+<span class="nb">int</span> <span class="n">GetYSize</span><span class="p">()</span> <span class="p">{</span><span class="k">return</span> <span class="n">nYSize</span><span class="p">;}</span>
+<span class="n">void</span> <span class="o">*</span> <span class="n">GetBuffer</span><span class="p">()</span> <span class="p">{</span><span class="k">return</span> <span class="n">pBuf</span><span class="p">;}</span>
+<span class="nb">int</span> <span class="n">GetBufferXSize</span><span class="p">()</span> <span class="p">{</span><span class="k">return</span> <span class="n">nBufXSize</span><span class="p">;}</span>
+<span class="nb">int</span> <span class="n">GetBufferYSize</span><span class="p">()</span> <span class="p">{</span><span class="k">return</span> <span class="n">nBufYSize</span><span class="p">;}</span>
+<span class="n">GDALDataType</span> <span class="n">GetBufferType</span><span class="p">()</span> <span class="p">{</span><span class="k">return</span> <span class="n">eBufType</span><span class="p">;}</span>
+<span class="nb">int</span> <span class="n">GetBandCount</span><span class="p">()</span> <span class="p">{</span><span class="k">return</span> <span class="n">nBandCount</span><span class="p">;}</span>
+<span class="nb">int</span><span class="o">*</span> <span class="n">GetBandMap</span><span class="p">()</span> <span class="p">{</span><span class="k">return</span> <span class="n">panBandMap</span><span class="p">;}</span>
+<span class="nb">int</span> <span class="n">GetPixelSpace</span><span class="p">()</span> <span class="p">{</span><span class="k">return</span> <span class="n">nPixelSpace</span><span class="p">;}</span>
+<span class="nb">int</span> <span class="n">GetLineSpace</span><span class="p">()</span> <span class="p">{</span><span class="k">return</span> <span class="n">nLineSpace</span><span class="p">;}</span>
+<span class="nb">int</span> <span class="n">GetBandSpace</span><span class="p">()</span> <span class="p">{</span><span class="k">return</span> <span class="n">nBandSpace</span><span class="p">;}</span>
+
+<span class="n">virtual</span> <span class="n">GDALAsyncStatusType</span> <span class="n">GetNextUpdatedRegion</span><span class="p">(</span><span class="n">double</span> <span class="n">dfTimeout</span><span class="p">,</span>
+                                                 <span class="nb">int</span><span class="o">*</span> <span class="n">pnBufXOff</span><span class="p">,</span>
+                                                 <span class="nb">int</span><span class="o">*</span> <span class="n">pnBufYOff</span><span class="p">,</span>
+                                                 <span class="nb">int</span><span class="o">*</span> <span class="n">pnBufXSize</span><span class="p">,</span>
+                                                 <span class="nb">int</span><span class="o">*</span> <span class="n">pnBufXSize</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="n">virtual</span> <span class="nb">int</span> <span class="n">LockBuffer</span><span class="p">(</span> <span class="n">double</span> <span class="n">dfTimeout</span> <span class="p">);</span>
+<span class="n">virtual</span> <span class="n">void</span> <span class="n">UnlockBuffer</span><span class="p">();</span>
+
+<span class="n">friend</span> <span class="k">class</span> <span class="nc">GDALDataset</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>}; }}}</p>
+</div>
+<div class="section" id="getnextupdatedregion">
+<h3>GetNextUpdatedRegion()<a class="headerlink" href="#getnextupdatedregion" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">GDALAsyncStatusType</span>
+<span class="n">GDALAsyncRasterio</span><span class="p">::</span><span class="n">GetNextUpdatedRegion</span><span class="p">(</span><span class="nb">int</span> <span class="n">dfTimeout</span><span class="p">,</span>
+                                        <span class="nb">int</span><span class="o">*</span> <span class="n">pnBufXOff</span><span class="p">,</span> <span class="nb">int</span><span class="o">*</span> <span class="n">pnBufYOff</span><span class="p">,</span>
+                                        <span class="nb">int</span><span class="o">*</span> <span class="n">pnBufXSize</span><span class="p">,</span> <span class="nb">int</span><span class="o">*</span> <span class="n">pnBufXSize</span><span class="p">);</span>
+
+<span class="nb">int</span> <span class="n">dfTimeout</span><span class="p">;</span>
+  <span class="n">The</span> <span class="n">amount</span> <span class="n">of</span> <span class="n">time</span> <span class="n">to</span> <span class="n">wait</span> <span class="k">for</span> <span class="n">results</span> <span class="n">measured</span>  <span class="ow">in</span> <span class="n">seconds</span><span class="o">.</span>  <span class="n">If</span> <span class="n">this</span> <span class="ow">is</span>
+  <span class="n">zero</span> <span class="n">available</span> <span class="n">work</span> <span class="n">may</span> <span class="n">be</span> <span class="n">processed</span> <span class="n">but</span> <span class="n">no</span> <span class="n">waiting</span> <span class="k">for</span> <span class="n">the</span> <span class="n">arrival</span> <span class="n">of</span> <span class="n">more</span>
+  <span class="n">imagery</span> <span class="n">should</span> <span class="n">be</span> <span class="n">done</span><span class="o">.</span>  <span class="n">A</span> <span class="n">value</span> <span class="n">of</span> <span class="o">-</span><span class="mf">1.0</span> <span class="n">means</span> <span class="n">wait</span> <span class="n">an</span> <span class="n">infinite</span> <span class="n">amount</span> <span class="n">of</span>
+  <span class="n">time</span> <span class="k">for</span> <span class="n">new</span> <span class="n">data</span><span class="o">.</span>  <span class="n">Processing</span> <span class="n">available</span> <span class="n">imagery</span> <span class="n">may</span> <span class="n">still</span> <span class="n">take</span> <span class="n">an</span>
+  <span class="n">arbitrary</span> <span class="n">amount</span> <span class="n">of</span> <span class="n">time</span><span class="o">.</span>
+
+<span class="nb">int</span> <span class="o">*</span><span class="n">pnBufXOff</span><span class="p">,</span> <span class="o">*</span><span class="n">pnBufYOff</span><span class="p">,</span> <span class="o">*</span><span class="n">pnBufXSize</span><span class="p">,</span> <span class="o">*</span><span class="n">pnBufYSize</span><span class="p">;</span>
+  <span class="n">The</span> <span class="n">window</span> <span class="n">of</span> <span class="n">data</span> <span class="n">updated</span> <span class="n">within</span> <span class="n">the</span> <span class="k">async</span> <span class="n">io</span> <span class="n">imagery</span> <span class="n">buffer</span> <span class="ow">is</span> <span class="n">returned</span> <span class="ow">in</span>
+  <span class="n">these</span> <span class="n">variables</span><span class="o">.</span> <span class="n">This</span> <span class="n">information</span> <span class="n">can</span> <span class="n">be</span> <span class="n">used</span> <span class="n">to</span> <span class="n">limit</span> <span class="n">screen</span> <span class="n">redraws</span> <span class="ow">or</span> <span class="n">other</span>
+  <span class="n">processing</span> <span class="n">to</span> <span class="n">the</span> <span class="n">portion</span> <span class="n">of</span> <span class="n">the</span> <span class="n">imagery</span> <span class="n">that</span> <span class="n">may</span> <span class="n">have</span> <span class="n">changed</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>The async return status list is as follows, and will be declared in
+gdal.h.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">typedef</span> <span class="n">enum</span>
+<span class="p">{</span>
+    <span class="n">GARIO_PENDING</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">GARIO_UPDATE</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">GARIO_ERROR</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="n">GARIO_COMPLETE</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="n">GARIO_TypeCount</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="p">}</span> <span class="n">GDALAsyncStatusType</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The meaning as a return value is:</p>
+<ul class="simple">
+<li><p>GARIO_PENDING: No imagery was altered in the buffer, but there is
+still activity pending, and the application should continue to call
+GetNextUpdatedRegion() as time permits.</p></li>
+<li><p>GARIO_UPDATE: Some of the imagery has been updated, but there is
+still activity pending.</p></li>
+<li><p>GARIO_ERROR: Something has gone wrong. The asynchronous request
+should be ended.</p></li>
+<li><p>GARIO_COMPLETE: An update has occurred and there is no more pending
+work on this request. The request should be ended and the buffer
+used.</p></li>
+</ul>
+</div>
+<div class="section" id="gdaldataset">
+<h3>GDALDataset<a class="headerlink" href="#gdaldataset" title="Permalink to this headline">¶</a></h3>
+<p>The GDALDataset class is extended with methods to create an asynchronous
+reader, and to cleanup the asynchronous reader. It is intended that
+these methods would be subclassed by drivers implementing asynchronous
+data access.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">virtual</span> <span class="n">GDALAsyncReader</span><span class="o">*</span>
+    <span class="n">BeginAsyncReader</span><span class="p">(</span><span class="nb">int</span> <span class="n">nXOff</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nYOff</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nXSize</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nYSize</span><span class="p">,</span>
+                       <span class="n">void</span> <span class="o">*</span><span class="n">pBuf</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nBufXSize</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nBufYSize</span><span class="p">,</span>
+                       <span class="n">GDALDataType</span> <span class="n">eBufType</span><span class="p">,</span>
+                       <span class="nb">int</span> <span class="n">nBandCount</span><span class="p">,</span> <span class="nb">int</span><span class="o">*</span> <span class="n">panBandMap</span><span class="p">,</span>
+                       <span class="nb">int</span> <span class="n">nPixelSpace</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nLineSpace</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nBandSpace</span><span class="p">,</span>
+                       <span class="n">char</span> <span class="o">**</span><span class="n">papszOptions</span><span class="p">);</span>
+<span class="n">virtual</span> <span class="n">void</span> <span class="n">EndAsyncReader</span><span class="p">(</span><span class="n">GDALAsyncReader</span> <span class="o">*</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>It is expected that as part of gdal/gcore a default !GDALAsyncReader
+implementation will be provided that just uses GDALDataset::!RasterIO()
+to perform the request as a single blocking request. However, this
+default implementation will ensure that applications can use the
+asynchronous interface without worrying whether a particular format will
+actually operate asynchronously.</p>
+</div>
+<div class="section" id="gdaldriver">
+<h3>GDALDriver<a class="headerlink" href="#gdaldriver" title="Permalink to this headline">¶</a></h3>
+<p>In order to provide a hint to applications whether particular formats
+support asynchronous IO, we will add a new metadata item on the
+GDALDriver of implementing formats. The metadata item will be
+“DCAP_ASYNCIO” (macro GDAL_DCAP_ASYNCIO) and will have the value “YES”
+if asynchronous IO is available.</p>
+<p>Implementing drivers will do something like this in their driver setup
+code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">poDriver</span><span class="o">-&gt;</span><span class="n">SetMetadataItem</span><span class="p">(</span> <span class="n">GDAL_DCAP_ASYNCIO</span><span class="p">,</span> <span class="s2">&quot;YES&quot;</span> <span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="gdalrasterband">
+<h3>GDALRasterBand<a class="headerlink" href="#gdalrasterband" title="Permalink to this headline">¶</a></h3>
+<p>There are no changes to the GDALRasterBand interface for asynchronous
+raster IO. Asynchronous IO requests can only be made at the dataset
+level, not the band.</p>
+</div>
+</div>
+<div class="section" id="c-api">
+<h2>C API<a class="headerlink" href="#c-api" title="Permalink to this headline">¶</a></h2>
+<p>The following C API wrappers for the C++ classes and methods will be
+added. Note that at this time there is no intention to provide C
+wrappers for all the GDALAsyncReader accessors since the provided
+information is already available in the application from the call
+launching the async io.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">typedef</span> <span class="n">void</span> <span class="o">*</span><span class="n">GDALAsyncReaderH</span><span class="p">;</span>
+
+<span class="n">GDALAsyncStatusType</span> <span class="n">CPL_DLL</span> <span class="n">CPL_STDCALL</span>
+<span class="n">GDALGetNextUpdatedRegion</span><span class="p">(</span><span class="n">GDALAsyncReaderH</span> <span class="n">hARIO</span><span class="p">,</span> <span class="n">double</span> <span class="n">dfTimeout</span><span class="p">,</span>
+                         <span class="nb">int</span><span class="o">*</span> <span class="n">pnXBufOff</span><span class="p">,</span> <span class="nb">int</span><span class="o">*</span> <span class="n">pnYBufOff</span><span class="p">,</span>
+                         <span class="nb">int</span><span class="o">*</span> <span class="n">pnXBufSize</span><span class="p">,</span> <span class="nb">int</span><span class="o">*</span> <span class="n">pnYBufSize</span> <span class="p">);</span>
+<span class="nb">int</span> <span class="n">CPL_DLL</span> <span class="n">CPL_STDCALL</span> <span class="n">GDALLockBuffer</span><span class="p">(</span><span class="n">GDALAsyncReaderH</span> <span class="n">hARIO</span><span class="p">,</span><span class="n">double</span> <span class="n">dfTimeout</span><span class="p">);</span>
+<span class="n">void</span> <span class="n">CPL_DLL</span> <span class="n">CPL_STDCALL</span> <span class="n">GDALUnlockBuffer</span><span class="p">(</span><span class="n">GDALAsyncReaderH</span> <span class="n">hARIO</span><span class="p">);</span>
+
+<span class="n">GDALAsyncReaderH</span> <span class="n">CPL_DLL</span> <span class="n">CPL_STDCALL</span>
+<span class="n">GDALBeginAsyncReader</span><span class="p">(</span><span class="n">GDALDatasetH</span> <span class="n">hDS</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nXOff</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nYOff</span><span class="p">,</span>
+                       <span class="nb">int</span> <span class="n">nXSize</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nYSize</span><span class="p">,</span>
+                       <span class="n">void</span> <span class="o">*</span><span class="n">pBuf</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nBufXSize</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nBufYSize</span><span class="p">,</span>
+                       <span class="n">GDALDataType</span> <span class="n">eBufType</span><span class="p">,</span>
+                       <span class="nb">int</span> <span class="n">nBandCount</span><span class="p">,</span> <span class="nb">int</span><span class="o">*</span> <span class="n">panBandMap</span><span class="p">,</span>
+                       <span class="nb">int</span> <span class="n">nPixelSpace</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nLineSpace</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nBandSpace</span><span class="p">,</span>
+                       <span class="n">char</span> <span class="o">**</span><span class="n">papszOptions</span><span class="p">);</span>
+<span class="n">void</span>  <span class="n">CPL_DLL</span> <span class="n">CPL_STDCALL</span>
+<span class="n">GDALEndAsyncReader</span><span class="p">(</span><span class="n">GDALDatasetH</span> <span class="n">hDS</span><span class="p">,</span> <span class="n">GDALAsyncReaderH</span> <span class="n">hAsynchRasterIOH</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="swig">
+<h2>SWIG<a class="headerlink" href="#swig" title="Permalink to this headline">¶</a></h2>
+<p>It is intended that all the above functions in the C API will be wrapped
+for SWIG.</p>
+</div>
+<div class="section" id="driver-implementations">
+<h2>Driver Implementations<a class="headerlink" href="#driver-implementations" title="Permalink to this headline">¶</a></h2>
+<p>A full implementation of the Asynchronous API will be provided as the
+JPIPKAK driver - a JPIP protocol implementation using the Kakadu
+library.</p>
+<p>At this time, no other implementations are planned.</p>
+</div>
+<div class="section" id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
+<p>Some testing of the asynchronous api against normal drivers will be
+added in the test suite, as well as testing of the JPIPKAK driver in
+asynchronous and conventional data access methods.</p>
+<p>Also, a new commandline program, gdalasyncread, is implemented which
+provides a mechanism to test the async API from the commandline. It
+takes a subset of the gdal_translate commandline options.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Usage</span><span class="p">:</span> <span class="n">gdalasyncread</span> <span class="p">[</span><span class="o">--</span><span class="n">help</span><span class="o">-</span><span class="n">general</span><span class="p">]</span>
+       <span class="p">[</span><span class="o">-</span><span class="n">ot</span> <span class="p">{</span><span class="n">Byte</span><span class="o">/</span><span class="n">Int16</span><span class="o">/</span><span class="n">UInt16</span><span class="o">/</span><span class="n">UInt32</span><span class="o">/</span><span class="n">Int32</span><span class="o">/</span><span class="n">Float32</span><span class="o">/</span><span class="n">Float64</span><span class="o">/</span>
+             <span class="n">CInt16</span><span class="o">/</span><span class="n">CInt32</span><span class="o">/</span><span class="n">CFloat32</span><span class="o">/</span><span class="n">CFloat64</span><span class="p">}]</span>
+       <span class="p">[</span><span class="o">-</span><span class="n">of</span> <span class="nb">format</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">b</span> <span class="n">band</span><span class="p">]</span>
+       <span class="p">[</span><span class="o">-</span><span class="n">outsize</span> <span class="n">xsize</span><span class="p">[</span><span class="o">%</span><span class="p">]</span> <span class="n">ysize</span><span class="p">[</span><span class="o">%</span><span class="p">]]</span>
+       <span class="p">[</span><span class="o">-</span><span class="n">srcwin</span> <span class="n">xoff</span> <span class="n">yoff</span> <span class="n">xsize</span> <span class="n">ysize</span><span class="p">]</span>
+       <span class="p">[</span><span class="o">-</span><span class="n">co</span> <span class="s2">&quot;NAME=VALUE&quot;</span><span class="p">]</span><span class="o">*</span> <span class="p">[</span><span class="o">-</span><span class="n">ao</span> <span class="s2">&quot;NAME=VALUE&quot;</span><span class="p">]</span>
+       <span class="n">src_dataset</span> <span class="n">dst_dataset</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rfc25_fast_open.html" class="btn btn-neutral float-right" title="RFC 25: Fast Open" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc23_ogr_unicode.html" class="btn btn-neutral float-left" title="RFC 23.1: Unicode support in OGR" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

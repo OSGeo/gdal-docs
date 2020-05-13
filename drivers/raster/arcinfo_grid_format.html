@@ -1,0 +1,946 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Arc/Info Binary Grid Format &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdrivers/raster/arcinfo_grid_format.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="AIRSAR – AIRSAR Polarimetric Format" href="airsar.html" />
+    <link rel="prev" title="AIG – Arc/Info Binary Grid" href="aig.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Raster drivers</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="aaigrid.html">AAIGrid – Arc/Info ASCII Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ace2.html">ACE2 – ACE2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adrg.html">ADRG – ADRG/ARC Digitized Raster Graphics (.gen/.thf)</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="aig.html">AIG – Arc/Info Binary Grid</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="aig.html#driver-capabilities">Driver capabilities</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Arc/Info Binary Grid Format</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="airsar.html">AIRSAR – AIRSAR Polarimetric Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arg.html">ARG – Azavea Raster Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bag.html">BAG – Bathymetry Attributed Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blx.html">BLX – Magellan BLX Topo File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bmp.html">BMP – Microsoft Windows Device Independent Bitmap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bpg.html">BPG – Better Portable Graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bsb.html">BSB – Maptech/NOAA BSB Nautical Chart Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bt.html">BT – VTP .bt Binary Terrain Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="byn.html">BYN - Natural Resources Canada’s Geoid file format (.byn)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cad.html">CAD – AutoCAD DWG raster layer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cals.html">CALS – CALS Type 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ceos.html">CEOS – CEOS Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coasp.html">COASP –  DRDC COASP SAR Processor Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cog.html">COG – Cloud Optimized GeoTIFF generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cosar.html">COSAR – TerraSAR-X Complex SAR Data Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpg.html">CPG – Convair PolGASP data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctable2.html">CTable2 – CTable2 Datum Grid Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctg.html">CTG – USGS LULC Composite Theme Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="daas.html">DAAS (Airbus DS Intelligence Data As A Service driver)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="db2.html">DB2 raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dds.html">DDS – DirectDraw Surface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="derived.html">DERIVED – Derived subdatasets driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dimap.html">DIMAP – Spot DIMAP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dipex.html">DIPEx – ELAS DIPEx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dods.html">DODS – OPeNDAP Grid Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doq1.html">DOQ1 – First Generation USGS DOQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doq2.html">DOQ2 – New Labelled USGS DOQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dted.html">DTED – Military Elevation Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="e00grid.html">E00GRID – Arc/Info Export E00 GRID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ecrgtoc.html">ECRGTOC – ECRG Table Of Contents (TOC.xml)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ecw.html">ECW – Enhanced Compressed Wavelets (.ecw)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eedai.html">EEDAI - Google Earth Engine Data API Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ehdr.html">EHdr – ESRI .hdr Labelled</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eir.html">EIR – Erdas Imagine Raw</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elas.html">ELAS - Earth Resources Laboratory Applications Software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="envi.html">ENVI – ENVI .hdr Labelled Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="epsilon.html">Epsilon - Wavelet compressed images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="esat.html">ESAT – Envisat Image Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ers.html">ERS – ERMapper .ERS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exr.html">EXR – Extended Dynamic Range Image File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fast.html">FAST – EOSAT FAST Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fit.html">FIT – FIT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fits.html">FITS – Flexible Image Transport System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fujibas.html">FujiBAS – Fuji BAS Scanner Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="genbin.html">GenBin – Generic Binary (.hdr labelled)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="georaster.html">Oracle Spatial GeoRaster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gff.html">GFF – Sandia National Laboratories GSAT File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gif.html">GIF – Graphics Interchange Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gmt.html">GMT – GMT Compatible netCDF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpkg.html">GPKG – GeoPackage raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grass.html">GRASS Raster Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grassasciigrid.html">GRASSASCIIGrid – GRASS ASCII Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grib.html">GRIB – WMO General Regularly-distributed Information in Binary form</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gs7bg.html">GS7BG – Golden Software Surfer 7 Binary Grid File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gsag.html">GSAG – Golden Software ASCII Grid File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gsbg.html">GSBG – Golden Software Binary Grid File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gsc.html">GSC – GSC Geogrid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gta.html">GTA - Generic Tagged Arrays</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gtiff.html">GTiff – GeoTIFF File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gxf.html">GXF – Grid eXchange File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hdf4.html">HDF4 – Hierarchical Data Format Release 4 (HDF4)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hdf5.html">HDF5 – Hierarchical Data Format Release 5 (HDF5)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hf2.html">HF2 – HF2/HFZ heightfield raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hfa.html">HFA – Erdas Imagine .img</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ida.html">IDA – Image Display and Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Idrisi.html">RST – Idrisi Raster Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ignfheightasciigrid.html">IGNFHeightASCIIGrid – IGN-France height correction ASCII grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ilwis.html">ILWIS – Raster Map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intergraphraster.html">INGR – Intergraph Raster Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iris.html">IRIS – Vaisala’s weather radar software format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="isce.html">ISCE – ISCE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="isg.html">ISG – International Service for the Geoid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="isis2.html">ISIS2 – USGS Astrogeology ISIS Cube (Version 2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="isis3.html">ISIS3 – USGS Astrogeology ISIS Cube (Version 3)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jdem.html">JDEM – Japanese DEM (.mem)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2ecw.html">JP2ECW – ERDAS JPEG2000 (.jp2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2kak.html">JP2KAK – JPEG-2000 (based on Kakadu)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2lura.html">JP2Lura – JPEG2000 driver based on Lurawave library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2mrsid.html">JP2MrSID – JPEG2000 via MrSID SDK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2openjpeg.html">JP2OpenJPEG – JPEG2000 driver based on OpenJPEG library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jpeg2000.html">JPEG2000 – Implementation of the JPEG-2000 part 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jpegls.html">JPEGLS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jpeg.html">JPEG – JPEG JFIF File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jpipkak.html">JPIPKAK - JPIP Streaming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kea.html">KEA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kmlsuperoverlay.html">KMLSuperoverlay – KMLSuperoverlay</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kro.html">KRO – KOLOR Raw format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lan.html">LAN – Erdas 7.x .LAN and .GIS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="l1b.html">L1B – NOAA Polar Orbiter Level 1b Data Set (AVHRR)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lcp.html">LCP – FARSITE v.4 LCP Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="leveller.html">Leveller – Daylon Leveller Heightfield</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loslas.html">LOSLAS – NADCON .los/.las Datum Grid Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="map.html">MAP – OziExplorer .MAP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="marfa.html">MRF – Meta Raster Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mbtiles.html">MBTiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mem.html">MEM – In Memory Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mff.html">MFF – Vexcel MFF Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mff2.html">MFF2 – Vexcel MFF2 Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mg4lidar.html">MG4Lidar – MrSID/MG4 LiDAR Compression / Point Cloud View files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mrsid.html">MrSID – Multi-resolution Seamless Image Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="msg.html">MSG – Meteosat Second Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="msgn.html">MSGN – Meteosat Second Generation (MSG) Native Archive Format (.nat)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ndf.html">NDF – NLAPS Data Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="netcdf.html">NetCDF: Network Common Data Form</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ngsgeoid.html">NGSGEOID - NOAA NGS Geoid Height Grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ngw.html">NGW – NextGIS Web</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nitf.html">NITF – National Imagery Transmission Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ntv1.html">NTv1 – NTv1 Datum Grid Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ntv2.html">NTv2 – NTv2 Datum Grid Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nwtgrd.html">NWT_GRD/NWT_GRC – Northwood/Vertical Mapper File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ozi.html">OZI – OZF2/OZFX3 raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="palsar.html">JAXA PALSAR Processed Products</a></li>
+<li class="toctree-l2"><a class="reference internal" href="paux.html">PAux – PCI .aux Labelled Raw Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pcidsk.html">PCIDSK – PCI Geomatics Database File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pcraster.html">PCRaster – PCRaster raster file format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pdf.html">PDF – Geospatial PDF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pds.html">PDS – Planetary Data System v3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pds4.html">PDS4 – NASA Planetary Data System (Version 4)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plmosaic.html">PLMosaic (Planet Labs Mosaics API)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="png.html">PNG – Portable Network Graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pnm.html">PNM – Netpbm (.pgm, .ppm)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="postgisraster.html">PostGISRaster – PostGIS Raster driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prf.html">PHOTOMOD Raster File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasdaman.html">Rasdaman GDAL driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasterlite.html">Rasterlite - Rasters in SQLite DB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasterlite2.html">RasterLite2 - Rasters in SQLite DB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="r.html">R – R Object Data Store</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rda.html">RDA (DigitalGlobe Raster Data Access)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rdb.html">RDB - <em>RIEGL</em> Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rik.html">RIK – Swedish Grid Maps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rmf.html">RMF – Raster Matrix Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="roi_pac.html">ROI_PAC – ROI_PAC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpftoc.html">RPFTOC – Raster Product Format/RPF (a.toc)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rraster.html">RRASTER – R Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rs2.html">RS2 – RadarSat 2 XML Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="safe.html">SAFE – Sentinel-1 SAFE XML Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sar_ceos.html">SAR_CEOS – CEOS SAR Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sdat.html">SAGA – SAGA GIS Binary Grid File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sdts.html">SDTS – USGS SDTS DEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sde.html">ESRI ArcSDE Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sentinel2.html">SENTINEL2 – Sentinel-2 Products</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sgi.html">SGI – SGI Image Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sigdem.html">SIGDEM – Scaled Integer Gridded DEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="snodas.html">SNODAS – Snow Data Assimilation System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="srp.html">SRP – Standard Product Format (ASRP/USRP) (.gen)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="srtmhgt.html">SRTMHGT – SRTM HGT Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="terragen.html">Terragen – Terragen™ Terrain File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="til.html">TIL – EarthWatch/DigitalGlobe .TIL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.html">TileDB - TileDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tsx.html">TSX –  TerraSAR-X Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usgsdem.html">USGSDEM – USGS ASCII DEM (and CDED)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vicar.html">VICAR – VICAR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vrt.html">VRT – GDAL Virtual Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wcs.html">WCS – OGC Web Coverage Service</a></li>
+<li class="toctree-l2"><a class="reference internal" href="webp.html">WEBP - WEBP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wms.html">WMS – Web Map Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wmts.html">WMTS – OGC Web Map Tile Service</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xpm.html">XPM – X11 Pixmap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xyz.html">XYZ – ASCII Gridded XYZ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="zmap.html">ZMap – ZMap Plus Grid</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Raster drivers</a> &raquo;</li>
+      
+          <li><a href="aig.html">AIG – Arc/Info Binary Grid</a> &raquo;</li>
+      
+      <li>Arc/Info Binary Grid Format</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/drivers/raster/arcinfo_grid_format.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="airsar.html" class="btn btn-neutral float-right" title="AIRSAR – AIRSAR Polarimetric Format" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="aig.html" class="btn btn-neutral float-left" title="AIG – Arc/Info Binary Grid" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="arc-info-binary-grid-format">
+<span id="raster-arcinfo-grid-format"></span><h1>Arc/Info Binary Grid Format<a class="headerlink" href="#arc-info-binary-grid-format" title="Permalink to this headline">¶</a></h1>
+<p><em>by</em> <a class="reference external" href="http://pobox.com/~warmerdam">Frank Warmerdam</a>
+(<a class="reference external" href="mailto:warmerdam&#37;&#52;&#48;pobox&#46;com">warmerdam<span>&#64;</span>pobox<span>&#46;</span>com</a>)</p>
+<p>The Arc/Info Binary Grid format is the internal working format of the
+Arc/Info Grid product. It is also usable and creatable within the
+spatial analyst component of ArcView. It is a tiled (blocked) format
+with run length compression capable of holding raster data of up to 4
+byte integers or 4 byte floating data.</p>
+<p>This format should not be confused with the Arc/Info ASCII Grid format
+which is the interchange format for grids. Files can be converted
+between binary and ASCII format with the GRIDASCII and ASCIIGRID
+commands in Arc/Info. This format is also different than the flat binary
+raster output of the GRIDFLOAT command. The Arc/Info binary float, and
+ASCII formats are also accessible from within ArcView.</p>
+<p>This format should also not be confused with what I know as ESRI BIL
+format. This is really a standard ESRI way of creating a header file
+(.HDR) describing the data layout a binary raster file containing raster
+data.</p>
+<div class="section" id="version">
+<h2>Version<a class="headerlink" href="#version" title="Permalink to this headline">¶</a></h2>
+<p>I am not sure yet how the versions work for grid files. I have been
+working primarily with grid files generated by ArcView 3.x, and its
+associated gridio API. The hdr.adf files I have examined start with the
+string <strong>GRID1.2</strong> for what that’s worth. Certainly the file naming
+conventions seem to follow the Arc/Info 7.x conventions rather than that
+of earlier versions.</p>
+</div>
+<div class="section" id="file-set">
+<h2>File Set<a class="headerlink" href="#file-set" title="Permalink to this headline">¶</a></h2>
+<p>A grid coverage actually consists of a number of files. A grid normally
+lives in its own directory named after the grid. For instance, the grid
+<strong>nwgrd1</strong> lives in the directory <strong>nwgrd1</strong>, and has the following
+component files:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="n">rwxr</span><span class="o">--</span><span class="n">r</span><span class="o">--</span>   <span class="mi">1</span> <span class="n">warmerda</span> <span class="n">users</span>          <span class="mi">32</span> <span class="n">Jan</span> <span class="mi">22</span> <span class="mi">16</span><span class="p">:</span><span class="mi">07</span> <span class="n">nwgrd1</span><span class="o">/</span><span class="n">dblbnd</span><span class="o">.</span><span class="n">adf</span>
+<span class="o">-</span><span class="n">rwxr</span><span class="o">--</span><span class="n">r</span><span class="o">--</span>   <span class="mi">1</span> <span class="n">warmerda</span> <span class="n">users</span>         <span class="mi">308</span> <span class="n">Jan</span> <span class="mi">22</span> <span class="mi">16</span><span class="p">:</span><span class="mi">07</span> <span class="n">nwgrd1</span><span class="o">/</span><span class="n">hdr</span><span class="o">.</span><span class="n">adf</span>
+<span class="o">-</span><span class="n">rwxr</span><span class="o">--</span><span class="n">r</span><span class="o">--</span>   <span class="mi">1</span> <span class="n">warmerda</span> <span class="n">users</span>          <span class="mi">32</span> <span class="n">Jan</span> <span class="mi">22</span> <span class="mi">16</span><span class="p">:</span><span class="mi">07</span> <span class="n">nwgrd1</span><span class="o">/</span><span class="n">sta</span><span class="o">.</span><span class="n">adf</span>
+<span class="o">-</span><span class="n">rwxr</span><span class="o">--</span><span class="n">r</span><span class="o">--</span>   <span class="mi">1</span> <span class="n">warmerda</span> <span class="n">users</span>        <span class="mi">2048</span> <span class="n">Jan</span> <span class="mi">22</span> <span class="mi">16</span><span class="p">:</span><span class="mi">07</span> <span class="n">nwgrd1</span><span class="o">/</span><span class="n">vat</span><span class="o">.</span><span class="n">adf</span>
+<span class="o">-</span><span class="n">rwxr</span><span class="o">--</span><span class="n">r</span><span class="o">--</span>   <span class="mi">1</span> <span class="n">warmerda</span> <span class="n">users</span>      <span class="mi">187228</span> <span class="n">Jan</span> <span class="mi">22</span> <span class="mi">16</span><span class="p">:</span><span class="mi">07</span> <span class="n">nwgrd1</span><span class="o">/</span><span class="n">w001001</span><span class="o">.</span><span class="n">adf</span>
+<span class="o">-</span><span class="n">rwxr</span><span class="o">--</span><span class="n">r</span><span class="o">--</span>   <span class="mi">1</span> <span class="n">warmerda</span> <span class="n">users</span>        <span class="mi">6132</span> <span class="n">Jan</span> <span class="mi">22</span> <span class="mi">16</span><span class="p">:</span><span class="mi">07</span> <span class="n">nwgrd1</span><span class="o">/</span><span class="n">w001001x</span><span class="o">.</span><span class="n">adf</span>
+</pre></div>
+</div>
+<p>Sometimes datasets will also include a prj.adf files containing the
+projection definition in the usual ESRI format. Grids also normally have
+associated tables in the info directory. This is beyond the scope of my
+discussion for now.</p>
+<p>The files have the following roles:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="#dblbnd">dblbnd.adf</a>: Contains the bounds (LLX, LLY, URX, URY) of
+the portion of utilized portion of the grid.</p></li>
+<li><p><a class="reference external" href="#hdr.adf">hdr.adf</a>: This is the header, and contains information
+on the tile sizes, and number of tiles in the dataset. It also
+contains assorted other information I have yet to identify.</p></li>
+<li><p><a class="reference external" href="#sta">sta.adf</a>: This contains raster statistics. In particular,
+the raster min, max, mean and standard deviation.</p></li>
+<li><p><strong>vat.adf</strong>: This relates to the value attribute table. This is the
+table corresponding integer raster values with a set of attributes. I
+presume it is really just a pointer into info in a manner similar to
+the pat.adf file in a vector coverage, but I haven’t investigated
+yet.</p></li>
+<li><p><a class="reference external" href="#w001001">w001001.adf</a>: This is the file containing the actual
+raster data.</p></li>
+<li><p><a class="reference external" href="#w001001x">w001001x.adf</a>: This is an index file containing
+pointers to each of the tiles in the w001001.adf raster file.</p></li>
+</ul>
+</div>
+<hr class="docutils" />
+<div class="section" id="dblbnd-adf-georef-bounds">
+<h2>dblbnd.adf - Georef Bounds<a class="headerlink" href="#dblbnd-adf-georef-bounds" title="Permalink to this headline">¶</a></h2>
+<p>Fields:</p>
+<p>Start Byte</p>
+<p># of Bytes</p>
+<p>Format</p>
+<p>Name</p>
+<p>Description</p>
+<p>0</p>
+<p>8</p>
+<p>MSB double</p>
+<p>D_LLX</p>
+<p>Lower left X (easting) of the grid. Generally -0.5 for an
+ungeoreferenced grid.</p>
+<p>8</p>
+<p>8</p>
+<p>MSB double</p>
+<p>D_LLY</p>
+<p>Lower left Y (northing) of the grid. Generally -0.5 for an
+ungeoreferenced grid.</p>
+<p>16</p>
+<p>8</p>
+<p>MSB double</p>
+<p>D_URX</p>
+<p>Upper right X (easting) of the grid. Generally #Pixels-0.5 for an
+ungeoreferenced grid.</p>
+<p>24</p>
+<p>8</p>
+<p>MSB double</p>
+<p>D_URY</p>
+<p>Upper right Y (northing) of the grid. Generally #Lines-0.5 for an
+ungeoreferenced grid.</p>
+<p>This file is always 32 bytes long. The bounds apply to the portion of
+the grid that is in use, not the whole thing.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="w001001x-adf-tile-index">
+<h2>w001001x.adf - Tile Index<a class="headerlink" href="#w001001x-adf-tile-index" title="Permalink to this headline">¶</a></h2>
+<p>This is a binary dump of the first 320 bytes of a w001001x.adf file.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>  <span class="mi">0</span><span class="p">:</span> <span class="mi">0000270</span><span class="n">A</span> <span class="n">FFFFFC14</span> <span class="mi">00000000</span> <span class="mi">00000000</span> <span class="o">~~</span><span class="s1">&#39;~~~~~~~~~~~~~</span>
+ <span class="mi">16</span><span class="p">:</span> <span class="mi">00000000</span> <span class="mi">00000000</span> <span class="mi">00000</span><span class="n">BFA</span> <span class="mi">00000000</span> <span class="o">~~~~~~~~~~~~~~~~</span>
+ <span class="mi">32</span><span class="p">:</span> <span class="mi">00000000</span> <span class="mi">00000000</span> <span class="mi">00000000</span> <span class="mi">00000000</span> <span class="o">~~~~~~~~~~~~~~~~</span>
+ <span class="mi">48</span><span class="p">:</span> <span class="mi">00000000</span> <span class="mi">00000000</span> <span class="mi">00000000</span> <span class="mi">00000000</span> <span class="o">~~~~~~~~~~~~~~~~</span>
+ <span class="mi">64</span><span class="p">:</span> <span class="mi">00000000</span> <span class="mi">00000000</span> <span class="mi">00000000</span> <span class="mi">00000000</span> <span class="o">~~~~~~~~~~~~~~~~</span>
+ <span class="mi">80</span><span class="p">:</span> <span class="mi">00000000</span> <span class="mi">00000000</span> <span class="mi">00000000</span> <span class="mi">00000000</span> <span class="o">~~~~~~~~~~~~~~~~</span>
+ <span class="mi">96</span><span class="p">:</span> <span class="mi">00000000</span> <span class="mi">00000032</span> <span class="mi">00000202</span> <span class="mi">00000235</span> <span class="o">~~~~~~~</span><span class="mi">2</span><span class="o">~~~~~~~</span><span class="mi">5</span>
+<span class="mi">112</span><span class="p">:</span> <span class="mi">000001</span><span class="n">D4</span> <span class="mi">0000040</span><span class="n">A</span> <span class="mi">00000000</span> <span class="mi">0000040</span><span class="n">B</span> <span class="o">~~~~~~~~~~~~~~~~</span>
+<span class="mi">128</span><span class="p">:</span> <span class="mi">00000000</span> <span class="mi">0000040</span><span class="n">C</span> <span class="mi">00000000</span> <span class="mi">0000040</span><span class="n">D</span> <span class="o">~~~~~~~~~~~~~~~~</span>
+<span class="mi">144</span><span class="p">:</span> <span class="mi">00000000</span> <span class="mi">0000040</span><span class="n">E</span> <span class="mi">00000000</span> <span class="mi">0000040</span><span class="n">F</span> <span class="o">~~~~~~~~~~~~~~~~</span>
+<span class="mi">160</span><span class="p">:</span> <span class="mi">00000000</span> <span class="mi">00000410</span> <span class="mi">00000202</span> <span class="mi">00000613</span> <span class="o">~~~~~~~~~~~~~~~~</span>
+<span class="mi">176</span><span class="p">:</span> <span class="mi">000001</span><span class="n">D4</span> <span class="mf">000007E8</span> <span class="mi">00000000</span> <span class="mf">000007E9</span> <span class="o">~~~~~~~~~~~~~~~~</span>
+<span class="mi">192</span><span class="p">:</span> <span class="mi">00000000</span> <span class="mi">000007</span><span class="n">EA</span> <span class="mi">00000000</span> <span class="mi">000007</span><span class="n">EB</span> <span class="o">~~~~~~~~~~~~~~~~</span>
+<span class="mi">208</span><span class="p">:</span> <span class="mi">00000000</span> <span class="mi">000007</span><span class="n">EC</span> <span class="mi">00000000</span> <span class="mi">000007</span><span class="n">ED</span> <span class="o">~~~~~~~~~~~~~~~~</span>
+<span class="mi">224</span><span class="p">:</span> <span class="mi">00000000</span> <span class="mi">000007</span><span class="n">EE</span> <span class="mi">00000202</span> <span class="mi">000009</span><span class="n">F1</span> <span class="o">~~~~~~~~~~~~~~~~</span>
+<span class="mi">240</span><span class="p">:</span> <span class="mi">000001</span><span class="n">D4</span> <span class="mi">00000</span><span class="n">BC6</span> <span class="mi">00000000</span> <span class="mi">00000</span><span class="n">BC7</span> <span class="o">~~~~~~~~~~~~~~~~</span>
+<span class="mi">256</span><span class="p">:</span> <span class="mi">00000000</span> <span class="mi">00000</span><span class="n">BC8</span> <span class="mi">00000000</span> <span class="mi">00000</span><span class="n">BC9</span> <span class="o">~~~~~~~~~~~~~~~~</span>
+<span class="mi">272</span><span class="p">:</span> <span class="mi">00000000</span> <span class="mi">00000</span><span class="n">BCA</span> <span class="mi">00000000</span> <span class="mi">00000</span><span class="n">BCB</span> <span class="o">~~~~~~~~~~~~~~~~</span>
+<span class="mi">288</span><span class="p">:</span> <span class="mi">00000000</span> <span class="mi">00000</span><span class="n">BCC</span> <span class="mi">00000202</span> <span class="mi">00000</span><span class="n">DCF</span> <span class="o">~~~~~~~~~~~~~~~~</span>
+<span class="mi">304</span><span class="p">:</span> <span class="mi">000001</span><span class="n">D4</span> <span class="mi">00000</span><span class="n">FA4</span> <span class="mi">00000000</span> <span class="mi">00000</span><span class="n">FA5</span> <span class="o">~~~~~~~~~~~~~~~~</span>
+</pre></div>
+</div>
+<p>Fields:</p>
+<p>Start Byte</p>
+<p># of Bytes</p>
+<p>Format</p>
+<p>Description</p>
+<p>0</p>
+<p>8</p>
+<p>Magic Number (always hex 00 00 27 0A FF FF ** **, usually ending in
+FC 14, FB F8 or FC 08).</p>
+<p>8</p>
+<p>16</p>
+<p>zero fill</p>
+<p>24</p>
+<p>4</p>
+<p>MSB Int32</p>
+<p>Size of whole file in shorts (multiply by two to get file size in
+bytes).</p>
+<p>28</p>
+<p>72</p>
+<p>zero fill</p>
+<p>100 + <strong>t</strong>*8</p>
+<p>4</p>
+<p>MSB Int32</p>
+<p>Offset to tile <strong>t</strong> in w001001.adf measured in two byte shorts.</p>
+<p>104 + <strong>t</strong>*8</p>
+<p>4</p>
+<p>MSB Int32</p>
+<p>Size of tile <strong>t</strong> in 2 byte shorts.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="sta-adf-raster-statistics">
+<h2>sta.adf - Raster Statistics<a class="headerlink" href="#sta-adf-raster-statistics" title="Permalink to this headline">¶</a></h2>
+<p>Fields:</p>
+<p>Start Byte</p>
+<p># of Bytes</p>
+<p>Format</p>
+<p>Name</p>
+<p>Description</p>
+<p>0</p>
+<p>8</p>
+<p>MSB double</p>
+<p>SMin</p>
+<p>Minimum value of a raster cell in this grid.</p>
+<p>8</p>
+<p>8</p>
+<p>MSB double</p>
+<p>SMax</p>
+<p>Maximum value of a raster cell in this grid.</p>
+<p>16</p>
+<p>8</p>
+<p>MSB double</p>
+<p>SMean</p>
+<p>Mean value of a raster cells in this grid.</p>
+<p>24</p>
+<p>8</p>
+<p>MSB double</p>
+<p>SStdDev</p>
+<p>Standard deviation of raster cells in this grid.</p>
+<p>This file is always 32 bytes long.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="w001001-adf-raster-data">
+<h2>w001001.adf - Raster Data<a class="headerlink" href="#w001001-adf-raster-data" title="Permalink to this headline">¶</a></h2>
+<p>This is a binary dump of the first 320 bytes of a w001001.adf file.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>  <span class="mi">0</span><span class="p">:</span> <span class="mi">0000270</span><span class="n">A</span> <span class="n">FFFFFC14</span> <span class="mi">00000000</span> <span class="mi">00000000</span> <span class="o">~~</span><span class="s1">&#39;~~~~~~~~~~~~~</span>
+ <span class="mi">16</span><span class="p">:</span> <span class="mi">00000000</span> <span class="mi">00000000</span> <span class="mi">00016</span><span class="n">DAE</span> <span class="mi">00000000</span> <span class="o">~~~~~~~~~~</span><span class="n">m</span><span class="o">~~~~~</span>
+ <span class="mi">32</span><span class="p">:</span> <span class="mi">00000000</span> <span class="mi">00000000</span> <span class="mi">00000000</span> <span class="mi">00000000</span> <span class="o">~~~~~~~~~~~~~~~~</span>
+ <span class="mi">48</span><span class="p">:</span> <span class="mi">00000000</span> <span class="mi">00000000</span> <span class="mi">00000000</span> <span class="mi">00000000</span> <span class="o">~~~~~~~~~~~~~~~~</span>
+ <span class="mi">64</span><span class="p">:</span> <span class="mi">00000000</span> <span class="mi">00000000</span> <span class="mi">00000000</span> <span class="mi">00000000</span> <span class="o">~~~~~~~~~~~~~~~~</span>
+ <span class="mi">80</span><span class="p">:</span> <span class="mi">00000000</span> <span class="mi">00000000</span> <span class="mi">00000000</span> <span class="mi">00000000</span> <span class="o">~~~~~~~~~~~~~~~~</span>
+ <span class="mi">96</span><span class="p">:</span> <span class="mi">00000000</span> <span class="mi">02020800</span> <span class="mi">00373</span><span class="n">D42</span> <span class="mi">5</span><span class="n">C5A4D31</span> <span class="o">~~~~~~~~~</span><span class="mi">7</span><span class="o">=</span><span class="n">B</span>\<span class="n">ZM1</span>
+<span class="mi">112</span><span class="p">:</span> <span class="mi">200</span><span class="n">A0108</span> <span class="mf">0E1</span><span class="n">D4F89</span> <span class="mi">9</span><span class="n">C9A9392</span> <span class="mi">8</span><span class="n">C7E6653</span>  <span class="o">~~~~~</span><span class="n">O</span><span class="o">~~~~~~~</span><span class="n">fS</span>
+<span class="mi">128</span><span class="p">:</span> <span class="mi">5151596</span><span class="n">D</span> <span class="mi">83919290</span> <span class="mi">868</span><span class="n">A8B87</span> <span class="mi">807</span><span class="n">A7A7B</span> <span class="n">QQYm</span><span class="o">~~~~~~~~~</span><span class="n">zz</span><span class="p">{</span>
+<span class="mi">144</span><span class="p">:</span> <span class="mi">7</span><span class="n">C7A766F</span> <span class="mi">64481</span><span class="n">D00</span> <span class="mi">0406305</span><span class="n">F</span> <span class="mi">6</span><span class="n">B6C6A5B</span> <span class="o">|</span><span class="n">zvodH</span><span class="o">~~~~</span><span class="mi">0</span><span class="n">_klj</span><span class="p">[</span>
+<span class="mi">160</span><span class="p">:</span> <span class="mi">5</span><span class="n">D53513C</span> <span class="mi">2</span><span class="n">D2D2732</span> <span class="mi">24293</span><span class="n">F54</span> <span class="mi">40354</span><span class="n">C55</span> <span class="p">]</span><span class="n">SQ</span><span class="o">&lt;--</span><span class="s1">&#39;2$)?T@5LU</span>
+<span class="mi">176</span><span class="p">:</span> <span class="mi">67686258</span> <span class="mf">514E4943</span> <span class="mi">5859534</span><span class="n">A</span> <span class="mi">41394</span><span class="n">D70</span> <span class="n">ghbXQNICXYSJA9Mp</span>
+<span class="mi">192</span><span class="p">:</span> <span class="mi">75665659</span> <span class="mi">66625</span><span class="n">A63</span> <span class="mi">737</span><span class="n">A848E</span> <span class="mi">9090979</span><span class="n">F</span> <span class="n">ufVYfbZcsz</span><span class="o">~~~~~~</span>
+<span class="mi">208</span><span class="p">:</span> <span class="mi">9</span><span class="n">F908C8F</span> <span class="mi">8</span><span class="n">F96998E</span> <span class="mi">8778685</span><span class="n">B</span> <span class="mi">53536274</span> <span class="o">~~~~~~~~~</span><span class="n">xh</span><span class="p">[</span><span class="n">SSbt</span>
+<span class="mi">224</span><span class="p">:</span> <span class="mi">747</span><span class="n">B838A</span> <span class="mi">8</span><span class="n">A8C8F92</span> <span class="mi">8</span><span class="n">D979B94</span> <span class="mi">8</span><span class="n">C8D9294</span> <span class="n">t</span><span class="p">{</span><span class="o">~~~~~~~~~~~~~~</span>
+<span class="mi">240</span><span class="p">:</span> <span class="mi">8</span><span class="n">D8D8D8D</span> <span class="mi">8</span><span class="n">C8B8989</span> <span class="mi">8</span><span class="n">B8E908F</span> <span class="mf">8E8</span><span class="n">E9092</span> <span class="o">~~~~~~~~~~~~~~~~</span>
+<span class="mi">256</span><span class="p">:</span> <span class="mi">90929394</span> <span class="mi">989</span><span class="n">C9891</span> <span class="mi">92939698</span> <span class="mi">9</span><span class="n">B9B9C9C</span> <span class="o">~~~~~~~~~~~~~~~~</span>
+<span class="mi">272</span><span class="p">:</span> <span class="mf">8E8</span><span class="n">E8F8F</span> <span class="mf">8E8</span><span class="n">E8F90</span> <span class="mf">898E918</span><span class="n">F</span> <span class="mi">8</span><span class="n">B8A8E93</span> <span class="o">~~~~~~~~~~~~~~~~</span>
+<span class="mi">288</span><span class="p">:</span> <span class="mi">8</span><span class="n">B8D9093</span> <span class="mi">94918</span><span class="n">C86</span> <span class="mi">838</span><span class="n">DA1BC</span> <span class="n">B7CEC9B0</span> <span class="o">~~~~~~~~~~~~~~~~</span>
+<span class="mi">304</span><span class="p">:</span> <span class="n">D4B0BB96</span> <span class="n">A0929E99</span> <span class="mi">9797999</span><span class="n">B</span> <span class="mi">9</span><span class="n">D9C9C9B</span> <span class="o">~~~~~~~~~~~~~~~~</span>
+</pre></div>
+</div>
+<p>Fields:</p>
+<p>Start Byte</p>
+<p># of Bytes</p>
+<p>Format</p>
+<p>Name</p>
+<p>Description</p>
+<p>0</p>
+<p>8</p>
+<p>RMagic</p>
+<p>Magic Number (always hex 00 00 27 0A FF FF ** **, usually ending in
+FC 14, FB F8 or FC 08).</p>
+<p>8</p>
+<p>16</p>
+<p>zero fill</p>
+<p>24</p>
+<p>4</p>
+<p>MSB Int32</p>
+<p>RFileSize</p>
+<p>Size of whole file in shorts (multiply by two to get file size in
+bytes).</p>
+<p>28</p>
+<p>72</p>
+<p>zero fill</p>
+<p>100, …</p>
+<p>2</p>
+<p>MSB Int16</p>
+<p>RTileSize</p>
+<p>Size of this tiles data measured in shorts. This matches the size in the
+index file, and does not include the tile size itself. The next tile
+starts <strong>2*n+2</strong> bytes after the start of this tile, where <strong>n</strong> is the
+value of this field.</p>
+<p>102, …</p>
+<p>1</p>
+<p>byte</p>
+<p>RTileType</p>
+<p>Tile type code indicating the organization of the following data
+(integer coverages only).</p>
+<p>103, …</p>
+<p>1</p>
+<p>byte</p>
+<p>RMinSize</p>
+<p>Number of bytes following to form the minimum value for the tile
+(integer coverages only).</p>
+<p>104, …</p>
+<p>(RMinSize bytes)</p>
+<p>MSB Int (var size)</p>
+<p>RMin</p>
+<p>The minimum value pixels for this tile. This number is added to the
+pixel values for each pixel in this tile (integer coverages only). I
+must stress that if RMinSize is less than 4 this is still a signed
+quantity. For instance, if RMinSize is 2, the value is 65536 - byte0*256
+- byte1 if byte0 is &gt; 127.</p>
+<p>104+RMinSize, …</p>
+<p>RTileSize*2 - 3 - RMinSize</p>
+<p>variable</p>
+<p>RTileData</p>
+<p>The data for this tile. Format varies according to RTileType for integer
+coverages.</p>
+<p>The fields RTileSize, RTileType, RMinSize, RMin, and RTileData occur in
+the file for each tile of data present. They are usually packed one
+after the other, but this isn’t necessarily guaranteed. The index file
+(w001001x.adf) should be used to establish the tile locations. Note that
+tiles that appear in the index file with a size of zero will appear as
+just two bytes (zeros) for the RTileSize for that tile.</p>
+<div class="section" id="raster-size">
+<h3>Raster Size<a class="headerlink" href="#raster-size" title="Permalink to this headline">¶</a></h3>
+<p>The size of a the grid isn’t as easy to deduce as one might expect. The
+hdr.adf file contains the HTilesPerRow, HTilesPerColumn, HTileXSize, and
+HTileYSize fields which imply a particular raster space. However, it
+seems that this is created much larger than necessary to hold the users
+raster data. I have created 3x1 rasters which resulted in the standard
+8x512 tiles of 256x4 pixels each.</p>
+<p>It seems that the user portion of the raster has to be computed based on
+the georeferenced bounds in the dblbnd.adf file (assumed to be anchored
+at the top left of the total raster space), and the HPixelSizeX, and
+HPixelSizeY fields from hdr.adf.</p>
+<p><strong>#Pixels = (D_URX - D_LRX) / HPixelSizeX</strong></p>
+<p><strong>#Lines = (D_URY - D_LRY) / HPixelSizeY</strong></p>
+<p>Based on this number of pixels and lines, it is possible to establish
+what portion out of the top left of the raster is really <em>of interest</em>.
+All regions outside this appear to empty tiles, or filled with no data
+markers.</p>
+</div>
+<div class="section" id="rtiletype-rtiledata">
+<h3>RTileType/RTileData<a class="headerlink" href="#rtiletype-rtiledata" title="Permalink to this headline">¶</a></h3>
+<p>Each tile contains HBlockXSize * HBlockYSize pixels of data. For
+floating point and uncompressed integer files the data is just the tile
+size (in two bytes) followed by the pixel data as 4 byte MSB order IEEE
+floating point words. For compressed integer tiles it is necessary to
+interpret the RTileType to establish the details of the tile
+organization:</p>
+<div class="section" id="rtiletype-0x00-constant-block">
+<h4>RTileType = 0x00 (constant block)<a class="headerlink" href="#rtiletype-0x00-constant-block" title="Permalink to this headline">¶</a></h4>
+<p>All pixels take the value of the RMin. Data is ignored. It appears there
+is sometimes a bit of meaningless data (up to four bytes) in the block.</p>
+</div>
+<div class="section" id="rtiletype-0x01-raw-1bit-data">
+<h4>RTileType = 0x01 (raw 1bit data)<a class="headerlink" href="#rtiletype-0x01-raw-1bit-data" title="Permalink to this headline">¶</a></h4>
+<p>One full tile worth of data pixel values follows the RMin field, with
+1bit per pixel.</p>
+</div>
+<div class="section" id="rtiletype-0x04-raw-4bit-data">
+<h4>RTileType = 0x04 (raw 4bit data)<a class="headerlink" href="#rtiletype-0x04-raw-4bit-data" title="Permalink to this headline">¶</a></h4>
+<p>One full tiles worth of data pixel values follows the RMin field, with 4
+bits per pixel. The high order four bits of a byte comes before the low
+order four bits.</p>
+</div>
+<div class="section" id="rtiletype-0x08-raw-byte-data">
+<h4>RTileType = 0x08 (raw byte data)<a class="headerlink" href="#rtiletype-0x08-raw-byte-data" title="Permalink to this headline">¶</a></h4>
+<p>One full tiles worth of data pixel values (one byte per pixel) follows
+the RMin field.</p>
+</div>
+<div class="section" id="rtiletype-0x10-raw-16bit-data">
+<h4>RTileType = 0x10 (raw 16bit data)<a class="headerlink" href="#rtiletype-0x10-raw-16bit-data" title="Permalink to this headline">¶</a></h4>
+<p>One full tiles worth of data pixel values follows the RMin field, with
+16 bits per pixel (MSB).</p>
+</div>
+<div class="section" id="rtiletype-0x20-raw-32bit-data">
+<h4>RTileType = 0x20 (raw 32bit data)<a class="headerlink" href="#rtiletype-0x20-raw-32bit-data" title="Permalink to this headline">¶</a></h4>
+<p>One full tiles worth of data pixel values follows the RMin field, with
+32 bits per pixel (MSB).</p>
+</div>
+<div class="section" id="rtiletype-0xcf-16-bit-literal-runs-nodata-runs">
+<h4>RTileType = 0xCF (16 bit literal runs/nodata runs)<a class="headerlink" href="#rtiletype-0xcf-16-bit-literal-runs-nodata-runs" title="Permalink to this headline">¶</a></h4>
+<p>The data is organized in a series of runs. Each run starts with a marker
+which should be interpreted as:</p>
+<ul class="simple">
+<li><p><strong>Marker &lt; 128</strong>: The marker is followed by <strong>Marker</strong> pixels of
+literal data with two MSB bytes per pixel.</p></li>
+<li><p><strong>Marker &gt; 127</strong>: The marker indicates that <strong>256-Marker</strong> pixels of
+<em>no data</em> pixels should be put into the output stream. No data (other
+than the next marker) follows this marker.</p></li>
+</ul>
+</div>
+<div class="section" id="rtiletype-0xd7-literal-runs-nodata-runs">
+<h4>RTileType = 0xD7 (literal runs/nodata runs)<a class="headerlink" href="#rtiletype-0xd7-literal-runs-nodata-runs" title="Permalink to this headline">¶</a></h4>
+<p>The data is organized in a series of runs. Each run starts with a marker
+which should be interpreted as:</p>
+<ul class="simple">
+<li><p><strong>Marker &lt; 128</strong>: The marker is followed by <strong>Marker</strong> pixels of
+literal data with one byte per pixel.</p></li>
+<li><p><strong>Marker &gt; 127</strong>: The marker indicates that <strong>256-Marker</strong> pixels of
+<em>no data</em> pixels should be put into the output stream. No data (other
+than the next marker) follows this marker.</p></li>
+</ul>
+</div>
+<div class="section" id="rtiletype-0xdf-rmin-runs-nodata-runs">
+<h4>RTileType = 0xDF (RMin runs/nodata runs)<a class="headerlink" href="#rtiletype-0xdf-rmin-runs-nodata-runs" title="Permalink to this headline">¶</a></h4>
+<p>The data is organized in a series of runs. Each run starts with a marker
+which should be interpreted as:</p>
+<ul class="simple">
+<li><p><strong>Marker &lt; 128</strong>: The marker is followed by <strong>Marker</strong> pixels of
+literal data with one byte per pixel.</p></li>
+<li><p><strong>Marker &gt; 127</strong>: The marker indicates that <strong>256-Marker</strong> pixels of
+<em>no data</em> pixels should be put into the output stream. No data (other
+than the next marker) follows this marker.</p></li>
+</ul>
+<p>This is similar to 0xD7, except that the data size is zero bytes instead
+of 1, so only RMin values are inserted into the output stream.</p>
+</div>
+<div class="section" id="rtiletype-0xe0-run-length-encoded-32bit">
+<h4>RTileType = 0xE0 (run length encoded 32bit)<a class="headerlink" href="#rtiletype-0xe0-run-length-encoded-32bit" title="Permalink to this headline">¶</a></h4>
+<p>The data is organized in a series of runs. Each run starts with a marker
+which should be interpreted as a <strong>count</strong>. The four bytes following the
+count should be interpreted as an MSB Int32 <strong>value</strong>. They indicate
+that <strong>count</strong> pixels of <strong>value</strong> should be inserted into the output
+stream.</p>
+</div>
+<div class="section" id="rtiletype-0xf0-run-length-encoded-16bit">
+<h4>RTileType = 0xF0 (run length encoded 16bit)<a class="headerlink" href="#rtiletype-0xf0-run-length-encoded-16bit" title="Permalink to this headline">¶</a></h4>
+<p>The data is organized in a series of runs. Each run starts with a marker
+which should be interpreted as a <strong>count</strong>. The two bytes following the
+count should be interpreted as an MSB Int16 <strong>value</strong>. They indicate
+that <strong>count</strong> pixels of <strong>value</strong> should be inserted into the output
+stream.</p>
+</div>
+<div class="section" id="rtiletype-0xfc-0xf8-run-length-encoded-8bit">
+<h4>RTileType = 0xFC/0xF8 (run length encoded 8bit)<a class="headerlink" href="#rtiletype-0xfc-0xf8-run-length-encoded-8bit" title="Permalink to this headline">¶</a></h4>
+<p>The data is organized in a series of runs. Each run starts with a marker
+which should be interpreted as a <strong>count</strong>. The following byte is the
+<strong>value</strong>. They indicate that <strong>count</strong> pixels of <strong>value</strong> should be
+inserted into the output stream.</p>
+<p>The interpretation is the same for 0xFC, and 0xF8. I believe that 0xFC
+has a lower dynamic (2 bit) range than 0xF8 (4 or 8 bit).</p>
+</div>
+<div class="section" id="rtiletype-0xff-rmin-ccitt-rle-1bit">
+<h4>RTileType = 0xFF (RMin CCITT RLE 1Bit)<a class="headerlink" href="#rtiletype-0xff-rmin-ccitt-rle-1bit" title="Permalink to this headline">¶</a></h4>
+<p>The data stream for this file is CCITT RLE (G1 fax) compressed. The
+format is complex but source is provided with the sample program
+(derived from libtiff) for reading it. The result of uncompressing is
+1bit data so which the RMin value should be added.</p>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="hdr-adf-header">
+<h2>hdr.adf - Header<a class="headerlink" href="#hdr-adf-header" title="Permalink to this headline">¶</a></h2>
+<p>This is a binary dump of the first 308 bytes of a hdr.adf file.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>  0: 47524944 312E3200 00000000 FFFFFFFF GRID1.2~~~~~~~~~
+ 16: 00000001 00000000 0000164E 3F800000 ~~~~~~~~~~~N?~~~
+ 32: 00000F00 F6180000 90060000 3603D601 ~~~~~~~~~~~~6~~~
+ 48: 6403E301 01000000 7620F808 43012B03 d~~~~~~~v ~~C~+~
+ 64: D6019903 E3012B03 D6019903 E301F7BF ~~~~~~+~~~~~~~~~
+ 80: 00007406 6E1FC2A4 7A370D00 0B004200 ~~t~n~~~z7~~~~B~
+ 96: 4E1654A4 00000000 00000000 00000000 N~T~~~~~~~~~~~~~
+112: 34A5A89D FF0414A5 A70F0002 00000000 4~~~~~~~~~~~~~~~
+128: 00000000 3C0B5F06 A8C05F06 08005AC0 ~~~~&lt;~_~~~_~~~Z~
+144: 0A00E101 36035AC0 72085F06 FAA42F3C ~~~~6~Z~r~_~~~/&lt;
+160: 0A001667 02000E00 A80B0200 08370200 ~~~g~~~~~~~~~7~~
+176: 0CA00200 9C0B0200 04370200 36A0E436 ~~~~~~~~~7~~6~~6
+192: 84000000 36A00200 5F063EA5 0883FF04 ~~~~6~~~_~&gt;~~~~~
+208: 00008400 00000010 BD810200 5F010000 ~~~~~~~~~~~~_~~~
+224: 670E0000 5F01560E 4C4F0001 84008CA5 g~~~_~V~LO~~~~~~
+240: 28008F01 1000E00A 6628F7BF 4076FF04 (~~~~~~~f(~~@v~~
+256: 3FF00000 00000000 3FF00000 00000000 ?~~~~~~~?~~~~~~~
+272: C08FFC00 00000000 C0A1BF00 00000000 ~~~~~~~~~~~~~~~~
+288: 00000008 00000200 00000100 00000001 ~~~~~~~~~~~~~~~~
+304: 00000004                            ~~~~
+</pre></div>
+</div>
+<p>Fields:</p>
+<p>Start Byte</p>
+<p># of Bytes</p>
+<p>Format</p>
+<p>Name</p>
+<p>Description</p>
+<p>0</p>
+<p>8</p>
+<p>Char</p>
+<p>HMagic</p>
+<p>Magic Number - always “GRID1.20”</p>
+<p>8</p>
+<p>8</p>
+<p>assorted data, I don’t know the purpose.</p>
+<p>16</p>
+<p>4</p>
+<p>MSB Int32</p>
+<p>HCellType</p>
+<p>1 = int cover, 2 = float cover.</p>
+<p>20</p>
+<p>4</p>
+<p>MSB Int32</p>
+<p>CompFlag</p>
+<p>0 = compressed, 1 = uncompressed</p>
+<p>24</p>
+<p>232</p>
+<p>assorted data, I don’t know the purpose.</p>
+<p>256</p>
+<p>8</p>
+<p>MSB Double</p>
+<p>HPixelSizeX</p>
+<p>Width of a pixel in georeferenced coordinates. Generally 1.0 for
+ungeoreferenced rasters.</p>
+<p>264</p>
+<p>8</p>
+<p>MSB Double</p>
+<p>HPixelSizeY</p>
+<p>Height of a pixel in georeferenced coordinates. Generally 1.0 for
+ungeoreferenced rasters.</p>
+<p>272</p>
+<p>8</p>
+<p>MSB Double</p>
+<p>XRef</p>
+<p>dfLLX-(nBlocksPerRow*nBlockXSize*dfCellSizeX)/2.0</p>
+<p>280</p>
+<p>8</p>
+<p>MSB Double</p>
+<p>YRef</p>
+<p>dfURY-(3*nBlocksPerColumn*nBlockYSize*dfCellSizeY)/2.0</p>
+<p>288</p>
+<p>4</p>
+<p>MSB Int32</p>
+<p>HTilesPerRow</p>
+<p>The width of the file in tiles (often 8 for files of less than 2K in
+width).</p>
+<p>292</p>
+<p>4</p>
+<p>MSB Int32</p>
+<p>HTilesPerColumn</p>
+<p>The height of the file in tiles. Note this may be much more than the
+number of tiles actually represented in the index file.</p>
+<p>296</p>
+<p>4</p>
+<p>MSB Int32</p>
+<p>HTileXSize</p>
+<p>The width of a file in pixels. Normally 256.</p>
+<p>300</p>
+<p>4</p>
+<p>MSB Int32</p>
+<p>Unknown, usually 1.</p>
+<p>304</p>
+<p>4</p>
+<p>MSB Int32</p>
+<p>HTileYSize</p>
+<p>Height of a tile in pixels, usually 4.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="acknowledgements">
+<h2>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h2>
+<p>I would like to thank <a class="reference external" href="http://www.geosoft.com/">Geosoft Inc.</a> for
+partial funding of my research into this format. I would also like to
+thank:</p>
+<ul class="simple">
+<li><p>Kenneth R. McVay for providing the statistics file format.</p></li>
+<li><p>Noureddine Farah of ThinkSpace who dug up lots of datasets that
+caused problems.</p></li>
+<li><p>Luciano Fonseca who worked out RTileType 0x01.</p></li>
+<li><p>Martin Manningham of Global Geomatics for additional problem sample
+files.</p></li>
+<li><p>Harry Anderson of EDX Engineering, for showing me that floating point
+tiles don’t have RTileType.</p></li>
+<li><p>Ian Turton for supplying a sample files demonstrating the need to be
+careful with the sign of “short” RMin values.</p></li>
+<li><p>Duncan Chaundy at PCI for poking hard till I finally deduced 0xFF
+tiles.</p></li>
+<li><p>Stephen Cheeseman of GeoSoft for yet more problem files.</p></li>
+<li><p>Geoffrey Williams for a files demonstrating tile type 0x20.</p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="airsar.html" class="btn btn-neutral float-right" title="AIRSAR – AIRSAR Polarimetric Format" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="aig.html" class="btn btn-neutral float-left" title="AIG – Arc/Info Binary Grid" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,474 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gdal2tiles &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgprograms/gdal2tiles.html"/>
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="gdal_rasterize" href="gdal_rasterize.html" />
+    <link rel="prev" title="gdal_merge" href="gdal_merge.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Programs</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#raster-programs">Raster programs</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="raster_common_options.html">Common options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalinfo.html">gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_translate.html">gdal_translate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaladdo.html">gdaladdo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalwarp.html">gdalwarp</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaltindex.html">gdaltindex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalbuildvrt.html">gdalbuildvrt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_contour.html">gdal_contour</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaldem.html">gdaldem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rgb2pct.html">rgb2pct</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pct2rgb.html">pct2rgb</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_merge.html">gdal_merge</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">gdal2tiles</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#synopsis">Synopsis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#description">Description</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_rasterize.html">gdal_rasterize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaltransform.html">gdaltransform</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nearblack.html">nearblack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_retile.html">gdal_retile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_grid.html">gdal_grid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_proximity.html">gdal_proximity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_polygonize.html">gdal_polygonize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_sieve.html">gdal_sieve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_fillnodata.html">gdal_fillnodata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdallocationinfo.html">gdallocationinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalsrsinfo.html">gdalsrsinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalmove.html">gdalmove</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_edit.html">gdal_edit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_calc.html">gdal_calc.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_pansharpen.html">gdal_pansharpen.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal-config.html">gdal-config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalmanage.html">gdalmanage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalcompare.html">gdalcompare</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_viewshed.html">gdal_viewshed</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#multidimensional-raster-programs">Multidimensional Raster programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#vector-programs">Vector programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#geographic-network-programs">Geographic network programs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Programs</a> &raquo;</li>
+      
+      <li>gdal2tiles</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/programs/gdal2tiles.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="gdal_rasterize.html" class="btn btn-neutral float-right" title="gdal_rasterize" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gdal_merge.html" class="btn btn-neutral float-left" title="gdal_merge" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="gdal2tiles">
+<span id="id1"></span><h1>gdal2tiles<a class="headerlink" href="#gdal2tiles" title="Permalink to this headline">¶</a></h1>
+<p>Generates directory with TMS tiles, KMLs and simple web viewers.</p>
+<div class="section" id="synopsis">
+<span id="index-0"></span><h2>Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdal2tiles</span><span class="o">.</span><span class="n">py</span> <span class="p">[</span><span class="o">-</span><span class="n">p</span> <span class="n">profile</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">r</span> <span class="n">resampling</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">s</span> <span class="n">srs</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">z</span> <span class="n">zoom</span><span class="p">]</span>
+              <span class="p">[</span><span class="o">-</span><span class="n">e</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">a</span> <span class="n">nodata</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">q</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">k</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">n</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">u</span> <span class="n">url</span><span class="p">]</span>
+              <span class="p">[</span><span class="o">-</span><span class="n">w</span> <span class="n">webviewer</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">t</span> <span class="n">title</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">c</span> <span class="n">copyright</span><span class="p">]</span>
+              <span class="p">[</span><span class="o">--</span><span class="n">processes</span><span class="o">=</span><span class="n">NB_PROCESSES</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">xyz</span><span class="p">]</span>
+              <span class="o">--</span><span class="n">tilesize</span><span class="o">=</span><span class="n">TILESIZE</span>
+              <span class="p">[</span><span class="o">-</span><span class="n">g</span> <span class="n">googlekey</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">b</span> <span class="n">bingkey</span><span class="p">]</span> <span class="n">input_file</span> <span class="p">[</span><span class="n">output_dir</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>This utility generates a directory with small tiles and metadata, following
+the OSGeo Tile Map Service Specification. Simple web pages with viewers based on
+Google Maps, OpenLayers and Leaflet are generated as well - so anybody can comfortably
+explore your maps on-line and you do not need to install or configure any
+special software (like MapServer) and the map displays very fast in the
+web browser. You only need to upload the generated directory onto a web server.</p>
+<p>GDAL2Tiles also creates the necessary metadata for Google Earth (KML
+SuperOverlay), in case the supplied map uses EPSG:4326 projection.</p>
+<p>World files and embedded georeferencing is used during tile generation, but you
+can publish a picture without proper georeferencing too.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Inputs with non-Byte data type (i.e. <code class="docutils literal notranslate"><span class="pre">Int16</span></code>, <code class="docutils literal notranslate"><span class="pre">UInt16</span></code>,…) will be clamped to
+the <code class="docutils literal notranslate"><span class="pre">Byte</span></code> data type, causing wrong results. To awoid this it is necessary to
+rescale input to the <code class="docutils literal notranslate"><span class="pre">Byte</span></code> data type using <cite>gdal_translate</cite> utility.</p>
+</div>
+<dl class="option">
+<dt id="cmdoption-gdal-translate-p">
+<code class="descname">-p</code><code class="descclassname"> &lt;PROFILE&gt;</code><code class="descclassname">, </code><code class="descname">--profile</code><code class="descclassname">=&lt;PROFILE&gt;</code><a class="headerlink" href="#cmdoption-gdal-translate-p" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tile cutting profile (mercator, geodetic, raster) - default ‘mercator’ (Google Maps compatible).</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-r">
+<code class="descname">-r</code><code class="descclassname"> &lt;RESAMPLING&gt;</code><code class="descclassname">, </code><code class="descname">--resampling</code><code class="descclassname">=&lt;RESAMPLING&gt;</code><a class="headerlink" href="#cmdoption-gdal-translate-r" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resampling method (average, near, bilinear, cubic, cubicspline, lanczos, antialias, mode, max, min, med, q1, q3) - default ‘average’.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-s">
+<code class="descname">-s</code><code class="descclassname"> &lt;SRS&gt;</code><code class="descclassname">, </code><code class="descname">--s_srs</code><code class="descclassname">=&lt;SRS&gt;</code><a class="headerlink" href="#cmdoption-gdal-translate-s" title="Permalink to this definition">¶</a></dt>
+<dd><p>The spatial reference system used for the source input data.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-xyz">
+<code class="descname">--xyz</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gdal-translate-xyz" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate XYZ tiles (OSM Slippy Map standard) instead of TSM</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 3.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-z">
+<code class="descname">-z</code><code class="descclassname"> &lt;ZOOM&gt;</code><code class="descclassname">, </code><code class="descname">--zoom</code><code class="descclassname">=&lt;ZOOM&gt;</code><a class="headerlink" href="#cmdoption-gdal-translate-z" title="Permalink to this definition">¶</a></dt>
+<dd><p>Zoom levels to render (format:‘2-5’ or ‘10’).</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-e">
+<code class="descname">-e</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--resume</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gdal-translate-e" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resume mode. Generate only missing files.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-a">
+<code class="descname">-a</code><code class="descclassname"> &lt;NODATA&gt;</code><code class="descclassname">, </code><code class="descname">--srcnodata</code><code class="descclassname">=&lt;NODATA&gt;</code><a class="headerlink" href="#cmdoption-gdal-translate-a" title="Permalink to this definition">¶</a></dt>
+<dd><p>NODATA transparency value to assign to the input data.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-v">
+<code class="descname">-v</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--verbose</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gdal-translate-v" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate verbose output of tile generation.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-q">
+<code class="descname">-q</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--quiet</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gdal-translate-q" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disable messages and status to stdout</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-processes">
+<code class="descname">--processes</code><code class="descclassname">=&lt;NB_PROCESSES&gt;</code><a class="headerlink" href="#cmdoption-gdal-translate-processes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of processes to use for tiling.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.3.</span></p>
+</div>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-tilesize">
+<code class="descname">--tilesize</code><code class="descclassname">=&lt;TILESIZE&gt;</code><a class="headerlink" href="#cmdoption-gdal-translate-tilesize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pixel size of the tiles.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 3.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-h">
+<code class="descname">-h</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--help</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gdal-translate-h" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show help message and exit.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-version">
+<code class="descname">--version</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gdal-translate-version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show program’s version number and exit.</p>
+</dd></dl>
+
+<div class="section" id="kml-google-earth-options">
+<h3>KML (Google Earth) options<a class="headerlink" href="#kml-google-earth-options" title="Permalink to this headline">¶</a></h3>
+<p>Options for generated Google Earth SuperOverlay metadata</p>
+<dl class="option">
+<dt id="cmdoption-gdal-translate-k">
+<code class="descname">-k</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--force-kml</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gdal-translate-k" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate KML for Google Earth - default for ‘geodetic’ profile and ‘raster’ in EPSG:4326. For a dataset with different projection use with caution!</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-n">
+<code class="descname">-n</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--no-kml</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gdal-translate-n" title="Permalink to this definition">¶</a></dt>
+<dd><p>Avoid automatic generation of KML files for EPSG:4326.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-u">
+<code class="descname">-u</code><code class="descclassname"> &lt;URL&gt;</code><code class="descclassname">, </code><code class="descname">--url</code><code class="descclassname">=&lt;URL&gt;</code><a class="headerlink" href="#cmdoption-gdal-translate-u" title="Permalink to this definition">¶</a></dt>
+<dd><p>URL address where the generated tiles are going to be published.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="web-viewer-options">
+<h3>Web viewer options<a class="headerlink" href="#web-viewer-options" title="Permalink to this headline">¶</a></h3>
+<p>Options for generated HTML viewers a la Google Maps</p>
+<dl class="option">
+<dt id="cmdoption-gdal-translate-w">
+<code class="descname">-w</code><code class="descclassname"> &lt;WEBVIEWER&gt;</code><code class="descclassname">, </code><code class="descname">--webviewer</code><code class="descclassname">=&lt;WEBVIEWER&gt;</code><a class="headerlink" href="#cmdoption-gdal-translate-w" title="Permalink to this definition">¶</a></dt>
+<dd><p>Web viewer to generate (all, google, openlayers, leaflet, none) - default ‘all’.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-t">
+<code class="descname">-t</code><code class="descclassname"> &lt;TITLE&gt;</code><code class="descclassname">, </code><code class="descname">--title</code><code class="descclassname">=&lt;TITLE&gt;</code><a class="headerlink" href="#cmdoption-gdal-translate-t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Title of the map.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-c">
+<code class="descname">-c</code><code class="descclassname"> &lt;COPYRIGHT&gt;</code><code class="descclassname">, </code><code class="descname">--copyright</code><code class="descclassname">=&lt;COPYRIGHT&gt;</code><a class="headerlink" href="#cmdoption-gdal-translate-c" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copyright for the map.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-g">
+<code class="descname">-g</code><code class="descclassname"> &lt;GOOGLEKEY&gt;</code><code class="descclassname">, </code><code class="descname">--googlekey</code><code class="descclassname">=&lt;GOOGLEKEY&gt;</code><a class="headerlink" href="#cmdoption-gdal-translate-g" title="Permalink to this definition">¶</a></dt>
+<dd><p>Google Maps API key from <a class="reference external" href="http://code.google.com/apis/maps/signup.html">http://code.google.com/apis/maps/signup.html</a>.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-b">
+<code class="descname">-b</code><code class="descclassname"> &lt;BINGKEY&gt;</code><code class="descclassname">, </code><code class="descname">--bingkey</code><code class="descclassname">=&lt;BINGKEY&gt;</code><a class="headerlink" href="#cmdoption-gdal-translate-b" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bing Maps API key from <a class="reference external" href="https://www.bingmapsportal.com/">https://www.bingmapsportal.com/</a></p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>gdal2tiles.py is a Python script that needs to be run against Python GDAL binding.</p>
+</div>
+</div>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>Basic example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdal2tiles</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">zoom</span><span class="o">=</span><span class="mi">2</span><span class="o">-</span><span class="mi">5</span> <span class="nb">input</span><span class="o">.</span><span class="n">tif</span> <span class="n">output_folder</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="gdal_rasterize.html" class="btn btn-neutral float-right" title="gdal_rasterize" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gdal_merge.html" class="btn btn-neutral float-left" title="gdal_merge" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

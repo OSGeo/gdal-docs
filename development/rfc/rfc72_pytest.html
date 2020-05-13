@@ -1,0 +1,565 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RFC 72: Update autotest suite to use pytest &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdevelopment/rfc/rfc72_pytest.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database" href="rfc73_proj6_wkt2_srsbarn.html" />
+    <link rel="prev" title="RFC 71: Migration to GitHub" href="rfc71_github_migration.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 72: Update autotest suite to use pytest</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motivation">Motivation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#proposal">Proposal</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#plan-phase-1">Plan Phase 1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#plan-phase-2-future-work">Plan Phase 2 / Future Work</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voting-history">Voting history</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 72: Update autotest suite to use pytest</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/development/rfc/rfc72_pytest.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="rfc73_proj6_wkt2_srsbarn.html" class="btn btn-neutral float-right" title="RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc71_github_migration.html" class="btn btn-neutral float-left" title="RFC 71: Migration to GitHub" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rfc-72-update-autotest-suite-to-use-pytest">
+<span id="rfc-72"></span><h1>RFC 72: Update autotest suite to use pytest<a class="headerlink" href="#rfc-72-update-autotest-suite-to-use-pytest" title="Permalink to this headline">¶</a></h1>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 79%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Author:</p></td>
+<td><p>Craig de Stigter</p></td>
+</tr>
+<tr class="row-even"><td><p>Contact:</p></td>
+<td><p><a class="reference external" href="mailto:craig&#46;destigter&#37;&#52;&#48;koordinates&#46;com">craig<span>&#46;</span>destigter<span>&#64;</span>koordinates<span>&#46;</span>com</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Started:</p></td>
+<td><p>2018-Sep-27</p></td>
+</tr>
+<tr class="row-even"><td><p>Status:</p></td>
+<td><p><em>Implemented in GDAL 2.4</em></p></td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>The document proposes and describes conversion of the existing Python
+autotest suite to use the <a class="reference external" href="https://docs.pytest.org/en/latest/">pytest
+framework</a>.</p>
+<p>Using pytest provides significant productivity gains for writing,
+reading and debugging python tests, compared with the current home-grown
+approach.</p>
+</div>
+<div class="section" id="motivation">
+<h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">¶</a></h2>
+<p>The current autotest framework dates back to 2007 (at least), and while
+reasonably comprehensive (and 186,000 lines of Python) is difficult for
+developers to use and extend.</p>
+<ul class="simple">
+<li><p>As a homegrown framework it’ll never get any better than the effort
+GDAL developers put in. For example: reporting, test coverage,
+parallelisation, resumption, log/output handling, parameterisation.</p></li>
+<li><p>Test failures are typically only as descriptive as “fail”,
+determining the cause requires editing the tests.</p></li>
+<li><p>It is difficult to run/rerun individual tests</p></li>
+<li><p>The tests often assume a set of compile options that may not be valid
+for the local build.</p></li>
+<li><p>Tests are patched/disabled in various CI environments by scripts
+outside the test tree. This is opaque to developers working locally.</p></li>
+<li><p>Some tests depend on each other and a specific execution order,
+making it difficult to debug and extend.</p></li>
+<li><p>Shared functionality is repeated across tests and modules</p></li>
+<li><p>Tests are typically only written for new functionality, not
+regressions. (Crudely, from the 2663 commits in the last year only
+725 touched the autotest tree)</p></li>
+</ul>
+<p>By adopting an OSS test framework in widespread use we can leverage the
+ecosystem to provide GDAL with benefits and improvements going forward.
+The utility of automated testing has been proven for GDAL, and we need
+to make test writing as easy as possible.</p>
+</div>
+<div class="section" id="proposal">
+<h2>Proposal<a class="headerlink" href="#proposal" title="Permalink to this headline">¶</a></h2>
+<p>Port the existing Python autotest suite to use the <a class="reference external" href="https://docs.pytest.org/en/latest/">pytest
+framework</a>. Why pytest? It’s in
+widespread use, has a wide set of features, is extensible via plugins,
+and focuses on making writing and debugging tests as easy as possible -
+minimising boilerplate code and maximising reuse. <a class="reference external" href="http://thesoftjaguar.com/pres_pytest.html">This
+presentation</a> (despite
+dating back to 2014) gives a brief overview of the key benefits.</p>
+<p>Do the bulk of this port using automated code refactoring tools so the
+autotest suite matches the preferred pytest approach. While pytest does
+support all sorts of custom test collection and execution methods, in
+order to increase the benefits to developers going forward we should do
+a proper conversion. Initial goal is to get the tests ported, remove as
+much boilerplate as feasible, all while keeping the existing CI green.
+Future goals are to continue to reduce boilerplate code and increase
+isolation between tests.</p>
+<p>At a minimum we still need to preserve the existing ability to:</p>
+<ul class="simple">
+<li><p>Run all existing CI tests in all environments using the existing
+configuration</p></li>
+<li><p>Run individual test modules</p></li>
+<li><p>Support existing subprocess/multiprocess tests</p></li>
+<li><p>Support testing under Python 2.7 &amp; Python 3</p></li>
+<li><p>Stacktraces for assertion failures</p></li>
+</ul>
+<p>The new test suite will be in place for the GDAL 2.4.0 release in
+December 2018. Changes will not be backported to the 2.3.x or earlier
+release branches.</p>
+<p>References:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/OSGeo/gdal/issues/949">issue #949</a>.</p></li>
+<li><p><a class="reference external" href="https://lists.osgeo.org/pipermail/gdal-dev/2018-October/049081.html">gdal-dev
+post</a>,
+Oct 2018</p></li>
+</ul>
+<div class="section" id="example">
+<h3>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h3>
+<p>A typical existing GDAL python unit test:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_gdaladdo_1</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">test_cli_utilities</span><span class="o">.</span><span class="n">get_gdaladdo_path</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;skip&#39;</span>
+
+    <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="s1">&#39;../gcore/data/mfloat32.vrt&#39;</span><span class="p">,</span> <span class="s1">&#39;tmp/mfloat32.vrt&#39;</span><span class="p">)</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="s1">&#39;../gcore/data/float32.tif&#39;</span><span class="p">,</span> <span class="s1">&#39;tmp/float32.tif&#39;</span><span class="p">)</span>
+
+    <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">gdaltest</span><span class="o">.</span><span class="n">runexternal_out_and_err</span><span class="p">(</span><span class="n">test_cli_utilities</span><span class="o">.</span><span class="n">get_gdaladdo_path</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39; tmp/mfloat32.vrt 2 4&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">err</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">err</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
+        <span class="n">gdaltest</span><span class="o">.</span><span class="n">post_reason</span><span class="p">(</span><span class="s1">&#39;got error/warning&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s1">&#39;fail&#39;</span>
+
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="s1">&#39;tmp/mfloat32.vrt&#39;</span><span class="p">)</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">tiff_ovr</span><span class="o">.</span><span class="n">tiff_ovr_check</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span>
+    <span class="n">ds</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;tmp/mfloat32.vrt&#39;</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;tmp/mfloat32.vrt.ovr&#39;</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;tmp/float32.tif&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ret</span>
+</pre></div>
+</div>
+<p>Could <em>eventually</em> become something like this</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">require_files</span><span class="p">(</span><span class="s1">&#39;gcore/data/mfloat32.vrt&#39;</span><span class="p">,</span> <span class="s1">&#39;gcore/data/float32.tif&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_gdaladdo_1</span><span class="p">(</span><span class="n">gdaladdo</span><span class="p">):</span>
+    <span class="n">gdaladdo</span><span class="p">(</span><span class="s1">&#39;gcore/data/mfloat32.vrt 2 4&#39;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;gcore/data/mfloat32.vrt.ovr&#39;</span><span class="p">)</span>
+
+    <span class="n">tiff_ovr</span><span class="o">.</span><span class="n">tiff_ovr_check</span><span class="p">(</span><span class="n">gdal</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="s1">&#39;mfloat32.vrt&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>It’s a lot clearer what it is actually testing, and all support
+functionality is handled by shared-use fixtures (<code class="docutils literal notranslate"><span class="pre">gdaladdo</span></code> &amp;
+<code class="docutils literal notranslate"><span class="pre">require_files</span></code>), including cleanup and conditional-skipping.</p>
+</div>
+<div class="section" id="test-output">
+<h3>Test output<a class="headerlink" href="#test-output" title="Permalink to this headline">¶</a></h3>
+<p>Pytest out-of-the-box produces readable output, and is augmented by the
+<code class="docutils literal notranslate"><span class="pre">pytest-sugar</span></code> plugin which makes it even nicer:</p>
+<ul class="simple">
+<li><p>Successful tests don’t produce much output (a single <code class="docutils literal notranslate"><span class="pre">.</span></code> or <code class="docutils literal notranslate"><span class="pre">✓</span></code>
+per test, by default)</p></li>
+<li><p>Failed tests produce a traceback. Any logs, stdout and stderr
+produced by the failing tests are printed too. This is a great start
+for debugging the cause of the failure.</p></li>
+<li><p>Any expressions used in failing asserts are printed.</p></li>
+<li><p>Test output is clearly colourised (red/green) if the terminal
+supports it.</p></li>
+</ul>
+<p>![](pytest-output-example.png, 626px, center)</p>
+</div>
+</div>
+<div class="section" id="plan-phase-1">
+<h2>Plan Phase 1<a class="headerlink" href="#plan-phase-1" title="Permalink to this headline">¶</a></h2>
+<p>Progress at <a class="reference external" href="https://github.com/OSGeo/gdal/pull/963">pull request
+963</a>.</p>
+<ul class="simple">
+<li><p>Using code automation, convert the existing Python autotest suite to
+use pytest-style assertions.</p></li>
+<li><p>rename all tests to <code class="docutils literal notranslate"><span class="pre">test_*()</span></code>. Pytest finds tests by matching
+names against a regex and this is the default regex.</p></li>
+<li><p>generate assertions from <code class="docutils literal notranslate"><span class="pre">post_reason()</span></code>/<code class="docutils literal notranslate"><span class="pre">return</span> <span class="pre">'fail'</span></code> calls
+where possible</p></li>
+<li><p>replace all <code class="docutils literal notranslate"><span class="pre">skip</span></code>/<code class="docutils literal notranslate"><span class="pre">fail</span></code>/<code class="docutils literal notranslate"><span class="pre">success</span></code> return values</p></li>
+<li><p>remove extra <code class="docutils literal notranslate"><span class="pre">../pymod</span></code> entries from <code class="docutils literal notranslate"><span class="pre">sys.path</span></code>. All tests now
+run in a single process</p></li>
+<li><p>remove <code class="docutils literal notranslate"><span class="pre">__main__</span></code> block and <code class="docutils literal notranslate"><span class="pre">gdaltest_list</span></code> from test files</p></li>
+<li><p>these collectively achieve better test collection/selection, output
+capturing, and improved assertions and reporting</p></li>
+<li><p>Manually convert the dynamically-generated tests to use
+<a class="reference external" href="https://docs.pytest.org/en/latest/parametrize.html">parametrization</a></p></li>
+<li><p>Ensure the slow/internet tests are still marked as such and skipped
+by default.</p></li>
+<li><p>Use <a class="reference external" href="https://pivotfinland.com/pytest-sugar/">pytest-sugar</a> to make
+test output pretty. Disable it in CI since it doesn’t work well with
+travis CI’s output buffering.</p></li>
+<li><p>Move environment-specific test-skipping from CI to the test suite,
+possibly with additional tag/marks.</p></li>
+<li><p>Ensure the existing CI tests pass &amp; debug any failures</p></li>
+<li><p>Add documentation and a straightforward install process for pytest
+itself</p></li>
+</ul>
+<div class="section" id="notable-changes-and-their-implications">
+<h3>Notable changes and their implications<a class="headerlink" href="#notable-changes-and-their-implications" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>tests are now run with <code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">autotest</span> <span class="pre">;</span> <span class="pre">pytest</span></code>. (The first time you
+may need to <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-r</span> <span class="pre">requirements.txt</span></code> to install pytest)</p></li>
+<li><p>All tests now run in a single process (they were previously forked
+for each test module). This means that:</p>
+<ul>
+<li><p>errors during test collection are now loud, and immediately fail
+the entire test run with a traceback. Previously things like
+syntax errors in files and errors at module level were easy to
+miss.</p></li>
+<li><p>a single segfault will kill the entire test run dead.</p></li>
+</ul>
+</li>
+<li><p>It’s now possible to run individual tests, instead of just entire
+files. However, tests are <em>not yet independent of each other</em>. So
+that might cause the tests to behave differently than if you ran the
+whole module.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_py_scripts.run_py_script</span></code> was modified to always run the
+script as a subprocess. The stdout capturing of the original method
+did strange things with pytest. This change broke some tests that
+relied on passing files in the <code class="docutils literal notranslate"><span class="pre">/vsimem/</span></code> root to scripts, so those
+have been changed to use the <code class="docutils literal notranslate"><span class="pre">tmp/</span></code> root instead.</p></li>
+<li><p>no test suite support for Python &lt;2.7</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="plan-phase-2-future-work">
+<span id="id1"></span><h2>Plan Phase 2 / Future Work<a class="headerlink" href="#plan-phase-2-future-work" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Improving test isolation, so running an entire module at a time isn’t
+required.</p></li>
+<li><p>Removing the global <code class="docutils literal notranslate"><span class="pre">gdaltest.&lt;drivername&gt;_drv</span></code> variables and
+replace them with pytest fixtures.</p></li>
+<li><p>Use fixtures for temporary file handling and cleanup</p></li>
+<li><p>More automated test skipping based on what’s actually compiled.</p></li>
+<li><p>Automated style cleanup using
+<a class="reference external" href="https://github.com/ambv/black">Black</a>.</p></li>
+<li><p>Consider parallelising test runs by default (there are several
+<a class="reference external" href="https://github.com/pytest-dev/pytest-xdist">plugins available</a>
+for this)</p></li>
+</ul>
+</div>
+<div class="section" id="voting-history">
+<h2>Voting history<a class="headerlink" href="#voting-history" title="Permalink to this headline">¶</a></h2>
+<p>Adopted with the following votes from PSC members:</p>
+<ul class="simple">
+<li><p>+1 from EvenR, DanielM, HowardB and KurtS</p></li>
+<li><p>+0 from JukkaR</p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rfc73_proj6_wkt2_srsbarn.html" class="btn btn-neutral float-right" title="RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc71_github_migration.html" class="btn btn-neutral float-left" title="RFC 71: Migration to GitHub" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,697 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Raster API tutorial &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgtutorials/raster_api_tut.html"/>
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Raster driver implementation tutorial" href="raster_driver_tut.html" />
+    <link rel="prev" title="Tutorials" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorials</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#raster">Raster</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Raster API tutorial</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#opening-the-file">Opening the File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#getting-dataset-information">Getting Dataset Information</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fetching-a-raster-band">Fetching a Raster Band</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#reading-raster-data">Reading Raster Data</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#closing-the-dataset">Closing the Dataset</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#techniques-for-creating-files">Techniques for Creating Files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#using-createcopy">Using CreateCopy()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#using-create">Using Create()</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="raster_driver_tut.html">Raster driver implementation tutorial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="warp_tut.html">GDAL Warp API tutorial (Reprojection, …)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_grid_tut.html">GDAL Grid Tutorial</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#multidimensional-raster">Multidimensional raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#vector">Vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#geographic-network-model">Geographic Network Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#projections-and-spatial-reference-systems-tutorial-osr-ogrspatialreference">Projections and Spatial Reference Systems tutorial (OSR - OGRSpatialReference)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Tutorials</a> &raquo;</li>
+      
+      <li>Raster API tutorial</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/tutorials/raster_api_tut.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="raster_driver_tut.html" class="btn btn-neutral float-right" title="Raster driver implementation tutorial" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Tutorials" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="raster-api-tutorial">
+<span id="raster-api-tut"></span><h1>Raster API tutorial<a class="headerlink" href="#raster-api-tutorial" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="opening-the-file">
+<h2>Opening the File<a class="headerlink" href="#opening-the-file" title="Permalink to this headline">¶</a></h2>
+<p>Before opening a GDAL supported raster datastore it is necessary to register drivers. There is a driver for each supported format. Normally this is accomplished with the <a class="reference internal" href="../api/raster_c_api.html#_CPPv415GDALAllRegisterv" title="GDALAllRegister"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALAllRegister()</span></code></a> function which attempts to register all known drivers, including those auto-loaded from .so files using <a class="reference internal" href="../api/gdaldriver_cpp.html#_CPPv4N17GDALDriverManager15AutoLoadDriversEv" title="GDALDriverManager::AutoLoadDrivers"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDriverManager::AutoLoadDrivers()</span></code></a>. If for some applications it is necessary to limit the set of drivers it may be helpful to review the code from gdalallregister.cpp. Python automatically calls GDALAllRegister() when the gdal module is imported.</p>
+<p>Once the drivers are registered, the application should call the free standing <a class="reference internal" href="../api/raster_c_api.html#_CPPv48GDALOpenPKc10GDALAccess" title="GDALOpen"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALOpen()</span></code></a> function to open a dataset, passing the name of the dataset and the access desired (GA_ReadOnly or GA_Update).</p>
+<p>In C++:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;gdal_priv.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;cpl_conv.h&quot; // for CPLMalloc()</span><span class="cp"></span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">GDALDataset</span>  <span class="o">*</span><span class="n">poDataset</span><span class="p">;</span>
+    <span class="n">GDALAllRegister</span><span class="p">();</span>
+    <span class="n">poDataset</span> <span class="o">=</span> <span class="p">(</span><span class="n">GDALDataset</span> <span class="o">*</span><span class="p">)</span> <span class="n">GDALOpen</span><span class="p">(</span> <span class="n">pszFilename</span><span class="p">,</span> <span class="n">GA_ReadOnly</span> <span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">poDataset</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="p">...;</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>In C:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;gdal.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;cpl_conv.h&quot; /* for CPLMalloc() */</span><span class="cp"></span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">GDALDatasetH</span>  <span class="n">hDataset</span><span class="p">;</span>
+    <span class="n">GDALAllRegister</span><span class="p">();</span>
+    <span class="n">hDataset</span> <span class="o">=</span> <span class="n">GDALOpen</span><span class="p">(</span> <span class="n">pszFilename</span><span class="p">,</span> <span class="n">GA_ReadOnly</span> <span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">hDataset</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="p">...;</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>In Python:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">osgeo</span> <span class="kn">import</span> <span class="n">gdal</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GA_ReadOnly</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">dataset</span><span class="p">:</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>Note that if <a class="reference internal" href="../api/raster_c_api.html#_CPPv48GDALOpenPKc10GDALAccess" title="GDALOpen"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALOpen()</span></code></a> returns NULL it means the open failed, and that an error messages will already have been emitted via <a class="reference internal" href="../api/cpl.html#_CPPv48CPLError6CPLErr11CPLErrorNumPKcz" title="CPLError"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">CPLError()</span></code></a>. If you want to control how errors are reported to the user review the <a class="reference internal" href="../api/cpl.html#_CPPv48CPLError6CPLErr11CPLErrorNumPKcz" title="CPLError"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">CPLError()</span></code></a> documentation. Generally speaking all of GDAL uses <a class="reference internal" href="../api/cpl.html#_CPPv48CPLError6CPLErr11CPLErrorNumPKcz" title="CPLError"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">CPLError()</span></code></a> for error reporting. Also, note that pszFilename need not actually be the name of a physical file (though it usually is). It’s interpretation is driver dependent, and it might be an URL, a filename with additional parameters added at the end controlling the open or almost anything. Please try not to limit GDAL file selection dialogs to only selecting physical files.</p>
+</div>
+<div class="section" id="getting-dataset-information">
+<h2>Getting Dataset Information<a class="headerlink" href="#getting-dataset-information" title="Permalink to this headline">¶</a></h2>
+<p>As described in the <a class="reference internal" href="../user/raster_data_model.html#raster-data-model"><span class="std std-ref">Raster Data Model</span></a>, a <a class="reference internal" href="../api/gdaldataset_cpp.html#_CPPv411GDALDataset" title="GDALDataset"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDataset</span></code></a> contains a list of raster bands, all pertaining to the same area, and having the same resolution. It also has metadata, a coordinate system, a georeferencing transform, size of raster and various other information.</p>
+<p>In the particular, but common, case of a “north up” image without any rotation or shearing, the georeferencing transform takes the following form :</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">adfGeoTransform</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="cm">/* top left x */</span>
+<span class="n">adfGeoTransform</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="cm">/* w-e pixel resolution */</span>
+<span class="n">adfGeoTransform</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="cm">/* 0 */</span>
+<span class="n">adfGeoTransform</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="cm">/* top left y */</span>
+<span class="n">adfGeoTransform</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="cm">/* 0 */</span>
+<span class="n">adfGeoTransform</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="cm">/* n-s pixel resolution (negative value) */</span>
+</pre></div>
+</div>
+<p>In the general case, this is an affine transform.</p>
+<p>If we wanted to print some general information about the dataset we might do the following:</p>
+<p>In C++:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">double</span>        <span class="n">adfGeoTransform</span><span class="p">[</span><span class="mi">6</span><span class="p">];</span>
+<span class="n">printf</span><span class="p">(</span> <span class="s">&quot;Driver: %s/%s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+        <span class="n">poDataset</span><span class="o">-&gt;</span><span class="n">GetDriver</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetDescription</span><span class="p">(),</span>
+        <span class="n">poDataset</span><span class="o">-&gt;</span><span class="n">GetDriver</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetMetadataItem</span><span class="p">(</span> <span class="n">GDAL_DMD_LONGNAME</span> <span class="p">)</span> <span class="p">);</span>
+<span class="n">printf</span><span class="p">(</span> <span class="s">&quot;Size is %dx%dx%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+        <span class="n">poDataset</span><span class="o">-&gt;</span><span class="n">GetRasterXSize</span><span class="p">(),</span> <span class="n">poDataset</span><span class="o">-&gt;</span><span class="n">GetRasterYSize</span><span class="p">(),</span>
+        <span class="n">poDataset</span><span class="o">-&gt;</span><span class="n">GetRasterCount</span><span class="p">()</span> <span class="p">);</span>
+<span class="k">if</span><span class="p">(</span> <span class="n">poDataset</span><span class="o">-&gt;</span><span class="n">GetProjectionRef</span><span class="p">()</span>  <span class="o">!=</span> <span class="nb">NULL</span> <span class="p">)</span>
+    <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;Projection is `%s&#39;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">poDataset</span><span class="o">-&gt;</span><span class="n">GetProjectionRef</span><span class="p">()</span> <span class="p">);</span>
+<span class="k">if</span><span class="p">(</span> <span class="n">poDataset</span><span class="o">-&gt;</span><span class="n">GetGeoTransform</span><span class="p">(</span> <span class="n">adfGeoTransform</span> <span class="p">)</span> <span class="o">==</span> <span class="n">CE_None</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;Origin = (%.6f,%.6f)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+            <span class="n">adfGeoTransform</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">adfGeoTransform</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;Pixel Size = (%.6f,%.6f)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+            <span class="n">adfGeoTransform</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">adfGeoTransform</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>In C:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">GDALDriverH</span>   <span class="n">hDriver</span><span class="p">;</span>
+<span class="kt">double</span>        <span class="n">adfGeoTransform</span><span class="p">[</span><span class="mi">6</span><span class="p">];</span>
+<span class="n">hDriver</span> <span class="o">=</span> <span class="n">GDALGetDatasetDriver</span><span class="p">(</span> <span class="n">hDataset</span> <span class="p">);</span>
+<span class="n">printf</span><span class="p">(</span> <span class="s">&quot;Driver: %s/%s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+        <span class="n">GDALGetDriverShortName</span><span class="p">(</span> <span class="n">hDriver</span> <span class="p">),</span>
+        <span class="n">GDALGetDriverLongName</span><span class="p">(</span> <span class="n">hDriver</span> <span class="p">)</span> <span class="p">);</span>
+<span class="n">printf</span><span class="p">(</span> <span class="s">&quot;Size is %dx%dx%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+        <span class="n">GDALGetRasterXSize</span><span class="p">(</span> <span class="n">hDataset</span> <span class="p">),</span>
+        <span class="n">GDALGetRasterYSize</span><span class="p">(</span> <span class="n">hDataset</span> <span class="p">),</span>
+        <span class="n">GDALGetRasterCount</span><span class="p">(</span> <span class="n">hDataset</span> <span class="p">)</span> <span class="p">);</span>
+<span class="k">if</span><span class="p">(</span> <span class="n">GDALGetProjectionRef</span><span class="p">(</span> <span class="n">hDataset</span> <span class="p">)</span> <span class="o">!=</span> <span class="nb">NULL</span> <span class="p">)</span>
+    <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;Projection is `%s&#39;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">GDALGetProjectionRef</span><span class="p">(</span> <span class="n">hDataset</span> <span class="p">)</span> <span class="p">);</span>
+<span class="k">if</span><span class="p">(</span> <span class="n">GDALGetGeoTransform</span><span class="p">(</span> <span class="n">hDataset</span><span class="p">,</span> <span class="n">adfGeoTransform</span> <span class="p">)</span> <span class="o">==</span> <span class="n">CE_None</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;Origin = (%.6f,%.6f)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+            <span class="n">adfGeoTransform</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">adfGeoTransform</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;Pixel Size = (%.6f,%.6f)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+            <span class="n">adfGeoTransform</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">adfGeoTransform</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>In Python:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="s2">&quot;Driver: {}/{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">GetDriver</span><span class="p">()</span><span class="o">.</span><span class="n">ShortName</span><span class="p">,</span>
+                            <span class="n">dataset</span><span class="o">.</span><span class="n">GetDriver</span><span class="p">()</span><span class="o">.</span><span class="n">LongName</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Size is {} x {} x {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">RasterXSize</span><span class="p">,</span>
+                                    <span class="n">dataset</span><span class="o">.</span><span class="n">RasterYSize</span><span class="p">,</span>
+                                    <span class="n">dataset</span><span class="o">.</span><span class="n">RasterCount</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Projection is {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">GetProjection</span><span class="p">()))</span>
+<span class="n">geotransform</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">GetGeoTransform</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">geotransform</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Origin = ({}, {})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">geotransform</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">geotransform</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Pixel Size = ({}, {})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">geotransform</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">geotransform</span><span class="p">[</span><span class="mi">5</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="fetching-a-raster-band">
+<h2>Fetching a Raster Band<a class="headerlink" href="#fetching-a-raster-band" title="Permalink to this headline">¶</a></h2>
+<p>At this time access to raster data via GDAL is done one band at a time. Also, there is metadata, block sizes, color tables, and various other information available on a band by band basis. The following codes fetches a <a class="reference internal" href="../api/gdalrasterband_cpp.html#_CPPv414GDALRasterBand" title="GDALRasterBand"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALRasterBand</span></code></a> object from the dataset (numbered 1 through <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALRasterBand::GetRasterCount()</span></code>) and displays a little information about it.</p>
+<p>In C++:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">GDALRasterBand</span>  <span class="o">*</span><span class="n">poBand</span><span class="p">;</span>
+<span class="kt">int</span>             <span class="n">nBlockXSize</span><span class="p">,</span> <span class="n">nBlockYSize</span><span class="p">;</span>
+<span class="kt">int</span>             <span class="n">bGotMin</span><span class="p">,</span> <span class="n">bGotMax</span><span class="p">;</span>
+<span class="kt">double</span>          <span class="n">adfMinMax</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+<span class="n">poBand</span> <span class="o">=</span> <span class="n">poDataset</span><span class="o">-&gt;</span><span class="n">GetRasterBand</span><span class="p">(</span> <span class="mi">1</span> <span class="p">);</span>
+<span class="n">poBand</span><span class="o">-&gt;</span><span class="n">GetBlockSize</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">nBlockXSize</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">nBlockYSize</span> <span class="p">);</span>
+<span class="n">printf</span><span class="p">(</span> <span class="s">&quot;Block=%dx%d Type=%s, ColorInterp=%s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+        <span class="n">nBlockXSize</span><span class="p">,</span> <span class="n">nBlockYSize</span><span class="p">,</span>
+        <span class="n">GDALGetDataTypeName</span><span class="p">(</span><span class="n">poBand</span><span class="o">-&gt;</span><span class="n">GetRasterDataType</span><span class="p">()),</span>
+        <span class="n">GDALGetColorInterpretationName</span><span class="p">(</span>
+            <span class="n">poBand</span><span class="o">-&gt;</span><span class="n">GetColorInterpretation</span><span class="p">())</span> <span class="p">);</span>
+<span class="n">adfMinMax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">poBand</span><span class="o">-&gt;</span><span class="n">GetMinimum</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">bGotMin</span> <span class="p">);</span>
+<span class="n">adfMinMax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">poBand</span><span class="o">-&gt;</span><span class="n">GetMaximum</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">bGotMax</span> <span class="p">);</span>
+<span class="k">if</span><span class="p">(</span> <span class="o">!</span> <span class="p">(</span><span class="n">bGotMin</span> <span class="o">&amp;&amp;</span> <span class="n">bGotMax</span><span class="p">)</span> <span class="p">)</span>
+    <span class="n">GDALComputeRasterMinMax</span><span class="p">((</span><span class="n">GDALRasterBandH</span><span class="p">)</span><span class="n">poBand</span><span class="p">,</span> <span class="n">TRUE</span><span class="p">,</span> <span class="n">adfMinMax</span><span class="p">);</span>
+<span class="n">printf</span><span class="p">(</span> <span class="s">&quot;Min=%.3fd, Max=%.3f</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">adfMinMax</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">adfMinMax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">);</span>
+<span class="k">if</span><span class="p">(</span> <span class="n">poBand</span><span class="o">-&gt;</span><span class="n">GetOverviewCount</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="p">)</span>
+    <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;Band has %d overviews.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">poBand</span><span class="o">-&gt;</span><span class="n">GetOverviewCount</span><span class="p">()</span> <span class="p">);</span>
+<span class="k">if</span><span class="p">(</span> <span class="n">poBand</span><span class="o">-&gt;</span><span class="n">GetColorTable</span><span class="p">()</span> <span class="o">!=</span> <span class="nb">NULL</span> <span class="p">)</span>
+    <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;Band has a color table with %d entries.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+            <span class="n">poBand</span><span class="o">-&gt;</span><span class="n">GetColorTable</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetColorEntryCount</span><span class="p">()</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>In C:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">GDALRasterBandH</span> <span class="n">hBand</span><span class="p">;</span>
+<span class="kt">int</span>             <span class="n">nBlockXSize</span><span class="p">,</span> <span class="n">nBlockYSize</span><span class="p">;</span>
+<span class="kt">int</span>             <span class="n">bGotMin</span><span class="p">,</span> <span class="n">bGotMax</span><span class="p">;</span>
+<span class="kt">double</span>          <span class="n">adfMinMax</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+<span class="n">hBand</span> <span class="o">=</span> <span class="n">GDALGetRasterBand</span><span class="p">(</span> <span class="n">hDataset</span><span class="p">,</span> <span class="mi">1</span> <span class="p">);</span>
+<span class="n">GDALGetBlockSize</span><span class="p">(</span> <span class="n">hBand</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">nBlockXSize</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">nBlockYSize</span> <span class="p">);</span>
+<span class="n">printf</span><span class="p">(</span> <span class="s">&quot;Block=%dx%d Type=%s, ColorInterp=%s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+        <span class="n">nBlockXSize</span><span class="p">,</span> <span class="n">nBlockYSize</span><span class="p">,</span>
+        <span class="n">GDALGetDataTypeName</span><span class="p">(</span><span class="n">GDALGetRasterDataType</span><span class="p">(</span><span class="n">hBand</span><span class="p">)),</span>
+        <span class="n">GDALGetColorInterpretationName</span><span class="p">(</span>
+            <span class="n">GDALGetRasterColorInterpretation</span><span class="p">(</span><span class="n">hBand</span><span class="p">))</span> <span class="p">);</span>
+<span class="n">adfMinMax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">GDALGetRasterMinimum</span><span class="p">(</span> <span class="n">hBand</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">bGotMin</span> <span class="p">);</span>
+<span class="n">adfMinMax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">GDALGetRasterMaximum</span><span class="p">(</span> <span class="n">hBand</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">bGotMax</span> <span class="p">);</span>
+<span class="k">if</span><span class="p">(</span> <span class="o">!</span> <span class="p">(</span><span class="n">bGotMin</span> <span class="o">&amp;&amp;</span> <span class="n">bGotMax</span><span class="p">)</span> <span class="p">)</span>
+    <span class="n">GDALComputeRasterMinMax</span><span class="p">(</span> <span class="n">hBand</span><span class="p">,</span> <span class="n">TRUE</span><span class="p">,</span> <span class="n">adfMinMax</span> <span class="p">);</span>
+<span class="n">printf</span><span class="p">(</span> <span class="s">&quot;Min=%.3fd, Max=%.3f</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">adfMinMax</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">adfMinMax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">);</span>
+<span class="k">if</span><span class="p">(</span> <span class="n">GDALGetOverviewCount</span><span class="p">(</span><span class="n">hBand</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="p">)</span>
+    <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;Band has %d overviews.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">GDALGetOverviewCount</span><span class="p">(</span><span class="n">hBand</span><span class="p">));</span>
+<span class="k">if</span><span class="p">(</span> <span class="n">GDALGetRasterColorTable</span><span class="p">(</span> <span class="n">hBand</span> <span class="p">)</span> <span class="o">!=</span> <span class="nb">NULL</span> <span class="p">)</span>
+    <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;Band has a color table with %d entries.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+            <span class="n">GDALGetColorEntryCount</span><span class="p">(</span>
+                <span class="n">GDALGetRasterColorTable</span><span class="p">(</span> <span class="n">hBand</span> <span class="p">)</span> <span class="p">)</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>In Python:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">band</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Band Type={}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">gdal</span><span class="o">.</span><span class="n">GetDataTypeName</span><span class="p">(</span><span class="n">band</span><span class="o">.</span><span class="n">DataType</span><span class="p">)))</span>
+
+<span class="nb">min</span> <span class="o">=</span> <span class="n">band</span><span class="o">.</span><span class="n">GetMinimum</span><span class="p">()</span>
+<span class="nb">max</span> <span class="o">=</span> <span class="n">band</span><span class="o">.</span><span class="n">GetMaximum</span><span class="p">()</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="nb">min</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">max</span><span class="p">:</span>
+    <span class="p">(</span><span class="nb">min</span><span class="p">,</span><span class="nb">max</span><span class="p">)</span> <span class="o">=</span> <span class="n">band</span><span class="o">.</span><span class="n">ComputeRasterMinMax</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Min={:.3f}, Max={:.3f}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">min</span><span class="p">,</span><span class="nb">max</span><span class="p">))</span>
+
+<span class="k">if</span> <span class="n">band</span><span class="o">.</span><span class="n">GetOverviewCount</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Band has {} overviews&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">band</span><span class="o">.</span><span class="n">GetOverviewCount</span><span class="p">()))</span>
+
+<span class="k">if</span> <span class="n">band</span><span class="o">.</span><span class="n">GetRasterColorTable</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Band has a color table with {} entries&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">band</span><span class="o">.</span><span class="n">GetRasterColorTable</span><span class="p">()</span><span class="o">.</span><span class="n">GetCount</span><span class="p">()))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="reading-raster-data">
+<h2>Reading Raster Data<a class="headerlink" href="#reading-raster-data" title="Permalink to this headline">¶</a></h2>
+<p>There are a few ways to read raster data, but the most common is via the <a class="reference internal" href="../api/gdalrasterband_cpp.html#_CPPv4N14GDALRasterBand8RasterIOE10GDALRWFlagiiiiPvii12GDALDataType8GSpacing8GSpacingP20GDALRasterIOExtraArg" title="GDALRasterBand::RasterIO"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALRasterBand::RasterIO()</span></code></a> method. This method will automatically take care of data type conversion, up/down sampling and windowing. The following code will read the first scanline of data into a similarly sized buffer, converting it to floating point as part of the operation.</p>
+<p>In C++:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">float</span> <span class="o">*</span><span class="n">pafScanline</span><span class="p">;</span>
+<span class="kt">int</span>   <span class="n">nXSize</span> <span class="o">=</span> <span class="n">poBand</span><span class="o">-&gt;</span><span class="n">GetXSize</span><span class="p">();</span>
+<span class="n">pafScanline</span> <span class="o">=</span> <span class="p">(</span><span class="kt">float</span> <span class="o">*</span><span class="p">)</span> <span class="n">CPLMalloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="o">*</span><span class="n">nXSize</span><span class="p">);</span>
+<span class="n">poBand</span><span class="o">-&gt;</span><span class="n">RasterIO</span><span class="p">(</span> <span class="n">GF_Read</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">nXSize</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="n">pafScanline</span><span class="p">,</span> <span class="n">nXSize</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">GDT_Float32</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>The pafScanline buffer should be freed with CPLFree() when it is no longer used.</p>
+<p>In C:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">float</span> <span class="o">*</span><span class="n">pafScanline</span><span class="p">;</span>
+<span class="kt">int</span>   <span class="n">nXSize</span> <span class="o">=</span> <span class="n">GDALGetRasterBandXSize</span><span class="p">(</span> <span class="n">hBand</span> <span class="p">);</span>
+<span class="n">pafScanline</span> <span class="o">=</span> <span class="p">(</span><span class="kt">float</span> <span class="o">*</span><span class="p">)</span> <span class="n">CPLMalloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="o">*</span><span class="n">nXSize</span><span class="p">);</span>
+<span class="n">GDALRasterIO</span><span class="p">(</span> <span class="n">hBand</span><span class="p">,</span> <span class="n">GF_Read</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">nXSize</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="n">pafScanline</span><span class="p">,</span> <span class="n">nXSize</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">GDT_Float32</span><span class="p">,</span>
+            <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>The pafScanline buffer should be freed with CPLFree() when it is no longer used.</p>
+<p>In Python:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">scanline</span> <span class="o">=</span> <span class="n">band</span><span class="o">.</span><span class="n">ReadRaster</span><span class="p">(</span><span class="n">xoff</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">yoff</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                        <span class="n">xsize</span><span class="o">=</span><span class="n">band</span><span class="o">.</span><span class="n">XSize</span><span class="p">,</span> <span class="n">ysize</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                        <span class="n">buf_xsize</span><span class="o">=</span><span class="n">band</span><span class="o">.</span><span class="n">XSize</span><span class="p">,</span> <span class="n">buf_ysize</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                        <span class="n">buf_type</span><span class="o">=</span><span class="n">gdal</span><span class="o">.</span><span class="n">GDT_Float32</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that the returned scanline is of type string, and contains xsize*4 bytes of raw binary floating point data. This can be converted to Python values using the struct module from the standard library:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">struct</span>
+<span class="n">tuple_of_floats</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;f&#39;</span> <span class="o">*</span> <span class="n">b2</span><span class="o">.</span><span class="n">XSize</span><span class="p">,</span> <span class="n">scanline</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The RasterIO call takes the following arguments.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">CPLErr</span> <span class="n">GDALRasterBand</span><span class="o">::</span><span class="n">RasterIO</span><span class="p">(</span> <span class="n">GDALRWFlag</span> <span class="n">eRWFlag</span><span class="p">,</span>
+                                <span class="kt">int</span> <span class="n">nXOff</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nYOff</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nXSize</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nYSize</span><span class="p">,</span>
+                                <span class="kt">void</span> <span class="o">*</span> <span class="n">pData</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nBufXSize</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nBufYSize</span><span class="p">,</span>
+                                <span class="n">GDALDataType</span> <span class="n">eBufType</span><span class="p">,</span>
+                                <span class="kt">int</span> <span class="n">nPixelSpace</span><span class="p">,</span>
+                                <span class="kt">int</span> <span class="n">nLineSpace</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that the same RasterIO() call is used to read, or write based on the setting of eRWFlag (either GF_Read or GF_Write). The nXOff, nYOff, nXSize, nYSize argument describe the window of raster data on disk to read (or write). It doesn’t have to fall on tile boundaries though access may be more efficient if it does.</p>
+<p>The pData is the memory buffer the data is read into, or written from. It’s real type must be whatever is passed as eBufType, such as GDT_Float32, or GDT_Byte. The RasterIO() call will take care of converting between the buffer’s data type and the data type of the band. Note that when converting floating point data to integer RasterIO() rounds down, and when converting source values outside the legal range of the output the nearest legal value is used. This implies, for instance, that 16bit data read into a GDT_Byte buffer will map all values greater than 255 to 255, the data is not scaled!</p>
+<p>The nBufXSize and nBufYSize values describe the size of the buffer. When loading data at full resolution this would be the same as the window size. However, to load a reduced resolution overview this could be set to smaller than the window on disk. In this case the RasterIO() will utilize overviews to do the IO more efficiently if the overviews are suitable.</p>
+<p>The nPixelSpace, and nLineSpace are normally zero indicating that default values should be used. However, they can be used to control access to the memory data buffer, allowing reading into a buffer containing other pixel interleaved data for instance.</p>
+</div>
+<div class="section" id="closing-the-dataset">
+<h2>Closing the Dataset<a class="headerlink" href="#closing-the-dataset" title="Permalink to this headline">¶</a></h2>
+<p>Please keep in mind that <a class="reference internal" href="../api/gdalrasterband_cpp.html#_CPPv414GDALRasterBand" title="GDALRasterBand"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALRasterBand</span></code></a> objects are owned by their dataset, and they should never be destroyed with the C++ delete operator. <a class="reference internal" href="../api/gdaldataset_cpp.html#_CPPv411GDALDataset" title="GDALDataset"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDataset</span></code></a>’s can be closed by calling <a class="reference internal" href="../api/raster_c_api.html#_CPPv49GDALClose12GDALDatasetH" title="GDALClose"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALClose()</span></code></a> (it is NOT recommended to use the delete operator on a GDALDataset for Windows users because of known issues when allocating and freeing memory across module boundaries. See the relevant topic on the FAQ). Calling GDALClose will result in proper cleanup, and flushing of any pending writes. Forgetting to call GDALClose on a dataset opened in update mode in a popular format like GTiff will likely result in being unable to open it afterwards.</p>
+</div>
+<div class="section" id="techniques-for-creating-files">
+<h2>Techniques for Creating Files<a class="headerlink" href="#techniques-for-creating-files" title="Permalink to this headline">¶</a></h2>
+<p>New files in GDAL supported formats may be created if the format driver supports creation. There are two general techniques for creating files, using CreateCopy() and Create(). The CreateCopy method involves calling the CreateCopy() method on the format driver, and passing in a source dataset that should be copied. The Create method involves calling the Create() method on the driver, and then explicitly writing all the metadata, and raster data with separate calls. All drivers that support creating new files support the CreateCopy() method, but only a few support the Create() method.</p>
+<p>To determine if a particular format supports Create or CreateCopy it is possible to check the DCAP_CREATE and DCAP_CREATECOPY metadata on the format driver object. Ensure that <a class="reference internal" href="../api/raster_c_api.html#_CPPv415GDALAllRegisterv" title="GDALAllRegister"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALAllRegister()</span></code></a> has been called before calling <a class="reference internal" href="../api/gdaldriver_cpp.html#_CPPv4N17GDALDriverManager15GetDriverByNameEPKc" title="GDALDriverManager::GetDriverByName"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDriverManager::GetDriverByName()</span></code></a>. In this example we fetch a driver, and determine whether it supports Create() and/or CreateCopy().</p>
+<p>In C++:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;cpl_string.h&quot;</span><span class="cp"></span>
+<span class="p">...</span>
+    <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">pszFormat</span> <span class="o">=</span> <span class="s">&quot;GTiff&quot;</span><span class="p">;</span>
+    <span class="n">GDALDriver</span> <span class="o">*</span><span class="n">poDriver</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="o">**</span><span class="n">papszMetadata</span><span class="p">;</span>
+    <span class="n">poDriver</span> <span class="o">=</span> <span class="n">GetGDALDriverManager</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetDriverByName</span><span class="p">(</span><span class="n">pszFormat</span><span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">poDriver</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="p">)</span>
+        <span class="n">exit</span><span class="p">(</span> <span class="mi">1</span> <span class="p">);</span>
+    <span class="n">papszMetadata</span> <span class="o">=</span> <span class="n">poDriver</span><span class="o">-&gt;</span><span class="n">GetMetadata</span><span class="p">();</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">CSLFetchBoolean</span><span class="p">(</span> <span class="n">papszMetadata</span><span class="p">,</span> <span class="n">GDAL_DCAP_CREATE</span><span class="p">,</span> <span class="n">FALSE</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;Driver %s supports Create() method.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">pszFormat</span> <span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">CSLFetchBoolean</span><span class="p">(</span> <span class="n">papszMetadata</span><span class="p">,</span> <span class="n">GDAL_DCAP_CREATECOPY</span><span class="p">,</span> <span class="n">FALSE</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;Driver %s supports CreateCopy() method.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">pszFormat</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>In C:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;cpl_string.h&quot;</span><span class="cp"></span>
+<span class="p">...</span>
+<span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">pszFormat</span> <span class="o">=</span> <span class="s">&quot;GTiff&quot;</span><span class="p">;</span>
+<span class="n">GDALDriverH</span> <span class="n">hDriver</span> <span class="o">=</span> <span class="n">GDALGetDriverByName</span><span class="p">(</span> <span class="n">pszFormat</span> <span class="p">);</span>
+<span class="kt">char</span> <span class="o">**</span><span class="n">papszMetadata</span><span class="p">;</span>
+<span class="k">if</span><span class="p">(</span> <span class="n">hDriver</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="p">)</span>
+    <span class="n">exit</span><span class="p">(</span> <span class="mi">1</span> <span class="p">);</span>
+<span class="n">papszMetadata</span> <span class="o">=</span> <span class="n">GDALGetMetadata</span><span class="p">(</span> <span class="n">hDriver</span><span class="p">,</span> <span class="nb">NULL</span> <span class="p">);</span>
+<span class="k">if</span><span class="p">(</span> <span class="n">CSLFetchBoolean</span><span class="p">(</span> <span class="n">papszMetadata</span><span class="p">,</span> <span class="n">GDAL_DCAP_CREATE</span><span class="p">,</span> <span class="n">FALSE</span> <span class="p">)</span> <span class="p">)</span>
+    <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;Driver %s supports Create() method.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">pszFormat</span> <span class="p">);</span>
+<span class="k">if</span><span class="p">(</span> <span class="n">CSLFetchBoolean</span><span class="p">(</span> <span class="n">papszMetadata</span><span class="p">,</span> <span class="n">GDAL_DCAP_CREATECOPY</span><span class="p">,</span> <span class="n">FALSE</span> <span class="p">)</span> <span class="p">)</span>
+    <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;Driver %s supports CreateCopy() method.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">pszFormat</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>In Python:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fileformat</span> <span class="o">=</span> <span class="s2">&quot;GTiff&quot;</span>
+<span class="n">driver</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GetDriverByName</span><span class="p">(</span><span class="n">fileformat</span><span class="p">)</span>
+<span class="n">metadata</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">GetMetadata</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">gdal</span><span class="o">.</span><span class="n">DCAP_CREATE</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;YES&quot;</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Driver {} supports Create() method.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fileformat</span><span class="p">))</span>
+
+<span class="k">if</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">gdal</span><span class="o">.</span><span class="n">DCAP_CREATECOPY</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;YES&quot;</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Driver {} supports CreateCopy() method.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fileformat</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Note that a number of drivers are read-only and won’t support Create() or CreateCopy().</p>
+</div>
+<div class="section" id="using-createcopy">
+<h2>Using CreateCopy()<a class="headerlink" href="#using-createcopy" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="../api/gdaldriver_cpp.html#_CPPv4N10GDALDriver10CreateCopyEPKcP11GDALDatasetiPPc16GDALProgressFuncPv" title="GDALDriver::CreateCopy"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDriver::CreateCopy()</span></code></a> method can be used fairly simply as most information is collected from the source dataset. However, it includes options for passing format specific creation options, and for reporting progress to the user as a long dataset copy takes place. A simple copy from the a file named pszSrcFilename, to a new file named pszDstFilename using default options on a format whose driver was previously fetched might look like this:</p>
+<p>In C++:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">GDALDataset</span> <span class="o">*</span><span class="n">poSrcDS</span> <span class="o">=</span>
+<span class="p">(</span><span class="n">GDALDataset</span> <span class="o">*</span><span class="p">)</span> <span class="n">GDALOpen</span><span class="p">(</span> <span class="n">pszSrcFilename</span><span class="p">,</span> <span class="n">GA_ReadOnly</span> <span class="p">);</span>
+<span class="n">GDALDataset</span> <span class="o">*</span><span class="n">poDstDS</span><span class="p">;</span>
+<span class="n">poDstDS</span> <span class="o">=</span> <span class="n">poDriver</span><span class="o">-&gt;</span><span class="n">CreateCopy</span><span class="p">(</span> <span class="n">pszDstFilename</span><span class="p">,</span> <span class="n">poSrcDS</span><span class="p">,</span> <span class="n">FALSE</span><span class="p">,</span>
+                                <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span> <span class="p">);</span>
+<span class="cm">/* Once we&#39;re done, close properly the dataset */</span>
+<span class="k">if</span><span class="p">(</span> <span class="n">poDstDS</span> <span class="o">!=</span> <span class="nb">NULL</span> <span class="p">)</span>
+    <span class="n">GDALClose</span><span class="p">(</span> <span class="p">(</span><span class="n">GDALDatasetH</span><span class="p">)</span> <span class="n">poDstDS</span> <span class="p">);</span>
+<span class="n">GDALClose</span><span class="p">(</span> <span class="p">(</span><span class="n">GDALDatasetH</span><span class="p">)</span> <span class="n">poSrcDS</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>In C:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">GDALDatasetH</span> <span class="n">hSrcDS</span> <span class="o">=</span> <span class="n">GDALOpen</span><span class="p">(</span> <span class="n">pszSrcFilename</span><span class="p">,</span> <span class="n">GA_ReadOnly</span> <span class="p">);</span>
+<span class="n">GDALDatasetH</span> <span class="n">hDstDS</span><span class="p">;</span>
+<span class="n">hDstDS</span> <span class="o">=</span> <span class="n">GDALCreateCopy</span><span class="p">(</span> <span class="n">hDriver</span><span class="p">,</span> <span class="n">pszDstFilename</span><span class="p">,</span> <span class="n">hSrcDS</span><span class="p">,</span> <span class="n">FALSE</span><span class="p">,</span>
+                        <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span> <span class="p">);</span>
+<span class="cm">/* Once we&#39;re done, close properly the dataset */</span>
+<span class="k">if</span><span class="p">(</span> <span class="n">hDstDS</span> <span class="o">!=</span> <span class="nb">NULL</span> <span class="p">)</span>
+    <span class="n">GDALClose</span><span class="p">(</span> <span class="n">hDstDS</span> <span class="p">);</span>
+<span class="n">GDALClose</span><span class="p">(</span><span class="n">hSrcDS</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>In Python:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">src_ds</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="n">src_filename</span><span class="p">)</span>
+<span class="n">dst_ds</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">CreateCopy</span><span class="p">(</span><span class="n">dst_filename</span><span class="p">,</span> <span class="n">src_ds</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="c1"># Once we&#39;re done, close properly the dataset</span>
+<span class="n">dst_ds</span> <span class="o">=</span> <span class="bp">None</span>
+<span class="n">src_ds</span> <span class="o">=</span> <span class="bp">None</span>
+</pre></div>
+</div>
+<p>Note that the CreateCopy() method returns a writable dataset, and that it must be closed properly to complete writing and flushing the dataset to disk. In the Python case this occurs automatically when “dst_ds” goes out of scope. The FALSE (or 0) value used for the bStrict option just after the destination filename in the CreateCopy() call indicates that the CreateCopy() call should proceed without a fatal error even if the destination dataset cannot be created to exactly match the input dataset. This might be because the output format does not support the pixel datatype of the input dataset, or because the destination cannot support writing georeferencing for instance.</p>
+<p>A more complex case might involve passing creation options, and using a predefined progress monitor like this:</p>
+<p>In C++:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;cpl_string.h&quot;</span><span class="cp"></span>
+<span class="p">...</span>
+<span class="kt">char</span> <span class="o">**</span><span class="n">papszOptions</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="n">papszOptions</span> <span class="o">=</span> <span class="n">CSLSetNameValue</span><span class="p">(</span> <span class="n">papszOptions</span><span class="p">,</span> <span class="s">&quot;TILED&quot;</span><span class="p">,</span> <span class="s">&quot;YES&quot;</span> <span class="p">);</span>
+<span class="n">papszOptions</span> <span class="o">=</span> <span class="n">CSLSetNameValue</span><span class="p">(</span> <span class="n">papszOptions</span><span class="p">,</span> <span class="s">&quot;COMPRESS&quot;</span><span class="p">,</span> <span class="s">&quot;PACKBITS&quot;</span> <span class="p">);</span>
+<span class="n">poDstDS</span> <span class="o">=</span> <span class="n">poDriver</span><span class="o">-&gt;</span><span class="n">CreateCopy</span><span class="p">(</span> <span class="n">pszDstFilename</span><span class="p">,</span> <span class="n">poSrcDS</span><span class="p">,</span> <span class="n">FALSE</span><span class="p">,</span>
+                                <span class="n">papszOptions</span><span class="p">,</span> <span class="n">GDALTermProgress</span><span class="p">,</span> <span class="nb">NULL</span> <span class="p">);</span>
+<span class="cm">/* Once we&#39;re done, close properly the dataset */</span>
+<span class="k">if</span><span class="p">(</span> <span class="n">poDstDS</span> <span class="o">!=</span> <span class="nb">NULL</span> <span class="p">)</span>
+    <span class="n">GDALClose</span><span class="p">(</span> <span class="p">(</span><span class="n">GDALDatasetH</span><span class="p">)</span> <span class="n">poDstDS</span> <span class="p">);</span>
+<span class="n">CSLDestroy</span><span class="p">(</span> <span class="n">papszOptions</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>In C:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;cpl_string.h&quot;</span><span class="cp"></span>
+<span class="p">...</span>
+<span class="kt">char</span> <span class="o">**</span><span class="n">papszOptions</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="n">papszOptions</span> <span class="o">=</span> <span class="n">CSLSetNameValue</span><span class="p">(</span> <span class="n">papszOptions</span><span class="p">,</span> <span class="s">&quot;TILED&quot;</span><span class="p">,</span> <span class="s">&quot;YES&quot;</span> <span class="p">);</span>
+<span class="n">papszOptions</span> <span class="o">=</span> <span class="n">CSLSetNameValue</span><span class="p">(</span> <span class="n">papszOptions</span><span class="p">,</span> <span class="s">&quot;COMPRESS&quot;</span><span class="p">,</span> <span class="s">&quot;PACKBITS&quot;</span> <span class="p">);</span>
+<span class="n">hDstDS</span> <span class="o">=</span> <span class="n">GDALCreateCopy</span><span class="p">(</span> <span class="n">hDriver</span><span class="p">,</span> <span class="n">pszDstFilename</span><span class="p">,</span> <span class="n">hSrcDS</span><span class="p">,</span> <span class="n">FALSE</span><span class="p">,</span>
+                        <span class="n">papszOptions</span><span class="p">,</span> <span class="n">GDALTermProgres</span><span class="p">,</span> <span class="nb">NULL</span> <span class="p">);</span>
+<span class="cm">/* Once we&#39;re done, close properly the dataset */</span>
+<span class="k">if</span><span class="p">(</span> <span class="n">hDstDS</span> <span class="o">!=</span> <span class="nb">NULL</span> <span class="p">)</span>
+    <span class="n">GDALClose</span><span class="p">(</span> <span class="n">hDstDS</span> <span class="p">);</span>
+<span class="n">CSLDestroy</span><span class="p">(</span> <span class="n">papszOptions</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>In Python:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">src_ds</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="n">src_filename</span><span class="p">)</span>
+<span class="n">dst_ds</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">CreateCopy</span><span class="p">(</span><span class="n">dst_filename</span><span class="p">,</span> <span class="n">src_ds</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                        <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;TILED=YES&quot;</span><span class="p">,</span> <span class="s2">&quot;COMPRESS=PACKBITS&quot;</span><span class="p">])</span>
+<span class="c1"># Once we&#39;re done, close properly the dataset</span>
+<span class="n">dst_ds</span> <span class="o">=</span> <span class="bp">None</span>
+<span class="n">src_ds</span> <span class="o">=</span> <span class="bp">None</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="using-create">
+<h2>Using Create()<a class="headerlink" href="#using-create" title="Permalink to this headline">¶</a></h2>
+<p>For situations in which you are not just exporting an existing file to a new file, it is generally necessary to use the <a class="reference internal" href="../api/gdaldriver_cpp.html#_CPPv4N10GDALDriver6CreateEPKciii12GDALDataTypePPc" title="GDALDriver::Create"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDriver::Create()</span></code></a> method (though some interesting options are possible through use of virtual files or in-memory files). The Create() method takes an options list much like CreateCopy(), but the image size, number of bands and band type must be provided explicitly.</p>
+<p>In C++:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">GDALDataset</span> <span class="o">*</span><span class="n">poDstDS</span><span class="p">;</span>
+<span class="kt">char</span> <span class="o">**</span><span class="n">papszOptions</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="n">poDstDS</span> <span class="o">=</span> <span class="n">poDriver</span><span class="o">-&gt;</span><span class="n">Create</span><span class="p">(</span> <span class="n">pszDstFilename</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">GDT_Byte</span><span class="p">,</span>
+                            <span class="n">papszOptions</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>In C:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">GDALDatasetH</span> <span class="n">hDstDS</span><span class="p">;</span>
+<span class="kt">char</span> <span class="o">**</span><span class="n">papszOptions</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="n">hDstDS</span> <span class="o">=</span> <span class="n">GDALCreate</span><span class="p">(</span> <span class="n">hDriver</span><span class="p">,</span> <span class="n">pszDstFilename</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">GDT_Byte</span><span class="p">,</span>
+                    <span class="n">papszOptions</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>In Python:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dst_ds</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="n">dst_filename</span><span class="p">,</span> <span class="n">xsize</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span> <span class="n">ysize</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span>
+                    <span class="n">bands</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">eType</span><span class="o">=</span><span class="n">gdal</span><span class="o">.</span><span class="n">GDT_Byte</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Once the dataset is successfully created, all appropriate metadata and raster data must be written to the file. What this is will vary according to usage, but a simple case with a projection, geotransform and raster data is covered here.</p>
+<p>In C++:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">double</span> <span class="n">adfGeoTransform</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">444720</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3751320</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">30</span> <span class="p">};</span>
+<span class="n">OGRSpatialReference</span> <span class="n">oSRS</span><span class="p">;</span>
+<span class="kt">char</span> <span class="o">*</span><span class="n">pszSRS_WKT</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="n">GDALRasterBand</span> <span class="o">*</span><span class="n">poBand</span><span class="p">;</span>
+<span class="n">GByte</span> <span class="n">abyRaster</span><span class="p">[</span><span class="mi">512</span><span class="o">*</span><span class="mi">512</span><span class="p">];</span>
+<span class="n">poDstDS</span><span class="o">-&gt;</span><span class="n">SetGeoTransform</span><span class="p">(</span> <span class="n">adfGeoTransform</span> <span class="p">);</span>
+<span class="n">oSRS</span><span class="p">.</span><span class="n">SetUTM</span><span class="p">(</span> <span class="mi">11</span><span class="p">,</span> <span class="n">TRUE</span> <span class="p">);</span>
+<span class="n">oSRS</span><span class="p">.</span><span class="n">SetWellKnownGeogCS</span><span class="p">(</span> <span class="s">&quot;NAD27&quot;</span> <span class="p">);</span>
+<span class="n">oSRS</span><span class="p">.</span><span class="n">exportToWkt</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">pszSRS_WKT</span> <span class="p">);</span>
+<span class="n">poDstDS</span><span class="o">-&gt;</span><span class="n">SetProjection</span><span class="p">(</span> <span class="n">pszSRS_WKT</span> <span class="p">);</span>
+<span class="n">CPLFree</span><span class="p">(</span> <span class="n">pszSRS_WKT</span> <span class="p">);</span>
+<span class="n">poBand</span> <span class="o">=</span> <span class="n">poDstDS</span><span class="o">-&gt;</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">poBand</span><span class="o">-&gt;</span><span class="n">RasterIO</span><span class="p">(</span> <span class="n">GF_Write</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span>
+                <span class="n">abyRaster</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="n">GDT_Byte</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+<span class="cm">/* Once we&#39;re done, close properly the dataset */</span>
+<span class="n">GDALClose</span><span class="p">(</span> <span class="p">(</span><span class="n">GDALDatasetH</span><span class="p">)</span> <span class="n">poDstDS</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>In C:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">double</span> <span class="n">adfGeoTransform</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">444720</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3751320</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">30</span> <span class="p">};</span>
+<span class="n">OGRSpatialReferenceH</span> <span class="n">hSRS</span><span class="p">;</span>
+<span class="kt">char</span> <span class="o">*</span><span class="n">pszSRS_WKT</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="n">GDALRasterBandH</span> <span class="n">hBand</span><span class="p">;</span>
+<span class="n">GByte</span> <span class="n">abyRaster</span><span class="p">[</span><span class="mi">512</span><span class="o">*</span><span class="mi">512</span><span class="p">];</span>
+<span class="n">GDALSetGeoTransform</span><span class="p">(</span> <span class="n">hDstDS</span><span class="p">,</span> <span class="n">adfGeoTransform</span> <span class="p">);</span>
+<span class="n">hSRS</span> <span class="o">=</span> <span class="n">OSRNewSpatialReference</span><span class="p">(</span> <span class="nb">NULL</span> <span class="p">);</span>
+<span class="n">OSRSetUTM</span><span class="p">(</span> <span class="n">hSRS</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="n">TRUE</span> <span class="p">);</span>
+<span class="n">OSRSetWellKnownGeogCS</span><span class="p">(</span> <span class="n">hSRS</span><span class="p">,</span> <span class="s">&quot;NAD27&quot;</span> <span class="p">);</span>
+<span class="n">OSRExportToWkt</span><span class="p">(</span> <span class="n">hSRS</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">pszSRS_WKT</span> <span class="p">);</span>
+<span class="n">OSRDestroySpatialReference</span><span class="p">(</span> <span class="n">hSRS</span> <span class="p">);</span>
+<span class="n">GDALSetProjection</span><span class="p">(</span> <span class="n">hDstDS</span><span class="p">,</span> <span class="n">pszSRS_WKT</span> <span class="p">);</span>
+<span class="n">CPLFree</span><span class="p">(</span> <span class="n">pszSRS_WKT</span> <span class="p">);</span>
+<span class="n">hBand</span> <span class="o">=</span> <span class="n">GDALGetRasterBand</span><span class="p">(</span> <span class="n">hDstDS</span><span class="p">,</span> <span class="mi">1</span> <span class="p">);</span>
+<span class="n">GDALRasterIO</span><span class="p">(</span> <span class="n">hBand</span><span class="p">,</span> <span class="n">GF_Write</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span>
+            <span class="n">abyRaster</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="n">GDT_Byte</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+<span class="cm">/* Once we&#39;re done, close properly the dataset */</span>
+<span class="n">GDALClose</span><span class="p">(</span> <span class="n">hDstDS</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>In Python:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">osgeo</span> <span class="kn">import</span> <span class="n">osr</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="n">dst_ds</span><span class="o">.</span><span class="n">SetGeoTransform</span><span class="p">([</span><span class="mi">444720</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3751320</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">30</span><span class="p">])</span>
+<span class="n">srs</span> <span class="o">=</span> <span class="n">osr</span><span class="o">.</span><span class="n">SpatialReference</span><span class="p">()</span>
+<span class="n">srs</span><span class="o">.</span><span class="n">SetUTM</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">srs</span><span class="o">.</span><span class="n">SetWellKnownGeogCS</span><span class="p">(</span><span class="s2">&quot;NAD27&quot;</span><span class="p">)</span>
+<span class="n">dst_ds</span><span class="o">.</span><span class="n">SetProjection</span><span class="p">(</span><span class="n">srs</span><span class="o">.</span><span class="n">ExportToWkt</span><span class="p">())</span>
+<span class="n">raster</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+<span class="n">dst_ds</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">WriteArray</span><span class="p">(</span><span class="n">raster</span><span class="p">)</span>
+<span class="c1"># Once we&#39;re done, close properly the dataset</span>
+<span class="n">dst_ds</span> <span class="o">=</span> <span class="bp">None</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="raster_driver_tut.html" class="btn btn-neutral float-right" title="Raster driver implementation tutorial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Tutorials" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

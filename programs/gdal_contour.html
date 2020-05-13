@@ -1,0 +1,446 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gdal_contour &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgprograms/gdal_contour.html"/>
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="gdaldem" href="gdaldem.html" />
+    <link rel="prev" title="gdalbuildvrt" href="gdalbuildvrt.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Programs</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#raster-programs">Raster programs</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="raster_common_options.html">Common options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalinfo.html">gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_translate.html">gdal_translate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaladdo.html">gdaladdo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalwarp.html">gdalwarp</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaltindex.html">gdaltindex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalbuildvrt.html">gdalbuildvrt</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">gdal_contour</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#synopsis">Synopsis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#description">Description</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#c-api">C API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#example">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="gdaldem.html">gdaldem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rgb2pct.html">rgb2pct</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pct2rgb.html">pct2rgb</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_merge.html">gdal_merge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal2tiles.html">gdal2tiles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_rasterize.html">gdal_rasterize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaltransform.html">gdaltransform</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nearblack.html">nearblack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_retile.html">gdal_retile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_grid.html">gdal_grid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_proximity.html">gdal_proximity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_polygonize.html">gdal_polygonize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_sieve.html">gdal_sieve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_fillnodata.html">gdal_fillnodata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdallocationinfo.html">gdallocationinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalsrsinfo.html">gdalsrsinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalmove.html">gdalmove</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_edit.html">gdal_edit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_calc.html">gdal_calc.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_pansharpen.html">gdal_pansharpen.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal-config.html">gdal-config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalmanage.html">gdalmanage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalcompare.html">gdalcompare</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_viewshed.html">gdal_viewshed</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#multidimensional-raster-programs">Multidimensional Raster programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#vector-programs">Vector programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#geographic-network-programs">Geographic network programs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Programs</a> &raquo;</li>
+      
+      <li>gdal_contour</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/programs/gdal_contour.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="gdaldem.html" class="btn btn-neutral float-right" title="gdaldem" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gdalbuildvrt.html" class="btn btn-neutral float-left" title="gdalbuildvrt" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="gdal-contour">
+<span id="id1"></span><h1>gdal_contour<a class="headerlink" href="#gdal-contour" title="Permalink to this headline">¶</a></h1>
+<p>Builds vector contour lines from a raster elevation model.</p>
+<div class="section" id="synopsis">
+<span id="index-0"></span><h2>Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdal_contour</span> <span class="p">[</span><span class="o">-</span><span class="n">b</span> <span class="o">&lt;</span><span class="n">band</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">a</span> <span class="o">&lt;</span><span class="n">attribute_name</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">amin</span> <span class="o">&lt;</span><span class="n">attribute_name</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">amax</span> <span class="o">&lt;</span><span class="n">attribute_name</span><span class="o">&gt;</span><span class="p">]</span>
+             <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="n">d</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">inodata</span><span class="p">]</span>
+             <span class="p">[</span><span class="o">-</span><span class="n">snodata</span> <span class="n">n</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">i</span> <span class="o">&lt;</span><span class="n">interval</span><span class="o">&gt;</span><span class="p">]</span>
+             <span class="p">[</span><span class="o">-</span><span class="n">f</span> <span class="o">&lt;</span><span class="n">formatname</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[[</span><span class="o">-</span><span class="n">dsco</span> <span class="n">NAME</span><span class="o">=</span><span class="n">VALUE</span><span class="p">]</span> <span class="o">...</span><span class="p">]</span> <span class="p">[[</span><span class="o">-</span><span class="n">lco</span> <span class="n">NAME</span><span class="o">=</span><span class="n">VALUE</span><span class="p">]</span> <span class="o">...</span><span class="p">]</span>
+             <span class="p">[</span><span class="o">-</span><span class="n">off</span> <span class="o">&lt;</span><span class="n">offset</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">fl</span> <span class="o">&lt;</span><span class="n">level</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">level</span><span class="o">&gt;...</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">e</span> <span class="o">&lt;</span><span class="n">exp_base</span><span class="o">&gt;</span><span class="p">]</span>
+             <span class="p">[</span><span class="o">-</span><span class="n">nln</span> <span class="o">&lt;</span><span class="n">outlayername</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">q</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">p</span><span class="p">]</span>
+             <span class="o">&lt;</span><span class="n">src_filename</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">dst_filename</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>The <strong class="program">gdal_contour</strong> generates a vector contour file from the input
+raster elevation model (DEM).</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 1.7.0: </span>The contour line-strings are oriented consistently and the high side will
+be on the right, i.e. a line string goes clockwise around a top.</p>
+</div>
+<dl class="option">
+<dt id="cmdoption-b">
+<code class="descname">-b</code><code class="descclassname"> &lt;band&gt;</code><a class="headerlink" href="#cmdoption-b" title="Permalink to this definition">¶</a></dt>
+<dd><p>Picks a particular band to get the DEM from. Defaults to band 1.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-a">
+<code class="descname">-a</code><code class="descclassname"> &lt;name&gt;</code><a class="headerlink" href="#cmdoption-a" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provides a name for the attribute in which to put the elevation.
+If not provided no elevation attribute is attached.
+Ignored in polygonal contouring (<a class="reference internal" href="gdaldem.html#cmdoption-p"><code class="xref std std-option docutils literal notranslate"><span class="pre">-p</span></code></a>) mode.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-amin">
+<code class="descname">-amin</code><code class="descclassname"> &lt;name&gt;</code><a class="headerlink" href="#cmdoption-amin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provides a name for the attribute in which to put the minimum elevation
+of contour polygon. If not provided no minimum elevation attribute
+is attached. Ignored in default line contouring mode.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.4.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-amax">
+<code class="descname">-amax</code><code class="descclassname"> &lt;name&gt;</code><a class="headerlink" href="#cmdoption-amax" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provides a name for the attribute in which to put the maximum elevation of
+contour polygon. If not provided no maximim elevation attribute is attached.
+Ignored in default line contouring mode.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.4.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-3d">
+<code class="descname">-3d</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-3d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Force production of 3D vectors instead of 2D.
+Includes elevation at every vertex.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-inodata">
+<code class="descname">-inodata</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-inodata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ignore any nodata value implied in the dataset - treat all values as valid.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-snodata">
+<code class="descname">-snodata</code><code class="descclassname"> &lt;value&gt;</code><a class="headerlink" href="#cmdoption-snodata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Input pixel value to treat as “nodata”.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-f">
+<code class="descname">-f</code><code class="descclassname"> &lt;format&gt;</code><a class="headerlink" href="#cmdoption-f" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create output in a particular format.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.3.0: </span>If not specified, the format is guessed from the extension (previously was ESRI Shapefile).</p>
+</div>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-dsco">
+<code class="descname">-dsco</code><code class="descclassname"> &lt;NAME=VALUE&gt;</code><a class="headerlink" href="#cmdoption-dsco" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dataset creation option (format specific)</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-lco">
+<code class="descname">-lco</code><code class="descclassname"> &lt;NAME=VALUE&gt;</code><a class="headerlink" href="#cmdoption-lco" title="Permalink to this definition">¶</a></dt>
+<dd><p>Layer creation option (format specific)</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-i">
+<code class="descname">-i</code><code class="descclassname"> &lt;interval&gt;</code><a class="headerlink" href="#cmdoption-i" title="Permalink to this definition">¶</a></dt>
+<dd><p>Elevation interval between contours.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-off">
+<code class="descname">-off</code><code class="descclassname"> &lt;offset&gt;</code><a class="headerlink" href="#cmdoption-off" title="Permalink to this definition">¶</a></dt>
+<dd><p>Offset from zero relative to which to interpret intervals.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-fl">
+<code class="descname">-fl</code><code class="descclassname"> &lt;level&gt;</code><a class="headerlink" href="#cmdoption-fl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name one or more “fixed levels” to extract.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-e">
+<code class="descname">-e</code><code class="descclassname"> &lt;base&gt;</code><a class="headerlink" href="#cmdoption-e" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate levels on an exponential scale: <cite>base ^ k</cite>, for <cite>k</cite> an integer.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.4.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-nln">
+<code class="descname">-nln</code><code class="descclassname"> &lt;name&gt;</code><a class="headerlink" href="#cmdoption-nln" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provide a name for the output vector layer. Defaults to “contour”.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-p">
+<code class="descname">-p</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-p" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate contour polygons rather than contour lines.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.4.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-q">
+<code class="descname">-q</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-q" title="Permalink to this definition">¶</a></dt>
+<dd><p>Be quiet.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="c-api">
+<h2>C API<a class="headerlink" href="#c-api" title="Permalink to this headline">¶</a></h2>
+<p>Functionality of this utility can be done from C with <a class="reference internal" href="../api/gdal_alg.html#_CPPv419GDALContourGenerate15GDALRasterBandHddiPdidPvii16GDALProgressFuncPv" title="GDALContourGenerate"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALContourGenerate()</span></code></a>.</p>
+</div>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<p>This would create 10-meter contours from the DEM data in <code class="file docutils literal notranslate"><span class="pre">dem.tif</span></code> and
+produce a shapefile in <code class="file docutils literal notranslate"><span class="pre">contour.shp|shx|dbf</span></code> with the contour elevations
+in the <code class="docutils literal notranslate"><span class="pre">elev</span></code> attribute.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdal_contour</span> <span class="o">-</span><span class="n">a</span> <span class="n">elev</span> <span class="n">dem</span><span class="o">.</span><span class="n">tif</span> <span class="n">contour</span><span class="o">.</span><span class="n">shp</span> <span class="o">-</span><span class="n">i</span> <span class="mf">10.0</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="gdaldem.html" class="btn btn-neutral float-right" title="gdaldem" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gdalbuildvrt.html" class="btn btn-neutral float-left" title="gdalbuildvrt" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

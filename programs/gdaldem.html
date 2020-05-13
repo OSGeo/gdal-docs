@@ -1,0 +1,684 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gdaldem &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgprograms/gdaldem.html"/>
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="rgb2pct" href="rgb2pct.html" />
+    <link rel="prev" title="gdal_contour" href="gdal_contour.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Programs</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#raster-programs">Raster programs</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="raster_common_options.html">Common options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalinfo.html">gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_translate.html">gdal_translate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaladdo.html">gdaladdo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalwarp.html">gdalwarp</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaltindex.html">gdaltindex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalbuildvrt.html">gdalbuildvrt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_contour.html">gdal_contour</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">gdaldem</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#synopsis">Synopsis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#description">Description</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#modes">Modes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#c-api">C API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#authors">Authors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#see-also">See also</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rgb2pct.html">rgb2pct</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pct2rgb.html">pct2rgb</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_merge.html">gdal_merge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal2tiles.html">gdal2tiles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_rasterize.html">gdal_rasterize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaltransform.html">gdaltransform</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nearblack.html">nearblack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_retile.html">gdal_retile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_grid.html">gdal_grid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_proximity.html">gdal_proximity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_polygonize.html">gdal_polygonize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_sieve.html">gdal_sieve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_fillnodata.html">gdal_fillnodata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdallocationinfo.html">gdallocationinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalsrsinfo.html">gdalsrsinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalmove.html">gdalmove</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_edit.html">gdal_edit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_calc.html">gdal_calc.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_pansharpen.html">gdal_pansharpen.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal-config.html">gdal-config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalmanage.html">gdalmanage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalcompare.html">gdalcompare</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_viewshed.html">gdal_viewshed</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#multidimensional-raster-programs">Multidimensional Raster programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#vector-programs">Vector programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#geographic-network-programs">Geographic network programs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Programs</a> &raquo;</li>
+      
+      <li>gdaldem</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/programs/gdaldem.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="rgb2pct.html" class="btn btn-neutral float-right" title="rgb2pct" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gdal_contour.html" class="btn btn-neutral float-left" title="gdal_contour" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="gdaldem">
+<span id="id1"></span><h1>gdaldem<a class="headerlink" href="#gdaldem" title="Permalink to this headline">¶</a></h1>
+<p>Tools to analyze and visualize DEMs.</p>
+<div class="section" id="synopsis">
+<span id="index-0"></span><h2>Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdaldem</span> <span class="o">&lt;</span><span class="n">mode</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="nb">input</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">output</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">options</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Generate a shaded relief map from any GDAL-supported elevation raster:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdaldem</span> <span class="n">hillshade</span> <span class="n">input_dem</span> <span class="n">output_hillshade</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">z</span> <span class="n">ZFactor</span> <span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span> <span class="p">[</span><span class="o">-</span><span class="n">s</span> <span class="n">scale</span><span class="o">*</span> <span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">az</span> <span class="n">Azimuth</span> <span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">315</span><span class="p">)]</span> <span class="p">[</span><span class="o">-</span><span class="n">alt</span> <span class="n">Altitude</span> <span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">45</span><span class="p">)]</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">alg</span> <span class="n">ZevenbergenThorne</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">combined</span> <span class="o">|</span> <span class="o">-</span><span class="n">multidirectional</span> <span class="o">|</span> <span class="o">-</span><span class="n">igor</span><span class="p">]</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">compute_edges</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">b</span> <span class="n">Band</span> <span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span> <span class="p">[</span><span class="o">-</span><span class="n">of</span> <span class="nb">format</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">co</span> <span class="s2">&quot;NAME=VALUE&quot;</span><span class="p">]</span><span class="o">*</span> <span class="p">[</span><span class="o">-</span><span class="n">q</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Generate a slope map from any GDAL-supported elevation raster:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdaldem</span> <span class="n">slope</span> <span class="n">input_dem</span> <span class="n">output_slope_map</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">p</span> <span class="n">use</span> <span class="n">percent</span> <span class="n">slope</span> <span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">degrees</span><span class="p">)]</span> <span class="p">[</span><span class="o">-</span><span class="n">s</span> <span class="n">scale</span><span class="o">*</span> <span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">alg</span> <span class="n">ZevenbergenThorne</span><span class="p">]</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">compute_edges</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">b</span> <span class="n">Band</span> <span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span> <span class="p">[</span><span class="o">-</span><span class="n">of</span> <span class="nb">format</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">co</span> <span class="s2">&quot;NAME=VALUE&quot;</span><span class="p">]</span><span class="o">*</span> <span class="p">[</span><span class="o">-</span><span class="n">q</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Generate an aspect map from any GDAL-supported elevation raster,
+outputs a 32-bit float raster with pixel values from 0-360 indicating azimuth:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdaldem</span> <span class="n">aspect</span> <span class="n">input_dem</span> <span class="n">output_aspect_map</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">trigonometric</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">zero_for_flat</span><span class="p">]</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">alg</span> <span class="n">ZevenbergenThorne</span><span class="p">]</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">compute_edges</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">b</span> <span class="n">Band</span> <span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span> <span class="p">[</span><span class="o">-</span><span class="n">of</span> <span class="nb">format</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">co</span> <span class="s2">&quot;NAME=VALUE&quot;</span><span class="p">]</span><span class="o">*</span> <span class="p">[</span><span class="o">-</span><span class="n">q</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Generate a color relief map from any GDAL-supported elevation raster:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdaldem</span> <span class="n">color</span><span class="o">-</span><span class="n">relief</span> <span class="n">input_dem</span> <span class="n">color_text_file</span> <span class="n">output_color_relief_map</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">alpha</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">exact_color_entry</span> <span class="o">|</span> <span class="o">-</span><span class="n">nearest_color_entry</span><span class="p">]</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">b</span> <span class="n">Band</span> <span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span> <span class="p">[</span><span class="o">-</span><span class="n">of</span> <span class="nb">format</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">co</span> <span class="s2">&quot;NAME=VALUE&quot;</span><span class="p">]</span><span class="o">*</span> <span class="p">[</span><span class="o">-</span><span class="n">q</span><span class="p">]</span>
+<span class="n">where</span> <span class="n">color_text_file</span> <span class="n">contains</span> <span class="n">lines</span> <span class="n">of</span> <span class="n">the</span> <span class="nb">format</span> <span class="s2">&quot;elevation_value red green blue&quot;</span>
+</pre></div>
+</div>
+<p>Generate a Terrain Ruggedness Index (TRI) map from any GDAL-supported elevation raster:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdaldem</span> <span class="n">TRI</span> <span class="n">input_dem</span> <span class="n">output_TRI_map</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">compute_edges</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">b</span> <span class="n">Band</span> <span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span> <span class="p">[</span><span class="o">-</span><span class="n">of</span> <span class="nb">format</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">q</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Generate a Topographic Position Index (TPI) map from any GDAL-supported elevation raster:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdaldem</span> <span class="n">TPI</span> <span class="n">input_dem</span> <span class="n">output_TPI_map</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">compute_edges</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">b</span> <span class="n">Band</span> <span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span> <span class="p">[</span><span class="o">-</span><span class="n">of</span> <span class="nb">format</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">q</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Generate a roughness map from any GDAL-supported elevation raster:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdaldem</span> <span class="n">roughness</span> <span class="n">input_dem</span> <span class="n">output_roughness_map</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">compute_edges</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">b</span> <span class="n">Band</span> <span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span> <span class="p">[</span><span class="o">-</span><span class="n">of</span> <span class="nb">format</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">q</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>The <strong class="program">gdaldem</strong> generally assumes that x, y and z units are identical.
+If x (east-west) and y (north-south) units are identical, but z (elevation)
+units are different, the scale (-s) option can be used to set the ratio of
+vertical units to horizontal.
+For LatLong projections near the equator, where units of latitude and units of
+longitude are similar, elevation (z) units can be converted to be compatible
+by using scale=370400 (if elevation is in feet) or scale=111120 (if elevation is in
+meters).  For locations not near the equator, it would be best to reproject your
+grid using gdalwarp before using gdaldem.</p>
+<dl class="option">
+<dt id="cmdoption-arg-mode">
+<code class="descname">&lt;mode&gt;</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-arg-mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Where &lt;mode&gt; is one of the seven available modes:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">hillshade</span></code></p>
+<blockquote>
+<div><p>Generate a shaded relief map from any GDAL-supported elevation raster</p>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">slope</span></code></p>
+<blockquote>
+<div><p>Generate a slope map from any GDAL-supported elevation raster aspect to
+generate an aspect map from any GDAL-supported elevation raster</p>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">color-relief</span></code></p>
+<blockquote>
+<div><p>Generate a color relief map from any GDAL-supported elevation raster.</p>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TRI</span></code></p>
+<blockquote>
+<div><p>Generate a map of Terrain Ruggedness Index from any GDAL-supported elevation raster.</p>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TPI</span></code></p>
+<blockquote>
+<div><p>Generate a map of Topographic Position Index from any GDAL-supported elevation raster.</p>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">roughness</span></code></p>
+<blockquote>
+<div><p>Generate a map of roughness from any GDAL-supported elevation raster.</p>
+</div></blockquote>
+</li>
+</ul>
+</dd></dl>
+
+<p>The following general options are available:</p>
+<dl class="option">
+<dt id="cmdoption-arg-input-dem">
+<code class="descname">input_dem</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-arg-input-dem" title="Permalink to this definition">¶</a></dt>
+<dd><p>The input DEM raster to be processed</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-arg-output-xxx-map">
+<code class="descname">output_xxx_map</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-arg-output-xxx-map" title="Permalink to this definition">¶</a></dt>
+<dd><p>The output raster produced</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-of">
+<code class="descname">-of</code><code class="descclassname"> &lt;format&gt;</code><a class="headerlink" href="#cmdoption-of" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select the output format.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.3.0: </span>If not specified, the format is guessed from the extension
+(previously was <a class="reference internal" href="../drivers/raster/gtiff.html#raster-gtiff"><span class="std std-ref">GTiff – GeoTIFF File Format</span></a>). Use the short format name.</p>
+</div>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-compute-edges">
+<code class="descname">-compute_edges</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-compute-edges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do the computation at raster edges and near nodata values</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-arg-alg">
+<code class="descname">alg</code><code class="descclassname"> ZevenbergenThorne</code><a class="headerlink" href="#cmdoption-arg-alg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use Zevenbergen &amp; Thorne formula, instead of Horn’s formula, to compute slope &amp; aspect. The literature suggests Zevenbergen &amp; Thorne to be more suited to smooth landscapes, whereas Horn’s formula to perform better on rougher terrain.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-b">
+<code class="descname">-b</code><code class="descclassname"> &lt;band&gt;</code><a class="headerlink" href="#cmdoption-b" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select an input band to be processed. Bands are numbered from 1.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-co">
+<code class="descname">-co</code><code class="descclassname"> &lt;NAME=VALUE&gt;</code><a class="headerlink" href="#cmdoption-co" title="Permalink to this definition">¶</a></dt>
+<dd><p>Many formats have one or more optional creation options that can be
+used to control particulars about the file created. For instance,
+the GeoTIFF driver supports creation options to control compression,
+and whether the file should be tiled.</p>
+<p>The creation options available vary by format driver, and some
+simple formats have no creation options at all. A list of options
+supported for a format can be listed with the
+<a class="reference internal" href="raster_common_options.html#raster-common-options-formats"><span class="std std-ref">–formats</span></a>
+command line option but the documentation for the format is the
+definitive source of information on driver creation options.
+See <a class="reference internal" href="../drivers/raster/index.html#raster-drivers"><span class="std std-ref">Raster drivers</span></a> format
+specific documentation for legal creation options for each format.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-q">
+<code class="descname">-q</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-q" title="Permalink to this definition">¶</a></dt>
+<dd><p>Suppress progress monitor and other non-error output.</p>
+</dd></dl>
+
+<p>For all algorithms, except color-relief, a nodata value in the target dataset
+will be emitted if at least one pixel set to the nodata value is found in the
+3x3 window centered around each source pixel. The consequence is that there
+will be a 1-pixel border around each image set with nodata value.</p>
+<blockquote>
+<div><p>If <a class="reference internal" href="#cmdoption-compute-edges"><code class="xref std std-option docutils literal notranslate"><span class="pre">-compute_edges</span></code></a> is specified, gdaldem will compute values
+at image edges or if a nodata value is found in the 3x3 window,
+by interpolating missing values.</p>
+</div></blockquote>
+</div>
+<div class="section" id="modes">
+<h2>Modes<a class="headerlink" href="#modes" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="hillshade">
+<h3>hillshade<a class="headerlink" href="#hillshade" title="Permalink to this headline">¶</a></h3>
+<p>This command outputs an 8-bit raster with a nice shaded relief effect. It’s very useful for visualizing the terrain. You can optionally specify the azimuth and altitude of the light source, a vertical exaggeration factor and a scaling factor to account for differences between vertical and horizontal units.</p>
+<p>The value 0 is used as the output nodata value.</p>
+<p>The following specific options are available :</p>
+<dl class="option">
+<dt id="cmdoption-z">
+<code class="descname">-z</code><code class="descclassname"> &lt;factor&gt;</code><a class="headerlink" href="#cmdoption-z" title="Permalink to this definition">¶</a></dt>
+<dd><p>Vertical exaggeration used to pre-multiply the elevations</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-s">
+<code class="descname">-s</code><code class="descclassname"> &lt;scale&gt;</code><a class="headerlink" href="#cmdoption-s" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ratio of vertical units to horizontal. If the horizontal unit of the source DEM is degrees (e.g Lat/Long WGS84 projection), you can use scale=111120 if the vertical units are meters (or scale=370400 if they are in feet)</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-az">
+<code class="descname">-az</code><code class="descclassname"> &lt;azimuth&gt;</code><a class="headerlink" href="#cmdoption-az" title="Permalink to this definition">¶</a></dt>
+<dd><p>Azimuth of the light, in degrees. 0 if it comes from the top of the raster, 90 from the east, … The default value, 315, should rarely be changed as it is the value generally used to generate shaded maps.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-alt">
+<code class="descname">-alt</code><code class="descclassname"> &lt;altitude&gt;</code><a class="headerlink" href="#cmdoption-alt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Altitude of the light, in degrees. 90 if the light comes from above the DEM, 0 if it is raking light.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-combined">
+<code class="descname">-combined</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-combined" title="Permalink to this definition">¶</a></dt>
+<dd><p>combined shading, a combination of slope and oblique shading.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-multidirectional">
+<code class="descname">-multidirectional</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-multidirectional" title="Permalink to this definition">¶</a></dt>
+<dd><p>multidirectional shading, a combination of hillshading illuminated from 225 deg, 270 deg, 315 deg, and 360 deg azimuth.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.2.</span></p>
+</div>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-igor">
+<code class="descname">-igor</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-igor" title="Permalink to this definition">¶</a></dt>
+<dd><p>shading which tries to minimize effects on other map features beneath. Can’t be used with -alt option.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 3.0.</span></p>
+</div>
+</dd></dl>
+
+<p>Multidirectional hillshading applies the formula of <a class="reference external" href="http://pubs.usgs.gov/of/1992/of92-422/of92-422.pdf">http://pubs.usgs.gov/of/1992/of92-422/of92-422.pdf</a>.</p>
+<p>Igor’s hillshading uses formula from Maperitive <a class="reference external" href="http://maperitive.net/docs/Commands/GenerateReliefImageIgor.html">http://maperitive.net/docs/Commands/GenerateReliefImageIgor.html</a>.</p>
+</div>
+<div class="section" id="slope">
+<h3>slope<a class="headerlink" href="#slope" title="Permalink to this headline">¶</a></h3>
+<p>This command will take a DEM raster and output a 32-bit float raster with slope values. You have the option of specifying the type of slope value you want: degrees or percent slope. In cases where the horizontal units differ from the vertical units, you can also supply a scaling factor.</p>
+<p>The value <cite>-9999</cite> is used as the output nodata value.</p>
+<p>The following specific options are available :</p>
+<dl class="option">
+<dt id="cmdoption-p">
+<code class="descname">-p</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-p" title="Permalink to this definition">¶</a></dt>
+<dd><p>If specified, the slope will be expressed as percent slope. Otherwise, it is expressed as degrees</p>
+</dd></dl>
+
+<p><a class="reference internal" href="#cmdoption-s"><code class="xref std std-option docutils literal notranslate"><span class="pre">-s</span></code></a></p>
+<blockquote>
+<div><p>Ratio of vertical units to horizontal. If the horizontal unit of the source DEM is degrees (e.g Lat/Long WGS84 projection), you can use scale=111120 if the vertical units are meters (or scale=370400 if they are in feet).</p>
+</div></blockquote>
+</div>
+<div class="section" id="aspect">
+<h3>aspect<a class="headerlink" href="#aspect" title="Permalink to this headline">¶</a></h3>
+<p>This command outputs a 32-bit float raster with values between 0° and 360° representing the azimuth that slopes are facing. The definition of the azimuth is such that : 0° means that the slope is facing the North, 90° it’s facing the East, 180° it’s facing the South and 270° it’s facing the West (provided that the top of your input raster is north oriented). The aspect value -9999 is used as the nodata value to indicate undefined aspect in flat areas with slope=0.</p>
+<p>The following specifics options are available :</p>
+<dl class="option">
+<dt id="cmdoption-trigonometric">
+<code class="descname">-trigonometric</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-trigonometric" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return trigonometric angle instead of azimuth. Thus 0° means East, 90° North, 180° West, 270° South.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-zero-for-flat">
+<code class="descname">-zero_for_flat</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-zero-for-flat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return 0 for flat areas with slope=0, instead of -9999.</p>
+</dd></dl>
+
+<p>By using those 2 options, the aspect returned by gdaldem aspect should be
+identical to the one of GRASS r.slope.aspect. Otherwise, it’s identical to
+the one of Matthew Perry’s <code class="file docutils literal notranslate"><span class="pre">aspect.cpp</span></code> utility.</p>
+</div>
+<div class="section" id="color-relief">
+<h3>color-relief<a class="headerlink" href="#color-relief" title="Permalink to this headline">¶</a></h3>
+<p>This command outputs a 3-band (RGB) or 4-band (RGBA) raster with values are computed from the elevation and a text-based color configuration file, containing the association between various elevation values and the corresponding wished color. By default, the colors between the given elevation values are blended smoothly and the result is a nice colorized DEM. The -exact_color_entry or -nearest_color_entry options can be used to avoid that linear interpolation for values that don’t match an index of the color configuration file.</p>
+<p>The following specifics options are available :</p>
+<dl class="option">
+<dt id="cmdoption-arg-color-text-file">
+<code class="descname">color_text_file</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-arg-color-text-file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Text-based color configuration file</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-alpha">
+<code class="descname">-alpha</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-alpha" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an alpha channel to the output raster</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-exact-color-entry">
+<code class="descname">-exact_color_entry</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-exact-color-entry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use strict matching when searching in the color configuration file.
+If none matching color entry is found, the “0,0,0,0” RGBA quadruplet will be used</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-nearest-color-entry">
+<code class="descname">-nearest_color_entry</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-nearest-color-entry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use the RGBA quadruplet corresponding to the closest entry in the color configuration file.</p>
+</dd></dl>
+
+<p>The color-relief mode is the only mode that supports VRT as output format.
+In that case, it will translate the color configuration file into appropriate
+LUT elements. Note that elevations specified as percentage will be translated
+as absolute values, which must be taken into account when the statistics of
+the source raster differ from the one that was used when building the VRT.</p>
+<p>The text-based color configuration file generally contains 4 columns
+per line: the elevation value and the corresponding Red, Green, Blue
+component (between 0 and 255). The elevation value can be any floating
+point value, or the nv keyword for the nodata value.
+The elevation can also be expressed as a percentage: 0% being the minimum
+value found in the raster, 100% the maximum value.</p>
+<p>An extra column can be optionally added for the alpha component.
+If it is not specified, full opacity (255) is assumed.</p>
+<p>Various field separators are accepted: comma, tabulation, spaces, ‘:’.</p>
+<p>Common colors used by GRASS can also be specified by using their name,
+instead of the RGB triplet. The supported list is: white, black, red,
+green, blue, yellow, magenta, cyan, aqua, grey/gray, orange, brown,
+purple/violet and indigo.</p>
+<blockquote>
+<div><p>GMT <code class="file docutils literal notranslate"><span class="pre">.cpt</span></code> palette files are also supported (COLOR_MODEL = RGB only).</p>
+</div></blockquote>
+<p>Note: the syntax of the color configuration file is derived from the one
+supported by GRASS r.colors utility. ESRI HDR color table files (.clr)
+also match that syntax. The alpha component and the support of tab and
+comma as separators are GDAL specific extensions.</p>
+<p>For example :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">3500</span>   <span class="n">white</span>
+<span class="mi">2500</span>   <span class="mi">235</span><span class="p">:</span><span class="mi">220</span><span class="p">:</span><span class="mi">175</span>
+<span class="mi">50</span><span class="o">%</span>   <span class="mi">190</span> <span class="mi">185</span> <span class="mi">135</span>
+<span class="mi">700</span>    <span class="mi">240</span> <span class="mi">250</span> <span class="mi">150</span>
+<span class="mi">0</span>      <span class="mi">50</span>  <span class="mi">180</span>  <span class="mi">50</span>
+<span class="n">nv</span>     <span class="mi">0</span>   <span class="mi">0</span>   <span class="mi">0</span>   <span class="mi">0</span>
+</pre></div>
+</div>
+<p>To implement a “round to the floor value” mode, the elevation value can be
+duplicate with a new value being slightly above the threshold.
+For example to have red in [0,10], green in ]10,20] and blue in ]20,30]:</p>
+<dl class="simple">
+<dt>::</dt><dd><p>0       red
+10      red
+10.001  green
+20      green
+20.001  blue
+30      blue</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="tri">
+<h3>TRI<a class="headerlink" href="#tri" title="Permalink to this headline">¶</a></h3>
+<p>This command outputs a single-band raster with values computed from the elevation.
+<cite>TRI</cite> stands for Terrain Ruggedness Index, which is defined as the mean difference
+between a central pixel and its surrounding cells (see Wilson et al 2007,
+Marine Geodesy 30:3-35).</p>
+<p>The value -9999 is used as the output nodata value.</p>
+<p>There are no specific options.</p>
+</div>
+<div class="section" id="tpi">
+<h3>TPI<a class="headerlink" href="#tpi" title="Permalink to this headline">¶</a></h3>
+<p>This command outputs a single-band raster with values computed from the elevation.
+<cite>TPI</cite> stands for Topographic Position Index, which is defined as the difference
+between a central pixel and the mean of its surrounding cells (see Wilson et al
+2007, Marine Geodesy 30:3-35).</p>
+<p>The value -9999 is used as the output nodata value.</p>
+<p>There are no specific options.</p>
+</div>
+<div class="section" id="roughness">
+<h3>roughness<a class="headerlink" href="#roughness" title="Permalink to this headline">¶</a></h3>
+<p>This command outputs a single-band raster with values computed from the elevation.
+Roughness is the largest inter-cell difference of a central pixel and its surrounding
+cell, as defined in Wilson et al (2007, Marine Geodesy 30:3-35).</p>
+<p>The value -9999 is used as the output nodata value.</p>
+<p>There are no specific options.</p>
+</div>
+</div>
+<div class="section" id="c-api">
+<h2>C API<a class="headerlink" href="#c-api" title="Permalink to this headline">¶</a></h2>
+<p>This utility is also callable from C with <a class="reference internal" href="../api/gdal_utils.html#_CPPv417GDALDEMProcessingPKc12GDALDatasetHPKcPKcPK24GDALDEMProcessingOptionsPi" title="GDALDEMProcessing"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDEMProcessing()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.1.</span></p>
+</div>
+</div>
+<div class="section" id="authors">
+<h2>Authors<a class="headerlink" href="#authors" title="Permalink to this headline">¶</a></h2>
+<p>Matthew Perry <a class="reference external" href="mailto:perrygeo&#37;&#52;&#48;gmail&#46;com">perrygeo<span>&#64;</span>gmail<span>&#46;</span>com</a>, Even Rouault <a class="reference external" href="mailto:even&#46;rouault&#37;&#52;&#48;spatialys&#46;com">even<span>&#46;</span>rouault<span>&#64;</span>spatialys<span>&#46;</span>com</a>,
+Howard Butler <a class="reference external" href="mailto:hobu&#46;inc&#37;&#52;&#48;gmail&#46;com">hobu<span>&#46;</span>inc<span>&#64;</span>gmail<span>&#46;</span>com</a>, Chris Yesson <a class="reference external" href="mailto:chris&#46;yesson&#37;&#52;&#48;ioz&#46;ac&#46;uk">chris<span>&#46;</span>yesson<span>&#64;</span>ioz<span>&#46;</span>ac<span>&#46;</span>uk</a></p>
+<p>Derived from code by Michael Shapiro, Olga Waupotitsch, Marjorie Larson, Jim Westervelt:
+U.S. Army CERL, 1993. GRASS 4.1 Reference Manual. U.S. Army Corps of Engineers,
+Construction Engineering Research Laboratories, Champaign, Illinois, 1-425.</p>
+</div>
+<div class="section" id="see-also">
+<h2>See also<a class="headerlink" href="#see-also" title="Permalink to this headline">¶</a></h2>
+<p>Documentation of related GRASS utilities:</p>
+<p><a class="reference external" href="http://grass.osgeo.org/grass64/manuals/html64_user/r.slope.aspect.html">http://grass.osgeo.org/grass64/manuals/html64_user/r.slope.aspect.html</a></p>
+<p><a class="reference external" href="http://grass.osgeo.org/grass64/manuals/html64_user/r.shaded.relief.html">http://grass.osgeo.org/grass64/manuals/html64_user/r.shaded.relief.html</a></p>
+<p><a class="reference external" href="http://grass.osgeo.org/grass64/manuals/html64_user/r.colors.html">http://grass.osgeo.org/grass64/manuals/html64_user/r.colors.html</a></p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rgb2pct.html" class="btn btn-neutral float-right" title="rgb2pct" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gdal_contour.html" class="btn btn-neutral float-left" title="gdal_contour" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,377 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Multidimensional Raster Data Model &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orguser/multidim_raster_data_model.html"/>
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Vector Data Model" href="vector_data_model.html" />
+    <link rel="prev" title="Raster Data Model" href="raster_data_model.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">User</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="raster_data_model.html">Raster Data Model</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Multidimensional Raster Data Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#group">Group</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#attribute">Attribute</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#multidimensional-array">Multidimensional array</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dimension">Dimension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#data-type">Data Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#differences-with-the-gdal-2d-raster-data-model">Differences with the GDAL 2D raster data model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bridges-between-gdal-2d-classic-raster-data-model-and-multidimensional-data-model">Bridges between GDAL 2D classic raster data model and multidimensional data model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#applications">Applications</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="vector_data_model.html">Vector Data Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gnm_data_model.html">Geographic Networks Data Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ogr_sql_sqlite_dialect.html">OGR SQL dialect and SQLITE SQL dialect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="virtual_file_systems.html">GDAL Virtual File Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ogr_feature_style.html">Feature Style Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configoptions.html">Configuration options</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">User oriented documentation</a> &raquo;</li>
+      
+      <li>Multidimensional Raster Data Model</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/user/multidim_raster_data_model.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="vector_data_model.html" class="btn btn-neutral float-right" title="Vector Data Model" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="raster_data_model.html" class="btn btn-neutral float-left" title="Raster Data Model" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="multidimensional-raster-data-model">
+<span id="multidim-raster-data-model"></span><h1>Multidimensional Raster Data Model<a class="headerlink" href="#multidimensional-raster-data-model" title="Permalink to this headline">¶</a></h1>
+<p>This document attempts to describe the GDAL multidimensional data model,
+that has been added in GDAL 3.1. That is
+the types of information that a GDAL multidimensional dataset can contain, and their semantics.</p>
+<p>The multidimensional raster API is a generalization of the traditional
+<a class="reference internal" href="raster_data_model.html#raster-data-model"><span class="std std-ref">Raster Data Model</span></a>, to address 3D, 4D or
+higher dimension datasets. Currently, it is
+limited to basic read/write API, and is not that much plugged into other higher
+level utilities.</p>
+<p>It is strongly inspired from the netCDF and HDF5 API and data models.
+See <a class="reference external" href="https://portal.opengeospatial.org/files/81716">HDF5 format and data model</a>.</p>
+<p>A <a class="reference internal" href="../api/gdaldataset_cpp.html#_CPPv411GDALDataset" title="GDALDataset"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDataset</span></code></a> with mulidimensional content contains a root
+<a class="reference internal" href="../api/gdalgroup_cpp.html#_CPPv49GDALGroup" title="GDALGroup"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALGroup</span></code></a>.</p>
+<div class="section" id="group">
+<h2>Group<a class="headerlink" href="#group" title="Permalink to this headline">¶</a></h2>
+<p>A <a class="reference internal" href="../api/gdalgroup_cpp.html#_CPPv49GDALGroup" title="GDALGroup"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALGroup</span></code></a> (modelling a <a class="reference external" href="https://portal.opengeospatial.org/files/81716#_hdf5_group">HDF5 Group</a>)
+is a named container of GDALAttribute, GDALMDArray or
+other GDALGroup. Hence GDALGroup can describe a hierarchy of objects.</p>
+</div>
+<div class="section" id="attribute">
+<h2>Attribute<a class="headerlink" href="#attribute" title="Permalink to this headline">¶</a></h2>
+<p>A <a class="reference internal" href="../api/gdalattribute_cpp.html#_CPPv413GDALAttribute" title="GDALAttribute"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALAttribute</span></code></a> (modelling a <a class="reference external" href="https://portal.opengeospatial.org/files/81716#_hdf5_attribute">HDF5 Attribute</a>)
+has a name and a value, and is typically used to describe a metadata item.
+The value can be (for the HDF5 format) in the general case a multidimensional array
+of “any” type (in most cases, this will be a single value of string or numeric type)</p>
+</div>
+<div class="section" id="multidimensional-array">
+<h2>Multidimensional array<a class="headerlink" href="#multidimensional-array" title="Permalink to this headline">¶</a></h2>
+<p>A <a class="reference internal" href="../api/gdalmdarray_cpp.html#_CPPv411GDALMDArray" title="GDALMDArray"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALMDArray</span></code></a> (modelling a <a class="reference external" href="https://portal.opengeospatial.org/files/81716#_hdf5_dataset">HDF5 Dataset</a>)
+has a name, a multidimensional array, references a number of GDALDimension, and
+has a list of GDALAttribute.</p>
+<p>Most drivers use the row-major convention for dimensions: that is, when considering
+that the array elemnts are stored consecutively in memory, the first dimension
+is the slowest varying one (in a 2D image, the row), and the last dimension the
+fastest varying one (in a 2D image, the column). That convention is the default
+convention used for NumPy arrays, the MEM driver and the HDF5 and netCDF APIs.
+The GDAL API is mostly agnostic
+about that convention, except when passing a NULL array as the <em>stride</em> parameter
+for the <a class="reference internal" href="../api/gdalabstractmdarray_cpp.html#_CPPv4NK19GDALAbstractMDArray4ReadEPK7GUInt64PK6size_tPK6GInt64PK10GPtrDiff_tRK20GDALExtendedDataTypePvPKv6size_t" title="GDALAbstractMDArray::Read"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALAbstractMDArray::Read()</span></code></a> and  <a class="reference internal" href="../api/gdalabstractmdarray_cpp.html#_CPPv4N19GDALAbstractMDArray5WriteEPK7GUInt64PK6size_tPK6GInt64PK10GPtrDiff_tRK20GDALExtendedDataTypePKvPKv6size_t" title="GDALAbstractMDArray::Write"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALAbstractMDArray::Write()</span></code></a> methods.
+You can refer to <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/internals.html#multidimensional-array-indexing-order-issues">NumPy documentation about multidimensional array indexing order issues</a></p>
+<p>a GDALMDArray has also optional properties:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Coordinate reference system: <a class="reference internal" href="../api/ogrspatialref.html#_CPPv419OGRSpatialReference" title="OGRSpatialReference"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRSpatialReference</span></code></a></p></li>
+<li><p>No data value:</p></li>
+<li><p>Unit</p></li>
+<li><p>Offset, such that unscaled_value = offset + scale * raw_value</p></li>
+<li><p>Scale, such that unscaled_value = offset + scale * raw_value</p></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="dimension">
+<h2>Dimension<a class="headerlink" href="#dimension" title="Permalink to this headline">¶</a></h2>
+<p>A <a class="reference internal" href="../api/gdaldimension_cpp.html#_CPPv413GDALDimension" title="GDALDimension"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDimension</span></code></a> describes a dimension / axis used to index multidimensional arrays.
+It has the following properties:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>a name</p></li>
+<li><p>a size, that is the number of values that can be indexed along
+the dimension</p></li>
+<li><p>a type, which is a string giving the nature of the dimension.
+Predeined values are: HORIZONTAL_X, HORIZONTAL_Y, VERTICAL, TEMPORAL, PARAMETRIC
+Other values might be used. Empty value means unknown.</p></li>
+<li><p>a direction. Predefined values are:
+EAST, WEST, SOUTH, NORTH, UP, DOWN, FUTURE, PAST
+Other values might be used. Empty value means unknown.</p></li>
+<li><p>a reference to a GDALMDArray variable, typically
+one-dimensional, describing the values taken by the dimension.
+For a georeferenced GDALMDArray and its X dimension, this will be typically
+the values of the easting/longitude for each grid point.</p></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="data-type">
+<h2>Data Type<a class="headerlink" href="#data-type" title="Permalink to this headline">¶</a></h2>
+<p>A <a class="reference internal" href="../api/gdalextendeddatatype_cpp.html#_CPPv420GDALExtendedDataType" title="GDALExtendedDataType"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALExtendedDataType</span></code></a> (modelling a
+<a class="reference external" href="https://portal.opengeospatial.org/files/81716#_hdf5_datatype">HDF5 datatype</a>)
+describes the type taken by an individual value of
+a GDALAttribute or GDALMDArray. Its class can be NUMERIC,
+STRING or COMPOUND. For NUMERIC, the existing <a class="reference internal" href="../api/raster_c_api.html#_CPPv412GDALDataType" title="GDALDataType"><code class="xref cpp cpp-enum docutils literal notranslate"><span class="pre">GDALDataType</span></code></a> enumerated
+values are supported. For COMPOUND, the data type is a list of members, each
+member being described by a name, a offset in byte in the compound structure and
+a GDALExtendedDataType.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The HDF5 modelisation allows for more complex datatypes.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>HDF5 does not have native data types for complex values whereas
+GDALDataType does. So a driver may decide to expose a GDT_Cxxxx datatype
+from a HDF5 Compound data type representing a complex value.</p>
+</div>
+</div>
+<div class="section" id="differences-with-the-gdal-2d-raster-data-model">
+<h2>Differences with the GDAL 2D raster data model<a class="headerlink" href="#differences-with-the-gdal-2d-raster-data-model" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>The concept of GDALRasterBand is no longer used for multidimensional.
+This can be modelled as either different GDALMDArray, or using a compound
+data type.</p></li>
+</ul>
+</div>
+<div class="section" id="bridges-between-gdal-2d-classic-raster-data-model-and-multidimensional-data-model">
+<h2>Bridges between GDAL 2D classic raster data model and multidimensional data model<a class="headerlink" href="#bridges-between-gdal-2d-classic-raster-data-model-and-multidimensional-data-model" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="../api/gdalrasterband_cpp.html#_CPPv4NK14GDALRasterBand9AsMDArrayEv" title="GDALRasterBand::AsMDArray"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALRasterBand::AsMDArray()</span></code></a> and <a class="reference internal" href="../api/gdalmdarray_cpp.html#_CPPv4NK11GDALMDArray16AsClassicDatasetE6size_t6size_t" title="GDALMDArray::AsClassicDataset"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALMDArray::AsClassicDataset()</span></code></a>
+can be used to respectively convert a raster band to a MD array or a 2D dataset
+to a MD array.</p>
+</div>
+<div class="section" id="applications">
+<h2>Applications<a class="headerlink" href="#applications" title="Permalink to this headline">¶</a></h2>
+<p>The following applications can be used to inspect and manipulate multidimensional
+datasets:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../programs/gdalmdiminfo.html#gdalmdiminfo"><span class="std std-ref">gdalmdiminfo</span></a></p></li>
+<li><p><a class="reference internal" href="../programs/gdalmdimtranslate.html#gdalmdimtranslate"><span class="std std-ref">gdalmdimtranslate</span></a></p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="vector_data_model.html" class="btn btn-neutral float-right" title="Vector Data Model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="raster_data_model.html" class="btn btn-neutral float-left" title="Raster Data Model" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

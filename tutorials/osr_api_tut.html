@@ -1,0 +1,814 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>OGR Coordinate Reference Systems and Coordinate Transformation tutorial &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgtutorials/osr_api_tut.html"/>
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="OGC WKT Coordinate System Issues" href="wktproblems.html" />
+    <link rel="prev" title="GNM API tutorial" href="gnm_api_tut.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#raster">Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#multidimensional-raster">Multidimensional raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#vector">Vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#geographic-network-model">Geographic Network Model</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#projections-and-spatial-reference-systems-tutorial-osr-ogrspatialreference">Projections and Spatial Reference Systems tutorial (OSR - OGRSpatialReference)</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">OGR Coordinate Reference Systems and Coordinate Transformation tutorial</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="wktproblems.html">OGC WKT Coordinate System Issues</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#references-and-applicable-standards">References and applicable standards</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#defining-a-geographic-coordinate-reference-system">Defining a Geographic Coordinate Reference System</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#crs-and-axis-order">CRS and axis order</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#defining-a-projected-crs">Defining a Projected CRS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#querying-coordinate-reference-system">Querying Coordinate Reference System</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#coordinate-transformation">Coordinate Transformation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#advanced-coordinate-transformation">Advanced Coordinate Transformation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#alternate-interfaces">Alternate Interfaces</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#history-and-implementation-considerations">History and implementation considerations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Tutorials</a> &raquo;</li>
+      
+      <li>OGR Coordinate Reference Systems and Coordinate Transformation tutorial</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/tutorials/osr_api_tut.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="wktproblems.html" class="btn btn-neutral float-right" title="OGC WKT Coordinate System Issues" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gnm_api_tut.html" class="btn btn-neutral float-left" title="GNM API tutorial" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="ogr-coordinate-reference-systems-and-coordinate-transformation-tutorial">
+<span id="osr-api-tut"></span><h1>OGR Coordinate Reference Systems and Coordinate Transformation tutorial<a class="headerlink" href="#ogr-coordinate-reference-systems-and-coordinate-transformation-tutorial" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="../api/ogrspatialref.html#_CPPv419OGRSpatialReference" title="OGRSpatialReference"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRSpatialReference</span></code></a> and <a class="reference internal" href="../api/ogrspatialref.html#_CPPv427OGRCoordinateTransformation" title="OGRCoordinateTransformation"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRCoordinateTransformation</span></code></a> classes provide
+respectively services to represent coordinate reference systems (known as CRS
+or SRS, such as typically a projected CRS associating a map projection with a geodetic
+datums) and to transform between them.  These services are loosely modeled on the
+OpenGIS Coordinate Transformations specification, and rely on the
+Well Known Text (WKT) format (in its various versions: OGC WKT 1, ESRI WKT,
+WKT2:2015 and WKT2:2018) for describing coordinate systems.</p>
+</div>
+<div class="section" id="references-and-applicable-standards">
+<h2>References and applicable standards<a class="headerlink" href="#references-and-applicable-standards" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://proj4.org">PROJ documentation</a>: projection methods and coordinate operations</p></li>
+<li><p><a class="reference external" href="https://proj4.org/development/reference/cpp/cpp_general.html#standards">ISO:19111 and WKT standards</a></p></li>
+<li><p><a class="reference external" href="http://geotiff.maptools.org/proj_list">GeoTIFF Projections Transform List</a>: understanding formulations of projections in WKT for GeoTIFF</p></li>
+<li><p><a class="reference external" href="http://www.epsg.org">EPSG Geodesy web page</a> is also a useful resource</p></li>
+</ul>
+</div>
+<div class="section" id="defining-a-geographic-coordinate-reference-system">
+<h2>Defining a Geographic Coordinate Reference System<a class="headerlink" href="#defining-a-geographic-coordinate-reference-system" title="Permalink to this headline">¶</a></h2>
+<p>CRS are encapsulated in the <a class="reference internal" href="../api/ogrspatialref.html#_CPPv419OGRSpatialReference" title="OGRSpatialReference"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRSpatialReference</span></code></a> class. There
+are a number of ways of initializing an OGRSpatialReference object to a
+valid coordinate reference system.  There are two primary kinds of CRS.
+The first is geographic (positions are measured in long/lat) and the second
+is projected (such as UTM - positions are measured in meters or feet).</p>
+<p>A Geographic CRS contains information on the datum (which implies
+an spheroid described by a semi-major axis, and inverse flattening), prime
+meridian (normally Greenwich), and an angular units type which is normally
+degrees.  The following code initializes a geographic CRS
+on supplying all this information along with a user visible name for the
+geographic CRS.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">OGRSpatialReference</span> <span class="n">oSRS</span><span class="p">;</span>
+
+<span class="n">oSRS</span><span class="p">.</span><span class="n">SetGeogCS</span><span class="p">(</span> <span class="s">&quot;My geographic CRS&quot;</span><span class="p">,</span>
+                <span class="s">&quot;World Geodetic System 1984&quot;</span><span class="p">,</span>
+                <span class="s">&quot;My WGS84 Spheroid&quot;</span><span class="p">,</span>
+                <span class="n">SRS_WGS84_SEMIMAJOR</span><span class="p">,</span> <span class="n">SRS_WGS84_INVFLATTENING</span><span class="p">,</span>
+                <span class="s">&quot;Greenwich&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span>
+                <span class="s">&quot;degree&quot;</span><span class="p">,</span> <span class="n">SRS_UA_DEGREE_CONV</span> <span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The abbreviation CS in <a class="reference internal" href="../api/ogrspatialref.html#_CPPv4N19OGRSpatialReference9SetGeogCSEPKcPKcPKcddPKcdPKcd" title="OGRSpatialReference::SetGeogCS"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRSpatialReference::SetGeogCS()</span></code></a> is not appropriate according to current
+geodesic terminology, and should be understood as CRS</p>
+</div>
+<p>Of these values, the names “My geographic CRS”, “My WGS84
+Spheroid”, “Greenwich” and “degree” are not keys, but are used for display
+to the user.  However, the datum name “World Geodetic System 1984” is used as a key to identify
+the datum, and should be set to a known value from the EPSG registry, so that
+appropriate datum transformations can be done during coordinate operations.
+The list of valid geodetic datum can be seen in the 3rd column of the
+<a class="reference external" href="https://github.com/OSGeo/proj.4/blob/master/data/sql/geodetic_datum.sql">geodetic_datum.sq</a>
+file.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In WKT 1, space characters in datum names are normally replaced by underscore.
+And WGS_1984 is used as an alias of “World Geodetic System 1984”</p>
+</div>
+<p>The OGRSpatialReference has built in support for a few well known CRS,
+which include “NAD27”, “NAD83”, “WGS72” and “WGS84” which can be
+defined in a single call to <a class="reference internal" href="../api/ogrspatialref.html#_CPPv4N19OGRSpatialReference18SetWellKnownGeogCSEPKc" title="OGRSpatialReference::SetWellKnownGeogCS"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRSpatialReference::SetWellKnownGeogCS()</span></code></a>.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">oSRS</span><span class="p">.</span><span class="n">SetWellKnownGeogCS</span><span class="p">(</span> <span class="s">&quot;WGS84&quot;</span> <span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The abbreviation CS in SetWellKnownGeogCS() is not appropriate according to current
+geodesic terminology, and should be understood as CRS</p>
+</div>
+<p>Furthermore, any geographic CRS in the EPSG database can
+be set by its GCS code number if the EPSG database is available.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">oSRS</span><span class="p">.</span><span class="n">SetWellKnownGeogCS</span><span class="p">(</span> <span class="s">&quot;EPSG:4326&quot;</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>For serialization, and transmission of projection definitions to other
+packages, the OpenGIS Well Known Text format for coordinate systems is
+used.  An OGRSpatialReference can be initialized from WKT, or
+converted back into WKT. As of GDAL 3.0, the default format for WKT export
+is still OGC WKT 1.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">char</span> <span class="o">*</span><span class="n">pszWKT</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="n">oSRS</span><span class="p">.</span><span class="n">SetWellKnownGeogCS</span><span class="p">(</span> <span class="s">&quot;WGS84&quot;</span> <span class="p">);</span>
+<span class="n">oSRS</span><span class="p">.</span><span class="n">exportToWkt</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">pszWKT</span> <span class="p">);</span>
+<span class="n">printf</span><span class="p">(</span> <span class="s">&quot;%s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">pszWKT</span> <span class="p">);</span>
+<span class="n">CPLFree</span><span class="p">(</span><span class="n">pszWKT</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>outputs:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">GEOGCS</span><span class="p">[</span><span class="s">&quot;WGS 84&quot;</span><span class="p">,</span><span class="n">DATUM</span><span class="p">[</span><span class="s">&quot;WGS_1984&quot;</span><span class="p">,</span><span class="n">SPHEROID</span><span class="p">[</span><span class="s">&quot;WGS 84&quot;</span><span class="p">,</span><span class="mi">6378137</span><span class="p">,</span><span class="mf">298.257223563</span><span class="p">,</span>
+<span class="n">AUTHORITY</span><span class="p">[</span><span class="s">&quot;EPSG&quot;</span><span class="p">,</span><span class="s">&quot;7030&quot;</span><span class="p">]],</span><span class="n">AUTHORITY</span><span class="p">[</span><span class="s">&quot;EPSG&quot;</span><span class="p">,</span><span class="s">&quot;6326&quot;</span><span class="p">]],</span><span class="n">PRIMEM</span><span class="p">[</span><span class="s">&quot;Greenwich&quot;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span>
+<span class="n">AUTHORITY</span><span class="p">[</span><span class="s">&quot;EPSG&quot;</span><span class="p">,</span><span class="s">&quot;8901&quot;</span><span class="p">]],</span><span class="n">UNIT</span><span class="p">[</span><span class="s">&quot;degree&quot;</span><span class="p">,</span><span class="mf">0.0174532925199433</span><span class="p">,</span>
+<span class="n">AUTHORITY</span><span class="p">[</span><span class="s">&quot;EPSG&quot;</span><span class="p">,</span><span class="s">&quot;9122&quot;</span><span class="p">]],</span><span class="n">AXIS</span><span class="p">[</span><span class="s">&quot;Latitude&quot;</span><span class="p">,</span><span class="n">NORTH</span><span class="p">],</span><span class="n">AXIS</span><span class="p">[</span><span class="s">&quot;Longitude&quot;</span><span class="p">,</span><span class="n">EAST</span><span class="p">],</span>
+<span class="n">AUTHORITY</span><span class="p">[</span><span class="s">&quot;EPSG&quot;</span><span class="p">,</span><span class="s">&quot;4326&quot;</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p>or in more readable form:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">GEOGCS</span><span class="p">[</span><span class="s">&quot;WGS 84&quot;</span><span class="p">,</span>
+    <span class="n">DATUM</span><span class="p">[</span><span class="s">&quot;WGS_1984&quot;</span><span class="p">,</span>
+        <span class="n">SPHEROID</span><span class="p">[</span><span class="s">&quot;WGS 84&quot;</span><span class="p">,</span><span class="mi">6378137</span><span class="p">,</span><span class="mf">298.257223563</span><span class="p">,</span>
+            <span class="n">AUTHORITY</span><span class="p">[</span><span class="s">&quot;EPSG&quot;</span><span class="p">,</span><span class="s">&quot;7030&quot;</span><span class="p">]],</span>
+        <span class="n">AUTHORITY</span><span class="p">[</span><span class="s">&quot;EPSG&quot;</span><span class="p">,</span><span class="s">&quot;6326&quot;</span><span class="p">]],</span>
+    <span class="n">PRIMEM</span><span class="p">[</span><span class="s">&quot;Greenwich&quot;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">AUTHORITY</span><span class="p">[</span><span class="s">&quot;EPSG&quot;</span><span class="p">,</span><span class="s">&quot;8901&quot;</span><span class="p">]],</span>
+    <span class="n">UNIT</span><span class="p">[</span><span class="s">&quot;degree&quot;</span><span class="p">,</span><span class="mf">0.0174532925199433</span><span class="p">,</span>
+        <span class="n">AUTHORITY</span><span class="p">[</span><span class="s">&quot;EPSG&quot;</span><span class="p">,</span><span class="s">&quot;9122&quot;</span><span class="p">]],</span>
+    <span class="n">AXIS</span><span class="p">[</span><span class="s">&quot;Latitude&quot;</span><span class="p">,</span><span class="n">NORTH</span><span class="p">],</span>
+    <span class="n">AXIS</span><span class="p">[</span><span class="s">&quot;Longitude&quot;</span><span class="p">,</span><span class="n">EAST</span><span class="p">],</span>
+    <span class="n">AUTHORITY</span><span class="p">[</span><span class="s">&quot;EPSG&quot;</span><span class="p">,</span><span class="s">&quot;4326&quot;</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p>Starting with GDAL 3.0, the <a class="reference internal" href="../api/ogrspatialref.html#_CPPv4NK19OGRSpatialReference11exportToWktEPPc" title="OGRSpatialReference::exportToWkt"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRSpatialReference::exportToWkt()</span></code></a> method accepts options,</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">char</span> <span class="o">*</span><span class="n">pszWKT</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+<span class="n">oSRS</span><span class="p">.</span><span class="n">SetWellKnownGeogCS</span><span class="p">(</span> <span class="s">&quot;WGS84&quot;</span> <span class="p">);</span>
+<span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">apszOptions</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="s">&quot;FORMAT=WKT2_2018&quot;</span><span class="p">,</span> <span class="s">&quot;MULTILINE=YES&quot;</span><span class="p">,</span> <span class="k">nullptr</span> <span class="p">};</span>
+<span class="n">oSRS</span><span class="p">.</span><span class="n">exportToWkt</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">pszWKT</span><span class="p">,</span> <span class="n">apszOptions</span> <span class="p">);</span>
+<span class="n">printf</span><span class="p">(</span> <span class="s">&quot;%s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">pszWKT</span> <span class="p">);</span>
+<span class="n">CPLFree</span><span class="p">(</span><span class="n">pszWKT</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">GEOGCRS</span><span class="p">[</span><span class="s">&quot;WGS 84&quot;</span><span class="p">,</span>
+    <span class="n">DATUM</span><span class="p">[</span><span class="s">&quot;World Geodetic System 1984&quot;</span><span class="p">,</span>
+        <span class="n">ELLIPSOID</span><span class="p">[</span><span class="s">&quot;WGS 84&quot;</span><span class="p">,</span><span class="mi">6378137</span><span class="p">,</span><span class="mf">298.257223563</span><span class="p">,</span>
+            <span class="n">LENGTHUNIT</span><span class="p">[</span><span class="s">&quot;metre&quot;</span><span class="p">,</span><span class="mi">1</span><span class="p">]]],</span>
+    <span class="n">PRIMEM</span><span class="p">[</span><span class="s">&quot;Greenwich&quot;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">ANGLEUNIT</span><span class="p">[</span><span class="s">&quot;degree&quot;</span><span class="p">,</span><span class="mf">0.0174532925199433</span><span class="p">]],</span>
+    <span class="n">CS</span><span class="p">[</span><span class="n">ellipsoidal</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span>
+        <span class="n">AXIS</span><span class="p">[</span><span class="s">&quot;geodetic latitude (Lat)&quot;</span><span class="p">,</span><span class="n">north</span><span class="p">,</span>
+            <span class="n">ORDER</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">ANGLEUNIT</span><span class="p">[</span><span class="s">&quot;degree&quot;</span><span class="p">,</span><span class="mf">0.0174532925199433</span><span class="p">]],</span>
+        <span class="n">AXIS</span><span class="p">[</span><span class="s">&quot;geodetic longitude (Lon)&quot;</span><span class="p">,</span><span class="n">east</span><span class="p">,</span>
+            <span class="n">ORDER</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+            <span class="n">ANGLEUNIT</span><span class="p">[</span><span class="s">&quot;degree&quot;</span><span class="p">,</span><span class="mf">0.0174532925199433</span><span class="p">]],</span>
+    <span class="n">ID</span><span class="p">[</span><span class="s">&quot;EPSG&quot;</span><span class="p">,</span><span class="mi">4326</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p>This method with options is available in C as the <a class="reference internal" href="../api/ogr_srs_api.html#_CPPv416OSRExportToWktEx20OGRSpatialReferenceHPPcPPCKc" title="OSRExportToWktEx"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OSRExportToWktEx()</span></code></a> function.</p>
+<p>The <a class="reference internal" href="../api/ogrspatialref.html#_CPPv4N19OGRSpatialReference13importFromWktEPPc" title="OGRSpatialReference::importFromWkt"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRSpatialReference::importFromWkt()</span></code></a> method can be used to set an
+OGRSpatialReference from a WKT CRS definition.</p>
+</div>
+<div class="section" id="crs-and-axis-order">
+<h2>CRS and axis order<a class="headerlink" href="#crs-and-axis-order" title="Permalink to this headline">¶</a></h2>
+<p>One “detail” that has been omitted in previous sections is the topic of the
+order of coordinate axis in a CRS. A Geographic CRS is, according to ISO:19111
+modeling, made of two main components: a geodetic datum and a
+<a class="reference external" href="http://docs.opengeospatial.org/as/18-005r4/18-005r4.html#42">coordinate system</a>.
+For 2D geographic CRS, the coordinate system axes are the longitude and the latitude,
+and the values along those axes are expressed generally in degree (ancient French-based CRS may use grad).</p>
+<p>The order in which they are specified, that is latitude first, longitude second,
+or the reverse, is a constant matter of confusion and vary depending on conventions
+used by geodetic authorities, GIS user, file format and protocol specifications, etc…
+This is the source of various interoperability issues.</p>
+<p>Before GDAL 3.0, the <a class="reference internal" href="../api/ogrspatialref.html#_CPPv419OGRSpatialReference" title="OGRSpatialReference"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRSpatialReference</span></code></a> class did not honour the axis order mandated by the authority
+defining a CRS and consequently stripped axis order information from the WKT string when the
+order was latitude first, longitude second. Coordinate transformations using the
+OGRCoordinateTransformation class also assumed that geographic coordinates
+passed or returned by the Transform() method of this class used the longitude,
+latitude order.</p>
+<p>Starting with GDAL 3.0, the axis order mandated by the authority defining a CRS
+is by default honoured by the OGRCoordinateTransformation class, and always exported
+in WKT1. Consequently CRS created with the “EPSG:4326” or “WGS84” strings use
+the latitude first, longitude second axis order.</p>
+<p>In order to help migration from code bases still using coordinates with the
+longitude, latitude order, it is possible to attach a metadata information to
+a OGRSpatialReference instance, to specify that for the purpose of coordinate
+transformations, the order of values effectively passed or returned, will be
+longitude, latitude. For that, the following must be called</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">oSRS</span><span class="p">.</span><span class="n">SetAxisMappingStrategy</span><span class="p">(</span><span class="n">OAMS_TRADITIONAL_GIS_ORDER</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The argument passed to <a class="reference internal" href="../api/ogrspatialref.html#_CPPv4N19OGRSpatialReference22SetAxisMappingStrategyE22OSRAxisMappingStrategy" title="OGRSpatialReference::SetAxisMappingStrategy"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRSpatialReference::SetAxisMappingStrategy()</span></code></a> is the
+data axis to CRS axis mapping strategy.</p>
+<ul class="simple">
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">OAMS_TRADITIONAL_GIS_ORDER</span></code> means that for geographic CRS with lat/long order, the data will still be long/lat ordered. Similarly for a projected CRS with northing/easting order, the data will still be easting/northing ordered.</p></li>
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">OAMS_AUTHORITY_COMPLIANT</span></code> means that the data axis will be identical to the CRS axis. This is the fdefault value when instantiating OGRSpatialReference.</p></li>
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">OAMS_CUSTOM</span></code> means that the data axis are customly defined with SetDataAxisToSRSAxisMapping().</p></li>
+</ul>
+<p>What has been discussed in this section for the particular case of Geographic
+CRS also applies to Projected CRS. While most of them use Easting first, Northing
+second convention, some defined in the EPSG registry use the reverse convention.</p>
+</div>
+<div class="section" id="defining-a-projected-crs">
+<h2>Defining a Projected CRS<a class="headerlink" href="#defining-a-projected-crs" title="Permalink to this headline">¶</a></h2>
+<p>A projected CRS (such as UTM, Lambert Conformal Conic, etc)
+requires and underlying geographic CRS as well as a definition
+for the projection transform used to translate between linear positions
+(in meters or feet) and angular long/lat positions.  The following code
+defines a UTM zone 17 projected CRS with an underlying
+geographic CRS (datum) of WGS84.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">OGRSpatialReference</span> <span class="n">oSRS</span><span class="p">;</span>
+
+<span class="n">oSRS</span><span class="p">.</span><span class="n">SetProjCS</span><span class="p">(</span> <span class="s">&quot;UTM 17 (WGS84) in northern hemisphere.&quot;</span> <span class="p">);</span>
+<span class="n">oSRS</span><span class="p">.</span><span class="n">SetWellKnownGeogCS</span><span class="p">(</span> <span class="s">&quot;WGS84&quot;</span> <span class="p">);</span>
+<span class="n">oSRS</span><span class="p">.</span><span class="n">SetUTM</span><span class="p">(</span> <span class="mi">17</span><span class="p">,</span> <span class="n">TRUE</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>Calling <a class="reference internal" href="../api/ogrspatialref.html#_CPPv4N19OGRSpatialReference9SetProjCSEPKc" title="OGRSpatialReference::SetProjCS"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRSpatialReference::SetProjCS()</span></code></a> sets a user
+name for the projected CRS and establishes that the system
+is projected.  The <a class="reference internal" href="../api/ogrspatialref.html#_CPPv4N19OGRSpatialReference18SetWellKnownGeogCSEPKc" title="OGRSpatialReference::SetWellKnownGeogCS"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRSpatialReference::SetWellKnownGeogCS()</span></code></a> associates a geographic coordinate
+system, and the <a class="reference internal" href="../api/ogrspatialref.html#_CPPv4N19OGRSpatialReference6SetUTMEii" title="OGRSpatialReference::SetUTM"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRSpatialReference::SetUTM()</span></code></a> call sets detailed projection transformation
+parameters.  At this time the above order is important in order to
+create a valid definition, but in the future the object will automatically
+reorder the internal representation as needed to remain valid.</p>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>For now, be careful of the order of steps defining an OGRSpatialReference!</p>
+</div>
+<p>The above definition would give a WKT version that looks something like
+the following.  Note that the UTM 17 was expanded into the details
+transverse mercator definition of the UTM zone.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">PROJCS</span><span class="p">[</span><span class="s">&quot;UTM 17 (WGS84) in northern hemisphere.&quot;</span><span class="p">,</span>
+    <span class="n">GEOGCS</span><span class="p">[</span><span class="s">&quot;WGS 84&quot;</span><span class="p">,</span>
+        <span class="n">DATUM</span><span class="p">[</span><span class="s">&quot;WGS_1984&quot;</span><span class="p">,</span>
+            <span class="n">SPHEROID</span><span class="p">[</span><span class="s">&quot;WGS 84&quot;</span><span class="p">,</span><span class="mi">6378137</span><span class="p">,</span><span class="mf">298.257223563</span><span class="p">,</span>
+                <span class="n">AUTHORITY</span><span class="p">[</span><span class="s">&quot;EPSG&quot;</span><span class="p">,</span><span class="mi">7030</span><span class="p">]],</span>
+            <span class="n">TOWGS84</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">AUTHORITY</span><span class="p">[</span><span class="s">&quot;EPSG&quot;</span><span class="p">,</span><span class="mi">6326</span><span class="p">]],</span>
+        <span class="n">PRIMEM</span><span class="p">[</span><span class="s">&quot;Greenwich&quot;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">AUTHORITY</span><span class="p">[</span><span class="s">&quot;EPSG&quot;</span><span class="p">,</span><span class="mi">8901</span><span class="p">]],</span>
+        <span class="n">UNIT</span><span class="p">[</span><span class="s">&quot;DMSH&quot;</span><span class="p">,</span><span class="mf">0.0174532925199433</span><span class="p">,</span><span class="n">AUTHORITY</span><span class="p">[</span><span class="s">&quot;EPSG&quot;</span><span class="p">,</span><span class="mi">9108</span><span class="p">]],</span>
+        <span class="n">AXIS</span><span class="p">[</span><span class="s">&quot;Lat&quot;</span><span class="p">,</span><span class="n">NORTH</span><span class="p">],</span>
+        <span class="n">AXIS</span><span class="p">[</span><span class="s">&quot;Long&quot;</span><span class="p">,</span><span class="n">EAST</span><span class="p">],</span>
+        <span class="n">AUTHORITY</span><span class="p">[</span><span class="s">&quot;EPSG&quot;</span><span class="p">,</span><span class="mi">4326</span><span class="p">]],</span>
+    <span class="n">PROJECTION</span><span class="p">[</span><span class="s">&quot;Transverse_Mercator&quot;</span><span class="p">],</span>
+    <span class="n">PARAMETER</span><span class="p">[</span><span class="s">&quot;latitude_of_origin&quot;</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+    <span class="n">PARAMETER</span><span class="p">[</span><span class="s">&quot;central_meridian&quot;</span><span class="p">,</span><span class="o">-</span><span class="mi">81</span><span class="p">],</span>
+    <span class="n">PARAMETER</span><span class="p">[</span><span class="s">&quot;scale_factor&quot;</span><span class="p">,</span><span class="mf">0.9996</span><span class="p">],</span>
+    <span class="n">PARAMETER</span><span class="p">[</span><span class="s">&quot;false_easting&quot;</span><span class="p">,</span><span class="mi">500000</span><span class="p">],</span>
+    <span class="n">PARAMETER</span><span class="p">[</span><span class="s">&quot;false_northing&quot;</span><span class="p">,</span><span class="mi">0</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p>There are methods for many projection methods including <a class="reference internal" href="../api/ogrspatialref.html#_CPPv4N19OGRSpatialReference5SetTMEddddd" title="OGRSpatialReference::SetTM"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRSpatialReference::SetTM()</span></code></a> (Transverse
+Mercator), <a class="reference internal" href="../api/ogrspatialref.html#_CPPv4N19OGRSpatialReference6SetLCCEdddddd" title="OGRSpatialReference::SetLCC"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRSpatialReference::SetLCC()</span></code></a> (Lambert Conformal Conic), and <a class="reference internal" href="../api/ogrspatialref.html#_CPPv4N19OGRSpatialReference11SetMercatorEddddd" title="OGRSpatialReference::SetMercator"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRSpatialReference::SetMercator()</span></code></a>.</p>
+</div>
+<div class="section" id="querying-coordinate-reference-system">
+<h2>Querying Coordinate Reference System<a class="headerlink" href="#querying-coordinate-reference-system" title="Permalink to this headline">¶</a></h2>
+<p>Once an OGRSpatialReference has been established, various information about
+it can be queried.  It can be established if it is a projected or
+geographic CRS using the <a class="reference internal" href="../api/ogrspatialref.html#_CPPv4NK19OGRSpatialReference11IsProjectedEv" title="OGRSpatialReference::IsProjected"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRSpatialReference::IsProjected()</span></code></a> and
+<a class="reference internal" href="../api/ogrspatialref.html#_CPPv4NK19OGRSpatialReference12IsGeographicEv" title="OGRSpatialReference::IsGeographic"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRSpatialReference::IsGeographic()</span></code></a> methods.  The <a class="reference internal" href="../api/ogrspatialref.html#_CPPv4NK19OGRSpatialReference12GetSemiMajorEP6OGRErr" title="OGRSpatialReference::GetSemiMajor"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRSpatialReference::GetSemiMajor()</span></code></a>, <a class="reference internal" href="../api/ogrspatialref.html#_CPPv4NK19OGRSpatialReference12GetSemiMinorEP6OGRErr" title="OGRSpatialReference::GetSemiMinor"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRSpatialReference::GetSemiMinor()</span></code></a> and
+<a class="reference internal" href="../api/ogrspatialref.html#_CPPv4NK19OGRSpatialReference16GetInvFlatteningEP6OGRErr" title="OGRSpatialReference::GetInvFlattening"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRSpatialReference::GetInvFlattening()</span></code></a> methods can be used to get
+information about the spheroid.  The <a class="reference internal" href="../api/ogrspatialref.html#_CPPv4NK19OGRSpatialReference12GetAttrValueEPKci" title="OGRSpatialReference::GetAttrValue"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRSpatialReference::GetAttrValue()</span></code></a>
+method can be used to get the PROJCS, GEOGCS, DATUM, SPHEROID, and PROJECTION
+names strings.  The <a class="reference internal" href="../api/ogrspatialref.html#_CPPv4NK19OGRSpatialReference11GetProjParmEPKcdP6OGRErr" title="OGRSpatialReference::GetProjParm"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRSpatialReference::GetProjParm()</span></code></a> method can be used to
+get the projection parameters.  The <a class="reference internal" href="../api/ogrspatialref.html#_CPPv4NK19OGRSpatialReference14GetLinearUnitsEPPc" title="OGRSpatialReference::GetLinearUnits"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRSpatialReference::GetLinearUnits()</span></code></a>
+method can be used to fetch the linear units type, and translation to meters.</p>
+<p>Note that the names of the projection method and parameters is the one of
+WKT 1.</p>
+<p>The following code demonstrates use
+of <a class="reference internal" href="../api/ogrspatialref.html#_CPPv4NK19OGRSpatialReference12GetAttrValueEPKci" title="OGRSpatialReference::GetAttrValue"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRSpatialReference::GetAttrValue()</span></code></a> to get the projection, and <a class="reference internal" href="../api/ogrspatialref.html#_CPPv4NK19OGRSpatialReference11GetProjParmEPKcdP6OGRErr" title="OGRSpatialReference::GetProjParm"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRSpatialReference::GetProjParm()</span></code></a> to get projection
+parameters.  The GetAttrValue() method searches for the first “value”
+node associated with the named entry in the WKT text representation.
+The #define’ed constants for projection parameters (such as
+SRS_PP_CENTRAL_MERIDIAN) should be used when fetching projection parameter
+with GetProjParm(). The code for the Set methods of the various projections
+in ogrspatialreference.cpp can be consulted to find which parameters apply to
+which projections.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">pszProjection</span> <span class="o">=</span> <span class="n">poSRS</span><span class="o">-&gt;</span><span class="n">GetAttrValue</span><span class="p">(</span><span class="s">&quot;PROJECTION&quot;</span><span class="p">);</span>
+
+<span class="k">if</span><span class="p">(</span> <span class="n">pszProjection</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">poSRS</span><span class="o">-&gt;</span><span class="n">IsGeographic</span><span class="p">()</span> <span class="p">)</span>
+        <span class="n">sprintf</span><span class="p">(</span> <span class="n">szProj4</span><span class="o">+</span><span class="n">strlen</span><span class="p">(</span><span class="n">szProj4</span><span class="p">),</span> <span class="s">&quot;+proj=longlat &quot;</span> <span class="p">);</span>
+    <span class="k">else</span>
+        <span class="nf">sprintf</span><span class="p">(</span> <span class="n">szProj4</span><span class="o">+</span><span class="n">strlen</span><span class="p">(</span><span class="n">szProj4</span><span class="p">),</span> <span class="s">&quot;unknown &quot;</span> <span class="p">);</span>
+<span class="p">}</span>
+<span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="n">EQUAL</span><span class="p">(</span><span class="n">pszProjection</span><span class="p">,</span><span class="n">SRS_PT_CYLINDRICAL_EQUAL_AREA</span><span class="p">)</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">sprintf</span><span class="p">(</span> <span class="n">szProj4</span><span class="o">+</span><span class="n">strlen</span><span class="p">(</span><span class="n">szProj4</span><span class="p">),</span>
+    <span class="s">&quot;+proj=cea +lon_0=%.9f +lat_ts=%.9f +x_0=%.3f +y_0=%.3f &quot;</span><span class="p">,</span>
+            <span class="n">poSRS</span><span class="o">-&gt;</span><span class="n">GetProjParm</span><span class="p">(</span><span class="n">SRS_PP_CENTRAL_MERIDIAN</span><span class="p">,</span><span class="mf">0.0</span><span class="p">),</span>
+            <span class="n">poSRS</span><span class="o">-&gt;</span><span class="n">GetProjParm</span><span class="p">(</span><span class="n">SRS_PP_STANDARD_PARALLEL_1</span><span class="p">,</span><span class="mf">0.0</span><span class="p">),</span>
+            <span class="n">poSRS</span><span class="o">-&gt;</span><span class="n">GetProjParm</span><span class="p">(</span><span class="n">SRS_PP_FALSE_EASTING</span><span class="p">,</span><span class="mf">0.0</span><span class="p">),</span>
+            <span class="n">poSRS</span><span class="o">-&gt;</span><span class="n">GetProjParm</span><span class="p">(</span><span class="n">SRS_PP_FALSE_NORTHING</span><span class="p">,</span><span class="mf">0.0</span><span class="p">)</span> <span class="p">);</span>
+<span class="p">}</span>
+<span class="p">...</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="coordinate-transformation">
+<h2>Coordinate Transformation<a class="headerlink" href="#coordinate-transformation" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="../api/ogrspatialref.html#_CPPv427OGRCoordinateTransformation" title="OGRCoordinateTransformation"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRCoordinateTransformation</span></code></a> class is used for translating positions
+between different CRS.  New transformation objects are
+created using <a class="reference internal" href="../api/ogrspatialref.html#_CPPv433OGRCreateCoordinateTransformationPK19OGRSpatialReferencePK19OGRSpatialReference" title="OGRCreateCoordinateTransformation"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRCreateCoordinateTransformation()</span></code></a>, and then the
+<a class="reference internal" href="../api/ogrspatialref.html#_CPPv4N27OGRCoordinateTransformation9TransformEiPdPdPdPi" title="OGRCoordinateTransformation::Transform"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRCoordinateTransformation::Transform()</span></code></a> method can be used to convert
+points between CRS.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">OGRSpatialReference</span> <span class="n">oSourceSRS</span><span class="p">,</span> <span class="n">oTargetSRS</span><span class="p">;</span>
+<span class="n">OGRCoordinateTransformation</span> <span class="o">*</span><span class="n">poCT</span><span class="p">;</span>
+<span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">;</span>
+
+<span class="n">oSourceSRS</span><span class="p">.</span><span class="n">importFromEPSG</span><span class="p">(</span> <span class="n">atoi</span><span class="p">(</span><span class="n">papszArgv</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="p">);</span>
+<span class="n">oTargetSRS</span><span class="p">.</span><span class="n">importFromEPSG</span><span class="p">(</span> <span class="n">atoi</span><span class="p">(</span><span class="n">papszArgv</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">])</span> <span class="p">);</span>
+
+<span class="n">poCT</span> <span class="o">=</span> <span class="n">OGRCreateCoordinateTransformation</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">oSourceSRS</span><span class="p">,</span>
+                                          <span class="o">&amp;</span><span class="n">oTargetSRS</span> <span class="p">);</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">atof</span><span class="p">(</span> <span class="n">papszArgv</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">3</span><span class="p">]</span> <span class="p">);</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">atof</span><span class="p">(</span> <span class="n">papszArgv</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">4</span><span class="p">]</span> <span class="p">);</span>
+
+<span class="k">if</span><span class="p">(</span> <span class="n">poCT</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="o">||</span> <span class="o">!</span><span class="n">poCT</span><span class="o">-&gt;</span><span class="n">Transform</span><span class="p">(</span> <span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">x</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">y</span> <span class="p">)</span> <span class="p">)</span>
+    <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;Transformation failed.</span><span class="se">\n</span><span class="s">&quot;</span> <span class="p">);</span>
+<span class="k">else</span>
+<span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;(%f,%f) -&gt; (%f,%f)</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+            <span class="n">atof</span><span class="p">(</span> <span class="n">papszArgv</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">3</span><span class="p">]</span> <span class="p">),</span>
+            <span class="n">atof</span><span class="p">(</span> <span class="n">papszArgv</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">4</span><span class="p">]</span> <span class="p">),</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>There are a couple of points at which transformations can
+fail.  First, OGRCreateCoordinateTransformation() may fail,
+generally because the internals recognise that no transformation
+between the indicated systems can be established, and will
+return a NULL pointer.</p>
+<p>The OGRCoordinateTransformation::Transform() method itself can
+also fail.  This may be as a delayed result of one of the above
+problems, or as a result of an operation being numerically
+undefined for one or more of the passed in points.  The
+Transform() function will return TRUE on success, or FALSE
+if any of the points fail to transform.  The point array is
+left in an indeterminate state on error.</p>
+<p>Though not shown above, the coordinate transformation service can
+take 3D points, and will adjust elevations for elevation differences
+in spheroids, and datums. Elevations given on a geographic or projected CRS
+are assumed to be ellipsoidal heights. When using a compound CRS made of a
+horizontal CRS (geographic or projected) and a vertical CRS, elevations will
+be related to a vertical datum (mean sea level, gravity based, etc.).</p>
+<p>Starting with GDAL 3.0, a time value (generally as a vale in decimal years) can
+also be specified for time-dependent coordinate operations.</p>
+<p>The following example shows how to conveniently create a long/lat coordinate
+system using the same geographic CRS as a projected coordinate
+system, and using that to transform between projected coordinates and
+long/lat. The returned coordinates will be in longitude, latitude order due to
+the call to SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">OGRSpatialReference</span>    <span class="n">oUTM</span><span class="p">,</span> <span class="o">*</span><span class="n">poLongLat</span><span class="p">;</span>
+<span class="n">OGRCoordinateTransformation</span> <span class="o">*</span><span class="n">poTransform</span><span class="p">;</span>
+
+<span class="n">oUTM</span><span class="p">.</span><span class="n">SetProjCS</span><span class="p">(</span><span class="s">&quot;UTM 17 / WGS84&quot;</span><span class="p">);</span>
+<span class="n">oUTM</span><span class="p">.</span><span class="n">SetWellKnownGeogCS</span><span class="p">(</span> <span class="s">&quot;WGS84&quot;</span> <span class="p">);</span>
+<span class="n">oUTM</span><span class="p">.</span><span class="n">SetUTM</span><span class="p">(</span> <span class="mi">17</span> <span class="p">);</span>
+
+<span class="n">poLongLat</span> <span class="o">=</span> <span class="n">oUTM</span><span class="p">.</span><span class="n">CloneGeogCS</span><span class="p">();</span>
+<span class="n">poLongLat</span><span class="o">-&gt;</span><span class="n">SetAxisMappingStrategy</span><span class="p">(</span><span class="n">OAMS_TRADITIONAL_GIS_ORDER</span><span class="p">);</span>
+
+<span class="n">poTransform</span> <span class="o">=</span> <span class="n">OGRCreateCoordinateTransformation</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">oUTM</span><span class="p">,</span> <span class="n">poLongLat</span> <span class="p">);</span>
+<span class="k">if</span><span class="p">(</span> <span class="n">poTransform</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+
+<span class="p">...</span>
+
+<span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="n">poTransform</span><span class="o">-&gt;</span><span class="n">Transform</span><span class="p">(</span> <span class="n">nPoints</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="p">)</span> <span class="p">)</span>
+<span class="p">...</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="advanced-coordinate-transformation">
+<h2>Advanced Coordinate Transformation<a class="headerlink" href="#advanced-coordinate-transformation" title="Permalink to this headline">¶</a></h2>
+<p>OGRCreateCoordinateTransformation() under-the-hood may determine several candidate
+coordinate operations transforming from the source CRS to the target CRS. Those
+candidate coordinate operations have each their own area of use. When Transform()
+is invoked, it will determine the most appropriate coordinate operation based on
+the coordinates of the point to transform and those area of use. For example,
+there are several dozains of possible coordinate operations for the NAD27 to WGS84
+transformation.</p>
+<p>If a bounding box of the area of interest into which coordinates to transform
+are located is known, it is possible to specify it to restrict the candidate
+coordinate operations to consider:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">OGRCoordinateTransformationOptions</span> <span class="n">options</span><span class="p">;</span>
+<span class="n">options</span><span class="p">.</span><span class="n">SetAreaOfInterest</span><span class="p">(</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="o">-</span><span class="mi">99</span><span class="p">,</span><span class="mi">41</span><span class="p">);</span>
+<span class="n">poTransform</span> <span class="o">=</span> <span class="n">OGRCreateCoordinateTransformation</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">oNAD27</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">oWGS84</span><span class="p">,</span> <span class="n">options</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>For cases where a particular coordinate operation must be used, it is possible
+to specify it as as a PROJ string (single step operation or multiple step string
+starting with +proj=pipeline), a WKT2 string describing a CoordinateOperation,
+or a <a class="reference external" href="urn:ogc:def:coordinateOperation:EPSG::XXXX">urn:ogc:def:coordinateOperation:EPSG::XXXX</a> URN</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">OGRCoordinateTransformationOptions</span> <span class="n">options</span><span class="p">;</span>
+
+<span class="c1">// EPSG:8599, NAD27 to WGS 84 (46), 1.15 m, USA - Indiana</span>
+<span class="n">options</span><span class="p">.</span><span class="n">SetCoordinateOperation</span><span class="p">(</span>
+    <span class="s">&quot;+proj=pipeline +step +proj=axisswap +order=2,1 &quot;</span>
+    <span class="s">&quot;+step +proj=unitconvert +xy_in=deg +xy_out=rad &quot;</span>
+    <span class="s">&quot;+step +proj=hgridshift +grids=conus &quot;</span>
+    <span class="s">&quot;+step +proj=hgridshift +grids=inhpgn.gsb &quot;</span>
+    <span class="s">&quot;+step +proj=unitconvert +xy_in=rad +xy_out=deg +step &quot;</span>
+    <span class="s">&quot;+proj=axisswap +order=2,1&quot;</span><span class="p">,</span> <span class="nb">false</span> <span class="p">);</span>
+
+<span class="c1">// or</span>
+<span class="c1">// options.SetCoordinateOperation(</span>
+<span class="c1">//      &quot;urn:ogc:def:coordinateOperation:EPSG::8599&quot;, false);</span>
+
+<span class="n">poTransform</span> <span class="o">=</span> <span class="n">OGRCreateCoordinateTransformation</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">oNAD27</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">oWGS84</span><span class="p">,</span> <span class="n">options</span> <span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="alternate-interfaces">
+<h2>Alternate Interfaces<a class="headerlink" href="#alternate-interfaces" title="Permalink to this headline">¶</a></h2>
+<p>A C interface to the coordinate system services is defined in
+ogr_srs_api.h, and Python bindings are available via the osr.py module.
+Methods are close analogs of the C++ methods but C and Python bindings
+are missing for some C++ methods.</p>
+<div class="section" id="c-bindings">
+<h3>C bindings<a class="headerlink" href="#c-bindings" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="kt">void</span> <span class="o">*</span><span class="n">OGRSpatialReferenceH</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="kt">void</span> <span class="o">*</span><span class="n">OGRCoordinateTransformationH</span><span class="p">;</span>
+
+<span class="n">OGRSpatialReferenceH</span> <span class="nf">OSRNewSpatialReference</span><span class="p">(</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="p">);</span>
+<span class="kt">void</span>    <span class="nf">OSRDestroySpatialReference</span><span class="p">(</span> <span class="n">OGRSpatialReferenceH</span> <span class="p">);</span>
+
+<span class="kt">int</span>     <span class="nf">OSRReference</span><span class="p">(</span> <span class="n">OGRSpatialReferenceH</span> <span class="p">);</span>
+<span class="kt">int</span>     <span class="nf">OSRDereference</span><span class="p">(</span> <span class="n">OGRSpatialReferenceH</span> <span class="p">);</span>
+
+<span class="kt">void</span> <span class="nf">OSRSetAxisMappingStrategy</span><span class="p">(</span> <span class="n">OGRSpatialReferenceH</span><span class="p">,</span>
+                                <span class="n">OSRAxisMappingStrategy</span> <span class="p">);</span>
+
+<span class="n">OGRErr</span>  <span class="nf">OSRImportFromEPSG</span><span class="p">(</span> <span class="n">OGRSpatialReferenceH</span><span class="p">,</span> <span class="kt">int</span> <span class="p">);</span>
+<span class="n">OGRErr</span>  <span class="nf">OSRImportFromWkt</span><span class="p">(</span> <span class="n">OGRSpatialReferenceH</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span> <span class="p">);</span>
+<span class="n">OGRErr</span>  <span class="nf">OSRExportToWkt</span><span class="p">(</span> <span class="n">OGRSpatialReferenceH</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span> <span class="p">);</span>
+<span class="n">OGRErr</span>  <span class="nf">OSRExportToWktEx</span><span class="p">(</span> <span class="n">OGRSpatialReferenceH</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="p">,</span>
+                        <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="k">const</span><span class="o">*</span> <span class="n">papszOptions</span> <span class="p">);</span>
+
+<span class="n">OGRErr</span>  <span class="nf">OSRSetAttrValue</span><span class="p">(</span> <span class="n">OGRSpatialReferenceH</span> <span class="n">hSRS</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">pszNodePath</span><span class="p">,</span>
+                        <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">pszNewNodeValue</span> <span class="p">);</span>
+<span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="nf">OSRGetAttrValue</span><span class="p">(</span> <span class="n">OGRSpatialReferenceH</span> <span class="n">hSRS</span><span class="p">,</span>
+                            <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">pszName</span><span class="p">,</span> <span class="kt">int</span> <span class="n">iChild</span><span class="p">);</span>
+
+<span class="n">OGRErr</span>  <span class="nf">OSRSetLinearUnits</span><span class="p">(</span> <span class="n">OGRSpatialReferenceH</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="p">,</span> <span class="kt">double</span> <span class="p">);</span>
+<span class="kt">double</span>  <span class="nf">OSRGetLinearUnits</span><span class="p">(</span> <span class="n">OGRSpatialReferenceH</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span> <span class="p">);</span>
+
+<span class="kt">int</span>     <span class="nf">OSRIsGeographic</span><span class="p">(</span> <span class="n">OGRSpatialReferenceH</span> <span class="p">);</span>
+<span class="kt">int</span>     <span class="nf">OSRIsProjected</span><span class="p">(</span> <span class="n">OGRSpatialReferenceH</span> <span class="p">);</span>
+<span class="kt">int</span>     <span class="nf">OSRIsSameGeogCS</span><span class="p">(</span> <span class="n">OGRSpatialReferenceH</span><span class="p">,</span> <span class="n">OGRSpatialReferenceH</span> <span class="p">);</span>
+<span class="kt">int</span>     <span class="nf">OSRIsSame</span><span class="p">(</span> <span class="n">OGRSpatialReferenceH</span><span class="p">,</span> <span class="n">OGRSpatialReferenceH</span> <span class="p">);</span>
+
+<span class="n">OGRErr</span>  <span class="nf">OSRSetProjCS</span><span class="p">(</span> <span class="n">OGRSpatialReferenceH</span> <span class="n">hSRS</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">pszName</span> <span class="p">);</span>
+<span class="n">OGRErr</span>  <span class="nf">OSRSetWellKnownGeogCS</span><span class="p">(</span> <span class="n">OGRSpatialReferenceH</span> <span class="n">hSRS</span><span class="p">,</span>
+                            <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">pszName</span> <span class="p">);</span>
+
+<span class="n">OGRErr</span>  <span class="nf">OSRSetGeogCS</span><span class="p">(</span> <span class="n">OGRSpatialReferenceH</span> <span class="n">hSRS</span><span class="p">,</span>
+                    <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">pszGeogName</span><span class="p">,</span>
+                    <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">pszDatumName</span><span class="p">,</span>
+                    <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">pszEllipsoidName</span><span class="p">,</span>
+                    <span class="kt">double</span> <span class="n">dfSemiMajor</span><span class="p">,</span> <span class="kt">double</span> <span class="n">dfInvFlattening</span><span class="p">,</span>
+                    <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">pszPMName</span> <span class="p">,</span>
+                    <span class="kt">double</span> <span class="n">dfPMOffset</span> <span class="p">,</span>
+                    <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">pszUnits</span><span class="p">,</span>
+                    <span class="kt">double</span> <span class="n">dfConvertToRadians</span> <span class="p">);</span>
+
+<span class="kt">double</span>  <span class="nf">OSRGetSemiMajor</span><span class="p">(</span> <span class="n">OGRSpatialReferenceH</span><span class="p">,</span> <span class="n">OGRErr</span> <span class="o">*</span> <span class="p">);</span>
+<span class="kt">double</span>  <span class="nf">OSRGetSemiMinor</span><span class="p">(</span> <span class="n">OGRSpatialReferenceH</span><span class="p">,</span> <span class="n">OGRErr</span> <span class="o">*</span> <span class="p">);</span>
+<span class="kt">double</span>  <span class="nf">OSRGetInvFlattening</span><span class="p">(</span> <span class="n">OGRSpatialReferenceH</span><span class="p">,</span> <span class="n">OGRErr</span> <span class="o">*</span> <span class="p">);</span>
+
+<span class="n">OGRErr</span>  <span class="nf">OSRSetAuthority</span><span class="p">(</span> <span class="n">OGRSpatialReferenceH</span> <span class="n">hSRS</span><span class="p">,</span>
+                        <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">pszTargetKey</span><span class="p">,</span>
+                        <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">pszAuthority</span><span class="p">,</span>
+                        <span class="kt">int</span> <span class="n">nCode</span> <span class="p">);</span>
+<span class="n">OGRErr</span>  <span class="nf">OSRSetProjParm</span><span class="p">(</span> <span class="n">OGRSpatialReferenceH</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="p">,</span> <span class="kt">double</span> <span class="p">);</span>
+<span class="kt">double</span>  <span class="nf">OSRGetProjParm</span><span class="p">(</span> <span class="n">OGRSpatialReferenceH</span> <span class="n">hSRS</span><span class="p">,</span>
+                        <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">pszParmName</span><span class="p">,</span>
+                        <span class="kt">double</span> <span class="n">dfDefault</span><span class="p">,</span>
+                        <span class="n">OGRErr</span> <span class="o">*</span> <span class="p">);</span>
+
+<span class="n">OGRErr</span>  <span class="nf">OSRSetUTM</span><span class="p">(</span> <span class="n">OGRSpatialReferenceH</span> <span class="n">hSRS</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nZone</span><span class="p">,</span> <span class="kt">int</span> <span class="n">bNorth</span> <span class="p">);</span>
+<span class="kt">int</span>     <span class="nf">OSRGetUTMZone</span><span class="p">(</span> <span class="n">OGRSpatialReferenceH</span> <span class="n">hSRS</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">pbNorth</span> <span class="p">);</span>
+
+<span class="n">OGRCoordinateTransformationH</span>
+<span class="nf">OCTNewCoordinateTransformation</span><span class="p">(</span> <span class="n">OGRSpatialReferenceH</span> <span class="n">hSourceSRS</span><span class="p">,</span>
+                                <span class="n">OGRSpatialReferenceH</span> <span class="n">hTargetSRS</span> <span class="p">);</span>
+
+<span class="kt">void</span> <span class="nf">OCTDestroyCoordinateTransformation</span><span class="p">(</span> <span class="n">OGRCoordinateTransformationH</span> <span class="p">);</span>
+
+<span class="kt">int</span> <span class="nf">OCTTransform</span><span class="p">(</span> <span class="n">OGRCoordinateTransformationH</span> <span class="n">hCT</span><span class="p">,</span>
+                <span class="kt">int</span> <span class="n">nCount</span><span class="p">,</span> <span class="kt">double</span> <span class="o">*</span><span class="n">x</span><span class="p">,</span> <span class="kt">double</span> <span class="o">*</span><span class="n">y</span><span class="p">,</span> <span class="kt">double</span> <span class="o">*</span><span class="n">z</span> <span class="p">);</span>
+
+<span class="n">OGRCoordinateTransformationOptionsH</span> <span class="n">OCTNewCoordinateTransformationOptions</span><span class="p">(;</span>
+
+<span class="kt">int</span> <span class="nf">OCTCoordinateTransformationOptionsSetOperation</span><span class="p">(</span>
+    <span class="n">OGRCoordinateTransformationOptionsH</span> <span class="n">hOptions</span><span class="p">,</span>
+    <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">pszCO</span><span class="p">,</span> <span class="kt">int</span> <span class="n">bReverseCO</span><span class="p">);</span>
+
+<span class="kt">int</span> <span class="nf">OCTCoordinateTransformationOptionsSetAreaOfInterest</span><span class="p">(</span>
+    <span class="n">OGRCoordinateTransformationOptionsH</span> <span class="n">hOptions</span><span class="p">,</span>
+    <span class="kt">double</span> <span class="n">dfWestLongitudeDeg</span><span class="p">,</span>
+    <span class="kt">double</span> <span class="n">dfSouthLatitudeDeg</span><span class="p">,</span>
+    <span class="kt">double</span> <span class="n">dfEastLongitudeDeg</span><span class="p">,</span>
+    <span class="kt">double</span> <span class="n">dfNorthLatitudeDeg</span><span class="p">);</span>
+
+<span class="kt">void</span> <span class="nf">OCTDestroyCoordinateTransformationOptions</span><span class="p">(</span><span class="n">OGRCoordinateTransformationOptionsH</span><span class="p">);</span>
+
+<span class="n">OGRCoordinateTransformationH</span>
+<span class="nf">OCTNewCoordinateTransformationEx</span><span class="p">(</span> <span class="n">OGRSpatialReferenceH</span> <span class="n">hSourceSRS</span><span class="p">,</span>
+                                <span class="n">OGRSpatialReferenceH</span> <span class="n">hTargetSRS</span><span class="p">,</span>
+                                <span class="n">OGRCoordinateTransformationOptionsH</span> <span class="n">hOptions</span> <span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="python-bindings">
+<h3>Python bindings<a class="headerlink" href="#python-bindings" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">osr</span><span class="o">.</span><span class="n">SpatialReference</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">obj</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">SetAxisMappingStrategy</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">strategy</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">ImportFromWkt</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">wkt</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">ExportToWkt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">ImportFromEPSG</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">code</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">IsGeographic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">IsProjected</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">GetAttrValue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">child</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">SetAttrValue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">SetWellKnownGeogCS</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">SetProjCS</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;unnamed&quot;</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">IsSameGeogCS</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">IsSame</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">SetLinearUnits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">units_name</span><span class="p">,</span> <span class="n">to_meters</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">SetUTM</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zone</span><span class="p">,</span> <span class="n">is_north</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+
+<span class="k">class</span> <span class="nc">CoordinateTransformation</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">source</span><span class="p">,</span><span class="n">target</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">TransformPoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">TransformPoints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">points</span><span class="p">):</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="history-and-implementation-considerations">
+<h2>History and implementation considerations<a class="headerlink" href="#history-and-implementation-considerations" title="Permalink to this headline">¶</a></h2>
+<p>Before GDAL 3.0, the OGRSpatialReference class was strongly tied to OGC WKT (WKT 1)
+format specified by <a class="reference external" href="http://portal.opengeospatial.org/files/?artifact_id=999">Coordinate Transformation Services (CT) specification (01-009)</a>,
+and the way
+it was interpreted by GDAL, which various caveats detailed in
+the <a class="reference internal" href="wktproblems.html#wktproblems"><span class="std std-ref">OGC WKT Coordinate System Issues</span></a> page.
+The class was mostly containing a in-memory tree-like representation of WKT 1 strings.
+The class used to directly implement import and export to OGC WKT 1, WKT-ESRI and PROJ.4
+formats. Reprojection services were only available if GDAL had been build against
+the PROJ.4 library.</p>
+<p>Starting with GDAL 3.0, the <a class="reference external" href="https://proj4.org">PROJ</a> &gt;= 6.0 library
+has become a required dependency of GDAL.
+PROJ 6 has built-in support for OGC WKT 1, ESRI WKT, OGC WKT 2:2015
+and OGC WKT 2:2018 representations. PROJ 6 also implements a C++ object class
+hierarchy of the ISO-19111 / OGC Abstract Topic 2 “Referencing by coordinate” standard.
+Consequently the OGRSpatialReference class has been modified to act mostly as
+a wrapper on top of PROJ PJ* CRS objects, and tries to abstract away from
+the OGC WKT 1 representation as much as possible. However, for backward compatibility,
+some methods still expect arguments or return values that are specific of OGC WKT 1.
+The design of th OGRSpatialReference class is also still monolothic. Users wanting
+direct and fine grained access to CRS representations might want to directly use
+the PROJ 6 C or C++ API.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="wktproblems.html" class="btn btn-neutral float-right" title="OGC WKT Coordinate System Issues" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gnm_api_tut.html" class="btn btn-neutral float-left" title="GNM API tutorial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

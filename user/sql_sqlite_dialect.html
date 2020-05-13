@@ -1,0 +1,547 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>SQL SQLite dialect &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orguser/sql_sqlite_dialect.html"/>
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="GDAL Virtual File Systems (compressed, network hosted, etc…): /vsimem, /vsizip, /vsitar, /vsicurl, …" href="virtual_file_systems.html" />
+    <link rel="prev" title="OGR SQL dialect" href="ogr_sql_dialect.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">User</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="raster_data_model.html">Raster Data Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multidim_raster_data_model.html">Multidimensional Raster Data Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vector_data_model.html">Vector Data Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gnm_data_model.html">Geographic Networks Data Model</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="ogr_sql_sqlite_dialect.html">OGR SQL dialect and SQLITE SQL dialect</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ogr_sql_dialect.html">OGR SQL dialect</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">SQL SQLite dialect</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#select-statement">SELECT statement</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="virtual_file_systems.html">GDAL Virtual File Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ogr_feature_style.html">Feature Style Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configoptions.html">Configuration options</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">User oriented documentation</a> &raquo;</li>
+      
+          <li><a href="ogr_sql_sqlite_dialect.html">OGR SQL dialect and SQLITE SQL dialect</a> &raquo;</li>
+      
+      <li>SQL SQLite dialect</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/user/sql_sqlite_dialect.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="virtual_file_systems.html" class="btn btn-neutral float-right" title="GDAL Virtual File Systems (compressed, network hosted, etc…): /vsimem, /vsizip, /vsitar, /vsicurl, …" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ogr_sql_dialect.html" class="btn btn-neutral float-left" title="OGR SQL dialect" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="sql-sqlite-dialect">
+<span id="id1"></span><h1>SQL SQLite dialect<a class="headerlink" href="#sql-sqlite-dialect" title="Permalink to this headline">¶</a></h1>
+<p>Since GDAL/OGR 1.10, the SQLite “dialect” can be used as an alternate SQL dialect to the
+<a class="reference internal" href="ogr_sql_dialect.html#ogr-sql-dialect"><span class="std std-ref">OGR SQL dialect</span></a>.
+This assumes that GDAL/OGR is built with support for SQLite (&gt;= 3.6), and preferably
+with <a class="reference external" href="http://www.gaia-gis.it/spatialite/">Spatialite</a> support too to benefit from spatial functions.</p>
+<p>The SQLite dialect may be used with any OGR datasource, like the OGR SQL dialect. It
+is available through the GDALDataset::ExecuteSQL() method by specifying the pszDialect to
+“SQLITE”. For the <a class="reference internal" href="../programs/ogrinfo.html#ogrinfo"><span class="std std-ref">ogrinfo</span></a> or <a class="reference internal" href="../programs/ogr2ogr.html#ogr2ogr"><span class="std std-ref">ogr2ogr</span></a>
+utility, you must specify the “-dialect SQLITE” option.</p>
+<p>This is mainly aimed to execute SELECT statements, but, for datasources that support
+update, INSERT/UPDATE/DELETE statements can also be run. GDAL is internally using
+<a class="reference external" href="https://sqlite.org/vtab.html">the Virtual Table Mechanism of SQLite</a>
+and therefore operations like ALTER TABLE are not supported.</p>
+<p>The syntax of the SQL statements is fully the one of the SQLite SQL engine. You can
+refer to the following pages:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="http://www.sqlite.org/lang_select.html">SELECT</a></p></li>
+<li><p><a class="reference external" href="http://www.sqlite.org/lang_insert.html">INSERT</a></p></li>
+<li><p><a class="reference external" href="http://www.sqlite.org/lang_update.html">UPDATE</a></p></li>
+<li><p><a class="reference external" href="http://www.sqlite.org/lang_delete.html">DELETE</a></p></li>
+</ul>
+<div class="section" id="select-statement">
+<h2>SELECT statement<a class="headerlink" href="#select-statement" title="Permalink to this headline">¶</a></h2>
+<p>The SELECT statement is used to fetch layer features (analogous to table
+rows in an RDBMS) with the result of the query represented as a temporary layer
+of features.   The layers of the datasource are analogous to tables in an
+RDBMS and feature attributes are analogous to column values.  The simplest
+form of OGR SQLITE SELECT statement looks like this:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">polylayer</span>
+</pre></div>
+</div>
+<p>More complex statements can of course be used, including WHERE, JOIN, USING, GROUP BY,
+ORDER BY, sub SELECT, …</p>
+<p>The table names that can be used are the layer names available in the datasource on
+which the ExecuteSQL() method is called.</p>
+<p>Similarly to OGRSQL, it is also possible to refer to layers of other datasources with
+the following syntax : “other_datasource_name”.”layer_name”.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="n">p</span><span class="p">.</span><span class="o">*</span><span class="p">,</span> <span class="n">NAME</span> <span class="k">FROM</span> <span class="n">poly</span> <span class="n">p</span> <span class="k">JOIN</span> <span class="ss">&quot;idlink.dbf&quot;</span><span class="p">.</span><span class="ss">&quot;idlink&quot;</span> <span class="n">il</span> <span class="k">USING</span> <span class="p">(</span><span class="n">eas_id</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The column names that can be used in the result column list, in WHERE, JOIN, … clauses
+are the field names of the layers. Expressions, SQLite functions can also be used,
+spatial functions, etc…</p>
+<p>The conditions on fields expressed in WHERE clauses, or in JOINs are
+translated, as far as possible, as attribute filters that are applied on the
+underlying OGR layers. Joins can be very expensive operations if the secondary table is not
+indexed on the key field being used.</p>
+<div class="section" id="delimited-identifiers">
+<h3>Delimited identifiers<a class="headerlink" href="#delimited-identifiers" title="Permalink to this headline">¶</a></h3>
+<p>If names of layers or attributes are reserved keywords in SQL like ‘FROM’ or they
+begin with a number or underscore they must be handled as “delimited identifiers” and
+enclosed between double quotation marks in queries. Double quotas can be used even when
+they are not strictly needed.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="ss">&quot;p&quot;</span><span class="p">.</span><span class="ss">&quot;geometry&quot;</span><span class="p">,</span> <span class="ss">&quot;p&quot;</span><span class="p">.</span><span class="ss">&quot;FROM&quot;</span><span class="p">,</span> <span class="ss">&quot;p&quot;</span><span class="p">.</span><span class="ss">&quot;3D&quot;</span> <span class="k">FROM</span> <span class="ss">&quot;poly&quot;</span> <span class="n">p</span>
+</pre></div>
+</div>
+<p>When SQL statements are used in the command shell and the statement itself is put
+between double quotes, the internal double quotes must be escaped with \</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>ogrinfo p.shp -sql <span class="s2">&quot;SELECT geometry \&quot;FROM\&quot;, \&quot;3D\&quot; FROM p&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="geometry-field">
+<h3>Geometry field<a class="headerlink" href="#geometry-field" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">GEOMETRY</span></code> special field represents the geometry of the feature
+returned by OGRFeature::GetGeometryRef(). It can be explicitly specified
+in the result column list of a SELECT, and is automatically selected if the
+* wildcard is used.</p>
+<p>For OGR layers that have a non-empty geometry column name (generally for RDBMS datasources),
+as returned by OGRLayer::GetGeometryColumn(), the name of the geometry special field
+in the SQL statement will be the name of the geometry column of the underlying OGR layer.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="n">EAS_ID</span><span class="p">,</span> <span class="n">GEOMETRY</span> <span class="k">FROM</span> <span class="n">poly</span>
+</pre></div>
+</div>
+<p>returns:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">OGRFeature</span><span class="p">(</span><span class="k">SELECT</span><span class="p">):</span><span class="mi">0</span>
+<span class="n">EAS_ID</span> <span class="p">(</span><span class="nb">Real</span><span class="p">)</span> <span class="o">=</span> <span class="mi">168</span>
+<span class="n">POLYGON</span> <span class="p">((</span><span class="mi">479819</span><span class="p">.</span><span class="mi">84375</span> <span class="mi">4765180</span><span class="p">.</span><span class="mi">5</span><span class="p">,</span><span class="mi">479690</span><span class="p">.</span><span class="mi">1875</span> <span class="mi">4765259</span><span class="p">.</span><span class="mi">5</span><span class="p">,[...],</span><span class="mi">479819</span><span class="p">.</span><span class="mi">84375</span> <span class="mi">4765180</span><span class="p">.</span><span class="mi">5</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">poly</span>
+</pre></div>
+</div>
+<p>returns:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">OGRFeature</span><span class="p">(</span><span class="k">SELECT</span><span class="p">):</span><span class="mi">0</span>
+<span class="n">AREA</span> <span class="p">(</span><span class="nb">Real</span><span class="p">)</span> <span class="o">=</span> <span class="mi">215229</span><span class="p">.</span><span class="mi">266</span>
+<span class="n">EAS_ID</span> <span class="p">(</span><span class="nb">Real</span><span class="p">)</span> <span class="o">=</span> <span class="mi">168</span>
+<span class="n">PRFEDEA</span> <span class="p">(</span><span class="n">String</span><span class="p">)</span> <span class="o">=</span> <span class="mi">35043411</span>
+<span class="n">POLYGON</span> <span class="p">((</span><span class="mi">479819</span><span class="p">.</span><span class="mi">84375</span> <span class="mi">4765180</span><span class="p">.</span><span class="mi">5</span><span class="p">,</span><span class="mi">479690</span><span class="p">.</span><span class="mi">1875</span> <span class="mi">4765259</span><span class="p">.</span><span class="mi">5</span><span class="p">,[...],</span><span class="mi">479819</span><span class="p">.</span><span class="mi">84375</span> <span class="mi">4765180</span><span class="p">.</span><span class="mi">5</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="ogr-style-special-field">
+<h3>OGR_STYLE special field<a class="headerlink" href="#ogr-style-special-field" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">OGR_STYLE</span></code> special field represents the style string of the feature
+returned by OGRFeature::GetStyleString(). By using this field and the
+<code class="docutils literal notranslate"><span class="pre">LIKE</span></code> operator the result of the query can be filtered by the style.
+For example we can select the annotation features as:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">nation</span> <span class="k">WHERE</span> <span class="n">OGR_STYLE</span> <span class="k">LIKE</span> <span class="s1">&#39;LABEL%&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="spatialite-sql-functions">
+<h3>Spatialite SQL functions<a class="headerlink" href="#spatialite-sql-functions" title="Permalink to this headline">¶</a></h3>
+<p>When GDAL/OGR is build with support for the &lt;a href=”<a class="reference external" href="http://www.gaia-gis.it/spatialite/">http://www.gaia-gis.it/spatialite/</a>”&gt;Spatialite&lt;/a&gt; library,
+a lot of &lt;a href=”<a class="reference external" href="http://www.gaia-gis.it/gaia-sins/spatialite-sql-4.3.0.html">http://www.gaia-gis.it/gaia-sins/spatialite-sql-4.3.0.html</a>”&gt;extra SQL functions&lt;/a&gt;,
+in particular spatial functions, can be used in results column fields, WHERE clauses, etc….</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="n">EAS_ID</span><span class="p">,</span> <span class="n">ST_Area</span><span class="p">(</span><span class="n">GEOMETRY</span><span class="p">)</span> <span class="k">AS</span> <span class="n">area</span> <span class="k">FROM</span> <span class="n">poly</span> <span class="k">WHERE</span>
+    <span class="n">ST_Intersects</span><span class="p">(</span><span class="n">GEOMETRY</span><span class="p">,</span> <span class="n">BuildCircleMbr</span><span class="p">(</span><span class="mi">479750</span><span class="p">.</span><span class="mi">6875</span><span class="p">,</span><span class="mi">4764702</span><span class="p">.</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>returns:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">OGRFeature</span><span class="p">(</span><span class="k">SELECT</span><span class="p">):</span><span class="mi">0</span>
+<span class="n">EAS_ID</span> <span class="p">(</span><span class="nb">Real</span><span class="p">)</span> <span class="o">=</span> <span class="mi">169</span>
+<span class="n">area</span> <span class="p">(</span><span class="nb">Real</span><span class="p">)</span> <span class="o">=</span> <span class="mi">101429</span><span class="p">.</span><span class="mi">9765625</span>
+
+<span class="n">OGRFeature</span><span class="p">(</span><span class="k">SELECT</span><span class="p">):</span><span class="mi">1</span>
+<span class="n">EAS_ID</span> <span class="p">(</span><span class="nb">Real</span><span class="p">)</span> <span class="o">=</span> <span class="mi">165</span>
+<span class="n">area</span> <span class="p">(</span><span class="nb">Real</span><span class="p">)</span> <span class="o">=</span> <span class="mi">596610</span><span class="p">.</span><span class="mi">3359375</span>
+
+<span class="n">OGRFeature</span><span class="p">(</span><span class="k">SELECT</span><span class="p">):</span><span class="mi">2</span>
+<span class="n">EAS_ID</span> <span class="p">(</span><span class="nb">Real</span><span class="p">)</span> <span class="o">=</span> <span class="mi">170</span>
+<span class="n">area</span> <span class="p">(</span><span class="nb">Real</span><span class="p">)</span> <span class="o">=</span> <span class="mi">5268</span><span class="p">.</span><span class="mi">8125</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="ogr-datasource-sql-functions">
+<h3>OGR datasource SQL functions<a class="headerlink" href="#ogr-datasource-sql-functions" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">ogr_datasource_load_layers(datasource_name[,</span> <span class="pre">update_mode[,</span> <span class="pre">prefix]])</span></code>
+function can be used to automatically load all the layers of a datasource as
+<a class="reference internal" href="../drivers/vector/sqlite.html#vector-sqlite"><span class="std std-ref">VirtualOGR tables</span></a>.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">sqlite</span><span class="o">&gt;</span> <span class="k">SELECT</span> <span class="n">load_extension</span><span class="p">(</span><span class="s1">&#39;libgdal.so&#39;</span><span class="p">);</span>
+
+<span class="n">sqlite</span><span class="o">&gt;</span> <span class="k">SELECT</span> <span class="n">load_extension</span><span class="p">(</span><span class="s1">&#39;libspatialite.so&#39;</span><span class="p">);</span>
+
+<span class="n">sqlite</span><span class="o">&gt;</span> <span class="k">SELECT</span> <span class="n">ogr_datasource_load_layers</span><span class="p">(</span><span class="s1">&#39;poly.shp&#39;</span><span class="p">);</span>
+<span class="mi">1</span>
+<span class="n">sqlite</span><span class="o">&gt;</span> <span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">sqlite_master</span><span class="p">;</span>
+<span class="k">table</span><span class="o">|</span><span class="n">poly</span><span class="o">|</span><span class="n">poly</span><span class="o">|</span><span class="mi">0</span><span class="o">|</span><span class="k">CREATE</span> <span class="n">VIRTUAL</span> <span class="k">TABLE</span> <span class="ss">&quot;poly&quot;</span> <span class="k">USING</span> <span class="n">VirtualOGR</span><span class="p">(</span><span class="s1">&#39;poly.shp&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;poly&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="ogr-layer-sql-functions">
+<h3>OGR layer SQL functions<a class="headerlink" href="#ogr-layer-sql-functions" title="Permalink to this headline">¶</a></h3>
+<p>The following SQL functions are available and operate on a layer name :
+<code class="docutils literal notranslate"><span class="pre">ogr_layer_Extent()</span></code>, <code class="docutils literal notranslate"><span class="pre">ogr_layer_SRID()</span></code>,
+<code class="docutils literal notranslate"><span class="pre">ogr_layer_GeometryType()</span></code> and <code class="docutils literal notranslate"><span class="pre">ogr_layer_FeatureCount()</span></code></p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="n">ogr_layer_Extent</span><span class="p">(</span><span class="s1">&#39;poly&#39;</span><span class="p">),</span> <span class="n">ogr_layer_SRID</span><span class="p">(</span><span class="s1">&#39;poly&#39;</span><span class="p">)</span> <span class="k">AS</span> <span class="n">srid</span><span class="p">,</span>
+    <span class="n">ogr_layer_GeometryType</span><span class="p">(</span><span class="s1">&#39;poly&#39;</span><span class="p">)</span> <span class="k">AS</span> <span class="n">geomtype</span><span class="p">,</span> <span class="n">ogr_layer_FeatureCount</span><span class="p">(</span><span class="s1">&#39;poly&#39;</span><span class="p">)</span> <span class="k">AS</span> <span class="k">count</span>
+</pre></div>
+</div>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">OGRFeature</span><span class="p">(</span><span class="k">SELECT</span><span class="p">):</span><span class="mi">0</span>
+<span class="n">srid</span> <span class="p">(</span><span class="nb">Integer</span><span class="p">)</span> <span class="o">=</span> <span class="mi">40004</span>
+<span class="n">geomtype</span> <span class="p">(</span><span class="n">String</span><span class="p">)</span> <span class="o">=</span> <span class="n">POLYGON</span>
+<span class="k">count</span> <span class="p">(</span><span class="nb">Integer</span><span class="p">)</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">POLYGON</span> <span class="p">((</span><span class="mi">478315</span><span class="p">.</span><span class="mi">53125</span> <span class="mi">4762880</span><span class="p">.</span><span class="mi">5</span><span class="p">,</span><span class="mi">481645</span><span class="p">.</span><span class="mi">3125</span> <span class="mi">4762880</span><span class="p">.</span><span class="mi">5</span><span class="p">,</span><span class="mi">481645</span><span class="p">.</span><span class="mi">3125</span> <span class="mi">4765610</span><span class="p">.</span><span class="mi">5</span><span class="p">,</span><span class="mi">478315</span><span class="p">.</span><span class="mi">53125</span> <span class="mi">4765610</span><span class="p">.</span><span class="mi">5</span><span class="p">,</span><span class="mi">478315</span><span class="p">.</span><span class="mi">53125</span> <span class="mi">4762880</span><span class="p">.</span><span class="mi">5</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="ogr-compression-functions">
+<h3>OGR compression functions<a class="headerlink" href="#ogr-compression-functions" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">ogr_deflate(text_or_blob[,</span> <span class="pre">compression_level])</span></code> returns a binary blob
+compressed with the ZLib deflate algorithm. See <a class="reference internal" href="../api/cpl.html#_CPPv414CPLZLibDeflatePKv6size_tiPv6size_tP6size_t" title="CPLZLibDeflate"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">CPLZLibDeflate()</span></code></a></p>
+<p><code class="docutils literal notranslate"><span class="pre">ogr_inflate(compressed_blob)</span></code> returns the decompressed binary blob,
+from a blob compressed with the ZLib deflate algorithm.
+If the decompressed binary is a string, use
+CAST(ogr_inflate(compressed_blob) AS VARCHAR). See CPLZLibInflate().</p>
+</div>
+<div class="section" id="other-functions">
+<h3>Other functions<a class="headerlink" href="#other-functions" title="Permalink to this headline">¶</a></h3>
+<p>Starting with OGR 2.0, the <code class="docutils literal notranslate"><span class="pre">hstore_get_value()</span></code> function can be used to extract
+a value associate to a key from a HSTORE string, formatted like “key=&gt;value,other_key=&gt;other_value,…”</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="n">hstore_get_value</span><span class="p">(</span><span class="s1">&#39;a =&gt; b, &quot;key with space&quot;=&gt; &quot;value with space&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;key with space&#39;</span><span class="p">)</span> <span class="c1">--&gt; &#39;value with space&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="ogr-geocoding-functions">
+<h3>OGR geocoding functions<a class="headerlink" href="#ogr-geocoding-functions" title="Permalink to this headline">¶</a></h3>
+<p>The following SQL functions are available : <code class="docutils literal notranslate"><span class="pre">ogr_geocode(...)</span></code> and <code class="docutils literal notranslate"><span class="pre">ogr_geocode_reverse(...)</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ogr_geocode(name_to_geocode</span> <span class="pre">[,</span> <span class="pre">field_to_return</span> <span class="pre">[,</span> <span class="pre">option1</span> <span class="pre">[,</span> <span class="pre">option2,</span> <span class="pre">...]]])</span></code> where
+name_to_geocode is a literal or a column name that must be geocoded. field_to_return if specified can be “geometry” for
+the geometry (default), or a field name of the layer returned by <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRGeocode()</span></code>. The special field  “raw” can also be used
+to return the raw response (XML string) of the geocoding service.
+option1, option2, etc.. must be of the key=value format, and are options understood
+by <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRGeocodeCreateSession()</span></code> or OGRGeocode().</p>
+<p>This function internally uses the OGRGeocode() API. Refer to it for more details.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="n">ST_Centroid</span><span class="p">(</span><span class="n">ogr_geocode</span><span class="p">(</span><span class="s1">&#39;Paris&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>returns:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">OGRFeature</span><span class="p">(</span><span class="k">SELECT</span><span class="p">):</span><span class="mi">0</span>
+<span class="n">POINT</span> <span class="p">(</span><span class="mi">2</span><span class="p">.</span><span class="mi">342878767069653</span> <span class="mi">48</span><span class="p">.</span><span class="mi">85661793020374</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>ogrinfo cities.csv -dialect sqlite -sql <span class="s2">&quot;SELECT *, ogr_geocode(city, &#39;country&#39;) AS country, ST_Centroid(ogr_geocode(city)) FROM cities&quot;</span>
+</pre></div>
+</div>
+<p>returns:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>OGRFeature(SELECT):0
+id (Real) = 1
+city (String) = Paris
+country (String) = France métropolitaine
+POINT (2.342878767069653 48.85661793020374)
+
+OGRFeature(SELECT):1
+id (Real) = 2
+city (String) = London
+country (String) = United Kingdom
+POINT (-0.109369427546499 51.500506667319407)
+
+OGRFeature(SELECT):2
+id (Real) = 3
+city (String) = Rennes
+country (String) = France métropolitaine
+POINT (-1.68185153381778 48.111663929761093)
+
+OGRFeature(SELECT):3
+id (Real) = 4
+city (String) = Strasbourg
+country (String) = France métropolitaine
+POINT (7.767762859150757 48.571233274141846)
+
+OGRFeature(SELECT):4
+id (Real) = 5
+city (String) = New York
+country (String) = United States of America
+POINT (-73.938140243499049 40.663799577449979)
+
+OGRFeature(SELECT):5
+id (Real) = 6
+city (String) = Berlin
+country (String) = Deutschland
+POINT (13.402306623451983 52.501470321410636)
+
+OGRFeature(SELECT):6
+id (Real) = 7
+city (String) = Beijing
+POINT (116.391195 39.9064702)
+
+OGRFeature(SELECT):7
+id (Real) = 8
+city (String) = Brasilia
+country (String) = Brasil
+POINT (-52.830435216371839 -10.828214867369699)
+
+OGRFeature(SELECT):8
+id (Real) = 9
+city (String) = Moscow
+country (String) = Российская Федерация
+POINT (37.367988106866868 55.556208255649558)
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">ogr_geocode_reverse(longitude,</span> <span class="pre">latitude,</span> <span class="pre">field_to_return</span> <span class="pre">[,</span> <span class="pre">option1</span> <span class="pre">[,</span> <span class="pre">option2,</span> <span class="pre">...]])</span></code> where
+longitude, latitude is the coordinate to query. field_to_return must be a field name of the layer
+returned by OGRGeocodeReverse() (for example ‘display_name’). The special field  “raw” can also be used
+to return the raw response (XML string) of the geocoding service.
+option1, option2, etc.. must be of the key=value format, and are options understood
+by OGRGeocodeCreateSession() or OGRGeocodeReverse().</p>
+<p><code class="docutils literal notranslate"><span class="pre">ogr_geocode_reverse(geometry,</span> <span class="pre">field_to_return</span> <span class="pre">[,</span> <span class="pre">option1</span> <span class="pre">[,</span> <span class="pre">option2,</span> <span class="pre">...]])</span></code> is also accepted
+as an alternate syntax where geometry is a (Spatialite) point geometry.</p>
+<p>This function internally uses the <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRGeocodeReverse()</span></code> API. Refer to it for more details.</p>
+</div>
+<div class="section" id="spatialite-spatial-index">
+<h3>Spatialite spatial index<a class="headerlink" href="#spatialite-spatial-index" title="Permalink to this headline">¶</a></h3>
+<p>Spatialite spatial index mechanism can be triggered by making sure a spatial index
+virtual table is mentioned in the SQL (of the form idx_layername_geometrycolumn), or
+by using the more recent SpatialIndex from the VirtualSpatialIndex extension. In which
+case, a in-memory RTree will be built to be used to speed up the spatial queries.</p>
+<p>For example, a spatial intersection between 2 layers, by using a spatial index on one
+of the layers to limit the number of actual geometry intersection computations :</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="n">city_name</span><span class="p">,</span> <span class="n">region_name</span> <span class="k">FROM</span> <span class="n">cities</span><span class="p">,</span> <span class="n">regions</span> <span class="k">WHERE</span>
+    <span class="n">ST_Area</span><span class="p">(</span><span class="n">ST_Intersection</span><span class="p">(</span><span class="n">cities</span><span class="p">.</span><span class="n">geometry</span><span class="p">,</span> <span class="n">regions</span><span class="p">.</span><span class="n">geometry</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">AND</span>
+    <span class="n">regions</span><span class="p">.</span><span class="n">rowid</span> <span class="k">IN</span> <span class="p">(</span>
+        <span class="k">SELECT</span> <span class="n">pkid</span> <span class="k">FROM</span> <span class="n">idx_regions_geometry</span> <span class="k">WHERE</span>
+            <span class="n">xmax</span> <span class="o">&gt;=</span> <span class="n">MbrMinX</span><span class="p">(</span><span class="n">cities</span><span class="p">.</span><span class="n">geometry</span><span class="p">)</span> <span class="k">AND</span> <span class="n">xmin</span> <span class="o">&lt;=</span> <span class="n">MbrMaxX</span><span class="p">(</span><span class="n">cities</span><span class="p">.</span><span class="n">geometry</span><span class="p">)</span> <span class="k">AND</span>
+            <span class="n">ymax</span> <span class="o">&gt;=</span> <span class="n">MbrMinY</span><span class="p">(</span><span class="n">cities</span><span class="p">.</span><span class="n">geometry</span><span class="p">)</span> <span class="k">AND</span> <span class="n">ymin</span> <span class="o">&lt;=</span> <span class="n">MbrMaxY</span><span class="p">(</span><span class="n">cities</span><span class="p">.</span><span class="n">geometry</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>or more elegantly :</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="n">city_name</span><span class="p">,</span> <span class="n">region_name</span> <span class="k">FROM</span> <span class="n">cities</span><span class="p">,</span> <span class="n">regions</span> <span class="k">WHERE</span>
+    <span class="n">ST_Area</span><span class="p">(</span><span class="n">ST_Intersection</span><span class="p">(</span><span class="n">cities</span><span class="p">.</span><span class="n">geometry</span><span class="p">,</span> <span class="n">regions</span><span class="p">.</span><span class="n">geometry</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">AND</span>
+    <span class="n">regions</span><span class="p">.</span><span class="n">rowid</span> <span class="k">IN</span> <span class="p">(</span>
+        <span class="k">SELECT</span> <span class="n">rowid</span> <span class="k">FROM</span> <span class="n">SpatialIndex</span> <span class="k">WHERE</span>
+            <span class="n">f_table_name</span> <span class="o">=</span> <span class="s1">&#39;regions&#39;</span> <span class="k">AND</span> <span class="n">search_frame</span> <span class="o">=</span> <span class="n">cities</span><span class="p">.</span><span class="n">geometry</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="virtual_file_systems.html" class="btn btn-neutral float-right" title="GDAL Virtual File Systems (compressed, network hosted, etc…): /vsimem, /vsizip, /vsitar, /vsicurl, …" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ogr_sql_dialect.html" class="btn btn-neutral float-left" title="OGR SQL dialect" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

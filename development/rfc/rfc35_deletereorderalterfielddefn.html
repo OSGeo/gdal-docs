@@ -1,0 +1,592 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RFC 35: Delete, reorder and alter field definitions of OGR layers &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdevelopment/rfc/rfc35_deletereorderalterfielddefn.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="RFC 36: Allow specification of intended driver on GDALOpen" href="rfc36_open_by_drivername.html" />
+    <link rel="prev" title="RFC 34: License Policy Enforcement" href="rfc34_license_policy.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 35: Delete, reorder and alter field definitions of OGR layers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rationale">Rationale</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#planned-changes">Planned Changes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#altering-field-types">Altering field types</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#compatibility-issues">Compatibility Issues</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#changed-drivers">Changed drivers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#swig-bindings">SWIG bindings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#test-suite">Test Suite</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voting-history">Voting history</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 35: Delete, reorder and alter field definitions of OGR layers</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/development/rfc/rfc35_deletereorderalterfielddefn.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="rfc36_open_by_drivername.html" class="btn btn-neutral float-right" title="RFC 36: Allow specification of intended driver on GDALOpen" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc34_license_policy.html" class="btn btn-neutral float-left" title="RFC 34: License Policy Enforcement" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rfc-35-delete-reorder-and-alter-field-definitions-of-ogr-layers">
+<span id="rfc-35"></span><h1>RFC 35: Delete, reorder and alter field definitions of OGR layers<a class="headerlink" href="#rfc-35-delete-reorder-and-alter-field-definitions-of-ogr-layers" title="Permalink to this headline">¶</a></h1>
+<p>Authors: Even Rouault</p>
+<p>Contact: even dot rouault at spatialys.com</p>
+<p>Status: Adopted</p>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>This document proposes changes in OGR to add the capability to delete
+fields, reorder fields and alter field definitions, in OGR layer
+definitions.</p>
+</div>
+<div class="section" id="rationale">
+<h2>Rationale<a class="headerlink" href="#rationale" title="Permalink to this headline">¶</a></h2>
+<p>Currently, an OGR layer definition can only be altered to add a new
+field definition with OGRLayer::CreateField().</p>
+<p>It is desirable to extend OGR capabilities to be able to delete, reorder
+and alter field definitions of existing layers. Such wish has been
+expressed in ticket #2671 and comes back regularly on QGIS mailing list
+(e.g.
+<a class="reference external" href="http://lists.osgeo.org/pipermail/qgis-user/2011-May/011935.html">http://lists.osgeo.org/pipermail/qgis-user/2011-May/011935.html</a>).
+QGIS currently has a “Table Manager” extension to work around the lack
+of DeleteField(), so a proper solution is clearly needed.</p>
+</div>
+<div class="section" id="planned-changes">
+<h2>Planned Changes<a class="headerlink" href="#planned-changes" title="Permalink to this headline">¶</a></h2>
+<p>The OGRLayer class will be extended with the following methods :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">virtual</span> <span class="n">OGRErr</span>      <span class="n">DeleteField</span><span class="p">(</span> <span class="nb">int</span> <span class="n">iField</span> <span class="p">);</span>
+<span class="n">virtual</span> <span class="n">OGRErr</span>      <span class="n">ReorderFields</span><span class="p">(</span> <span class="nb">int</span><span class="o">*</span> <span class="n">panMap</span> <span class="p">);</span>
+<span class="n">virtual</span> <span class="n">OGRErr</span>      <span class="n">AlterFieldDefn</span><span class="p">(</span> <span class="nb">int</span> <span class="n">iField</span><span class="p">,</span> <span class="n">OGRFieldDefn</span><span class="o">*</span> <span class="n">poNewFieldDefn</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nFlags</span> <span class="p">);</span>
+
+<span class="o">/*</span> <span class="n">non</span> <span class="n">virtual</span> <span class="p">:</span> <span class="n">conveniency</span> <span class="n">wrapper</span> <span class="k">for</span> <span class="n">ReorderFields</span><span class="p">()</span> <span class="o">*/</span>
+<span class="n">OGRErr</span>              <span class="n">ReorderField</span><span class="p">(</span> <span class="nb">int</span> <span class="n">iOldFieldPos</span><span class="p">,</span> <span class="nb">int</span> <span class="n">iNewFieldPos</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>The documentation of those new methods is :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/**</span>
+\<span class="n">fn</span> <span class="n">OGRErr</span> <span class="n">OGRLayer</span><span class="p">::</span><span class="n">DeleteField</span><span class="p">(</span> <span class="nb">int</span> <span class="n">iField</span> <span class="p">);</span>
+
+\<span class="n">brief</span> <span class="n">Delete</span> <span class="n">an</span> <span class="n">existing</span> <span class="n">field</span> <span class="n">on</span> <span class="n">a</span> <span class="n">layer</span><span class="o">.</span>
+
+<span class="n">You</span> <span class="n">must</span> <span class="n">use</span> <span class="n">this</span> <span class="n">to</span> <span class="n">delete</span> <span class="n">existing</span> <span class="n">fields</span>
+<span class="n">on</span> <span class="n">a</span> <span class="n">real</span> <span class="n">layer</span><span class="o">.</span> <span class="n">Internally</span> <span class="n">the</span> <span class="n">OGRFeatureDefn</span> <span class="k">for</span> <span class="n">the</span> <span class="n">layer</span> <span class="n">will</span> <span class="n">be</span> <span class="n">updated</span>
+<span class="n">to</span> <span class="n">reflect</span> <span class="n">the</span> <span class="n">deleted</span> <span class="n">field</span><span class="o">.</span>  <span class="n">Applications</span> <span class="n">should</span> <span class="n">never</span> <span class="n">modify</span> <span class="n">the</span> <span class="n">OGRFeatureDefn</span>
+<span class="n">used</span> <span class="n">by</span> <span class="n">a</span> <span class="n">layer</span> <span class="n">directly</span><span class="o">.</span>
+
+<span class="n">This</span> <span class="n">method</span> <span class="n">should</span> <span class="ow">not</span> <span class="n">be</span> <span class="n">called</span> <span class="k">while</span> <span class="n">there</span> <span class="n">are</span> <span class="n">feature</span> <span class="n">objects</span> <span class="ow">in</span> <span class="n">existence</span> <span class="n">that</span>
+<span class="n">were</span> <span class="n">obtained</span> <span class="ow">or</span> <span class="n">created</span> <span class="k">with</span> <span class="n">the</span> <span class="n">previous</span> <span class="n">layer</span> <span class="n">definition</span><span class="o">.</span>
+
+<span class="n">Not</span> <span class="nb">all</span> <span class="n">drivers</span> <span class="n">support</span> <span class="n">this</span> <span class="n">method</span><span class="o">.</span> <span class="n">You</span> <span class="n">can</span> <span class="n">query</span> <span class="n">a</span> <span class="n">layer</span> <span class="n">to</span> <span class="n">check</span> <span class="k">if</span> <span class="n">it</span> <span class="n">supports</span> <span class="n">it</span>
+<span class="k">with</span> <span class="n">the</span> <span class="n">OLCDeleteField</span> <span class="n">capability</span><span class="o">.</span> <span class="n">Some</span> <span class="n">drivers</span> <span class="n">may</span> <span class="n">only</span> <span class="n">support</span> <span class="n">this</span> <span class="n">method</span> <span class="k">while</span>
+<span class="n">there</span> <span class="n">are</span> <span class="n">still</span> <span class="n">no</span> <span class="n">features</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">layer</span><span class="o">.</span> <span class="n">When</span> <span class="n">it</span> <span class="ow">is</span> <span class="n">supported</span><span class="p">,</span> <span class="n">the</span> <span class="n">existings</span> <span class="n">features</span> <span class="n">of</span> <span class="n">the</span>
+<span class="n">backing</span> <span class="n">file</span><span class="o">/</span><span class="n">database</span> <span class="n">should</span> <span class="n">be</span> <span class="n">updated</span> <span class="n">accordingly</span><span class="o">.</span>
+
+<span class="n">This</span> <span class="n">function</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">same</span> <span class="k">as</span> <span class="n">the</span> <span class="n">C</span> <span class="n">function</span> <span class="n">OGR_L_DeleteField</span><span class="p">()</span><span class="o">.</span>
+
+<span class="nd">@param</span> <span class="n">iField</span> <span class="n">index</span> <span class="n">of</span> <span class="n">the</span> <span class="n">field</span> <span class="n">to</span> <span class="n">delete</span><span class="o">.</span>
+
+<span class="nd">@return</span> <span class="n">OGRERR_NONE</span> <span class="n">on</span> <span class="n">success</span><span class="o">.</span>
+
+<span class="nd">@since</span> <span class="n">OGR</span> <span class="mf">1.9</span><span class="o">.</span><span class="mi">0</span>
+<span class="o">*/</span>
+
+<span class="o">/**</span>
+\<span class="n">fn</span> <span class="n">OGRErr</span> <span class="n">OGRLayer</span><span class="p">::</span><span class="n">ReorderFields</span><span class="p">(</span> <span class="nb">int</span><span class="o">*</span> <span class="n">panMap</span> <span class="p">);</span>
+
+\<span class="n">brief</span> <span class="n">Reorder</span> <span class="nb">all</span> <span class="n">the</span> <span class="n">fields</span> <span class="n">of</span> <span class="n">a</span> <span class="n">layer</span><span class="o">.</span>
+
+<span class="n">You</span> <span class="n">must</span> <span class="n">use</span> <span class="n">this</span> <span class="n">to</span> <span class="n">reorder</span> <span class="n">existing</span> <span class="n">fields</span>
+<span class="n">on</span> <span class="n">a</span> <span class="n">real</span> <span class="n">layer</span><span class="o">.</span> <span class="n">Internally</span> <span class="n">the</span> <span class="n">OGRFeatureDefn</span> <span class="k">for</span> <span class="n">the</span> <span class="n">layer</span> <span class="n">will</span> <span class="n">be</span> <span class="n">updated</span>
+<span class="n">to</span> <span class="n">reflect</span> <span class="n">the</span> <span class="n">reordering</span> <span class="n">of</span> <span class="n">the</span> <span class="n">fields</span><span class="o">.</span>  <span class="n">Applications</span> <span class="n">should</span> <span class="n">never</span> <span class="n">modify</span> <span class="n">the</span> <span class="n">OGRFeatureDefn</span>
+<span class="n">used</span> <span class="n">by</span> <span class="n">a</span> <span class="n">layer</span> <span class="n">directly</span><span class="o">.</span>
+
+<span class="n">This</span> <span class="n">method</span> <span class="n">should</span> <span class="ow">not</span> <span class="n">be</span> <span class="n">called</span> <span class="k">while</span> <span class="n">there</span> <span class="n">are</span> <span class="n">feature</span> <span class="n">objects</span> <span class="ow">in</span> <span class="n">existence</span> <span class="n">that</span>
+<span class="n">were</span> <span class="n">obtained</span> <span class="ow">or</span> <span class="n">created</span> <span class="k">with</span> <span class="n">the</span> <span class="n">previous</span> <span class="n">layer</span> <span class="n">definition</span><span class="o">.</span>
+
+<span class="n">panMap</span> <span class="ow">is</span> <span class="n">such</span> <span class="n">that</span><span class="p">,</span><span class="k">for</span> <span class="n">each</span> <span class="n">field</span> <span class="n">definition</span> <span class="n">at</span> <span class="n">position</span> <span class="n">i</span> <span class="n">after</span> <span class="n">reordering</span><span class="p">,</span>
+<span class="n">its</span> <span class="n">position</span> <span class="n">before</span> <span class="n">reordering</span> <span class="n">was</span> <span class="n">panMap</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span>
+
+<span class="n">For</span> <span class="n">example</span><span class="p">,</span> <span class="n">let</span> <span class="n">suppose</span> <span class="n">the</span> <span class="n">fields</span> <span class="n">were</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;1&quot;</span><span class="p">,</span><span class="s2">&quot;2&quot;</span><span class="p">,</span><span class="s2">&quot;3&quot;</span><span class="p">,</span><span class="s2">&quot;4&quot;</span> <span class="n">initially</span><span class="o">.</span>
+<span class="n">ReorderFields</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span> <span class="n">will</span> <span class="n">reorder</span> <span class="n">them</span> <span class="k">as</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;2&quot;</span><span class="p">,</span><span class="s2">&quot;3&quot;</span><span class="p">,</span><span class="s2">&quot;1&quot;</span><span class="p">,</span><span class="s2">&quot;4&quot;</span><span class="o">.</span>
+
+<span class="n">Not</span> <span class="nb">all</span> <span class="n">drivers</span> <span class="n">support</span> <span class="n">this</span> <span class="n">method</span><span class="o">.</span> <span class="n">You</span> <span class="n">can</span> <span class="n">query</span> <span class="n">a</span> <span class="n">layer</span> <span class="n">to</span> <span class="n">check</span> <span class="k">if</span> <span class="n">it</span> <span class="n">supports</span> <span class="n">it</span>
+<span class="k">with</span> <span class="n">the</span> <span class="n">OLCReorderFields</span> <span class="n">capability</span><span class="o">.</span> <span class="n">Some</span> <span class="n">drivers</span> <span class="n">may</span> <span class="n">only</span> <span class="n">support</span> <span class="n">this</span> <span class="n">method</span> <span class="k">while</span>
+<span class="n">there</span> <span class="n">are</span> <span class="n">still</span> <span class="n">no</span> <span class="n">features</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">layer</span><span class="o">.</span> <span class="n">When</span> <span class="n">it</span> <span class="ow">is</span> <span class="n">supported</span><span class="p">,</span> <span class="n">the</span> <span class="n">existings</span> <span class="n">features</span> <span class="n">of</span> <span class="n">the</span>
+<span class="n">backing</span> <span class="n">file</span><span class="o">/</span><span class="n">database</span> <span class="n">should</span> <span class="n">be</span> <span class="n">updated</span> <span class="n">accordingly</span><span class="o">.</span>
+
+<span class="n">This</span> <span class="n">function</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">same</span> <span class="k">as</span> <span class="n">the</span> <span class="n">C</span> <span class="n">function</span> <span class="n">OGR_L_ReorderFields</span><span class="p">()</span><span class="o">.</span>
+
+<span class="nd">@param</span> <span class="n">panMap</span> <span class="n">an</span> <span class="n">array</span> <span class="n">of</span> <span class="n">GetLayerDefn</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetFieldCount</span><span class="p">()</span> <span class="n">elements</span> <span class="n">which</span>
+<span class="ow">is</span> <span class="n">a</span> <span class="n">permutation</span> <span class="n">of</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">GetLayerDefn</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetFieldCount</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span>
+
+<span class="nd">@return</span> <span class="n">OGRERR_NONE</span> <span class="n">on</span> <span class="n">success</span><span class="o">.</span>
+
+<span class="nd">@since</span> <span class="n">OGR</span> <span class="mf">1.9</span><span class="o">.</span><span class="mi">0</span>
+<span class="o">*/</span>
+
+<span class="o">/**</span>
+\<span class="n">fn</span> <span class="n">OGRErr</span> <span class="n">OGRLayer</span><span class="p">::</span><span class="n">ReorderField</span><span class="p">(</span> <span class="nb">int</span> <span class="n">iOldFieldPos</span><span class="p">,</span> <span class="nb">int</span> <span class="n">iNewFieldPos</span> <span class="p">);</span>
+
+\<span class="n">brief</span> <span class="n">Reorder</span> <span class="n">an</span> <span class="n">existing</span> <span class="n">field</span> <span class="n">on</span> <span class="n">a</span> <span class="n">layer</span><span class="o">.</span>
+
+<span class="n">This</span> <span class="n">method</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">conveniency</span> <span class="n">wrapper</span> <span class="n">of</span> <span class="n">ReorderFields</span><span class="p">()</span> <span class="n">dedicated</span> <span class="n">to</span> <span class="n">move</span> <span class="n">a</span> <span class="n">single</span> <span class="n">field</span><span class="o">.</span>
+<span class="n">It</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">non</span><span class="o">-</span><span class="n">virtual</span> <span class="n">method</span><span class="p">,</span> <span class="n">so</span> <span class="n">drivers</span> <span class="n">should</span> <span class="n">implement</span> <span class="n">ReorderFields</span><span class="p">()</span> <span class="n">instead</span><span class="o">.</span>
+
+<span class="n">You</span> <span class="n">must</span> <span class="n">use</span> <span class="n">this</span> <span class="n">to</span> <span class="n">reorder</span> <span class="n">existing</span> <span class="n">fields</span>
+<span class="n">on</span> <span class="n">a</span> <span class="n">real</span> <span class="n">layer</span><span class="o">.</span> <span class="n">Internally</span> <span class="n">the</span> <span class="n">OGRFeatureDefn</span> <span class="k">for</span> <span class="n">the</span> <span class="n">layer</span> <span class="n">will</span> <span class="n">be</span> <span class="n">updated</span>
+<span class="n">to</span> <span class="n">reflect</span> <span class="n">the</span> <span class="n">reordering</span> <span class="n">of</span> <span class="n">the</span> <span class="n">fields</span><span class="o">.</span>  <span class="n">Applications</span> <span class="n">should</span> <span class="n">never</span> <span class="n">modify</span> <span class="n">the</span> <span class="n">OGRFeatureDefn</span>
+<span class="n">used</span> <span class="n">by</span> <span class="n">a</span> <span class="n">layer</span> <span class="n">directly</span><span class="o">.</span>
+
+<span class="n">This</span> <span class="n">method</span> <span class="n">should</span> <span class="ow">not</span> <span class="n">be</span> <span class="n">called</span> <span class="k">while</span> <span class="n">there</span> <span class="n">are</span> <span class="n">feature</span> <span class="n">objects</span> <span class="ow">in</span> <span class="n">existence</span> <span class="n">that</span>
+<span class="n">were</span> <span class="n">obtained</span> <span class="ow">or</span> <span class="n">created</span> <span class="k">with</span> <span class="n">the</span> <span class="n">previous</span> <span class="n">layer</span> <span class="n">definition</span><span class="o">.</span>
+
+<span class="n">The</span> <span class="n">field</span> <span class="n">definition</span> <span class="n">that</span> <span class="n">was</span> <span class="n">at</span> <span class="n">initial</span> <span class="n">position</span> <span class="n">iOldFieldPos</span> <span class="n">will</span> <span class="n">be</span> <span class="n">moved</span> <span class="n">at</span>
+<span class="n">position</span> <span class="n">iNewFieldPos</span><span class="p">,</span> <span class="ow">and</span> <span class="n">elements</span> <span class="n">between</span> <span class="n">will</span> <span class="n">be</span> <span class="n">shuffled</span> <span class="n">accordingly</span><span class="o">.</span>
+
+<span class="n">For</span> <span class="n">example</span><span class="p">,</span> <span class="n">let</span> <span class="n">suppose</span> <span class="n">the</span> <span class="n">fields</span> <span class="n">were</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;1&quot;</span><span class="p">,</span><span class="s2">&quot;2&quot;</span><span class="p">,</span><span class="s2">&quot;3&quot;</span><span class="p">,</span><span class="s2">&quot;4&quot;</span> <span class="n">initially</span><span class="o">.</span>
+<span class="n">ReorderField</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="n">will</span> <span class="n">reorder</span> <span class="n">them</span> <span class="k">as</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;2&quot;</span><span class="p">,</span><span class="s2">&quot;3&quot;</span><span class="p">,</span><span class="s2">&quot;1&quot;</span><span class="p">,</span><span class="s2">&quot;4&quot;</span><span class="o">.</span>
+
+<span class="n">Not</span> <span class="nb">all</span> <span class="n">drivers</span> <span class="n">support</span> <span class="n">this</span> <span class="n">method</span><span class="o">.</span> <span class="n">You</span> <span class="n">can</span> <span class="n">query</span> <span class="n">a</span> <span class="n">layer</span> <span class="n">to</span> <span class="n">check</span> <span class="k">if</span> <span class="n">it</span> <span class="n">supports</span> <span class="n">it</span>
+<span class="k">with</span> <span class="n">the</span> <span class="n">OLCReorderFields</span> <span class="n">capability</span><span class="o">.</span> <span class="n">Some</span> <span class="n">drivers</span> <span class="n">may</span> <span class="n">only</span> <span class="n">support</span> <span class="n">this</span> <span class="n">method</span> <span class="k">while</span>
+<span class="n">there</span> <span class="n">are</span> <span class="n">still</span> <span class="n">no</span> <span class="n">features</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">layer</span><span class="o">.</span> <span class="n">When</span> <span class="n">it</span> <span class="ow">is</span> <span class="n">supported</span><span class="p">,</span> <span class="n">the</span> <span class="n">existings</span> <span class="n">features</span> <span class="n">of</span> <span class="n">the</span>
+<span class="n">backing</span> <span class="n">file</span><span class="o">/</span><span class="n">database</span> <span class="n">should</span> <span class="n">be</span> <span class="n">updated</span> <span class="n">accordingly</span><span class="o">.</span>
+
+<span class="n">This</span> <span class="n">function</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">same</span> <span class="k">as</span> <span class="n">the</span> <span class="n">C</span> <span class="n">function</span> <span class="n">OGR_L_ReorderField</span><span class="p">()</span><span class="o">.</span>
+
+<span class="nd">@param</span> <span class="n">iOldFieldPos</span> <span class="n">previous</span> <span class="n">position</span> <span class="n">of</span> <span class="n">the</span> <span class="n">field</span> <span class="n">to</span> <span class="n">move</span><span class="o">.</span> <span class="n">Must</span> <span class="n">be</span> <span class="ow">in</span> <span class="n">the</span> <span class="nb">range</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">GetFieldCount</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span>
+<span class="nd">@param</span> <span class="n">iNewFieldPos</span> <span class="n">new</span> <span class="n">position</span> <span class="n">of</span> <span class="n">the</span> <span class="n">field</span> <span class="n">to</span> <span class="n">move</span><span class="o">.</span> <span class="n">Must</span> <span class="n">be</span> <span class="ow">in</span> <span class="n">the</span> <span class="nb">range</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">GetFieldCount</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span>
+
+<span class="nd">@return</span> <span class="n">OGRERR_NONE</span> <span class="n">on</span> <span class="n">success</span><span class="o">.</span>
+
+<span class="nd">@since</span> <span class="n">OGR</span> <span class="mf">1.9</span><span class="o">.</span><span class="mi">0</span>
+<span class="o">*/</span>
+
+<span class="o">/**</span>
+\<span class="n">fn</span> <span class="n">OGRErr</span> <span class="n">OGRLayer</span><span class="p">::</span><span class="n">AlterFieldDefn</span><span class="p">(</span> <span class="nb">int</span> <span class="n">iField</span><span class="p">,</span> <span class="n">OGRFieldDefn</span><span class="o">*</span> <span class="n">poNewFieldDefn</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nFlags</span> <span class="p">);</span>
+
+\<span class="n">brief</span> <span class="n">Alter</span> <span class="n">the</span> <span class="n">definition</span> <span class="n">of</span> <span class="n">an</span> <span class="n">existing</span> <span class="n">field</span> <span class="n">on</span> <span class="n">a</span> <span class="n">layer</span><span class="o">.</span>
+
+<span class="n">You</span> <span class="n">must</span> <span class="n">use</span> <span class="n">this</span> <span class="n">to</span> <span class="n">alter</span> <span class="n">the</span> <span class="n">definition</span> <span class="n">of</span> <span class="n">an</span> <span class="n">existing</span> <span class="n">field</span> <span class="n">of</span> <span class="n">a</span> <span class="n">real</span> <span class="n">layer</span><span class="o">.</span>
+<span class="n">Internally</span> <span class="n">the</span> <span class="n">OGRFeatureDefn</span> <span class="k">for</span> <span class="n">the</span> <span class="n">layer</span> <span class="n">will</span> <span class="n">be</span> <span class="n">updated</span>
+<span class="n">to</span> <span class="n">reflect</span> <span class="n">the</span> <span class="n">altered</span> <span class="n">field</span><span class="o">.</span>  <span class="n">Applications</span> <span class="n">should</span> <span class="n">never</span> <span class="n">modify</span> <span class="n">the</span> <span class="n">OGRFeatureDefn</span>
+<span class="n">used</span> <span class="n">by</span> <span class="n">a</span> <span class="n">layer</span> <span class="n">directly</span><span class="o">.</span>
+
+<span class="n">This</span> <span class="n">method</span> <span class="n">should</span> <span class="ow">not</span> <span class="n">be</span> <span class="n">called</span> <span class="k">while</span> <span class="n">there</span> <span class="n">are</span> <span class="n">feature</span> <span class="n">objects</span> <span class="ow">in</span> <span class="n">existence</span> <span class="n">that</span>
+<span class="n">were</span> <span class="n">obtained</span> <span class="ow">or</span> <span class="n">created</span> <span class="k">with</span> <span class="n">the</span> <span class="n">previous</span> <span class="n">layer</span> <span class="n">definition</span><span class="o">.</span>
+
+<span class="n">Not</span> <span class="nb">all</span> <span class="n">drivers</span> <span class="n">support</span> <span class="n">this</span> <span class="n">method</span><span class="o">.</span> <span class="n">You</span> <span class="n">can</span> <span class="n">query</span> <span class="n">a</span> <span class="n">layer</span> <span class="n">to</span> <span class="n">check</span> <span class="k">if</span> <span class="n">it</span> <span class="n">supports</span> <span class="n">it</span>
+<span class="k">with</span> <span class="n">the</span> <span class="n">OLCAlterFieldDefn</span> <span class="n">capability</span><span class="o">.</span> <span class="n">Some</span> <span class="n">drivers</span> <span class="n">may</span> <span class="n">only</span> <span class="n">support</span> <span class="n">this</span> <span class="n">method</span> <span class="k">while</span>
+<span class="n">there</span> <span class="n">are</span> <span class="n">still</span> <span class="n">no</span> <span class="n">features</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">layer</span><span class="o">.</span> <span class="n">When</span> <span class="n">it</span> <span class="ow">is</span> <span class="n">supported</span><span class="p">,</span> <span class="n">the</span> <span class="n">existings</span> <span class="n">features</span> <span class="n">of</span> <span class="n">the</span>
+<span class="n">backing</span> <span class="n">file</span><span class="o">/</span><span class="n">database</span> <span class="n">should</span> <span class="n">be</span> <span class="n">updated</span> <span class="n">accordingly</span><span class="o">.</span> <span class="n">Some</span> <span class="n">drivers</span> <span class="n">might</span> <span class="n">also</span> <span class="ow">not</span> <span class="n">support</span>
+<span class="nb">all</span> <span class="n">update</span> <span class="n">flags</span><span class="o">.</span>
+
+<span class="n">This</span> <span class="n">function</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">same</span> <span class="k">as</span> <span class="n">the</span> <span class="n">C</span> <span class="n">function</span> <span class="n">OGR_L_AlterFieldDefn</span><span class="p">()</span><span class="o">.</span>
+
+<span class="nd">@param</span> <span class="n">iField</span> <span class="n">index</span> <span class="n">of</span> <span class="n">the</span> <span class="n">field</span> <span class="n">whose</span> <span class="n">definition</span> <span class="n">must</span> <span class="n">be</span> <span class="n">altered</span><span class="o">.</span>
+<span class="nd">@param</span> <span class="n">poNewFieldDefn</span> <span class="n">new</span> <span class="n">field</span> <span class="n">definition</span>
+<span class="nd">@param</span> <span class="n">nFlags</span> <span class="n">combination</span> <span class="n">of</span> <span class="n">ALTER_NAME_FLAG</span><span class="p">,</span> <span class="n">ALTER_TYPE_FLAG</span> <span class="ow">and</span> <span class="n">ALTER_WIDTH_PRECISION_FLAG</span>
+<span class="n">to</span> <span class="n">indicate</span> <span class="n">which</span> <span class="n">of</span> <span class="n">the</span> <span class="n">name</span> <span class="ow">and</span><span class="o">/</span><span class="ow">or</span> <span class="nb">type</span> <span class="ow">and</span><span class="o">/</span><span class="ow">or</span> <span class="n">width</span> <span class="ow">and</span> <span class="n">precision</span> <span class="n">fields</span> <span class="kn">from</span> <span class="nn">the</span> <span class="n">new</span> <span class="n">field</span>
+<span class="n">definition</span> <span class="n">must</span> <span class="n">be</span> <span class="n">taken</span> <span class="n">into</span> <span class="n">account</span><span class="o">.</span>
+
+<span class="nd">@return</span> <span class="n">OGRERR_NONE</span> <span class="n">on</span> <span class="n">success</span><span class="o">.</span>
+
+<span class="nd">@since</span> <span class="n">OGR</span> <span class="mf">1.9</span><span class="o">.</span><span class="mi">0</span>
+<span class="o">*/</span>
+</pre></div>
+</div>
+<p>Three new layer capabilities are added :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">OLCDeleteField</span> <span class="o">/</span> <span class="s2">&quot;DeleteField&quot;</span><span class="p">:</span> <span class="n">TRUE</span> <span class="k">if</span> <span class="n">this</span> <span class="n">layer</span> <span class="n">can</span> <span class="n">delete</span>
+<span class="n">existing</span> <span class="n">fields</span> <span class="n">on</span> <span class="n">the</span> <span class="n">current</span> <span class="n">layer</span> <span class="n">using</span> <span class="n">DeleteField</span><span class="p">(),</span> <span class="n">otherwise</span> <span class="n">FALSE</span><span class="o">.</span>
+
+<span class="n">OLCReorderFields</span> <span class="o">/</span> <span class="s2">&quot;ReorderFields&quot;</span><span class="p">:</span> <span class="n">TRUE</span> <span class="k">if</span> <span class="n">this</span> <span class="n">layer</span> <span class="n">can</span> <span class="n">reorder</span>
+<span class="n">existing</span> <span class="n">fields</span> <span class="n">on</span> <span class="n">the</span> <span class="n">current</span> <span class="n">layer</span> <span class="n">using</span> <span class="n">ReorderField</span><span class="p">()</span> <span class="ow">or</span> <span class="n">ReorderFields</span><span class="p">(),</span> <span class="n">otherwise</span> <span class="n">FALSE</span><span class="o">.</span>
+
+<span class="n">OLCAlterFieldDefn</span> <span class="o">/</span> <span class="s2">&quot;AlterFieldDefn&quot;</span><span class="p">:</span> <span class="n">TRUE</span> <span class="k">if</span> <span class="n">this</span> <span class="n">layer</span> <span class="n">can</span> <span class="n">alter</span>
+<span class="n">the</span> <span class="n">definition</span> <span class="n">of</span> <span class="n">an</span> <span class="n">existing</span> <span class="n">field</span> <span class="n">on</span> <span class="n">the</span> <span class="n">current</span> <span class="n">layer</span> <span class="n">using</span> <span class="n">AlterFieldDefn</span><span class="p">(),</span> <span class="n">otherwise</span> <span class="n">FALSE</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>The new methods are mapped to the C API :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">OGRErr</span> <span class="n">CPL_DLL</span> <span class="n">OGR_L_DeleteField</span><span class="p">(</span> <span class="n">OGRLayerH</span><span class="p">,</span> <span class="nb">int</span> <span class="n">iField</span> <span class="p">);</span>
+<span class="n">OGRErr</span> <span class="n">CPL_DLL</span> <span class="n">OGR_L_ReorderFields</span><span class="p">(</span> <span class="n">OGRLayerH</span><span class="p">,</span> <span class="nb">int</span><span class="o">*</span> <span class="n">panMap</span> <span class="p">);</span>
+<span class="n">OGRErr</span> <span class="n">CPL_DLL</span> <span class="n">OGR_L_ReorderField</span><span class="p">(</span> <span class="n">OGRLayerH</span><span class="p">,</span> <span class="nb">int</span> <span class="n">iOldFieldPos</span><span class="p">,</span> <span class="nb">int</span> <span class="n">iNewFieldPos</span> <span class="p">);</span>
+<span class="n">OGRErr</span> <span class="n">CPL_DLL</span> <span class="n">OGR_L_AlterFieldDefn</span><span class="p">(</span> <span class="n">OGRLayerH</span><span class="p">,</span> <span class="nb">int</span> <span class="n">iField</span><span class="p">,</span> <span class="n">OGRFieldDefnH</span> <span class="n">hNewFieldDefn</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nFlags</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>For the purpose of the implementation, new methods are also added to the
+OGRFeatureDefn class :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">OGRErr</span>      <span class="n">DeleteFieldDefn</span><span class="p">(</span> <span class="nb">int</span> <span class="n">iField</span> <span class="p">);</span>
+<span class="n">OGRErr</span>      <span class="n">ReorderFieldDefns</span><span class="p">(</span> <span class="nb">int</span><span class="o">*</span> <span class="n">panMap</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>A OGRErr OGRCheckPermutation(int* panPermutation, int nSize) function
+is added to ogrutils.cpp to check that the array is a permutation of
+[0,nSize-1]. It is used by OGRFeatureDefn::ReorderFieldDefns() and can
+be used by all drivers implementing OGRLayer::ReorderFields() to
+validate the panMap argument.</p>
+</div>
+<div class="section" id="altering-field-types">
+<h2>Altering field types<a class="headerlink" href="#altering-field-types" title="Permalink to this headline">¶</a></h2>
+<p>This RFC does not attempt to guarantee which type conversions will be
+possible. It will depend on the capabilities of the implementing
+drivers. For example, for database drivers, the operation will be
+directly done on the server side (through a ‘ALTER TABLE my_table ALTER
+COLUMN my_column TYPE new_type’ command for the PG driver). So some
+conversions might be possible, others not…</p>
+<p>It is however expected that converting from any type to OFTString will
+be supported in most cases when AlterFieldDefn() is supported.</p>
+<p>Drivers that don’t support a conversion and that were required to do it
+(ALTER_TYPE_FLAG set and new_type != old_type) should emit an explicit
+error.</p>
+</div>
+<div class="section" id="compatibility-issues">
+<h2>Compatibility Issues<a class="headerlink" href="#compatibility-issues" title="Permalink to this headline">¶</a></h2>
+<p>None</p>
+</div>
+<div class="section" id="changed-drivers">
+<h2>Changed drivers<a class="headerlink" href="#changed-drivers" title="Permalink to this headline">¶</a></h2>
+<p>The shapefile driver will implement DeleteField(), ReorderFields() and
+AlterFieldDefn(). Shapelib will be extended with DBFReorderFields() and
+DBFAlterFieldDefn().</p>
+<p>Note: The implementation of AlterFieldDefn() in the Shapefile driver
+does not support altering the field type, except when converting to
+OFTString. It will not reformat numeric values of existing features if
+width or precision are changed. However, appropriate field truncation or
+expansion will occur if the width is altered.</p>
+<p>Other drivers, mainly database drivers (PG, MySQL, SQLite), could be
+easily extended to implement the new API by issuing the appropriate SQL
+command (ALTER TABLE foo DROP COLUMN bar, ALTER TABLE foo ALTER COLUMN
+bar, …). The implementation of DeleteField() and AlterFieldDefn() in
+the PG driver is indeed planned, provided this RFC is adopted. The
+Memory driver will also updated to support DeleteField(),
+ReorderFields() and AlterFieldDefn().</p>
+</div>
+<div class="section" id="swig-bindings">
+<h2>SWIG bindings<a class="headerlink" href="#swig-bindings" title="Permalink to this headline">¶</a></h2>
+<p>DeleteField(), ReorderField(), ReorderFields() and AlterFieldDefn() will
+be mapped to SWIG.</p>
+</div>
+<div class="section" id="test-suite">
+<h2>Test Suite<a class="headerlink" href="#test-suite" title="Permalink to this headline">¶</a></h2>
+<p>The autotest suite will be extended to test the implementation of the
+new API for the Shapefile driver. An example of the use of the new API
+is attached to ticket #2671
+(<a class="reference external" href="http://trac.osgeo.org/gdal/attachment/ticket/2671/rfc35_test.py">rfc35_test.py</a>)
+and will be turned into unit tests.</p>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>Implementation will be done by Even Rouault in GDAL/OGR trunk. Changes
+in Shapelib will need to be pushed into upstream CVS by a Shapelib
+committer. The proposed implementation is attached as a patch in ticket
+#2671
+(<a class="reference external" href="http://trac.osgeo.org/gdal/attachment/ticket/2671/rfc35_v3.patch">rfc35_v3.patch</a>).</p>
+</div>
+<div class="section" id="voting-history">
+<h2>Voting history<a class="headerlink" href="#voting-history" title="Permalink to this headline">¶</a></h2>
+<p>+1 from FrankW, DanielM, HowardB, TamasS and EvenR</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rfc36_open_by_drivername.html" class="btn btn-neutral float-right" title="RFC 36: Allow specification of intended driver on GDALOpen" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc34_license_policy.html" class="btn btn-neutral float-left" title="RFC 34: License Policy Enforcement" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

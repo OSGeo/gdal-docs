@@ -1,0 +1,462 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RFC 4: Geolocation Arrays &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdevelopment/rfc/rfc4_geolocate.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="RFC 5: Unicode support in GDAL" href="rfc5_unicode.html" />
+    <link rel="prev" title="RFC 3: GDAL Committer Guildlines" href="rfc3_commiters.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 4: Geolocation Arrays</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#geolocation-domain-metadata">Geolocation Domain Metadata</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#updating-drivers">Updating Drivers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#changes-to-warp-api-and-gdalwarp">Changes to Warp API and gdalwarp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#preserving-geolocation-through-translation">Preserving Geolocation Through Translation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 4: Geolocation Arrays</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/development/rfc/rfc4_geolocate.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="rfc5_unicode.html" class="btn btn-neutral float-right" title="RFC 5: Unicode support in GDAL" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc3_commiters.html" class="btn btn-neutral float-left" title="RFC 3: GDAL Committer Guildlines" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rfc-4-geolocation-arrays">
+<span id="rfc-4"></span><h1>RFC 4: Geolocation Arrays<a class="headerlink" href="#rfc-4-geolocation-arrays" title="Permalink to this headline">¶</a></h1>
+<p>Author: Frank Warmerdam</p>
+<p>Contact: <a class="reference external" href="mailto:warmerdam&#37;&#52;&#48;pobox&#46;com">warmerdam<span>&#64;</span>pobox<span>&#46;</span>com</a></p>
+<p>Status: Development</p>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>It is proposed that GDAL support an additional mechanism for geolocation
+of imagery based on large arrays of points associating pixels and lines
+with geolocation coordinates. These arrays would be represented as
+raster bands themselves.</p>
+<p>It is common in AVHRR, Envisat, HDF and netCDF data products to
+distribute geolocation for raw or projected data in this manner, and
+current approaches to representing this as very large numbers of GCPs,
+or greatly subsampling the geolocation information to provide more
+reasonable numbers of GCPs are inadequate for many applications.</p>
+</div>
+<div class="section" id="geolocation-domain-metadata">
+<h2>Geolocation Domain Metadata<a class="headerlink" href="#geolocation-domain-metadata" title="Permalink to this headline">¶</a></h2>
+<p>Datasets with geolocation information will include the following dataset
+level metadata items in the “GEOLOCATION” domain to identify the
+geolocation arrays, and the details of the coordinate system and
+relationship back to the original pixels and lines.</p>
+<ul class="simple">
+<li><p>SRS: wkt encoding of spatial reference system.</p></li>
+<li><p>X_DATASET: dataset name (defaults to same dataset if not specified)</p></li>
+<li><p>X_BAND: band number within X_DATASET.</p></li>
+<li><p>Y_DATASET: dataset name (defaults to same dataset if not specified)</p></li>
+<li><p>Y_BAND: band number within Y_DATASET.</p></li>
+<li><p>Z_DATASET: dataset name (defaults to same dataset if not specified)</p></li>
+<li><p>Z_BAND: band number within Z_DATASET. (optional)</p></li>
+<li><p>PIXEL_OFFSET: pixel offset into geo-located data of left geolocation
+pixel</p></li>
+<li><p>LINE_OFFSET: line offset into geo-located data of top geolocation
+pixel</p></li>
+<li><p>PIXEL_STEP: each geolocation pixel represents this many geolocated
+pixels.</p></li>
+<li><p>LINE_STEP: each geolocation pixel represents this many geolocated
+lines.</p></li>
+</ul>
+<p>In the common case where two of the bands of a dataset are actually
+latitude and longitude, and so the geolocation arrays are the same size
+as the base image, the metadata might look like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SRS</span><span class="p">:</span> <span class="n">GEOGCS</span><span class="o">...</span>
+<span class="n">X_BAND</span><span class="p">:</span> <span class="mi">2</span>
+<span class="n">Y_BAND</span><span class="p">:</span> <span class="mi">3</span>
+<span class="n">PIXEL_OFFSET</span><span class="p">:</span> <span class="mi">0</span>
+<span class="n">LINE_OFFSET</span><span class="p">:</span> <span class="mi">0</span>
+<span class="n">PIXEL_STEP</span><span class="p">:</span> <span class="mi">1</span>
+<span class="n">LINE_STEP</span><span class="p">:</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>For AVHRR datasets, there are only 11 points (note, the more recent NOAA
+AVHRR datasets have 51 points), but for every line. So the result for a
+LAC dataset might look like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SRS</span><span class="p">:</span> <span class="n">GEOGCS</span><span class="o">...</span>
+<span class="n">X_DATASET</span><span class="p">:</span> <span class="n">L1BGCPS</span><span class="p">:</span><span class="n">n12gac10bit</span><span class="o">.</span><span class="n">l1b</span>
+<span class="n">X_BAND</span><span class="p">:</span> <span class="mi">1</span>
+<span class="n">Y_DATASET</span><span class="p">:</span> <span class="n">L1BGCPS</span><span class="p">:</span><span class="n">n12gac10bit</span><span class="o">.</span><span class="n">l1b</span>
+<span class="n">Y_BAND</span><span class="p">:</span> <span class="mi">2</span>
+<span class="n">PIXEL_OFFSET</span><span class="p">:</span> <span class="mi">25</span>
+<span class="n">LINE_OFFSET</span><span class="p">:</span> <span class="mi">0</span>
+<span class="n">PIXEL_STEP</span><span class="p">:</span> <span class="mi">40</span>
+<span class="n">LINE_STEP</span><span class="p">:</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>This assumes the L1B driver is modified to support the special access to
+GCPs as bands using the L1BGCPS: prefix.</p>
+</div>
+<div class="section" id="updating-drivers">
+<h2>Updating Drivers<a class="headerlink" href="#updating-drivers" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><p>HDF4: Client needs mandate immediate incorporation of geolocation
+array support in the HDF4 driver (specifically for swath products).
+(complete)</p></li>
+<li><p>HDF5: Some HDF5 products include geolocation information that should
+be handled as arrays. No timetable for update.</p></li>
+<li><p>AVHRR: Has 11/51 known locations per-scanline. These are currently
+substantially downsampled and returned as GCPs, but this format would
+be an excellent candidate for treating as geolocation arrays. Planned
+in near future.</p></li>
+<li><p>Envisat: Envisat raw products use geolocation information currently
+subsampled as GCPs, good candidate for upgrade. No timetable for
+update.</p></li>
+<li><p>netCDF: NetCDF files can have differently varying maps in x and y
+directions, which are represented as geolocation arrays when they are
+encoded as CF conventions “two-dimensional coordinate variables”. See
+the netcdf driver page for details.</p></li>
+<li><p>OPeNDAP: Can have differently varying maps in x and y directions
+which could be represented as geolocation arrays when they are
+irregular. No timetable for update.</p></li>
+</ol>
+</div>
+<div class="section" id="changes-to-warp-api-and-gdalwarp">
+<h2>Changes to Warp API and gdalwarp<a class="headerlink" href="#changes-to-warp-api-and-gdalwarp" title="Permalink to this headline">¶</a></h2>
+<p>Introduce a new geolocation array based transformation method, following
+the existing GDALTransformer mechanism. A geolocation array transformer
+will be created with the following function call. The “char **” array
+is the list of metadata from the GEOLOCATION metadata domain.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="o">*</span><span class="n">GDALCreateGeoLocTransformer</span><span class="p">(</span> <span class="n">GDALDatasetH</span> <span class="n">hBaseDS</span><span class="p">,</span>
+                                   <span class="n">char</span> <span class="o">**</span><span class="n">papszGeolocationInfo</span><span class="p">,</span>
+                                   <span class="nb">int</span> <span class="n">bReversed</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>This transformer is currently partially implemented, but in a manner
+that potentially uses a great deal of memory (twice the memory needed
+for the geolocation arrays), and with still dubious correctness, but
+once approved this will be fixup up to at least be correct, though
+likely not efficient for the time being.</p>
+<p>The GDALGenImgProjTransformer will be upgraded to instantiate the GeoLoc
+transformer (instead of an affine, gcp, or rpc transformer) if only
+geolocation information is available (done). However, the current
+GDALCreateGenImgProjTransformer() function does not provide a mechanism
+to select which transformation mechanism is used. So, for instance, if
+an affine transform is available it will be used in preference to
+geolocation data. If bGCPUseOK is TRUE, gcps will be used in preference
+to geolocation data.</p>
+<p>The gdalwarp program currently always sets bGCPUseOK to TRUE so there is
+no means for gdalwarp users select use of geolocation data in preference
+to gcps. Some modification to gdalwarp may be needed in the future in
+this regard.</p>
+</div>
+<div class="section" id="preserving-geolocation-through-translation">
+<h2>Preserving Geolocation Through Translation<a class="headerlink" href="#preserving-geolocation-through-translation" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line">‘’How do we preserve access to geolocation information when
+translating a dataset? Do applications like gdal_translate need
+special handling?</div>
+<div class="line">Placement of the geolocation data in a special metadata domain means
+it won’t be transferred in default translations.’‘</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rfc5_unicode.html" class="btn btn-neutral float-right" title="RFC 5: Unicode support in GDAL" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc3_commiters.html" class="btn btn-neutral float-left" title="RFC 3: GDAL Committer Guildlines" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

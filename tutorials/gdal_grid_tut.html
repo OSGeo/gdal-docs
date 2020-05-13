@@ -1,0 +1,401 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>GDAL Grid Tutorial &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgtutorials/gdal_grid_tut.html"/>
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Multidimensional raster API tutorial" href="multidimensional_api_tut.html" />
+    <link rel="prev" title="GDAL Warp API tutorial (Reprojection, …)" href="warp_tut.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorials</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#raster">Raster</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="raster_api_tut.html">Raster API tutorial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="raster_driver_tut.html">Raster driver implementation tutorial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="warp_tut.html">GDAL Warp API tutorial (Reprojection, …)</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">GDAL Grid Tutorial</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#introduction-to-gridding">Introduction to Gridding</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#interpolation-of-the-scattered-data">Interpolation of the Scattered Data</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#data-metrics-computation">Data Metrics Computation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#search-ellipse">Search Ellipse</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#multidimensional-raster">Multidimensional raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#vector">Vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#geographic-network-model">Geographic Network Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#projections-and-spatial-reference-systems-tutorial-osr-ogrspatialreference">Projections and Spatial Reference Systems tutorial (OSR - OGRSpatialReference)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Tutorials</a> &raquo;</li>
+      
+      <li>GDAL Grid Tutorial</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/tutorials/gdal_grid_tut.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="multidimensional_api_tut.html" class="btn btn-neutral float-right" title="Multidimensional raster API tutorial" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="warp_tut.html" class="btn btn-neutral float-left" title="GDAL Warp API tutorial (Reprojection, …)" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="gdal-grid-tutorial">
+<span id="gdal-grid-tut"></span><h1>GDAL Grid Tutorial<a class="headerlink" href="#gdal-grid-tutorial" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction-to-gridding">
+<h2>Introduction to Gridding<a class="headerlink" href="#introduction-to-gridding" title="Permalink to this headline">¶</a></h2>
+<p>Gridding is a process of creating a regular grid (or call it a raster image)
+from the scattered data. Typically you have a set of arbitrary scattered over
+the region of survey measurements and you would like to convert them into the
+regular grid for further processing and combining with other grids.</p>
+<img alt="Scattered data gridding" src="../_images/gridding.png" />
+<p>This problem can be solved using data interpolation or approximation
+algorithms. But you are not limited by interpolation here. Sometimes you don’t
+need to interpolate your data but rather compute some statistics or data
+metrics over the region. Statistics is valuable itself or could be used for
+better choosing the interpolation algorithm and parameters.</p>
+<p>That is what GDAL Grid API is about. It helps you to interpolate your data
+(see <a class="reference internal" href="#interpolation-of-the-scattered-data">Interpolation of the Scattered Data</a>) or compute data metrics (see
+<a class="reference internal" href="#data-metrics-computation">Data Metrics Computation</a>).</p>
+<p>There are two ways of using this interface. Programmatically it is available
+through the <a class="reference internal" href="../api/gdal_alg.html#_CPPv414GDALGridCreate17GDALGridAlgorithmPKv7GUInt32PKdPKdPKddddd7GUInt327GUInt3212GDALDataTypePv16GDALProgressFuncPv" title="GDALGridCreate"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALGridCreate()</span></code></a> C function; for end users there is a
+<a class="reference internal" href="../programs/gdal_grid.html#gdal-grid"><span class="std std-ref">gdal_grid</span></a> utility. The rest of this document discusses details on algorithms
+and their parameters implemented in GDAL Grid API.</p>
+</div>
+<div class="section" id="interpolation-of-the-scattered-data">
+<h2>Interpolation of the Scattered Data<a class="headerlink" href="#interpolation-of-the-scattered-data" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="inverse-distance-to-a-power">
+<h3>Inverse Distance to a Power<a class="headerlink" href="#inverse-distance-to-a-power" title="Permalink to this headline">¶</a></h3>
+<p>The Inverse Distance to a Power gridding method is a weighted average
+interpolator. You should supply the input arrays with the scattered data
+values including coordinates of every data point and output grid geometry. The
+function will compute interpolated value for the given position in output
+grid.</p>
+<p>For every grid node the resulting value <span class="math notranslate nohighlight">\(Z\)</span> will be calculated using
+formula:</p>
+<div class="math notranslate nohighlight">
+\[Z=\frac{\sum_{i=1}^n{\frac{Z_i}{r_i^p}}}{\sum_{i=1}^n{\frac{1}{r_i^p}}}\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(Z_i\)</span> is a known value at point <span class="math notranslate nohighlight">\(i\)</span>,</p></li>
+<li><p><span class="math notranslate nohighlight">\(r_i\)</span> is a distance from the grid node to point <span class="math notranslate nohighlight">\(i\)</span>,</p></li>
+<li><p><span class="math notranslate nohighlight">\(p\)</span> is a weighting power,</p></li>
+<li><p><span class="math notranslate nohighlight">\(n\)</span> is a number of points in <a class="reference internal" href="#search-ellipse">Search Ellipse</a>.</p></li>
+</ul>
+<p>The smoothing parameter <span class="math notranslate nohighlight">\(s\)</span> is used as an additive term in the Euclidean distance calculation:</p>
+<div class="math notranslate nohighlight">
+\[{r_i}=\sqrt{{r_{ix}}^2 + {r_{iy}}^2 + s^2}\]</div>
+<p>where <span class="math notranslate nohighlight">\(r_{ix}\)</span> and <span class="math notranslate nohighlight">\(r_{iy}\)</span> are the horizontal and vertical
+distances between the grid node to point <span class="math notranslate nohighlight">\(i\)</span> respectively.</p>
+<p>In this method the weighting factor <span class="math notranslate nohighlight">\(w\)</span> is</p>
+<div class="math notranslate nohighlight">
+\[w=\frac{1}{r^p}\]</div>
+<p>See <a class="reference internal" href="../api/gdal_alg.html#_CPPv438GDALGridInverseDistanceToAPowerOptions" title="GDALGridInverseDistanceToAPowerOptions"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALGridInverseDistanceToAPowerOptions</span></code></a> for the list of
+<a class="reference internal" href="../api/gdal_alg.html#_CPPv414GDALGridCreate17GDALGridAlgorithmPKv7GUInt32PKdPKdPKddddd7GUInt327GUInt3212GDALDataTypePv16GDALProgressFuncPv" title="GDALGridCreate"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALGridCreate()</span></code></a> parameters and <a class="reference internal" href="../programs/gdal_grid.html#gdal-grid-invdist"><span class="std std-ref">invdist</span></a> for the list
+of <a class="reference internal" href="../programs/gdal_grid.html#gdal-grid"><span class="std std-ref">gdal_grid</span></a> options.</p>
+</div>
+<div class="section" id="moving-average">
+<h3>Moving Average<a class="headerlink" href="#moving-average" title="Permalink to this headline">¶</a></h3>
+<p>The Moving Average is a simple data averaging algorithm. It uses a moving
+window of elliptic form to search values and averages all data points within
+the window. <a class="reference internal" href="#search-ellipse">Search Ellipse</a> can be rotated by
+specified angle, the center of ellipse located at the grid node. Also the
+minimum number of data points to average can be set, if there are not enough
+points in window, the grid node considered empty and will be filled with
+specified NODATA value.</p>
+<p>Mathematically it can be expressed with the formula:</p>
+<div class="math notranslate nohighlight">
+\[Z=\frac{\sum_{i=1}^n{Z_i}}{n}\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(Z\)</span> is a resulting value at the grid node,</p></li>
+<li><p><span class="math notranslate nohighlight">\(Z_i\)</span> is a known value at point <span class="math notranslate nohighlight">\(i\)</span>,</p></li>
+<li><p><span class="math notranslate nohighlight">\(n\)</span> is a number of points in search <a class="reference internal" href="#search-ellipse">Search Ellipse</a>.</p></li>
+</ul>
+<p>See <a class="reference internal" href="../api/gdal_alg.html#_CPPv428GDALGridMovingAverageOptions" title="GDALGridMovingAverageOptions"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALGridMovingAverageOptions</span></code></a> for the list of <a class="reference internal" href="../api/gdal_alg.html#_CPPv414GDALGridCreate17GDALGridAlgorithmPKv7GUInt32PKdPKdPKddddd7GUInt327GUInt3212GDALDataTypePv16GDALProgressFuncPv" title="GDALGridCreate"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALGridCreate()</span></code></a>
+parameters and  <a class="reference internal" href="../programs/gdal_grid.html#gdal-grid-average"><span class="std std-ref">average</span></a> for the list of <a class="reference internal" href="../programs/gdal_grid.html#gdal-grid"><span class="std std-ref">gdal_grid</span></a> options.</p>
+</div>
+<div class="section" id="nearest-neighbor">
+<h3>Nearest Neighbor<a class="headerlink" href="#nearest-neighbor" title="Permalink to this headline">¶</a></h3>
+<p>The Nearest Neighbor method doesn’t perform any interpolation or smoothing, it
+just takes the value of nearest point found in grid node search ellipse and
+returns it as a result. If there are no points found, the specified NODATA
+value will be returned.</p>
+<p>See <a class="reference internal" href="../api/gdal_alg.html#_CPPv430GDALGridNearestNeighborOptions" title="GDALGridNearestNeighborOptions"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALGridNearestNeighborOptions</span></code></a> for the list of <a class="reference internal" href="../api/gdal_alg.html#_CPPv414GDALGridCreate17GDALGridAlgorithmPKv7GUInt32PKdPKdPKddddd7GUInt327GUInt3212GDALDataTypePv16GDALProgressFuncPv" title="GDALGridCreate"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALGridCreate()</span></code></a>
+parameters and <a class="reference internal" href="../programs/gdal_grid.html#gdal-grid-nearest"><span class="std std-ref">nearest</span></a> for the list of <a class="reference internal" href="../programs/gdal_grid.html#gdal-grid"><span class="std std-ref">gdal_grid</span></a> options.</p>
+</div>
+</div>
+<div class="section" id="data-metrics-computation">
+<h2>Data Metrics Computation<a class="headerlink" href="#data-metrics-computation" title="Permalink to this headline">¶</a></h2>
+<p>All the metrics have the same set controlling options. See the
+<a class="reference internal" href="../api/gdal_alg.html#_CPPv426GDALGridDataMetricsOptions" title="GDALGridDataMetricsOptions"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALGridDataMetricsOptions</span></code></a>.</p>
+<div class="section" id="minimum-data-value">
+<h3>Minimum Data Value<a class="headerlink" href="#minimum-data-value" title="Permalink to this headline">¶</a></h3>
+<p>Minimum value found in grid node <a class="reference internal" href="#search-ellipse">Search Ellipse</a>.
+If there are no points found, the specified NODATA value will be returned.</p>
+<div class="math notranslate nohighlight">
+\[Z=\min{(Z_1,Z_2,\ldots,Z_n)}\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(Z\)</span> is a resulting value at the grid node,</p></li>
+<li><p><span class="math notranslate nohighlight">\(Z_i\)</span> is a known value at point <span class="math notranslate nohighlight">\(i\)</span>,</p></li>
+<li><p><span class="math notranslate nohighlight">\(n\)</span> is a number of points in <a class="reference internal" href="#search-ellipse">Search Ellipse</a>.</p></li>
+</ul>
+</div>
+<div class="section" id="maximum-data-value">
+<h3>Maximum Data Value<a class="headerlink" href="#maximum-data-value" title="Permalink to this headline">¶</a></h3>
+<p>Maximum value found in grid node <a class="reference internal" href="#search-ellipse">Search Ellipse</a>.
+If there are no points found, the specified NODATA value will be returned.</p>
+<div class="math notranslate nohighlight">
+\[Z=\max{(Z_1,Z_2,\ldots,Z_n)}\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(Z\)</span> is a resulting value at the grid node,</p></li>
+<li><p><span class="math notranslate nohighlight">\(Z_i\)</span> is a known value at point <span class="math notranslate nohighlight">\(i\)</span>,</p></li>
+<li><p><span class="math notranslate nohighlight">\(n\)</span> is a number of points in <a class="reference internal" href="#search-ellipse">Search Ellipse</a>.</p></li>
+</ul>
+</div>
+<div class="section" id="data-range">
+<h3>Data Range<a class="headerlink" href="#data-range" title="Permalink to this headline">¶</a></h3>
+<p>A difference between the minimum and maximum values found in grid <a class="reference internal" href="#search-ellipse">Search Ellipse</a>.
+If there are no points found, the
+specified NODATA value will be returned.</p>
+<div class="math notranslate nohighlight">
+\[Z=\max{(Z_1,Z_2,\ldots,Z_n)}-\min{(Z_1,Z_2,\ldots,Z_n)}\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(Z\)</span> is a resulting value at the grid node,</p></li>
+<li><p><span class="math notranslate nohighlight">\(Z_i\)</span> is a known value at point <span class="math notranslate nohighlight">\(i\)</span>,</p></li>
+<li><p><span class="math notranslate nohighlight">\(n\)</span> is a number of points in <a class="reference internal" href="#search-ellipse">Search Ellipse</a>.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="search-ellipse">
+<h2>Search Ellipse<a class="headerlink" href="#search-ellipse" title="Permalink to this headline">¶</a></h2>
+<p>Search window in gridding algorithms specified in the form of rotated ellipse.
+It is described by the three parameters:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(radius_1\)</span> is the first radius (<span class="math notranslate nohighlight">\(x\)</span> axis if rotation angle is 0),</p></li>
+<li><p><span class="math notranslate nohighlight">\(radius_2\)</span> is the second radius (<span class="math notranslate nohighlight">\(y\)</span> axis if rotation angle is 0),</p></li>
+<li><p><span class="math notranslate nohighlight">\(angle\)</span> is a search ellipse rotation angle (rotated counter clockwise).</p></li>
+</ul>
+<img alt="Search ellipse" src="../_images/ellipse.png" />
+<p>Only points located inside the search ellipse (including its border line) will
+be used for computation.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="multidimensional_api_tut.html" class="btn btn-neutral float-right" title="Multidimensional raster API tutorial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="warp_tut.html" class="btn btn-neutral float-left" title="GDAL Warp API tutorial (Reprojection, …)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

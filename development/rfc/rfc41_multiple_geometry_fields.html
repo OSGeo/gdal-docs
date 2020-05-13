@@ -1,0 +1,944 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RFC 41 : Support for multiple geometry fields in OGR &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdevelopment/rfc/rfc41_multiple_geometry_fields.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="RFC 42: OGR Layer laundered field lookup" href="rfc42_find_laundered_fields.html" />
+    <link rel="prev" title="RFC 40: Improving performance of Raster Attribute Table implementation for large tables" href="rfc40_enhanced_rat_support.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 41 : Support for multiple geometry fields in OGR</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motivation">Motivation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#proposed-solution">Proposed solution</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#explored-alternative-solutions">Explored alternative solutions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#c-api">C API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ogr-sql-engine">OGR SQL engine</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#drivers">Drivers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#utilities">Utilities</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#python-and-other-language-bindings">Python and other language bindings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#compatibility">Compatibility</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#funding">Funding</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voting-history">Voting history</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 41 : Support for multiple geometry fields in OGR</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/development/rfc/rfc41_multiple_geometry_fields.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="rfc42_find_laundered_fields.html" class="btn btn-neutral float-right" title="RFC 42: OGR Layer laundered field lookup" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc40_enhanced_rat_support.html" class="btn btn-neutral float-left" title="RFC 40: Improving performance of Raster Attribute Table implementation for large tables" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rfc-41-support-for-multiple-geometry-fields-in-ogr">
+<span id="rfc-41"></span><h1>RFC 41 : Support for multiple geometry fields in OGR<a class="headerlink" href="#rfc-41-support-for-multiple-geometry-fields-in-ogr" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>Add read/write support in the OGR data model for features with multiple
+geometry fields.</p>
+</div>
+<div class="section" id="motivation">
+<h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">¶</a></h2>
+<p>The OGR data model is currently tied to a single geometry field per
+feature, feature definition and layer. But a number of data formats
+support multiple geometry fields. The OGC Simple Feature Specifications
+also do not limit to one geometry field per layer (e.g. §7.1.4 of <a class="reference external" href="http://portal.opengeospatial.org/files/?artifact_id=25354">OGC
+06-104r4 “OpenGIS® Implementation Standard for Geographic information -
+Simple feature access -Part 2: SQL
+option</a>).</p>
+<p>There are workarounds : using geometries of type GEOMETRYCOLLECTION, or
+advertizing as many layers as there are geometry columns in the layer
+(like currently done in the PostGIS or SQLite drivers). All those
+approach are at best workarounds that suffer from limitations :</p>
+<ul class="simple">
+<li><p>GEOMETRYCOLLECTION approach : no way to know the name/semantics of
+each sub-geometry. All sub-geometries must be expressed in the same
+SRS. No way of guaranteeing that the GEOMETRYCOLLECTION has always
+the same number of sub-geometries or that there are of a consistent
+geometry type.</p></li>
+<li><p>one layer per geometry column approach : only appropriate for
+read-only scenarios. Cannot work in write scenarios.</p></li>
+</ul>
+<p>The purpose of this RFC is to make support for multiple geometry fields
+per feature to be properly taken into account in the OGR data model.</p>
+</div>
+<div class="section" id="proposed-solution">
+<h2>Proposed solution<a class="headerlink" href="#proposed-solution" title="Permalink to this headline">¶</a></h2>
+<p>(Note: alternative solutions have also been studied. They are explained
+in a following section of this RFC.)</p>
+<p>To sum it up, geometry fields will be treated similarly as attribute
+fields are handled at the OGRFeatureDefn and OGRFeature levels, but they
+will be kept separate. Attribute fields and geometry fields will have
+their own separate indexing in the feature definition.</p>
+<p>This choice has been mainly made to maximize backward compatibility,
+while offering new capabilities.</p>
+<p>Its involves creating a OGRGeomFieldDefn class, and changes in
+OGRFieldDefn, OGRFeatureDefn, OGRFeature and OGRLayer classes.</p>
+<div class="section" id="ogrgeomfielddefn-class">
+<h3>OGRGeomFieldDefn class<a class="headerlink" href="#ogrgeomfielddefn-class" title="Permalink to this headline">¶</a></h3>
+<p>The OGRGeomFieldDefn is a new class. Its structure is directly inspired
+from the OGRFieldDefn class.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">CPL_DLL</span> <span class="n">OGRGeomFieldDefn</span>
+<span class="p">{</span>
+<span class="n">protected</span><span class="p">:</span>
+        <span class="n">char</span>                <span class="o">*</span><span class="n">pszName</span><span class="p">;</span>
+        <span class="n">OGRwkbGeometryType</span>   <span class="n">eGeomType</span><span class="p">;</span> <span class="o">/*</span> <span class="nb">all</span> <span class="n">values</span> <span class="n">possible</span> <span class="k">except</span> <span class="n">wkbNone</span> <span class="o">*/</span>
+        <span class="n">OGRSpatialReference</span><span class="o">*</span> <span class="n">poSRS</span><span class="p">;</span>
+
+        <span class="nb">int</span>                 <span class="n">bIgnore</span><span class="p">;</span>
+
+<span class="n">public</span><span class="p">:</span>
+                            <span class="n">OGRGeomFieldDefn</span><span class="p">(</span><span class="n">char</span> <span class="o">*</span><span class="n">pszName</span><span class="p">,</span>
+                                             <span class="n">OGRwkbGeometryType</span> <span class="n">eGeomType</span><span class="p">);</span>
+        <span class="n">virtual</span>            <span class="o">~</span><span class="n">OGRGeomFieldDefn</span><span class="p">();</span>
+
+        <span class="n">void</span>                <span class="n">SetName</span><span class="p">(</span> <span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="p">);</span>
+        <span class="n">const</span> <span class="n">char</span>         <span class="o">*</span><span class="n">GetNameRef</span><span class="p">();</span>
+
+        <span class="n">OGRwkbGeometryType</span>  <span class="n">GetType</span><span class="p">();</span>
+        <span class="n">void</span>                <span class="n">SetType</span><span class="p">(</span> <span class="n">OGRwkbGeometryType</span> <span class="n">eTypeIn</span> <span class="p">);</span>
+
+        <span class="n">virtual</span> <span class="n">OGRSpatialReference</span><span class="o">*</span> <span class="n">GetSpatialRef</span><span class="p">();</span>
+        <span class="n">void</span>                 <span class="n">SetSpatialRef</span><span class="p">(</span><span class="n">OGRSpatialReference</span><span class="o">*</span> <span class="n">poSRS</span><span class="p">);</span>
+
+        <span class="nb">int</span>                 <span class="n">IsIgnored</span><span class="p">();</span>
+        <span class="n">void</span>                <span class="n">SetIgnored</span><span class="p">(</span> <span class="nb">int</span> <span class="n">bIgnoreIn</span> <span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>One can notice that the member variables were to be found at OGRLayer
+level previously.</p>
+<p>The SRS object is ref-counted. The reference count is increased in the
+constructor and in SetSpatialRef(), and decreased in the destructor.</p>
+<p>GetSpatialRef() is deliberately set virtual, so that lazy evaluation can
+be implemented (getting SRS can have a noticeable cost in some driver
+implementations, like reading an extra file, or issuing a SQL request).</p>
+</div>
+<div class="section" id="ogrfeaturedefn-class">
+<h3>OGRFeatureDefn class<a class="headerlink" href="#ogrfeaturedefn-class" title="Permalink to this headline">¶</a></h3>
+<p>The OGRFeatureDefn class will be extended as the following :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">CPL_DLL</span> <span class="n">OGRFeatureDefn</span>
+<span class="p">{</span>
+  <span class="n">protected</span><span class="p">:</span>
+        <span class="o">//</span> <span class="n">Remove</span> <span class="n">OGRwkbGeometryType</span> <span class="n">eGeomType</span> <span class="ow">and</span> <span class="n">bIgnoreGeometry</span> <span class="ow">and</span>
+        <span class="o">//</span> <span class="n">add</span> <span class="n">instead</span> <span class="n">the</span> <span class="n">following</span> <span class="p">:</span>
+
+        <span class="nb">int</span> <span class="n">nGeomFieldCount</span><span class="p">;</span>
+        <span class="n">OGRGeomFieldDefn</span><span class="o">*</span> <span class="n">papoGeomFieldDefn</span><span class="p">;</span>
+  <span class="n">public</span><span class="p">:</span>
+        <span class="n">virtual</span> <span class="nb">int</span>         <span class="n">GetGeomFieldCount</span><span class="p">();</span>
+        <span class="n">virtual</span> <span class="n">OGRGeomFieldDefn</span> <span class="o">*</span><span class="n">GetGeomFieldDefn</span><span class="p">(</span> <span class="nb">int</span> <span class="n">i</span> <span class="p">);</span>
+        <span class="n">virtual</span> <span class="nb">int</span>         <span class="n">GetGeomFieldIndex</span><span class="p">(</span> <span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="p">);</span>
+
+        <span class="n">virtual</span> <span class="n">void</span>        <span class="n">AddGeomFieldDefn</span><span class="p">(</span> <span class="n">OGRGeomFieldDefn</span> <span class="o">*</span> <span class="p">);</span>
+        <span class="n">virtual</span> <span class="n">OGRErr</span>      <span class="n">DeleteGeomFieldDefn</span><span class="p">(</span> <span class="nb">int</span> <span class="n">iGeomField</span> <span class="p">);</span>
+
+        <span class="o">//</span> <span class="n">Route</span> <span class="n">OGRwkbGeometryType</span> <span class="n">GetGeomType</span><span class="p">()</span> <span class="ow">and</span> <span class="n">void</span> <span class="n">SetGeomType</span><span class="p">()</span>
+        <span class="o">//</span> <span class="n">on</span> <span class="n">the</span> <span class="n">first</span> <span class="n">geometry</span> <span class="n">field</span> <span class="n">definition</span><span class="o">.</span>
+
+        <span class="o">//</span> <span class="n">Same</span> <span class="k">for</span> <span class="n">IsGeometryIgnored</span><span class="p">()</span> <span class="ow">and</span> <span class="n">SetGeometryIgnored</span><span class="p">()</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>At instantiation, OGRFeatureDefn would create a default geometry field
+definition of name “” and type wkbUnknown. If SetGeomType() is called,
+this will be routed on papoGeomFieldDefn[0]. If only one geometry field
+definition exists, SetGeomType(wkbNone) will remove it.</p>
+<p>GetGeomType() will be routed on papoGeomFieldDefn[0] if it exists.
+Otherwise it will return wkbNone.</p>
+<p>It is strongly advised that there is name uniqueness among the combined
+set of regular field names and the geometry field names. Failing to do
+so will result in unspecified behavior in SQL queries. This advice will
+not be checked by the code (it is currently not done for regular
+fields).</p>
+<p>Another change is to make all the existing methods of OGRFeatureDefn
+virtual (and change private visibility to protected), so this class can
+be subclassed if needed. This will enable lazy creation of the object.
+Justification: establishing the full feature definition can be costly.
+But applications may want to list all the layers of a datasource, and
+only present some information that is important, but cheap to establish.
+In the past, OGRLayer::GetName() and OGRLayer::GetGeomType() have been
+introduced in order to workaround for that.</p>
+<p>Note also that ReorderGeomFieldDefns() is not foreseen for the moment.
+It could be added in a later step, should the need arises.
+DeleteGeomFieldDefn() is mostly there for the own benefit of
+OGRFeatureDefn itself when calling SetGeomType(wkbNone).</p>
+</div>
+<div class="section" id="ogrfeature-class">
+<h3>OGRFeature class<a class="headerlink" href="#ogrfeature-class" title="Permalink to this headline">¶</a></h3>
+<p>The OGRFeature class will be extended as following :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">CPL_DLL</span> <span class="n">OGRFeature</span>
+<span class="p">{</span>
+  <span class="n">private</span><span class="p">:</span>
+        <span class="o">//</span> <span class="n">Remove</span> <span class="n">poGeometry</span> <span class="n">field</span> <span class="ow">and</span> <span class="n">add</span> <span class="n">instead</span>
+        <span class="n">OGRGeometry</span><span class="o">**</span> <span class="n">papoGeometries</span><span class="p">;</span> <span class="o">/*</span> <span class="n">size</span> <span class="ow">is</span> <span class="n">given</span> <span class="n">by</span> <span class="n">poFDefn</span><span class="o">-&gt;</span><span class="n">GetGeomFieldCount</span><span class="p">()</span> <span class="o">*/</span>
+
+  <span class="n">public</span><span class="p">:</span>
+
+        <span class="nb">int</span>                 <span class="n">GetGeomFieldCount</span><span class="p">();</span>
+        <span class="n">OGRGeomFieldDefn</span>   <span class="o">*</span><span class="n">GetGeomFieldDefnRef</span><span class="p">(</span> <span class="nb">int</span> <span class="n">iField</span> <span class="p">);</span>
+        <span class="nb">int</span>                 <span class="n">GetGeomFieldIndex</span><span class="p">(</span> <span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">pszName</span><span class="p">);</span>
+
+        <span class="n">OGRGeometry</span><span class="o">*</span>        <span class="n">GetGeomFieldRef</span><span class="p">(</span><span class="nb">int</span> <span class="n">iField</span><span class="p">);</span>
+        <span class="n">OGRErr</span>              <span class="n">SetGeomFieldDirectly</span><span class="p">(</span> <span class="nb">int</span> <span class="n">iField</span><span class="p">,</span> <span class="n">OGRGeometry</span> <span class="o">*</span> <span class="p">);</span>
+        <span class="n">OGRErr</span>              <span class="n">SetGeomField</span><span class="p">(</span> <span class="nb">int</span> <span class="n">iField</span><span class="p">,</span> <span class="n">OGRGeometry</span> <span class="o">*</span> <span class="p">);</span>
+
+        <span class="o">//</span> <span class="n">Route</span> <span class="n">SetGeometryDirectly</span><span class="p">(),</span> <span class="n">SetGeometry</span><span class="p">(),</span> <span class="n">GetGeometryRef</span><span class="p">(),</span>
+        <span class="o">//</span> <span class="n">StealGeometry</span><span class="p">()</span> <span class="n">on</span> <span class="n">the</span> <span class="n">first</span> <span class="n">geometry</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">array</span>
+
+        <span class="o">//</span> <span class="n">Modify</span> <span class="n">implementation</span> <span class="n">of</span> <span class="n">SetFrom</span><span class="p">()</span> <span class="n">to</span> <span class="n">replicate</span> <span class="nb">all</span> <span class="n">geometries</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Note: before RFC41, SetGeometry() or SetGeometryDirectly() could work on
+a feature whose feature definition had a GetGeomType() == wkbNone (which
+was inconsistent). This will be no longer the case since the size of the
+papoGeometries array is now based on GetGeomFieldCount(), and when
+GetGeomType() == wkbNone, the geometry field count is 0. The VRT and CSV
+drivers will be fixed to declare their geometry type consistently.</p>
+</div>
+<div class="section" id="ogrlayer-class">
+<h3>OGRLayer class<a class="headerlink" href="#ogrlayer-class" title="Permalink to this headline">¶</a></h3>
+<p>Impact on OGRLayer class :</p>
+<ul>
+<li><p>Spatial filter: the option considered is to only allow one spatial
+filter at the time.</p>
+<ul class="simple">
+<li><p>the need for spatial filters applied simultaneously on several
+geometry fields is not obvious.</p></li>
+<li><p>the m_poFilterGeom protected member is used more than 250 times in
+the OGR code base, so turning it into an array would be a tedious
+task…</p></li>
+</ul>
+<p>Additions:</p>
+</li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">protected</span><span class="p">:</span>
+    <span class="nb">int</span> <span class="n">m_iGeomFieldFilter</span> <span class="o">//</span> <span class="n">specify</span> <span class="n">the</span> <span class="n">index</span> <span class="n">on</span> <span class="n">which</span> <span class="n">the</span> <span class="n">spatial</span>
+                           <span class="o">//</span> <span class="nb">filter</span> <span class="ow">is</span> <span class="n">active</span><span class="o">.</span>
+
+<span class="n">public</span><span class="p">:</span>
+    <span class="n">virtual</span> <span class="n">void</span>        <span class="n">SetSpatialFilter</span><span class="p">(</span> <span class="nb">int</span> <span class="n">iGeomField</span><span class="p">,</span> <span class="n">OGRGeometry</span> <span class="o">*</span> <span class="p">);</span>
+    <span class="n">virtual</span> <span class="n">void</span>        <span class="n">SetSpatialFilterRect</span><span class="p">(</span> <span class="nb">int</span> <span class="n">iGeomField</span><span class="p">,</span>
+                                            <span class="n">double</span> <span class="n">dfMinX</span><span class="p">,</span> <span class="n">double</span> <span class="n">dfMinY</span><span class="p">,</span>
+                                            <span class="n">double</span> <span class="n">dfMaxX</span><span class="p">,</span> <span class="n">double</span> <span class="n">dfMaxY</span> <span class="p">);</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">GetNextFeature</span><span class="p">()</span> <span class="n">implementation</span> <span class="n">must</span> <span class="n">check</span> <span class="n">the</span> <span class="n">m_iGeomFieldFilter</span> <span class="n">index</span>
+<span class="ow">in</span> <span class="n">order</span> <span class="n">to</span> <span class="n">select</span> <span class="n">the</span> <span class="n">appropriate</span> <span class="n">geometry</span> <span class="n">field</span><span class="o">.</span>
+</pre></div>
+</div>
+<ul>
+<li><p>GetGeomType() : unchanged. For other fields, use
+GetLayerDefn()-&gt;GetGeomField(i)-&gt;GetType()</p></li>
+<li><p>GetSpatialRef(): Currently the default implementation returns NULL.
+It will be changed to return
+GetLayerDefn()-&gt;GetGeomField(0)-&gt;GetSpatialRef() (if there is at
+least one geometry field). New drivers are encouraged not to
+specialize GetSpatialRef() anymore, but to appropriately set the SRS
+of their first geometry field. For other fields, use
+GetLayerDefn()-&gt;GetGeomField(i)-&gt;GetSpatialRef().</p>
+<p>Caveat: as SRS wasn’t previously stored at the OGRFeatureDefn level,
+all existing drivers, if not updated, will have
+GetGeomField(0)-&gt;GetSpatialRef() returning NULL. The test_ogrsf
+utility will check and warn about this. Update of existing drivers
+will be made progressively. In the mean time, using
+OGRLayer::GetSpatialRef() will be advized to get the SRS of the first
+geometry field in a reliable way.</p>
+</li>
+<li><p>add :</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">virtual</span> <span class="n">OGRErr</span> <span class="n">GetExtent</span><span class="p">(</span><span class="nb">int</span> <span class="n">iGeomField</span><span class="p">,</span> <span class="n">OGREnvelope</span> <span class="o">*</span><span class="n">psExtent</span><span class="p">,</span>
+                         <span class="nb">int</span> <span class="n">bForce</span> <span class="o">=</span> <span class="n">TRUE</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Default</span> <span class="n">implementation</span> <span class="n">would</span> <span class="n">call</span> <span class="n">GetExtent</span><span class="p">()</span> <span class="k">if</span> <span class="n">iGeomField</span> <span class="o">==</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>add :</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">virtual</span> <span class="n">OGRErr</span> <span class="n">CreateGeomField</span><span class="p">(</span><span class="n">OGRGeomFieldDefn</span> <span class="o">*</span><span class="n">poField</span><span class="p">);</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>no DeleteGeomField(), ReorderGeomFields() or AlterGeomFieldDefn() for
+now. Could be added later if the need arises.</p></li>
+<li><p>GetGeometryColumn() : unchanged. Routed onto the first geometry
+field. For other fields, use
+GetLayerDefn()-&gt;GetGeomField(i)-&gt;GetNameRef()</p></li>
+<li><p>SetIgnoredFields() : iterate over the geometry fields in addition to
+regular fields. The special “OGR_GEOMETRY” value will only apply to
+the first geometry field.</p></li>
+<li><p>Intersection(), Union(), etc… : unchanged. Later improvements could
+use the papszOptions parameter to specify an alternate geometry field</p></li>
+<li><p>TestCapability(): add a OLCCreateGeomField capability to inform if
+CreateGeomField() is implemented.</p></li>
+</ul>
+</div>
+<div class="section" id="ogrdatasource-class">
+<h3>OGRDataSource class<a class="headerlink" href="#ogrdatasource-class" title="Permalink to this headline">¶</a></h3>
+<p>Impact on OGRDataSource class :</p>
+<ul class="simple">
+<li><p>CreateLayer() : signature will be unchanged. If more than one
+geometry fields are needed, OGRLayer::CreateGeomField() must be used.
+If the name of the first geometry field must be specified, for
+datasources supporting ODsCCreateGeomFieldAfterCreateLayer, using
+code should call CreateLayer() with eGType = wkbNone and then add all
+geometry fields with OGRLayer::CreateGeomField().</p></li>
+<li><p>CopyLayer() : adapted to replicate all geometry fields (if supported
+by target layer)</p></li>
+<li><p>ExecuteSQL() : takes a spatial filter. In the case of the generic OGR
+SQL implementation, this filter is a facility. It could also as well
+be applied on the returned layer object. So there is no real need for
+adding a way of specifying the geometry field at the ExecuteSQL() API
+level.</p></li>
+<li><p>TestCapability(): add a ODsCCreateGeomFieldAfterCreateLayer
+capability to inform if CreateGeomField() is implemented after layer
+creation and that CreateLayer() can be safely called with eGType =
+wkbNone.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="explored-alternative-solutions">
+<h2>Explored alternative solutions<a class="headerlink" href="#explored-alternative-solutions" title="Permalink to this headline">¶</a></h2>
+<p>( This paragraph can be skipped if you are totally convinced by the
+proposed approach detailed above :-) )</p>
+<p>A possible alternative solution would have been to extend the existing
+OGRFieldDefn object with information related to the geometry. That would
+have involved adding a OFTGeometry value in the OGRFieldType
+enumeration, and adding the OGRwkbGeometryType eGeomType and
+OGRSpatialReference* poSRS members to OGRFieldDefn. At OGRFeature class
+level, the OGRField union could have been extended with a OGRGeometry*
+field. Similarly at OGRLayer level, CreateField() could have been used
+to create new geometry fields.</p>
+<p>The main drawback of this approach, which seems the most natural way, is
+backward compatibility. This would have affected all places in OGR own
+code or external code where fields are retrieved and geometry is not
+expected. For example, in code like the following (very common in the
+CreateFeature() of most drivers, or in user code consuming features
+returned by GetNextFeature()) :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">switch</span><span class="p">(</span> <span class="n">poFieldDefn</span><span class="o">-&gt;</span><span class="n">GetType</span><span class="p">()</span> <span class="p">)</span>
+<span class="p">{</span>
+        <span class="n">case</span> <span class="n">OFTInteger</span><span class="p">:</span> <span class="n">something1</span><span class="p">(</span><span class="n">poField</span><span class="o">-&gt;</span><span class="n">GetFieldAsInteger</span><span class="p">());</span> <span class="k">break</span><span class="p">;</span>
+        <span class="n">case</span> <span class="n">OFTReal</span><span class="p">:</span> <span class="n">something2</span><span class="p">(</span><span class="n">poField</span><span class="o">-&gt;</span><span class="n">GetFieldAsDouble</span><span class="p">()):</span> <span class="k">break</span><span class="p">;</span>
+        <span class="n">default</span><span class="p">:</span> <span class="n">something3</span><span class="p">(</span><span class="n">poField</span><span class="o">-&gt;</span><span class="n">GetFieldAsString</span><span class="p">());</span> <span class="k">break</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This would lead, for legacy code, to geometry being handled as regular
+field. We could imagine that GetFieldAsString() converts the geometry as
+WKT, but it is doubtfull that this would really be desired.
+Fundamentally, the handling of attribute and geometry fields is
+different in most use cases.</p>
+<p>(On the other side, if we introduce 64bit integer as a OGR type (this is
+an RFC that is waiting for implementation…), the above code would
+still produce a meaningful result. The string reprentation of a 64bit
+integer is not that bad as a default behavior.)</p>
+<p>GetFieldCount() would also take into account geometry fields, but in
+most cases, you would need to subtract them.</p>
+<p>A possible way of avoiding the above compatibility issue would be to
+have 2 sets of API at OGRFeatureDefn and OGRFeature level. The current
+one, that would ignore the geometry fields, and an “extended” one that
+would take them into account. For example,
+OGRFeatureDefn::GetFieldCountEx(), OGRFeatureDefn::GetFieldIndexEx(),
+OGRFeatureDefn::GetFieldDefnEx(), OGRFeature::GetFieldEx(),
+OGRFeature::SetFieldAsXXXEx() would take into account both attribute and
+geometry fields. The annoying thing with that approach is the
+duplication of the ~ 20 methods GetField() and SetFieldXXX() in
+OGRFeature.</p>
+</div>
+<div class="section" id="c-api">
+<h2>C API<a class="headerlink" href="#c-api" title="Permalink to this headline">¶</a></h2>
+<p>The following functions are added to the C API :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/*</span> <span class="n">OGRGeomFieldDefnH</span> <span class="o">*/</span>
+
+<span class="n">typedef</span> <span class="n">struct</span> <span class="n">OGRGeomFieldDefnHS</span> <span class="o">*</span><span class="n">OGRGeomFieldDefnH</span><span class="p">;</span>
+
+<span class="n">OGRGeomFieldDefnH</span>    <span class="n">CPL_DLL</span> <span class="n">OGR_GFld_Create</span><span class="p">(</span> <span class="n">const</span> <span class="n">char</span> <span class="o">*</span><span class="p">,</span> <span class="n">OGRwkbGeometryType</span> <span class="p">)</span> <span class="n">CPL_WARN_UNUSED_RESULT</span><span class="p">;</span>
+<span class="n">void</span>                 <span class="n">CPL_DLL</span> <span class="n">OGR_GFld_Destroy</span><span class="p">(</span> <span class="n">OGRGeomFieldDefnH</span> <span class="p">);</span>
+
+<span class="n">void</span>                 <span class="n">CPL_DLL</span> <span class="n">OGR_GFld_SetName</span><span class="p">(</span> <span class="n">OGRGeomFieldDefnH</span><span class="p">,</span> <span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="p">);</span>
+<span class="n">const</span> <span class="n">char</span>           <span class="n">CPL_DLL</span> <span class="o">*</span><span class="n">OGR_GFld_GetNameRef</span><span class="p">(</span> <span class="n">OGRGeomFieldDefnH</span> <span class="p">);</span>
+
+<span class="n">OGRwkbGeometryType</span>   <span class="n">CPL_DLL</span> <span class="n">OGR_GFld_GetType</span><span class="p">(</span> <span class="n">OGRGeomFieldDefnH</span> <span class="p">);</span>
+<span class="n">void</span>                 <span class="n">CPL_DLL</span> <span class="n">OGR_GFld_SetType</span><span class="p">(</span> <span class="n">OGRGeomFieldDefnH</span><span class="p">,</span> <span class="n">OGRwkbGeometryType</span> <span class="p">);</span>
+
+<span class="n">OGRSpatialReferenceH</span> <span class="n">CPL_DLL</span> <span class="n">OGR_GFld_GetSpatialRef</span><span class="p">(</span> <span class="n">OGRGeomFieldDefnH</span> <span class="p">);</span>
+<span class="n">void</span>                 <span class="n">CPL_DLL</span> <span class="n">OGR_GFld_SetSpatialRef</span><span class="p">(</span> <span class="n">OGRGeomFieldDefnH</span><span class="p">,</span>
+                                                     <span class="n">OGRSpatialReferenceH</span> <span class="n">hSRS</span> <span class="p">);</span>
+
+<span class="nb">int</span>                  <span class="n">CPL_DLL</span> <span class="n">OGR_GFld_IsIgnored</span><span class="p">(</span> <span class="n">OGRGeomFieldDefnH</span> <span class="n">hDefn</span> <span class="p">);</span>
+<span class="n">void</span>                 <span class="n">CPL_DLL</span> <span class="n">OGR_GFld_SetIgnored</span><span class="p">(</span> <span class="n">OGRGeomFieldDefnH</span> <span class="n">hDefn</span><span class="p">,</span> <span class="nb">int</span> <span class="p">);</span>
+
+<span class="o">/*</span> <span class="n">OGRFeatureDefnH</span> <span class="o">*/</span>
+
+<span class="nb">int</span>               <span class="n">CPL_DLL</span> <span class="n">OGR_FD_GetGeomFieldCount</span><span class="p">(</span> <span class="n">OGRFeatureDefnH</span> <span class="n">hFDefn</span> <span class="p">);</span>
+<span class="n">OGRGeomFieldDefnH</span> <span class="n">CPL_DLL</span> <span class="n">OGR_FD_GetGeomFieldDefn</span><span class="p">(</span> <span class="n">OGRFeatureDefnH</span> <span class="n">hFDefn</span><span class="p">,</span> <span class="nb">int</span> <span class="n">i</span> <span class="p">);</span>
+<span class="nb">int</span>               <span class="n">CPL_DLL</span> <span class="n">OGR_FD_GetGeomFieldIndex</span><span class="p">(</span> <span class="n">OGRFeatureDefnH</span> <span class="n">hFDefn</span><span class="p">,</span> <span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="p">);</span>
+
+<span class="n">void</span>              <span class="n">CPL_DLL</span> <span class="n">OGR_FD_AddGeomFieldDefn</span><span class="p">(</span> <span class="n">OGRFeatureDefnH</span> <span class="n">hFDefn</span><span class="p">,</span> <span class="n">OGRGeomFieldDefnH</span> <span class="p">);</span>
+<span class="n">OGRErr</span>            <span class="n">CPL_DLL</span> <span class="n">OGR_FD_DeleteGeomFieldDefn</span><span class="p">(</span> <span class="n">OGRFeatureDefnH</span> <span class="n">hFDefn</span><span class="p">,</span> <span class="nb">int</span> <span class="n">iGeomField</span> <span class="p">);</span>
+
+<span class="o">/*</span> <span class="n">OGRFeatureH</span> <span class="o">*/</span>
+
+<span class="nb">int</span>               <span class="n">CPL_DLL</span> <span class="n">OGR_F_GetGeomFieldCount</span><span class="p">(</span> <span class="n">OGRFeatureH</span> <span class="n">hFeat</span> <span class="p">);</span>
+<span class="n">OGRGeomFieldDefnH</span> <span class="n">CPL_DLL</span> <span class="n">OGR_F_GetGeomFieldDefnRef</span><span class="p">(</span> <span class="n">OGRFeatureH</span> <span class="n">hFeat</span><span class="p">,</span> <span class="nb">int</span> <span class="n">iField</span> <span class="p">);</span>
+<span class="nb">int</span>               <span class="n">CPL_DLL</span> <span class="n">OGR_F_GetGeomFieldIndex</span><span class="p">(</span> <span class="n">OGRFeatureH</span> <span class="n">hFeat</span><span class="p">,</span> <span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">pszName</span><span class="p">);</span>
+
+<span class="n">OGRGeometryH</span>      <span class="n">CPL_DLL</span> <span class="n">OGR_F_GetGeomFieldRef</span><span class="p">(</span> <span class="n">OGRFeatureH</span> <span class="n">hFeat</span><span class="p">,</span> <span class="nb">int</span> <span class="n">iField</span> <span class="p">);</span>
+<span class="n">OGRErr</span>            <span class="n">CPL_DLL</span> <span class="n">OGR_F_SetGeomFieldDirectly</span><span class="p">(</span> <span class="n">OGRFeatureH</span> <span class="n">hFeat</span><span class="p">,</span> <span class="nb">int</span> <span class="n">iField</span><span class="p">,</span> <span class="n">OGRGeometryH</span> <span class="p">);</span>
+<span class="n">OGRErr</span>            <span class="n">CPL_DLL</span> <span class="n">OGR_F_SetGeomField</span><span class="p">(</span> <span class="n">OGRFeatureH</span> <span class="n">hFeat</span><span class="p">,</span> <span class="nb">int</span> <span class="n">iField</span><span class="p">,</span> <span class="n">OGRGeometryH</span> <span class="p">);</span>
+
+<span class="o">/*</span> <span class="n">OGRLayerH</span> <span class="o">*/</span>
+
+<span class="n">void</span>     <span class="n">CPL_DLL</span> <span class="n">OGR_L_SetSpatialFilterEx</span><span class="p">(</span> <span class="n">OGRLayerH</span><span class="p">,</span> <span class="nb">int</span> <span class="n">iGeomField</span><span class="p">,</span> <span class="n">OGRGeometryH</span> <span class="p">);</span>
+<span class="n">void</span>     <span class="n">CPL_DLL</span> <span class="n">OGR_L_SetSpatialFilterRectEx</span><span class="p">(</span> <span class="n">OGRLayerH</span><span class="p">,</span> <span class="nb">int</span> <span class="n">iGeomField</span><span class="p">,</span>
+                                               <span class="n">double</span> <span class="n">dfMinX</span><span class="p">,</span> <span class="n">double</span> <span class="n">dfMinY</span><span class="p">,</span>
+                                               <span class="n">double</span> <span class="n">dfMaxX</span><span class="p">,</span> <span class="n">double</span> <span class="n">dfMaxY</span> <span class="p">);</span>
+<span class="n">OGRErr</span>   <span class="n">CPL_DLL</span> <span class="n">OGR_L_GetExtentEx</span><span class="p">(</span> <span class="n">OGRLayerH</span><span class="p">,</span> <span class="nb">int</span> <span class="n">iGeomField</span><span class="p">,</span>
+                                    <span class="n">OGREnvelope</span> <span class="o">*</span><span class="n">psExtent</span><span class="p">,</span> <span class="nb">int</span> <span class="n">bForce</span> <span class="p">);</span>
+<span class="n">OGRErr</span>   <span class="n">CPL_DLL</span> <span class="n">OGR_L_CreateGeomField</span><span class="p">(</span> <span class="n">OGRLayerH</span><span class="p">,</span> <span class="n">OGRGeomFieldDefnH</span> <span class="n">hFieldDefn</span> <span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="ogr-sql-engine">
+<h2>OGR SQL engine<a class="headerlink" href="#ogr-sql-engine" title="Permalink to this headline">¶</a></h2>
+<p>Currently, “SELECT fieldname1[, …fieldnameN] FROM layername” returns
+the specified fields, as well as the associated geometry. This behavior
+is clearly not following the behavior of spatial RDBMS where the
+geometry field must be explicitly specified.</p>
+<p>The following compromise between backward compatibility and the new
+capabilities of this RFC is adopted :</p>
+<ul class="simple">
+<li><p>if no geometry field is explicitly specified in the SELECT clause,
+and there is only one geometry fields associated with the layer, then
+return it implicitly</p></li>
+<li><p>otherwise, only return the explicitly mentioned geometry fields (or
+all geometry fields if “*” is used).</p></li>
+</ul>
+<div class="section" id="limitations">
+<h3>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Geometries from joined layers will not be fetched, as currently.</p></li>
+<li><p>UNION ALL will only handle the default geometry, as currently. (could
+be extended in later work.)</p></li>
+<li><p>The special fields OGR_GEOMETRY, OGR_GEOM_WKT and OGR_GEOM_AREA will
+operate on the first geometry field. It does not seem wise to extend
+this ad-hoc syntax. A better alternative will be the OGR SQLite
+dialect (with Spatialite support), once it is updated to support
+multi-geometry (not in the scope of this RFC)</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="drivers">
+<h2>Drivers<a class="headerlink" href="#drivers" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="updated-drivers-in-the-context-of-this-rfc">
+<h3>Updated drivers in the context of this RFC<a class="headerlink" href="#updated-drivers-in-the-context-of-this-rfc" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>PostGIS:</p>
+<ul>
+<li><p>a ad-hoc form of support already exists. Tables with multiple
+geometries are reported currently as layers called
+“table_name(geometry_col_name)” (as many layers as geometry
+columns). This behavior will be changed so that the table is
+reported only once as a OGR layer.</p></li>
+</ul>
+</li>
+<li><p>PGDump:</p>
+<ul>
+<li><p>add write support for multi-geometry tables.</p></li>
+</ul>
+</li>
+<li><p>Memory:</p>
+<ul>
+<li><p>updated as a simple illustration of the new capabilities.</p></li>
+</ul>
+</li>
+<li><p>Interlis:</p>
+<ul>
+<li><p>updated to support multiple geometry fields (as well as other
+changes unrelated to this RFC)</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="other-candidate-drivers-upgrade-not-originally-covered-by-this-rfc">
+<h3>Other candidate drivers (upgrade not originally covered by this RFC)<a class="headerlink" href="#other-candidate-drivers-upgrade-not-originally-covered-by-this-rfc" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>GML driver : currently, only one geometry per feature reported.
+Possibility of changing this by hand-editing of the .gfs file –&gt;
+implemented post RFC in GDAL 1.11</p></li>
+<li><p>SQLite driver :</p>
+<ul>
+<li><p>currently, same behavior as current PostGIS driver.</p></li>
+<li><p>both the driver and the SQLite dialect could be updated to support
+multi-geometry layers. –&gt; implemented post RFC in GDAL 2.0</p></li>
+</ul>
+</li>
+<li><p>Google Fusion Tables driver : currently, only the first found
+geometry column used. Possibility of specifying
+“table_name(geometry_column_name)” as the layer name passed to
+GetLayerByName().</p></li>
+<li><p>VRT : some thoughts needed to find the syntax to support multiple
+geometries. Impacted XML syntax : . at OGRVRTLayer element level :
+GeometryType, LayerSRS, GeomField, SrcRegion,
+ExtentXMin/YMin/XMax/YMax, . at OGRVRTWarpedLayer element level : add
+new element to select the geometry field . at OGRVRTUnionLayer
+element level : GeometryType, LayerSRS, ExtentXMin/YMin/XMax/YMax –&gt;
+implemented post RFC in GDAL 1.11</p></li>
+<li><p>CSV : currently, take geometries from column named “WKT”. To be
+extended to support multiple geometry columns. Not sure worth the
+effort. Could be done with the extended VRT driver. –&gt; implemented
+post RFC in GDAL 1.11</p></li>
+<li><p>WFS : currently, only single-geometry layers supported. The standard
+allows multi-geometry. Would require GML driver support first.</p></li>
+<li><p>Other RDBMS based drivers: MySQL ?, MSSQLSpatial ? Oracle Spatial ?</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="utilities">
+<h2>Utilities<a class="headerlink" href="#utilities" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="ogrinfo">
+<h3>ogrinfo<a class="headerlink" href="#ogrinfo" title="Permalink to this headline">¶</a></h3>
+<p>ogrinfo will be updated to report information related to multi-geometry
+support. Output is expected to be unchanged w.r.t current output in the
+case of single-geometry datasource.</p>
+<p>Expected output for multi-geometry datasource:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ogrinfo PG:dbname=mydb
+INFO: Open of `PG:dbname=mydb&#39;
+      using driver `PostgreSQL&#39; successful.
+1: test_multi_geom (Polygon, Point)
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ogrinfo PG:dbname=mydb -al
+INFO: Open of `PG:dbname=mydb&#39;
+      using driver `PostgreSQL&#39; successful.
+
+Layer name: test_multi_geom
+Geometry (polygon_geometry): Polygon
+Geometry (centroid_geometry): Point
+Feature Count: 10
+Extent (polygon_geometry): (400000,4500000) - (500000, 5000000)
+Extent (centroid_geometry): (2,48) - (3,49)
+Layer SRS WKT (polygon_geometry):
+PROJCS[&quot;WGS 84 / UTM zone 31N&quot;,
+    GEOGCS[&quot;WGS 84&quot;,
+        DATUM[&quot;WGS_1984&quot;,
+            SPHEROID[&quot;WGS 84&quot;,6378137,298.257223563,
+                AUTHORITY[&quot;EPSG&quot;,&quot;7030&quot;]],
+            AUTHORITY[&quot;EPSG&quot;,&quot;6326&quot;]],
+        PRIMEM[&quot;Greenwich&quot;,0,
+            AUTHORITY[&quot;EPSG&quot;,&quot;8901&quot;]],
+        UNIT[&quot;degree&quot;,0.0174532925199433,
+            AUTHORITY[&quot;EPSG&quot;,&quot;9122&quot;]],
+        AUTHORITY[&quot;EPSG&quot;,&quot;4326&quot;]],
+    PROJECTION[&quot;Transverse_Mercator&quot;],
+    PARAMETER[&quot;latitude_of_origin&quot;,0],
+    PARAMETER[&quot;central_meridian&quot;,3],
+    PARAMETER[&quot;scale_factor&quot;,0.9996],
+    PARAMETER[&quot;false_easting&quot;,500000],
+    PARAMETER[&quot;false_northing&quot;,0],
+    UNIT[&quot;metre&quot;,1,
+        AUTHORITY[&quot;EPSG&quot;,&quot;9001&quot;]],
+    AXIS[&quot;Easting&quot;,EAST],
+    AXIS[&quot;Northing&quot;,NORTH],
+    AUTHORITY[&quot;EPSG&quot;,&quot;32631&quot;]]
+Layer SRS WKT (centroid_geometry):
+GEOGCS[&quot;WGS 84&quot;,
+    DATUM[&quot;WGS_1984&quot;,
+        SPHEROID[&quot;WGS 84&quot;,6378137,298.257223563,
+            AUTHORITY[&quot;EPSG&quot;,&quot;7030&quot;]],
+        AUTHORITY[&quot;EPSG&quot;,&quot;6326&quot;]],
+    PRIMEM[&quot;Greenwich&quot;,0,
+        AUTHORITY[&quot;EPSG&quot;,&quot;8901&quot;]],
+    UNIT[&quot;degree&quot;,0.0174532925199433,
+        AUTHORITY[&quot;EPSG&quot;,&quot;9122&quot;]],
+    AUTHORITY[&quot;EPSG&quot;,&quot;4326&quot;]]
+FID Column = ogc_fid
+Geometry Column 1 = polygon_geometry
+Geometry Column 2 = centroid_geometry
+area: Real
+OGRFeature(test_multi_geom):1
+  area (Real) = 500
+  polygon_geometry = POLYGON ((400000 4500000,400000 5000000,500000 5000000,500000 4500000,400000 4500000))
+  centroid_geometry = POINT(2.5 48.5)
+</pre></div>
+</div>
+<p>A “-geomfield” option will be added to specify on which field the -spat
+option applies.</p>
+</div>
+<div class="section" id="ogr2ogr">
+<h3>ogr2ogr<a class="headerlink" href="#ogr2ogr" title="Permalink to this headline">¶</a></h3>
+<p>Enhacements :</p>
+<ul class="simple">
+<li><p>will translate multi-geometry layers into multi-geometry layers if
+supported by output layer (OLCCreateGeomField capability). In case it
+is not supported, only translates the first geometry.</p></li>
+<li><p>“-select” option. If only attribute field names are specified, all
+input geometries will be implicitly selected (backward compatible
+behavior). If one or several geometry field names are specified,
+only those ones will be selected.</p></li>
+<li><p>add a “-geomfield” option to specify on which field the -spat option
+applies</p></li>
+<li><p>the various geometry transformations (reprojection, clipping, etc.)
+will be applied on all geometry fields.</p></li>
+</ul>
+</div>
+<div class="section" id="test-ogrsf">
+<h3>test_ogrsf<a class="headerlink" href="#test-ogrsf" title="Permalink to this headline">¶</a></h3>
+<p>Will be enhanced with a few consistency checks :</p>
+<ul class="simple">
+<li><p>OGRLayer::GetSpatialRef() ==
+OGRFeatureDefn::GetGeomField(0)-&gt;GetSpatialRef()</p></li>
+<li><p>OGRLayer::GetGeomType() ==
+OGRFeatureDefn::GetGeomField(0)-&gt;GetGeomType()</p></li>
+<li><p>OGRLayer::GetGeometryColumn() ==
+OGRFeatureDefn::GetGeomField(0)-&gt;GetNameRef()</p></li>
+</ul>
+<p>Spatial filtering tests will loop over all geometry fields.</p>
+</div>
+</div>
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<p>In addition to function level documentation, the new capability will be
+documented in the <a class="reference internal" href="../../user/vector_data_model.html#vector-data-model"><span class="std std-ref">Vector Data Model</span></a> and <a class="reference internal" href="../../tutorials/vector_api_tut.html#vector-api-tut"><span class="std std-ref">Vector API tutorial</span></a> documents.</p>
+</div>
+<div class="section" id="python-and-other-language-bindings">
+<h2>Python and other language bindings<a class="headerlink" href="#python-and-other-language-bindings" title="Permalink to this headline">¶</a></h2>
+<p>The new C API will be mapped to SWIG bindings. It will be only tested
+with the Python bindings. No new typemaps are expected, so this should
+work with other languages in a straightforward way.</p>
+</div>
+<div class="section" id="compatibility">
+<h2>Compatibility<a class="headerlink" href="#compatibility" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Changes are only additions to the existing API, and existing
+behavior should be preserved, so this will be backwards compatible.</p></li>
+<li><p>C++ ABI changes</p></li>
+<li><p>Change of behavior in PostGIS driver w.r.t GDAL 1.10 for tables with
+multiple geometries.</p></li>
+</ul>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>Even Rouault will implement the above described changes for GDAL 1.11
+release, except the upgrade of the Interlis driver that will be done by
+Pirmin Kalberer.</p>
+</div>
+<div class="section" id="funding">
+<h2>Funding<a class="headerlink" href="#funding" title="Permalink to this headline">¶</a></h2>
+<p>This work is funded by the <a class="reference external" href="http://www.swisstopo.admin.ch/internet/swisstopo/en/home/swisstopo/org/kogis.html">Federal Office of Topography (swisstopo),
+COGIS</a></p>
+</div>
+<div class="section" id="voting-history">
+<h2>Voting history<a class="headerlink" href="#voting-history" title="Permalink to this headline">¶</a></h2>
+<p>+1 from EvenR, FrankW, HowardB, DanielM and TamasS</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rfc42_find_laundered_fields.html" class="btn btn-neutral float-right" title="RFC 42: OGR Layer laundered field lookup" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc40_enhanced_rat_support.html" class="btn btn-neutral float-left" title="RFC 40: Improving performance of Raster Attribute Table implementation for large tables" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

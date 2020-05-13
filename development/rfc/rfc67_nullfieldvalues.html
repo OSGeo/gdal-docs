@@ -1,0 +1,498 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RFC 67 : Null values in OGR &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdevelopment/rfc/rfc67_nullfieldvalues.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="RFC 68: C++11 Compilation Mode" href="rfc68_cplusplus11.html" />
+    <link rel="prev" title="RFC 66 : OGR random layer read/write capabilities" href="rfc66_randomlayerreadwrite.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 67 : Null values in OGR</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rationale">Rationale</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#changes">Changes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#c-api">C API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#swig-bindings-python-java-c-perl-changes">SWIG bindings (Python / Java / C# / Perl) changes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#drivers">Drivers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#utilities">Utilities</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#test-suite">Test Suite</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#compatibility-issues">Compatibility Issues</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#related-ticket">Related ticket</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voting-history">Voting history</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 67 : Null values in OGR</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/development/rfc/rfc67_nullfieldvalues.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="rfc68_cplusplus11.html" class="btn btn-neutral float-right" title="RFC 68: C++11 Compilation Mode" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc66_randomlayerreadwrite.html" class="btn btn-neutral float-left" title="RFC 66 : OGR random layer read/write capabilities" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rfc-67-null-values-in-ogr">
+<span id="rfc-67"></span><h1>RFC 67 : Null values in OGR<a class="headerlink" href="#rfc-67-null-values-in-ogr" title="Permalink to this headline">¶</a></h1>
+<p>Author: Even Rouault</p>
+<p>Contact: even.rouault at spatialys.com</p>
+<p>Status: Adopted, implemented</p>
+<p>Implementation version: 2.2</p>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>This RFC implement the concept of null value for the field of a feature,
+in addition to the existing unset status.</p>
+</div>
+<div class="section" id="rationale">
+<h2>Rationale<a class="headerlink" href="#rationale" title="Permalink to this headline">¶</a></h2>
+<p>Currently, OGR supports one single concept to indicate that a field
+value is missing : the concept of unset field.</p>
+<p>So assuming a JSon feature collection with 2 features would properties
+would be { “foo”: “bar” } and { “foo”: “bar”, “other_field”: null }, OGR
+currently returns that the other_field is unset in both cases.</p>
+<p>What is proposed here is that in the first case where the “other_field”
+keyword is totally absent, we use the current unset field concept. And
+for the other case, we add a new concept of null field.</p>
+<p>This distinction between both concepts apply to all GeoJSON based
+formats and protocols, so GeoJSON, ElasticSearch, MongoDB, CouchDB,
+Cloudant.</p>
+<p>This also applies for GML where the semantics of a missing element would
+be mapped to unset field and an element with a xsi:nil=”true” attribute
+would be mapped to a null field.</p>
+</div>
+<div class="section" id="changes">
+<h2>Changes<a class="headerlink" href="#changes" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="ogrfield">
+<h3>OGRField<a class="headerlink" href="#ogrfield" title="Permalink to this headline">¶</a></h3>
+<p>The Set structure in the “raw field” union is modified to add a third
+marker</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">struct</span> <span class="p">{</span>
+    <span class="nb">int</span>     <span class="n">nMarker1</span><span class="p">;</span>
+    <span class="nb">int</span>     <span class="n">nMarker2</span><span class="p">;</span>
+    <span class="nb">int</span>     <span class="n">nMarker3</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">Set</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>This is not strictly related to this work but the 3rd marker decreases
+the likelihood of a genuine value to be misinterpreted as unset / null.
+This does not increase the size of the structure that is already at
+least 12 bytes large.</p>
+<p>The current special value of OGRUnsetMarker = -21121 will be set in the
+3 markers for unset field (currently set to the first 2 markers).</p>
+<p>Similarly for the new Null state, the new value OGRNullMarker = -21122
+will be set to the 3 markers.</p>
+</div>
+<div class="section" id="ogrfeature">
+<h3>OGRFeature<a class="headerlink" href="#ogrfeature" title="Permalink to this headline">¶</a></h3>
+<p>The methods int IsFieldNull( int nFieldIdx ) and void SetNullField ( int
+nFieldIdx ) are added.</p>
+<p>The accessors GetFieldXXXX() are modified to take into account the null
+case, in the same way as if they are called on a unset field, so
+returning 0 for numeric field types, empty string for string fields,
+FALSE for date time fields and NULL for list-based types.</p>
+<p>A convenience method OGRFeature::IsFieldSetAndNotNull() is added to ease
+the porting of existing code that used previously IsFieldSet() and
+doesn’t need to distinguish between the unset and null states.</p>
+</div>
+</div>
+<div class="section" id="c-api">
+<h2>C API<a class="headerlink" href="#c-api" title="Permalink to this headline">¶</a></h2>
+<p>The following functions will be added:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">int</span>    <span class="n">CPL_DLL</span> <span class="n">OGR_F_IsFieldNull</span><span class="p">(</span> <span class="n">OGRFeatureH</span><span class="p">,</span> <span class="nb">int</span> <span class="p">);</span>
+<span class="n">void</span>   <span class="n">CPL_DLL</span> <span class="n">OGR_F_SetFieldNull</span><span class="p">(</span> <span class="n">OGRFeatureH</span><span class="p">,</span> <span class="nb">int</span> <span class="p">);</span>
+
+<span class="nb">int</span>    <span class="n">CPL_DLL</span> <span class="n">OGR_F_IsFieldSetAndNotNull</span><span class="p">(</span> <span class="n">OGRFeatureH</span><span class="p">,</span> <span class="nb">int</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>Lower-level functions will be added to manipulate directly the raw field
+union (for use mostly in core and a few drivers), instead of directly
+testing/ setting the markers :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">int</span>    <span class="n">CPL_DLL</span> <span class="n">OGR_RawField_IsUnset</span><span class="p">(</span> <span class="n">OGRField</span><span class="o">*</span> <span class="p">);</span>
+<span class="nb">int</span>    <span class="n">CPL_DLL</span> <span class="n">OGR_RawField_IsNull</span><span class="p">(</span> <span class="n">OGRField</span><span class="o">*</span> <span class="p">);</span>
+<span class="n">void</span>   <span class="n">CPL_DLL</span> <span class="n">OGR_RawField_SetUnset</span><span class="p">(</span> <span class="n">OGRField</span><span class="o">*</span> <span class="p">);</span>
+<span class="n">void</span>   <span class="n">CPL_DLL</span> <span class="n">OGR_RawField_SetNull</span><span class="p">(</span> <span class="n">OGRField</span><span class="o">*</span> <span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="swig-bindings-python-java-c-perl-changes">
+<h2>SWIG bindings (Python / Java / C# / Perl) changes<a class="headerlink" href="#swig-bindings-python-java-c-perl-changes" title="Permalink to this headline">¶</a></h2>
+<p>The new methods will mapped to SWIG.</p>
+</div>
+<div class="section" id="drivers">
+<h2>Drivers<a class="headerlink" href="#drivers" title="Permalink to this headline">¶</a></h2>
+<p>The following drivers will be modified to take into account the unset
+and NULL state as distinct states: GeoJSON, ElasticSearch, MongoDB,
+CouchDB, Cloudant, GML, GMLAS, WFS.</p>
+<p>Note: regarding the GMLAS driver, the previous behavior to have both
+xxxx and xxxx_nil fields when xxxx is an optional nillable XML elements
+is preserved by default (can be changed through a configuration setting
+in the gmlasconf.xml file). The rationale is that the GMLAS driver is
+mostly used to convert to SQL capable formats that cannot distinguish
+between the unset and null states, hence the need for the 2 dedicated
+fields.</p>
+<p>The CSV driver will be modified so that when EMPTY_STRING_AS_NULL open
+option is specified, the new Null state is used.</p>
+<p>All drivers that in their writing part test if the source feature has a
+field unset will also test if the field is null.</p>
+<p>For SQL based drivers (PG, PGDump, Carto, MySQL, OCI, SQLite, GPKG), on
+reading a SQL NULL value will be mapped to the new Null state. On
+writing, a unset field will not be mentioned in the corresponding
+INSERT or UPDATE statement. Whereas a Null field will be mentioned and
+set to NULL. On insertion, there will generally be no difference of
+behavior, unless a default value is defined on the field, in which case
+it will be used by the database engine to set the value in the unset
+case. On update, a unset field will not see its content updated by the
+database, where as a field set to NULL will be updated to NULL.</p>
+</div>
+<div class="section" id="utilities">
+<h2>Utilities<a class="headerlink" href="#utilities" title="Permalink to this headline">¶</a></h2>
+<p>No direct changes, but as the OGRFeature::DumpReadable() method is
+modified so that unset fields of features are no longer displayed, the
+output of ogrinfo will be affected.</p>
+</div>
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<p>All new methods/functions are documented.</p>
+</div>
+<div class="section" id="test-suite">
+<h2>Test Suite<a class="headerlink" href="#test-suite" title="Permalink to this headline">¶</a></h2>
+<p>Core changes and updated drivers will be tested.</p>
+</div>
+<div class="section" id="compatibility-issues">
+<h2>Compatibility Issues<a class="headerlink" href="#compatibility-issues" title="Permalink to this headline">¶</a></h2>
+<p>All code, in GDAL source code, and in calling external code, that
+currently uses OGRFeature::IsFieldSet() / OGR_F_IsFieldSet() should also
+be updated to used IsFieldNull() / OGR_F_IsFieldNull(), either to act
+exactly as in the unset case, or add a new appropriate behavior. A
+convenience method and function OGRFeature::IsFieldSetAndNotNull() /
+OGR_F_IsFieldSetAndNotNull() is added to ease the porting of existing
+code.</p>
+<p>Failure to do so, the existing code will see 0 for numeric field types,
+empty string for string fields, FALSE for date time fields and NULL for
+list-based types.</p>
+<p>On the write side, for the GeoJSON driver, in GDAL 2.1 or before, a
+unset field was written as field_name: null. Starting with GDAL 2.2,
+only fields explicitly set as null with OGR_F_SetFieldNull() will be
+written with a null value. Unset fields of a feature will not be present
+in the corresponding JSon feature element.</p>
+<p>MIGRATION_GUIDE.TXT is updated to discuss those compatibility issues.</p>
+</div>
+<div class="section" id="related-ticket">
+<h2>Related ticket<a class="headerlink" href="#related-ticket" title="Permalink to this headline">¶</a></h2>
+<p>None</p>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>The implementation will be done by Even Rouault (Spatialys) and be
+sponsored by Safe Software.</p>
+<p>The proposed implementation is available in
+<a class="reference external" href="https://github.com/rouault/gdal2/tree/rfc67">https://github.com/rouault/gdal2/tree/rfc67</a></p>
+</div>
+<div class="section" id="voting-history">
+<h2>Voting history<a class="headerlink" href="#voting-history" title="Permalink to this headline">¶</a></h2>
+<p>+1 from JukkaR, DanielM, HowardB and EvenR</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rfc68_cplusplus11.html" class="btn btn-neutral float-right" title="RFC 68: C++11 Compilation Mode" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc66_randomlayerreadwrite.html" class="btn btn-neutral float-left" title="RFC 66 : OGR random layer read/write capabilities" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,907 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RFC 54: Dataset transactions &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdevelopment/rfc/rfc54_dataset_transactions.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="RFC 55: Refined SetFeature() and DeleteFeature() semantics" href="rfc55_refined_setfeature_deletefeature_semantics.html" />
+    <link rel="prev" title="RFC 53: OGR not-null constraints and default values" href="rfc53_ogr_notnull_default.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 54: Dataset transactions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rationale">Rationale</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#proposed-changes">Proposed changes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#swig-bindings-python-java-c-perl-changes">SWIG bindings (Python / Java / C# / Perl) changes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#utilities">Utilities</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#test-suite">Test Suite</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#compatibility-issues">Compatibility Issues</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#out-of-scope">Out of scope</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#related-tickets">Related tickets</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voting-history">Voting history</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 54: Dataset transactions</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/development/rfc/rfc54_dataset_transactions.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="rfc55_refined_setfeature_deletefeature_semantics.html" class="btn btn-neutral float-right" title="RFC 55: Refined SetFeature() and DeleteFeature() semantics" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc53_ogr_notnull_default.html" class="btn btn-neutral float-left" title="RFC 53: OGR not-null constraints and default values" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rfc-54-dataset-transactions">
+<span id="rfc-54"></span><h1>RFC 54: Dataset transactions<a class="headerlink" href="#rfc-54-dataset-transactions" title="Permalink to this headline">¶</a></h1>
+<p>Authors: Even Rouault</p>
+<p>Contact: even dot rouault at spatialys.com</p>
+<p>Status: Adopted, implemented in GDAL 2.0</p>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>This RFC introduces an API to offer a transaction mechanism at dataset
+level and uses it in the PostgreSQL, SQLite and GPKG drivers. It also
+reworks significantly how transactions are handled in the PostgreSQL
+driver. It also introduces a generic mechanism to implement an emulation
+of transactions for datasources that would not natively support it, and
+uses it in the FileGDB driver.</p>
+</div>
+<div class="section" id="rationale">
+<h2>Rationale<a class="headerlink" href="#rationale" title="Permalink to this headline">¶</a></h2>
+<p>The current abstraction offers a transaction API at the layer level.
+However, this is generally misleading since, when it is implemented in
+DBMS with BEGIN/COMMIT/ROLLBACK sql statements (PostgreSQL, SQLite,
+GPKG, PGDump, MSSQLSpatial), the semantics is really a transaction at
+database level that spans over all layers/tables. So even if calling
+StartTransaction() on a layer, it also extends on the changes done on
+other layers. In a very few drivers
+StartTransaction()/CommitTransaction() is sometimes used as a mechanism
+to do bulk insertion. This is for example the case of WFS, CartoDB, GFT,
+GME. For some of them, it could rather be at dataset level too since
+potentially multiple layer modifications could be stacked together.</p>
+<p>Furthermode some use cases require updating several layers consistently,
+hence the need for a real database level transaction abstraction.</p>
+<p>The current situation of various drivers is the following (some of the
+below observations resulting from the analysis are kept mainly for the
+benefit of developers that would need to work in the drivers) :</p>
+<div class="section" id="postgresql">
+<h3>PostgreSQL<a class="headerlink" href="#postgresql" title="Permalink to this headline">¶</a></h3>
+<p>A few facts about cursors used to run GetNextFeature() requests:</p>
+<ul class="simple">
+<li><p>Cursors are needed for retrieval of huge amount of data without being
+memory bound.</p></li>
+<li><p>Cursors need transactions to run.</p></li>
+<li><p>Default cursors (WITHOUT HOLD) cannot be used outside of the
+transaction that created tem</p></li>
+<li><p>You cannot modify the structure of a table while the transaction
+(yes, the transaction, not the cursor) is still active and if you do
+that on another connection, it hangs until the other connection
+commits or rollbacks)</p></li>
+<li><p>Within a transaction, deleted/modified rows are only visible if they
+are done before declaring the cursor.</p></li>
+<li><p>Cursors WITH HOLD: may be used outside of transaction but cause a
+copy of the table to be done –&gt; bad for performance</p></li>
+</ul>
+<p>Current flaws are :</p>
+<ul class="simple">
+<li><p>one cannot do interleaved layer reading (beyond the first 500
+features fetched, can be easily seen with OGR_PG_CURSOR_PAGE=1) due
+to the underlying implicit transaction created to read layer A being
+closed when the reading of layer B starts.</p></li>
+<li><p>GetFeature() flushes the current transaction and starts a new one to
+do a cursor SELECT. Which is unnecessary since we retrieve only one
+record</p></li>
+<li><p>SetAttributeFilter() issues a ResetReading() which currently
+FlushSoftTransaction() the ongoing transaction. Can be annoying in a
+scenario with long update where you need transactional guarantee</p></li>
+</ul>
+<p>What works :</p>
+<ul class="simple">
+<li><p>Transaction support at the layer level forwarded to datasource.</p></li>
+<li><p>Interleaved writing works (even with copy mode)</p></li>
+</ul>
+</div>
+<div class="section" id="sqlite-gpkg">
+<h3>SQLite/GPKG<a class="headerlink" href="#sqlite-gpkg" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Mechanisms used to read table content (sqlite3_prepare() /
+sqlite3_step()) do not need transactions.</p></li>
+<li><p>Step sees structure modifications (e.g. column addition) if run after
+prepared statement but before first step.</p></li>
+<li><p>Step sees row modifications/additions as soon as they occur.</p></li>
+<li><p>Transaction support at the layer level forwarded to datasource.</p></li>
+</ul>
+</div>
+<div class="section" id="mysql">
+<h3>MySQL<a class="headerlink" href="#mysql" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Cannot do interleaved layer reading (reading in one layer resets the
+other reading) because of the use of mysql_use_result() that can work
+with one single request at a time. mysql_store_result() would be a
+solution but requires ingesting the whole result set into memory,
+which is inpractical for big layers.</p></li>
+<li><p>step does not set row changes once the query has started (if done
+through another connection, because if done through ExecuteSQL() the
+long transaction is interrupted)</p></li>
+<li><p>No transaction support</p></li>
+</ul>
+</div>
+<div class="section" id="oci">
+<h3>OCI<a class="headerlink" href="#oci" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Interleaved layer reading works</p></li>
+<li><p>Changes done after SELECT seem not to be seen.</p></li>
+<li><p>No transaction support</p></li>
+</ul>
+</div>
+<div class="section" id="filegdb">
+<h3>FileGDB<a class="headerlink" href="#filegdb" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Interleaved layer reading works</p></li>
+<li><p>Changes done after SELECT seem not to be seen.</p></li>
+<li><p>No transaction support</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="proposed-changes">
+<h2>Proposed changes<a class="headerlink" href="#proposed-changes" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="gdaldataset-changes">
+<h3>GDALDataset changes<a class="headerlink" href="#gdaldataset-changes" title="Permalink to this headline">¶</a></h3>
+<p>The following methods are added to GDALDataset (and usable by
+OGRDataSource which inherits from GDALDataset).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/************************************************************************/</span>
+<span class="o">/*</span>                           <span class="n">StartTransaction</span><span class="p">()</span>                         <span class="o">*/</span>
+<span class="o">/************************************************************************/</span>
+
+<span class="o">/**</span>
+ \<span class="n">brief</span> <span class="n">For</span> <span class="n">datasources</span> <span class="n">which</span> <span class="n">support</span> <span class="n">transactions</span><span class="p">,</span> <span class="n">StartTransaction</span> <span class="n">creates</span> <span class="n">a</span> <span class="n">transaction</span><span class="o">.</span>
+
+ <span class="n">If</span> <span class="n">starting</span> <span class="n">the</span> <span class="n">transaction</span> <span class="n">fails</span><span class="p">,</span> <span class="n">will</span> <span class="k">return</span>
+ <span class="n">OGRERR_FAILURE</span><span class="o">.</span> <span class="n">Datasources</span> <span class="n">which</span> <span class="n">do</span> <span class="ow">not</span> <span class="n">support</span> <span class="n">transactions</span> <span class="n">will</span>
+ <span class="n">always</span> <span class="k">return</span> <span class="n">OGRERR_UNSUPPORTED_OPERATION</span><span class="o">.</span>
+
+ <span class="n">Nested</span> <span class="n">transactions</span> <span class="n">are</span> <span class="ow">not</span> <span class="n">supported</span><span class="o">.</span>
+
+ <span class="n">All</span> <span class="n">changes</span> <span class="n">done</span> <span class="n">after</span> <span class="n">the</span> <span class="n">start</span> <span class="n">of</span> <span class="n">the</span> <span class="n">transaction</span> <span class="n">are</span> <span class="n">definitely</span> <span class="n">applied</span> <span class="ow">in</span> <span class="n">the</span>
+ <span class="n">datasource</span> <span class="k">if</span> <span class="n">CommitTransaction</span><span class="p">()</span> <span class="ow">is</span> <span class="n">called</span><span class="o">.</span> <span class="n">They</span> <span class="n">may</span> <span class="n">be</span> <span class="n">canceled</span> <span class="n">by</span> <span class="n">calling</span>
+ <span class="n">RollbackTransaction</span><span class="p">()</span> <span class="n">instead</span><span class="o">.</span>
+
+ <span class="n">At</span> <span class="n">the</span> <span class="n">time</span> <span class="n">of</span> <span class="n">writing</span><span class="p">,</span> <span class="n">transactions</span> <span class="n">only</span> <span class="n">apply</span> <span class="n">on</span> <span class="n">vector</span> <span class="n">layers</span><span class="o">.</span>
+
+ <span class="n">Datasets</span> <span class="n">that</span> <span class="n">support</span> <span class="n">transactions</span> <span class="n">will</span> <span class="n">advertise</span> <span class="n">the</span> <span class="n">ODsCTransactions</span> <span class="n">capability</span><span class="o">.</span>
+ <span class="n">Use</span> <span class="n">of</span> <span class="n">transactions</span> <span class="n">at</span> <span class="n">dataset</span> <span class="n">level</span> <span class="ow">is</span> <span class="n">generally</span> <span class="n">preferred</span> <span class="n">to</span> <span class="n">transactions</span> <span class="n">at</span>
+ <span class="n">layer</span> <span class="n">level</span><span class="p">,</span> <span class="n">whose</span> <span class="n">scope</span> <span class="ow">is</span> <span class="n">rarely</span> <span class="n">limited</span> <span class="n">to</span> <span class="n">the</span> <span class="n">layer</span> <span class="kn">from</span> <span class="nn">which</span> <span class="n">it</span> <span class="n">was</span> <span class="n">started</span><span class="o">.</span>
+
+ <span class="n">In</span> <span class="n">case</span> <span class="n">StartTransaction</span><span class="p">()</span> <span class="n">fails</span><span class="p">,</span> <span class="n">neither</span> <span class="n">CommitTransaction</span><span class="p">()</span> <span class="ow">or</span> <span class="n">RollbackTransaction</span><span class="p">()</span>
+ <span class="n">should</span> <span class="n">be</span> <span class="n">called</span><span class="o">.</span>
+
+ <span class="n">If</span> <span class="n">an</span> <span class="n">error</span> <span class="n">occurs</span> <span class="n">after</span> <span class="n">a</span> <span class="n">successful</span> <span class="n">StartTransaction</span><span class="p">(),</span> <span class="n">the</span> <span class="n">whole</span>
+ <span class="n">transaction</span> <span class="n">may</span> <span class="ow">or</span> <span class="n">may</span> <span class="ow">not</span> <span class="n">be</span> <span class="n">implicitly</span> <span class="n">canceled</span><span class="p">,</span> <span class="n">depending</span> <span class="n">on</span> <span class="n">drivers</span><span class="o">.</span> <span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span>
+ <span class="n">the</span> <span class="n">PG</span> <span class="n">driver</span> <span class="n">will</span> <span class="n">cancel</span> <span class="n">it</span><span class="p">,</span> <span class="n">SQLite</span><span class="o">/</span><span class="n">GPKG</span> <span class="ow">not</span><span class="p">)</span><span class="o">.</span> <span class="n">In</span> <span class="nb">any</span> <span class="n">case</span><span class="p">,</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">event</span> <span class="n">of</span> <span class="n">an</span>
+ <span class="n">error</span><span class="p">,</span> <span class="n">an</span> <span class="n">explicit</span> <span class="n">call</span> <span class="n">to</span> <span class="n">RollbackTransaction</span><span class="p">()</span> <span class="n">should</span> <span class="n">be</span> <span class="n">done</span> <span class="n">to</span> <span class="n">keep</span> <span class="n">things</span> <span class="n">balanced</span><span class="o">.</span>
+
+ <span class="n">By</span> <span class="n">default</span><span class="p">,</span> <span class="n">when</span> <span class="n">bForce</span> <span class="ow">is</span> <span class="nb">set</span> <span class="n">to</span> <span class="n">FALSE</span><span class="p">,</span> <span class="n">only</span> <span class="s2">&quot;efficient&quot;</span> <span class="n">transactions</span> <span class="n">will</span> <span class="n">be</span>
+ <span class="n">attempted</span><span class="o">.</span> <span class="n">Some</span> <span class="n">drivers</span> <span class="n">may</span> <span class="n">offer</span> <span class="n">an</span> <span class="n">emulation</span> <span class="n">of</span> <span class="n">transactions</span><span class="p">,</span> <span class="n">but</span> <span class="n">sometimes</span>
+ <span class="k">with</span> <span class="n">significant</span> <span class="n">overhead</span><span class="p">,</span> <span class="ow">in</span> <span class="n">which</span> <span class="n">case</span> <span class="n">the</span> <span class="n">user</span> <span class="n">must</span> <span class="n">explicitly</span> <span class="n">allow</span> <span class="k">for</span> <span class="n">such</span>
+ <span class="n">an</span> <span class="n">emulation</span> <span class="n">by</span> <span class="n">setting</span> <span class="n">bForce</span> <span class="n">to</span> <span class="n">TRUE</span><span class="o">.</span> <span class="n">Drivers</span> <span class="n">that</span> <span class="n">offer</span> <span class="n">emulated</span> <span class="n">transactions</span>
+ <span class="n">should</span> <span class="n">advertise</span> <span class="n">the</span> <span class="n">ODsCEmulatedTransactions</span> <span class="n">capability</span> <span class="p">(</span><span class="ow">and</span> <span class="ow">not</span> <span class="n">ODsCTransactions</span><span class="p">)</span><span class="o">.</span>
+
+ <span class="n">This</span> <span class="n">function</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">same</span> <span class="k">as</span> <span class="n">the</span> <span class="n">C</span> <span class="n">function</span> <span class="n">GDALDatasetStartTransaction</span><span class="p">()</span><span class="o">.</span>
+
+ <span class="nd">@param</span> <span class="n">bForce</span> <span class="n">can</span> <span class="n">be</span> <span class="nb">set</span> <span class="n">to</span> <span class="n">TRUE</span> <span class="k">if</span> <span class="n">an</span> <span class="n">emulation</span><span class="p">,</span> <span class="n">possibly</span> <span class="n">slow</span><span class="p">,</span> <span class="n">of</span> <span class="n">a</span> <span class="n">transaction</span>
+               <span class="n">mechanism</span> <span class="ow">is</span> <span class="n">acceptable</span><span class="o">.</span>
+
+ <span class="nd">@return</span> <span class="n">OGRERR_NONE</span> <span class="n">on</span> <span class="n">success</span><span class="o">.</span>
+ <span class="nd">@since</span> <span class="n">GDAL</span> <span class="mf">2.0</span>
+<span class="o">*/</span>
+<span class="n">OGRErr</span> <span class="n">GDALDataset</span><span class="p">::</span><span class="n">StartTransaction</span><span class="p">(</span><span class="n">CPL_UNUSED</span> <span class="nb">int</span> <span class="n">bForce</span><span class="p">);</span>
+
+
+<span class="o">/************************************************************************/</span>
+<span class="o">/*</span>                           <span class="n">CommitTransaction</span><span class="p">()</span>                        <span class="o">*/</span>
+<span class="o">/************************************************************************/</span>
+
+<span class="o">/**</span>
+ \<span class="n">brief</span> <span class="n">For</span> <span class="n">datasources</span> <span class="n">which</span> <span class="n">support</span> <span class="n">transactions</span><span class="p">,</span> <span class="n">CommitTransaction</span> <span class="n">commits</span> <span class="n">a</span> <span class="n">transaction</span><span class="o">.</span>
+
+ <span class="n">If</span> <span class="n">no</span> <span class="n">transaction</span> <span class="ow">is</span> <span class="n">active</span><span class="p">,</span> <span class="ow">or</span> <span class="n">the</span> <span class="n">commit</span> <span class="n">fails</span><span class="p">,</span> <span class="n">will</span> <span class="k">return</span>
+ <span class="n">OGRERR_FAILURE</span><span class="o">.</span> <span class="n">Datasources</span> <span class="n">which</span> <span class="n">do</span> <span class="ow">not</span> <span class="n">support</span> <span class="n">transactions</span> <span class="n">will</span>
+ <span class="n">always</span> <span class="k">return</span> <span class="n">OGRERR_UNSUPPORTED_OPERATION</span><span class="o">.</span>
+
+ <span class="n">Depending</span> <span class="n">on</span> <span class="n">drivers</span><span class="p">,</span> <span class="n">this</span> <span class="n">may</span> <span class="ow">or</span> <span class="n">may</span> <span class="ow">not</span> <span class="n">abort</span> <span class="n">layer</span> <span class="n">sequential</span> <span class="n">readings</span> <span class="n">that</span>
+ <span class="n">are</span> <span class="n">active</span><span class="o">.</span>
+
+ <span class="n">This</span> <span class="n">function</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">same</span> <span class="k">as</span> <span class="n">the</span> <span class="n">C</span> <span class="n">function</span> <span class="n">GDALDatasetCommitTransaction</span><span class="p">()</span><span class="o">.</span>
+
+ <span class="nd">@return</span> <span class="n">OGRERR_NONE</span> <span class="n">on</span> <span class="n">success</span><span class="o">.</span>
+ <span class="nd">@since</span> <span class="n">GDAL</span> <span class="mf">2.0</span>
+<span class="o">*/</span>
+<span class="n">OGRErr</span> <span class="n">GDALDataset</span><span class="p">::</span><span class="n">CommitTransaction</span><span class="p">();</span>
+
+<span class="o">/************************************************************************/</span>
+<span class="o">/*</span>                           <span class="n">RollbackTransaction</span><span class="p">()</span>                      <span class="o">*/</span>
+<span class="o">/************************************************************************/</span>
+
+<span class="o">/**</span>
+ \<span class="n">brief</span> <span class="n">For</span> <span class="n">datasources</span> <span class="n">which</span> <span class="n">support</span> <span class="n">transactions</span><span class="p">,</span> <span class="n">RollbackTransaction</span> <span class="n">will</span> <span class="n">roll</span>
+ <span class="n">back</span> <span class="n">a</span> <span class="n">datasource</span> <span class="n">to</span> <span class="n">its</span> <span class="n">state</span> <span class="n">before</span> <span class="n">the</span> <span class="n">start</span> <span class="n">of</span> <span class="n">the</span> <span class="n">current</span> <span class="n">transaction</span><span class="o">.</span>
+
+ <span class="n">If</span> <span class="n">no</span> <span class="n">transaction</span> <span class="ow">is</span> <span class="n">active</span><span class="p">,</span> <span class="ow">or</span> <span class="n">the</span> <span class="n">rollback</span> <span class="n">fails</span><span class="p">,</span> <span class="n">will</span> <span class="k">return</span>
+ <span class="n">OGRERR_FAILURE</span><span class="o">.</span> <span class="n">Datasources</span> <span class="n">which</span> <span class="n">do</span> <span class="ow">not</span> <span class="n">support</span> <span class="n">transactions</span> <span class="n">will</span>
+ <span class="n">always</span> <span class="k">return</span> <span class="n">OGRERR_UNSUPPORTED_OPERATION</span><span class="o">.</span>
+
+ <span class="n">This</span> <span class="n">function</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">same</span> <span class="k">as</span> <span class="n">the</span> <span class="n">C</span> <span class="n">function</span> <span class="n">GDALDatasetRollbackTransaction</span><span class="p">()</span><span class="o">.</span>
+
+ <span class="nd">@return</span> <span class="n">OGRERR_NONE</span> <span class="n">on</span> <span class="n">success</span><span class="o">.</span>
+ <span class="nd">@since</span> <span class="n">GDAL</span> <span class="mf">2.0</span>
+<span class="o">*/</span>
+<span class="n">OGRErr</span> <span class="n">GDALDataset</span><span class="p">::</span><span class="n">RollbackTransaction</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>Note: in the GDALDataset class itself, those methods have an empty
+implementation that returns OGRERR_UNSUPPORTED_OPERATION.</p>
+<p>Those 3 methods are mapped at the C level as :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">OGRErr</span> <span class="n">CPL_DLL</span> <span class="n">GDALDatasetStartTransaction</span><span class="p">(</span><span class="n">GDALDatasetH</span> <span class="n">hDS</span><span class="p">,</span> <span class="nb">int</span> <span class="n">bForce</span><span class="p">);</span>
+<span class="n">OGRErr</span> <span class="n">CPL_DLL</span> <span class="n">GDALDatasetCommitTransaction</span><span class="p">(</span><span class="n">GDALDatasetH</span> <span class="n">hDS</span><span class="p">);</span>
+<span class="n">OGRErr</span> <span class="n">CPL_DLL</span> <span class="n">GDALDatasetRollbackTransaction</span><span class="p">(</span><span class="n">GDALDatasetH</span> <span class="n">hDS</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Two news dataset capabilities are added :</p>
+<ul class="simple">
+<li><p>ODsCTransactions: True if this datasource supports (efficient)
+transactions.</p></li>
+<li><p>ODsCEmulatedTransactions: True if this datasource supports
+transactions through emulation.</p></li>
+</ul>
+</div>
+<div class="section" id="emulated-transactions">
+<h3>Emulated transactions<a class="headerlink" href="#emulated-transactions" title="Permalink to this headline">¶</a></h3>
+<p>A new function OGRCreateEmulatedTransactionDataSourceWrapper() is added
+for used by drivers that do not natively support transactions but want
+an emulation of them. It could potentially be adopted by any datasource
+whose data is supported by files/directories.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/**</span> <span class="n">Returns</span> <span class="n">a</span> <span class="n">new</span> <span class="n">datasource</span> <span class="nb">object</span> <span class="n">that</span> <span class="n">adds</span> <span class="n">transactional</span> <span class="n">behavior</span> <span class="n">to</span> <span class="n">an</span> <span class="n">existing</span> <span class="n">datasource</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">The</span> <span class="n">provided</span> <span class="n">poTransactionBehaviour</span> <span class="nb">object</span> <span class="n">should</span> <span class="n">implement</span> <span class="n">driver</span><span class="o">-</span><span class="n">specific</span>
+ <span class="o">*</span> <span class="n">behavior</span> <span class="k">for</span> <span class="n">transactions</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">The</span> <span class="n">generic</span> <span class="n">mechanisms</span> <span class="n">offered</span> <span class="n">by</span> <span class="n">the</span> <span class="n">wrapper</span> <span class="k">class</span> <span class="nc">do</span> <span class="ow">not</span> <span class="n">cover</span> <span class="n">concurrent</span>
+ <span class="o">*</span> <span class="n">updates</span> <span class="p">(</span><span class="n">though</span> <span class="n">different</span> <span class="n">datasource</span> <span class="n">connections</span><span class="p">)</span> <span class="n">to</span> <span class="n">the</span> <span class="n">same</span> <span class="n">datasource</span> <span class="n">files</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">There</span> <span class="n">are</span> <span class="n">restrictions</span> <span class="n">on</span> <span class="n">what</span> <span class="n">can</span> <span class="n">be</span> <span class="n">accomplished</span><span class="o">.</span> <span class="n">For</span> <span class="n">example</span> <span class="n">it</span> <span class="ow">is</span> <span class="ow">not</span>
+ <span class="o">*</span> <span class="n">allowed</span> <span class="n">to</span> <span class="n">have</span> <span class="n">a</span> <span class="n">unreleased</span> <span class="n">layer</span> <span class="n">returned</span> <span class="n">by</span> <span class="n">ExecuteSQL</span><span class="p">()</span> <span class="n">before</span> <span class="n">calling</span>
+ <span class="o">*</span> <span class="n">StartTransaction</span><span class="p">(),</span> <span class="n">CommitTransaction</span><span class="p">()</span> <span class="ow">or</span> <span class="n">RollbackTransaction</span><span class="p">()</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">Layer</span> <span class="n">structural</span> <span class="n">changes</span> <span class="n">are</span> <span class="ow">not</span> <span class="n">allowed</span> <span class="n">after</span> <span class="n">StartTransaction</span><span class="p">()</span> <span class="k">if</span> <span class="n">the</span>
+ <span class="o">*</span> <span class="n">layer</span> <span class="n">definition</span> <span class="nb">object</span> <span class="n">has</span> <span class="n">been</span> <span class="n">returned</span> <span class="n">previously</span> <span class="k">with</span> <span class="n">GetLayerDefn</span><span class="p">()</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="nd">@param</span> <span class="n">poBaseDataSource</span> <span class="n">the</span> <span class="n">datasource</span> <span class="n">to</span> <span class="n">which</span> <span class="n">to</span> <span class="n">add</span> <span class="n">transactional</span> <span class="n">behavior</span><span class="o">.</span>
+ <span class="o">*</span> <span class="nd">@param</span> <span class="n">poTransactionBehaviour</span> <span class="n">an</span> <span class="n">implementation</span> <span class="n">of</span> <span class="n">the</span> <span class="n">IOGRTransactionBehaviour</span> <span class="n">interface</span><span class="o">.</span>
+ <span class="o">*</span> <span class="nd">@param</span> <span class="n">bTakeOwnershipDataSource</span> <span class="n">whether</span> <span class="n">the</span> <span class="n">returned</span> <span class="nb">object</span> <span class="n">should</span> <span class="n">own</span> <span class="n">the</span>
+ <span class="o">*</span>                                 <span class="n">passed</span> <span class="n">poBaseDataSource</span> <span class="p">(</span><span class="ow">and</span> <span class="n">thus</span> <span class="n">destroy</span> <span class="n">it</span>
+ <span class="o">*</span>                                 <span class="n">when</span> <span class="n">it</span> <span class="ow">is</span> <span class="n">destroyed</span> <span class="n">itself</span><span class="p">)</span><span class="o">.</span>
+ <span class="o">*</span> <span class="nd">@param</span> <span class="n">bTakeOwnershipTransactionBehavior</span> <span class="n">whether</span> <span class="n">the</span> <span class="n">returned</span> <span class="nb">object</span> <span class="n">should</span> <span class="n">own</span>
+ <span class="o">*</span>                                           <span class="n">the</span> <span class="n">passed</span> <span class="n">poTransactionBehaviour</span>
+ <span class="o">*</span>                                           <span class="p">(</span><span class="ow">and</span> <span class="n">thus</span> <span class="n">destroy</span> <span class="n">it</span> <span class="n">when</span>
+ <span class="o">*</span>                                           <span class="n">it</span> <span class="ow">is</span> <span class="n">destroyed</span> <span class="n">itself</span><span class="p">)</span><span class="o">.</span>
+ <span class="o">*</span> <span class="nd">@return</span> <span class="n">a</span> <span class="n">new</span> <span class="n">datasource</span> <span class="n">handle</span>
+ <span class="o">*</span> <span class="nd">@since</span> <span class="n">GDAL</span> <span class="mf">2.0</span>
+ <span class="o">*/</span>
+<span class="n">OGRDataSource</span> <span class="n">CPL_DLL</span><span class="o">*</span> <span class="n">OGRCreateEmulatedTransactionDataSourceWrapper</span><span class="p">(</span>
+                                <span class="n">OGRDataSource</span><span class="o">*</span> <span class="n">poBaseDataSource</span><span class="p">,</span>
+                                <span class="n">IOGRTransactionBehaviour</span><span class="o">*</span> <span class="n">poTransactionBehaviour</span><span class="p">,</span>
+                                <span class="nb">int</span> <span class="n">bTakeOwnershipDataSource</span><span class="p">,</span>
+                                <span class="nb">int</span> <span class="n">bTakeOwnershipTransactionBehavior</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The definition of the IOGRTransactionBehaviour interface is the
+following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/**</span> <span class="n">IOGRTransactionBehaviour</span> <span class="ow">is</span> <span class="n">an</span> <span class="n">interface</span> <span class="n">that</span> <span class="n">a</span> <span class="n">driver</span> <span class="n">must</span> <span class="n">implement</span>
+ <span class="o">*</span>  <span class="n">to</span> <span class="n">provide</span> <span class="n">emulation</span> <span class="n">of</span> <span class="n">transactions</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="nd">@since</span> <span class="n">GDAL</span> <span class="mf">2.0</span>
+ <span class="o">*/</span>
+<span class="k">class</span> <span class="nc">CPL_DLL</span> <span class="n">IOGRTransactionBehaviour</span>
+<span class="p">{</span>
+    <span class="n">public</span><span class="p">:</span>
+
+        <span class="o">/**</span> <span class="n">Start</span> <span class="n">a</span> <span class="n">transaction</span><span class="o">.</span>
+        <span class="o">*</span>
+        <span class="o">*</span> <span class="n">The</span> <span class="n">implementation</span> <span class="n">may</span> <span class="n">update</span> <span class="n">the</span> <span class="n">poDSInOut</span> <span class="n">reference</span> <span class="n">by</span> <span class="n">closing</span>
+        <span class="o">*</span> <span class="ow">and</span> <span class="n">reopening</span> <span class="n">the</span> <span class="n">datasource</span> <span class="p">(</span><span class="ow">or</span> <span class="n">assigning</span> <span class="n">it</span> <span class="n">to</span> <span class="n">NULL</span> <span class="ow">in</span> <span class="n">case</span> <span class="n">of</span> <span class="n">error</span><span class="p">)</span><span class="o">.</span>
+        <span class="o">*</span> <span class="n">In</span> <span class="n">which</span> <span class="n">case</span> <span class="n">bOutHasReopenedDS</span> <span class="n">must</span> <span class="n">be</span> <span class="nb">set</span> <span class="n">to</span> <span class="n">TRUE</span><span class="o">.</span>
+        <span class="o">*</span>
+        <span class="o">*</span> <span class="n">The</span> <span class="n">implementation</span> <span class="n">can</span> <span class="k">for</span> <span class="n">example</span> <span class="n">backup</span> <span class="n">the</span> <span class="n">existing</span> <span class="n">files</span><span class="o">/</span><span class="n">directories</span>
+        <span class="o">*</span> <span class="n">that</span> <span class="n">compose</span> <span class="n">the</span> <span class="n">current</span> <span class="n">datasource</span><span class="o">.</span>
+        <span class="o">*</span>
+        <span class="o">*</span> <span class="nd">@param</span> <span class="n">poDSInOut</span> <span class="n">datasource</span> <span class="n">handle</span> <span class="n">that</span> <span class="n">may</span> <span class="n">be</span> <span class="n">modified</span>
+        <span class="o">*</span> <span class="nd">@param</span> <span class="n">bOutHasReopenedDS</span> <span class="n">output</span> <span class="n">boolean</span> <span class="n">to</span> <span class="n">indicate</span> <span class="k">if</span> <span class="n">datasource</span> <span class="n">has</span> <span class="n">been</span> <span class="n">closed</span>
+        <span class="o">*</span> <span class="nd">@return</span> <span class="n">OGRERR_NONE</span> <span class="ow">in</span> <span class="n">case</span> <span class="n">of</span> <span class="n">success</span>
+        <span class="o">*/</span>
+       <span class="n">virtual</span> <span class="n">OGRErr</span> <span class="n">StartTransaction</span><span class="p">(</span><span class="n">OGRDataSource</span><span class="o">*&amp;</span> <span class="n">poDSInOut</span><span class="p">,</span>
+                                       <span class="nb">int</span><span class="o">&amp;</span> <span class="n">bOutHasReopenedDS</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+        <span class="o">/**</span> <span class="n">Commit</span> <span class="n">a</span> <span class="n">transaction</span><span class="o">.</span>
+        <span class="o">*</span>
+        <span class="o">*</span> <span class="n">The</span> <span class="n">implementation</span> <span class="n">may</span> <span class="n">update</span> <span class="n">the</span> <span class="n">poDSInOut</span> <span class="n">reference</span> <span class="n">by</span> <span class="n">closing</span>
+        <span class="o">*</span> <span class="ow">and</span> <span class="n">reopening</span> <span class="n">the</span> <span class="n">datasource</span> <span class="p">(</span><span class="ow">or</span> <span class="n">assigning</span> <span class="n">it</span> <span class="n">to</span> <span class="n">NULL</span> <span class="ow">in</span> <span class="n">case</span> <span class="n">of</span> <span class="n">error</span><span class="p">)</span><span class="o">.</span>
+        <span class="o">*</span> <span class="n">In</span> <span class="n">which</span> <span class="n">case</span> <span class="n">bOutHasReopenedDS</span> <span class="n">must</span> <span class="n">be</span> <span class="nb">set</span> <span class="n">to</span> <span class="n">TRUE</span><span class="o">.</span>
+        <span class="o">*</span>
+        <span class="o">*</span> <span class="n">The</span> <span class="n">implementation</span> <span class="n">can</span> <span class="k">for</span> <span class="n">example</span> <span class="n">remove</span> <span class="n">the</span> <span class="n">backup</span> <span class="n">it</span> <span class="n">may</span> <span class="n">have</span> <span class="n">done</span>
+        <span class="o">*</span> <span class="n">at</span> <span class="n">StartTransaction</span><span class="p">()</span> <span class="n">time</span><span class="o">.</span>
+        <span class="o">*</span>
+        <span class="o">*</span> <span class="nd">@param</span> <span class="n">poDSInOut</span> <span class="n">datasource</span> <span class="n">handle</span> <span class="n">that</span> <span class="n">may</span> <span class="n">be</span> <span class="n">modified</span>
+        <span class="o">*</span> <span class="nd">@param</span> <span class="n">bOutHasReopenedDS</span> <span class="n">output</span> <span class="n">boolean</span> <span class="n">to</span> <span class="n">indicate</span> <span class="k">if</span> <span class="n">datasource</span> <span class="n">has</span> <span class="n">been</span> <span class="n">closed</span>
+        <span class="o">*</span> <span class="nd">@return</span> <span class="n">OGRERR_NONE</span> <span class="ow">in</span> <span class="n">case</span> <span class="n">of</span> <span class="n">success</span>
+        <span class="o">*/</span>
+       <span class="n">virtual</span> <span class="n">OGRErr</span> <span class="n">CommitTransaction</span><span class="p">(</span><span class="n">OGRDataSource</span><span class="o">*&amp;</span> <span class="n">poDSInOut</span><span class="p">,</span>
+                                        <span class="nb">int</span><span class="o">&amp;</span> <span class="n">bOutHasReopenedDS</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+        <span class="o">/**</span> <span class="n">Rollback</span> <span class="n">a</span> <span class="n">transaction</span><span class="o">.</span>
+        <span class="o">*</span>
+        <span class="o">*</span> <span class="n">The</span> <span class="n">implementation</span> <span class="n">may</span> <span class="n">update</span> <span class="n">the</span> <span class="n">poDSInOut</span> <span class="n">reference</span> <span class="n">by</span> <span class="n">closing</span>
+        <span class="o">*</span> <span class="ow">and</span> <span class="n">reopening</span> <span class="n">the</span> <span class="n">datasource</span> <span class="p">(</span><span class="ow">or</span> <span class="n">assigning</span> <span class="n">it</span> <span class="n">to</span> <span class="n">NULL</span> <span class="ow">in</span> <span class="n">case</span> <span class="n">of</span> <span class="n">error</span><span class="p">)</span><span class="o">.</span>
+        <span class="o">*</span> <span class="n">In</span> <span class="n">which</span> <span class="n">case</span> <span class="n">bOutHasReopenedDS</span> <span class="n">must</span> <span class="n">be</span> <span class="nb">set</span> <span class="n">to</span> <span class="n">TRUE</span><span class="o">.</span>
+        <span class="o">*</span>
+        <span class="o">*</span> <span class="n">The</span> <span class="n">implementation</span> <span class="n">can</span> <span class="k">for</span> <span class="n">example</span> <span class="n">restore</span> <span class="n">the</span> <span class="n">backup</span> <span class="n">it</span> <span class="n">may</span> <span class="n">have</span> <span class="n">done</span>
+        <span class="o">*</span> <span class="n">at</span> <span class="n">StartTransaction</span><span class="p">()</span> <span class="n">time</span><span class="o">.</span>
+        <span class="o">*</span>
+        <span class="o">*</span> <span class="nd">@param</span> <span class="n">poDSInOut</span> <span class="n">datasource</span> <span class="n">handle</span> <span class="n">that</span> <span class="n">may</span> <span class="n">be</span> <span class="n">modified</span>
+        <span class="o">*</span> <span class="nd">@param</span> <span class="n">bOutHasReopenedDS</span> <span class="n">output</span> <span class="n">boolean</span> <span class="n">to</span> <span class="n">indicate</span> <span class="k">if</span> <span class="n">datasource</span> <span class="n">has</span> <span class="n">been</span> <span class="n">closed</span>
+        <span class="o">*</span> <span class="nd">@return</span> <span class="n">OGRERR_NONE</span> <span class="ow">in</span> <span class="n">case</span> <span class="n">of</span> <span class="n">success</span>
+        <span class="o">*/</span>
+       <span class="n">virtual</span> <span class="n">OGRErr</span> <span class="n">RollbackTransaction</span><span class="p">(</span><span class="n">OGRDataSource</span><span class="o">*&amp;</span> <span class="n">poDSInOut</span><span class="p">,</span>
+                                          <span class="nb">int</span><span class="o">&amp;</span> <span class="n">bOutHasReopenedDS</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="opgrlayer-changes">
+<h3>OPGRLayer changes<a class="headerlink" href="#opgrlayer-changes" title="Permalink to this headline">¶</a></h3>
+<p>At the OGRLayer level, the documentation of GetNextFeature() receives
+the following additional information to clarify its semantics :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Features</span> <span class="n">returned</span> <span class="n">by</span> <span class="n">GetNextFeature</span><span class="p">()</span> <span class="n">may</span> <span class="ow">or</span> <span class="n">may</span> <span class="ow">not</span> <span class="n">be</span> <span class="n">affected</span> <span class="n">by</span> <span class="n">concurrent</span>
+<span class="n">modifications</span> <span class="n">depending</span> <span class="n">on</span> <span class="n">drivers</span><span class="o">.</span> <span class="n">A</span> <span class="n">guaranteed</span> <span class="n">way</span> <span class="n">of</span> <span class="n">seeing</span> <span class="n">modifications</span> <span class="ow">in</span>
+<span class="n">effect</span> <span class="ow">is</span> <span class="n">to</span> <span class="n">call</span> <span class="n">ResetReading</span><span class="p">()</span> <span class="n">on</span> <span class="n">layers</span> <span class="n">where</span> <span class="n">GetNextFeature</span><span class="p">()</span> <span class="n">has</span> <span class="n">been</span> <span class="n">called</span><span class="p">,</span>
+<span class="n">before</span> <span class="n">reading</span> <span class="n">again</span><span class="o">.</span> <span class="n">Structural</span> <span class="n">changes</span> <span class="ow">in</span> <span class="n">layers</span> <span class="p">(</span><span class="n">field</span> <span class="n">addition</span><span class="p">,</span> <span class="n">deletion</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+<span class="n">when</span> <span class="n">a</span> <span class="n">read</span> <span class="ow">is</span> <span class="ow">in</span> <span class="n">progress</span> <span class="n">may</span> <span class="ow">or</span> <span class="n">may</span> <span class="ow">not</span> <span class="n">be</span> <span class="n">possible</span> <span class="n">depending</span> <span class="n">on</span> <span class="n">drivers</span><span class="o">.</span>
+<span class="n">If</span> <span class="n">a</span> <span class="n">transaction</span> <span class="ow">is</span> <span class="n">committed</span><span class="o">/</span><span class="n">aborted</span><span class="p">,</span> <span class="n">the</span> <span class="n">current</span> <span class="n">sequential</span> <span class="n">reading</span> <span class="n">may</span> <span class="ow">or</span> <span class="n">may</span>
+<span class="ow">not</span> <span class="n">be</span> <span class="n">valid</span> <span class="n">after</span> <span class="n">that</span> <span class="n">operation</span> <span class="ow">and</span> <span class="n">a</span> <span class="n">call</span> <span class="n">to</span> <span class="n">ResetReading</span><span class="p">()</span> <span class="n">might</span> <span class="n">be</span> <span class="n">needed</span><span class="o">.</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="pg-driver-changes">
+<h3>PG driver changes<a class="headerlink" href="#pg-driver-changes" title="Permalink to this headline">¶</a></h3>
+<p>Dataset level transactions have been implemented, and use of implicitly
+created transactions reworked.</p>
+<p>Interleaved layer reading is now possible.</p>
+<p>GetFeature() has been modified to run without a cursor or a transaction,
+and all other calls to transactions have been checked/modified to not
+reset accidentally a transaction initiated by the user.</p>
+<p>Below the new behavior as described in the updated drv_pg_advanced.html
+help page :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Efficient</span> <span class="n">sequential</span> <span class="n">reading</span> <span class="ow">in</span> <span class="n">PostgreSQL</span> <span class="n">requires</span> <span class="n">to</span> <span class="n">be</span> <span class="n">done</span> <span class="n">within</span> <span class="n">a</span> <span class="n">transaction</span>
+<span class="p">(</span><span class="n">technically</span> <span class="n">this</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">CURSOR</span> <span class="n">WITHOUT</span> <span class="n">HOLD</span><span class="p">)</span><span class="o">.</span>
+<span class="n">So</span> <span class="n">the</span> <span class="n">PG</span> <span class="n">driver</span> <span class="n">will</span> <span class="n">implicitly</span> <span class="nb">open</span> <span class="n">such</span> <span class="n">a</span> <span class="n">transaction</span> <span class="k">if</span> <span class="n">none</span> <span class="ow">is</span> <span class="n">currently</span>
+<span class="n">opened</span> <span class="k">as</span> <span class="n">soon</span> <span class="k">as</span> <span class="n">a</span> <span class="n">feature</span> <span class="ow">is</span> <span class="n">retrieved</span><span class="o">.</span> <span class="n">This</span> <span class="n">transaction</span> <span class="n">will</span> <span class="n">be</span> <span class="n">released</span> <span class="k">if</span>
+<span class="n">ResetReading</span><span class="p">()</span> <span class="ow">is</span> <span class="n">called</span> <span class="p">(</span><span class="n">provided</span> <span class="n">that</span> <span class="n">no</span> <span class="n">other</span> <span class="n">layer</span> <span class="ow">is</span> <span class="n">still</span> <span class="n">being</span> <span class="n">read</span><span class="p">)</span><span class="o">.</span>
+
+<span class="n">If</span> <span class="n">within</span> <span class="n">such</span> <span class="n">an</span> <span class="n">implicit</span> <span class="n">transaction</span><span class="p">,</span> <span class="n">an</span> <span class="n">explicit</span> <span class="n">dataset</span> <span class="n">level</span> <span class="n">StartTransaction</span><span class="p">()</span>
+<span class="ow">is</span> <span class="n">issued</span><span class="p">,</span> <span class="n">the</span> <span class="n">PG</span> <span class="n">driver</span> <span class="n">will</span> <span class="n">use</span> <span class="n">a</span> <span class="n">SAVEPOINT</span> <span class="n">to</span> <span class="n">emulate</span> <span class="n">properly</span> <span class="n">the</span> <span class="n">transaction</span>
+<span class="n">behavior</span> <span class="k">while</span> <span class="n">making</span> <span class="n">the</span> <span class="n">active</span> <span class="n">cursor</span> <span class="n">on</span> <span class="n">the</span> <span class="n">read</span> <span class="n">layer</span> <span class="n">still</span> <span class="n">opened</span><span class="o">.</span>
+
+<span class="n">If</span> <span class="n">an</span> <span class="n">explicit</span> <span class="n">transaction</span> <span class="ow">is</span> <span class="n">opened</span> <span class="k">with</span> <span class="n">dataset</span> <span class="n">level</span> <span class="n">StartTransaction</span><span class="p">()</span>
+<span class="n">before</span> <span class="n">reading</span> <span class="n">a</span> <span class="n">layer</span><span class="p">,</span> <span class="n">this</span> <span class="n">transaction</span> <span class="n">will</span> <span class="n">be</span> <span class="n">used</span> <span class="k">for</span> <span class="n">the</span> <span class="n">cursor</span> <span class="n">that</span> <span class="n">iterates</span>
+<span class="n">over</span> <span class="n">the</span> <span class="n">layer</span><span class="o">.</span> <span class="n">When</span> <span class="n">explicitly</span> <span class="n">committing</span> <span class="ow">or</span> <span class="n">rolling</span> <span class="n">back</span> <span class="n">the</span> <span class="n">transaction</span><span class="p">,</span> <span class="n">the</span>
+<span class="n">cursor</span> <span class="n">will</span> <span class="n">become</span> <span class="n">invalid</span><span class="p">,</span> <span class="ow">and</span> <span class="n">ResetReading</span><span class="p">()</span> <span class="n">should</span> <span class="n">be</span> <span class="n">issued</span> <span class="n">again</span> <span class="n">to</span> <span class="n">restart</span>
+<span class="n">reading</span> <span class="kn">from</span> <span class="nn">the</span> <span class="n">beginning</span><span class="o">.</span>
+
+<span class="n">As</span> <span class="n">calling</span> <span class="n">SetAttributeFilter</span><span class="p">()</span> <span class="ow">or</span> <span class="n">SetSpatialFilter</span><span class="p">()</span> <span class="n">implies</span> <span class="n">an</span> <span class="n">implicit</span>
+<span class="n">ResetReading</span><span class="p">(),</span> <span class="n">they</span> <span class="n">have</span> <span class="n">the</span> <span class="n">same</span> <span class="n">effect</span> <span class="k">as</span> <span class="n">ResetReading</span><span class="p">()</span><span class="o">.</span> <span class="n">That</span> <span class="ow">is</span> <span class="n">to</span> <span class="n">say</span><span class="p">,</span>
+<span class="k">while</span> <span class="n">an</span> <span class="n">implict</span> <span class="n">transaction</span> <span class="ow">is</span> <span class="ow">in</span> <span class="n">progress</span><span class="p">,</span> <span class="n">the</span> <span class="n">transaction</span> <span class="n">will</span> <span class="n">be</span> <span class="n">committed</span>
+<span class="p">(</span><span class="k">if</span> <span class="n">no</span> <span class="n">other</span> <span class="n">layer</span> <span class="ow">is</span> <span class="n">being</span> <span class="n">read</span><span class="p">),</span> <span class="ow">and</span> <span class="n">a</span> <span class="n">new</span> <span class="n">one</span> <span class="n">will</span> <span class="n">be</span> <span class="n">started</span> <span class="n">again</span> <span class="n">at</span> <span class="n">the</span> <span class="nb">next</span>
+<span class="n">GetNextFeature</span><span class="p">()</span> <span class="n">call</span><span class="o">.</span> <span class="n">On</span> <span class="n">the</span> <span class="n">contrary</span><span class="p">,</span> <span class="k">if</span> <span class="n">they</span> <span class="n">are</span> <span class="n">called</span> <span class="n">within</span> <span class="n">an</span> <span class="n">explicit</span>
+<span class="n">transaction</span><span class="p">,</span> <span class="n">the</span> <span class="n">transaction</span> <span class="ow">is</span> <span class="n">maintained</span><span class="o">.</span>
+
+<span class="n">With</span> <span class="n">the</span> <span class="n">above</span> <span class="n">rules</span><span class="p">,</span> <span class="n">the</span> <span class="n">below</span> <span class="n">examples</span> <span class="n">show</span> <span class="n">the</span> <span class="n">SQL</span> <span class="n">instructions</span> <span class="n">that</span> <span class="n">are</span>
+<span class="n">run</span> <span class="n">when</span> <span class="n">using</span> <span class="n">the</span> <span class="n">OGR</span> <span class="n">API</span> <span class="ow">in</span> <span class="n">different</span> <span class="n">scenarios</span><span class="o">.</span>
+
+
+<span class="n">lyr1</span><span class="o">-&gt;</span><span class="n">GetNextFeature</span><span class="p">()</span>             <span class="n">BEGIN</span> <span class="p">(</span><span class="n">implict</span><span class="p">)</span>
+                                   <span class="n">DECLARE</span> <span class="n">cur1</span> <span class="n">CURSOR</span> <span class="n">FOR</span> <span class="n">SELECT</span> <span class="o">*</span> <span class="n">FROM</span> <span class="n">lyr1</span>
+                                   <span class="n">FETCH</span> <span class="mi">1</span> <span class="n">IN</span> <span class="n">cur1</span>
+
+<span class="n">lyr1</span><span class="o">-&gt;</span><span class="n">SetAttributeFilter</span><span class="p">(</span><span class="s1">&#39;xxx&#39;</span><span class="p">)</span>
+     <span class="o">--&gt;</span> <span class="n">lyr1</span><span class="o">-&gt;</span><span class="n">ResetReading</span><span class="p">()</span>      <span class="n">CLOSE</span> <span class="n">cur1</span>
+                                   <span class="n">COMMIT</span> <span class="p">(</span><span class="n">implicit</span><span class="p">)</span>
+
+<span class="n">lyr1</span><span class="o">-&gt;</span><span class="n">GetNextFeature</span><span class="p">()</span>             <span class="n">BEGIN</span> <span class="p">(</span><span class="n">implict</span><span class="p">)</span>
+                                   <span class="n">DECLARE</span> <span class="n">cur1</span> <span class="n">CURSOR</span>  <span class="n">FOR</span> <span class="n">SELECT</span> <span class="o">*</span> <span class="n">FROM</span> <span class="n">lyr1</span> <span class="n">WHERE</span> <span class="n">xxx</span>
+                                   <span class="n">FETCH</span> <span class="mi">1</span> <span class="n">IN</span> <span class="n">cur1</span>
+
+<span class="n">lyr2</span><span class="o">-&gt;</span><span class="n">GetNextFeature</span><span class="p">()</span>             <span class="n">DECLARE</span> <span class="n">cur2</span> <span class="n">CURSOR</span>  <span class="n">FOR</span> <span class="n">SELECT</span> <span class="o">*</span> <span class="n">FROM</span> <span class="n">lyr2</span>
+                                   <span class="n">FETCH</span> <span class="mi">1</span> <span class="n">IN</span> <span class="n">cur2</span>
+
+<span class="n">lyr1</span><span class="o">-&gt;</span><span class="n">GetNextFeature</span><span class="p">()</span>             <span class="n">FETCH</span> <span class="mi">1</span> <span class="n">IN</span> <span class="n">cur1</span>
+
+<span class="n">lyr2</span><span class="o">-&gt;</span><span class="n">GetNextFeature</span><span class="p">()</span>             <span class="n">FETCH</span> <span class="mi">1</span> <span class="n">IN</span> <span class="n">cur2</span>
+
+<span class="n">lyr1</span><span class="o">-&gt;</span><span class="n">CreateFeature</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>             <span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">cur1</span> <span class="o">...</span>
+
+<span class="n">lyr1</span><span class="o">-&gt;</span><span class="n">SetAttributeFilter</span><span class="p">(</span><span class="s1">&#39;xxx&#39;</span><span class="p">)</span>
+     <span class="o">--&gt;</span> <span class="n">lyr1</span><span class="o">-&gt;</span><span class="n">ResetReading</span><span class="p">()</span>      <span class="n">CLOSE</span> <span class="n">cur1</span>
+                                   <span class="n">COMMIT</span> <span class="p">(</span><span class="n">implicit</span><span class="p">)</span>
+
+<span class="n">lyr1</span><span class="o">-&gt;</span><span class="n">GetNextFeature</span><span class="p">()</span>             <span class="n">DECLARE</span> <span class="n">cur1</span> <span class="n">CURSOR</span>  <span class="n">FOR</span> <span class="n">SELECT</span> <span class="o">*</span> <span class="n">FROM</span> <span class="n">lyr1</span> <span class="n">WHERE</span> <span class="n">xxx</span>
+                                   <span class="n">FETCH</span> <span class="mi">1</span> <span class="n">IN</span> <span class="n">cur1</span>
+
+<span class="n">lyr1</span><span class="o">-&gt;</span><span class="n">ResetReading</span><span class="p">()</span>               <span class="n">CLOSE</span> <span class="n">cur1</span>
+
+<span class="n">lyr2</span><span class="o">-&gt;</span><span class="n">ResetReading</span><span class="p">()</span>               <span class="n">CLOSE</span> <span class="n">cur2</span>
+                                   <span class="n">COMMIT</span> <span class="p">(</span><span class="n">implicit</span><span class="p">)</span>
+
+<span class="o">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+
+<span class="n">ds</span><span class="o">-&gt;</span><span class="n">StartTransaction</span><span class="p">()</span>             <span class="n">BEGIN</span>
+
+<span class="n">lyr1</span><span class="o">-&gt;</span><span class="n">GetNextFeature</span><span class="p">()</span>             <span class="n">DECLARE</span> <span class="n">cur1</span> <span class="n">CURSOR</span> <span class="n">FOR</span> <span class="n">SELECT</span> <span class="o">*</span> <span class="n">FROM</span> <span class="n">lyr1</span>
+                                   <span class="n">FETCH</span> <span class="mi">1</span> <span class="n">IN</span> <span class="n">cur1</span>
+
+<span class="n">lyr2</span><span class="o">-&gt;</span><span class="n">GetNextFeature</span><span class="p">()</span>             <span class="n">DECLARE</span> <span class="n">cur2</span> <span class="n">CURSOR</span> <span class="n">FOR</span> <span class="n">SELECT</span> <span class="o">*</span> <span class="n">FROM</span> <span class="n">lyr2</span>
+                                   <span class="n">FETCH</span> <span class="mi">1</span> <span class="n">IN</span> <span class="n">cur2</span>
+
+<span class="n">lyr1</span><span class="o">-&gt;</span><span class="n">CreateFeature</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>             <span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">cur1</span> <span class="o">...</span>
+
+<span class="n">lyr1</span><span class="o">-&gt;</span><span class="n">SetAttributeFilter</span><span class="p">(</span><span class="s1">&#39;xxx&#39;</span><span class="p">)</span>
+     <span class="o">--&gt;</span> <span class="n">lyr1</span><span class="o">-&gt;</span><span class="n">ResetReading</span><span class="p">()</span>      <span class="n">CLOSE</span> <span class="n">cur1</span>
+                                   <span class="n">COMMIT</span> <span class="p">(</span><span class="n">implicit</span><span class="p">)</span>
+
+<span class="n">lyr1</span><span class="o">-&gt;</span><span class="n">GetNextFeature</span><span class="p">()</span>             <span class="n">DECLARE</span> <span class="n">cur1</span> <span class="n">CURSOR</span>  <span class="n">FOR</span> <span class="n">SELECT</span> <span class="o">*</span> <span class="n">FROM</span> <span class="n">lyr1</span> <span class="n">WHERE</span> <span class="n">xxx</span>
+                                   <span class="n">FETCH</span> <span class="mi">1</span> <span class="n">IN</span> <span class="n">cur1</span>
+
+<span class="n">lyr1</span><span class="o">-&gt;</span><span class="n">ResetReading</span><span class="p">()</span>               <span class="n">CLOSE</span> <span class="n">cur1</span>
+
+<span class="n">lyr2</span><span class="o">-&gt;</span><span class="n">ResetReading</span><span class="p">()</span>               <span class="n">CLOSE</span> <span class="n">cur2</span>
+
+<span class="n">ds</span><span class="o">-&gt;</span><span class="n">CommitTransaction</span><span class="p">()</span>            <span class="n">COMMIT</span>
+
+<span class="o">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+
+<span class="n">ds</span><span class="o">-&gt;</span><span class="n">StartTransaction</span><span class="p">()</span>             <span class="n">BEGIN</span>
+
+<span class="n">lyr1</span><span class="o">-&gt;</span><span class="n">GetNextFeature</span><span class="p">()</span>             <span class="n">DECLARE</span> <span class="n">cur1</span> <span class="n">CURSOR</span> <span class="n">FOR</span> <span class="n">SELECT</span> <span class="o">*</span> <span class="n">FROM</span> <span class="n">lyr1</span>
+                                   <span class="n">FETCH</span> <span class="mi">1</span> <span class="n">IN</span> <span class="n">cur1</span>
+
+<span class="n">lyr1</span><span class="o">-&gt;</span><span class="n">CreateFeature</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>             <span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">cur1</span> <span class="o">...</span>
+
+<span class="n">ds</span><span class="o">-&gt;</span><span class="n">CommitTransaction</span><span class="p">()</span>            <span class="n">CLOSE</span> <span class="n">cur1</span> <span class="p">(</span><span class="n">implicit</span><span class="p">)</span>
+                                   <span class="n">COMMIT</span>
+
+<span class="n">lyr1</span><span class="o">-&gt;</span><span class="n">GetNextFeature</span><span class="p">()</span>             <span class="n">FETCH</span> <span class="mi">1</span> <span class="n">IN</span> <span class="n">cur1</span>      <span class="o">==&gt;</span> <span class="n">Error</span> <span class="n">since</span> <span class="n">the</span> <span class="n">cursor</span> <span class="n">was</span> <span class="n">closed</span> <span class="k">with</span> <span class="n">the</span> <span class="n">commit</span><span class="o">.</span> <span class="n">Explicit</span> <span class="n">ResetReading</span><span class="p">()</span> <span class="n">required</span> <span class="n">before</span>
+
+<span class="o">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+
+<span class="n">lyr1</span><span class="o">-&gt;</span><span class="n">GetNextFeature</span><span class="p">()</span>             <span class="n">BEGIN</span> <span class="p">(</span><span class="n">implicit</span><span class="p">)</span>
+                                   <span class="n">DECLARE</span> <span class="n">cur1</span> <span class="n">CURSOR</span> <span class="n">FOR</span> <span class="n">SELECT</span> <span class="o">*</span> <span class="n">FROM</span> <span class="n">lyr1</span>
+                                   <span class="n">FETCH</span> <span class="mi">1</span> <span class="n">IN</span> <span class="n">cur1</span>
+
+<span class="n">ds</span><span class="o">-&gt;</span><span class="n">StartTransaction</span><span class="p">()</span>             <span class="n">SAVEPOINT</span> <span class="n">savepoint</span>
+
+<span class="n">lyr1</span><span class="o">-&gt;</span><span class="n">CreateFeature</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>             <span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">cur1</span> <span class="o">...</span>
+
+<span class="n">ds</span><span class="o">-&gt;</span><span class="n">CommitTransaction</span><span class="p">()</span>            <span class="n">RELEASE</span> <span class="n">SAVEPOINT</span> <span class="n">savepoint</span>
+
+<span class="n">lyr1</span><span class="o">-&gt;</span><span class="n">ResetReading</span><span class="p">()</span>               <span class="n">CLOSE</span> <span class="n">cur1</span>
+                                   <span class="n">COMMIT</span> <span class="p">(</span><span class="n">implicit</span><span class="p">)</span>
+
+
+<span class="n">Note</span><span class="p">:</span> <span class="ow">in</span> <span class="n">reality</span><span class="p">,</span> <span class="n">the</span> <span class="n">PG</span> <span class="n">drivers</span> <span class="n">fetches</span> <span class="mi">500</span> <span class="n">features</span> <span class="n">at</span> <span class="n">once</span><span class="o">.</span> <span class="n">The</span> <span class="n">FETCH</span> <span class="mi">1</span>
+<span class="ow">is</span> <span class="k">for</span> <span class="n">clarity</span> <span class="n">of</span> <span class="n">the</span> <span class="n">explanation</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>It is recommended to do operations within explicit transactions for ease
+of mind (some troubles fixing ogr_pg.py, but which does admittedly weird
+things like reopening connections, which does not fly very well with
+‘implicit’ transactions)</p>
+</div>
+<div class="section" id="gpkg-and-sqlite-driver-changes">
+<h3>GPKG and SQLite driver changes<a class="headerlink" href="#gpkg-and-sqlite-driver-changes" title="Permalink to this headline">¶</a></h3>
+<p>Dataset level transactions have been implemented. A few fixes made here
+and there to avoid resetting accidentally a transaction initiated by the
+user.</p>
+</div>
+<div class="section" id="filegdb-driver-changes">
+<h3>FileGDB driver changes<a class="headerlink" href="#filegdb-driver-changes" title="Permalink to this headline">¶</a></h3>
+<p>The FileGDB driver uses the above described emulation to offer a
+transaction mechanism. This works by backing up the current state of a
+geodatabase when StartTransaction(force=TRUE) is called. If the
+transaction is committed, the backup copy is destroyed. If the
+transaction is rolled back, the backup copy is restored. So this might
+be costly when operating on huge geodatabases. Note that this emulation
+has an unspecified behavior in case of concurrent updates (with
+different connections in the same or another process).</p>
+</div>
+</div>
+<div class="section" id="swig-bindings-python-java-c-perl-changes">
+<h2>SWIG bindings (Python / Java / C# / Perl) changes<a class="headerlink" href="#swig-bindings-python-java-c-perl-changes" title="Permalink to this headline">¶</a></h2>
+<p>The following additions have been done :</p>
+<ul class="simple">
+<li><p>Dataset.StartTransaction(int force=FALSE)</p></li>
+<li><p>Dataset.CommitTransaction()</p></li>
+<li><p>Dataset.RollbackTransaction()</p></li>
+<li><p>ogr.ODsCTransactions constant</p></li>
+<li><p>ogr.ODsCEmulatedTransactions constant</p></li>
+</ul>
+</div>
+<div class="section" id="utilities">
+<h2>Utilities<a class="headerlink" href="#utilities" title="Permalink to this headline">¶</a></h2>
+<p>ogr2ogr now uses dataset transactions (instead of layer transactions) if
+ODsCTransactions is advertized.</p>
+</div>
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<p>New/modified API are documented. MIGRATION_GUIDE.TXT updated with
+mention to below compatibility issues.</p>
+</div>
+<div class="section" id="test-suite">
+<h2>Test Suite<a class="headerlink" href="#test-suite" title="Permalink to this headline">¶</a></h2>
+<p>The test suite is extended to test</p>
+<ul class="simple">
+<li><p>updated drivers: PG, GPKG, SQLite, FileGDB</p></li>
+<li><p>use of database transactions by ogr2ogr</p></li>
+</ul>
+</div>
+<div class="section" id="compatibility-issues">
+<h2>Compatibility Issues<a class="headerlink" href="#compatibility-issues" title="Permalink to this headline">¶</a></h2>
+<p>As described above, subtle behavior changes can be observed with the PG
+driver, related to implicit transactions that were flushed before and
+are no longer now, but this should hopefully be restricted to
+non-typical use cases. So some cases that “worked” before might no
+longer work, but the new behavior should hopefully be more
+understandable.</p>
+<p>The PG and SQLite drivers could accept apparently nested calls to
+StartTransaction() (at the layer level). This is no longer possible
+since they are now redirected to dataset transactions, that explicitly
+do not support it.</p>
+</div>
+<div class="section" id="out-of-scope">
+<h2>Out of scope<a class="headerlink" href="#out-of-scope" title="Permalink to this headline">¶</a></h2>
+<p>The following drivers that implement BEGIN/COMMIT/ROLLBACK could be
+later enhanced to support dataset transactions: OCI, MySQL,
+MSSQLSpatial.</p>
+<p>GFT, CartoDB, WFS could also benefit for dataset transactions.</p>
+<p>VRT currently supports layer transactions (if the underlying dataset
+support it, and excluding union layers). If dataset transaction were to
+be implemented, should it consist in forwarding dataset transaction to
+source dataset(s) ? Implementation might be complicated in case the same
+dataset is used by multiple sources, but more fundamentally one cannot
+guarantee ACID on multiple datasets.</p>
+</div>
+<div class="section" id="related-tickets">
+<h2>Related tickets<a class="headerlink" href="#related-tickets" title="Permalink to this headline">¶</a></h2>
+<p>A proposed revision on how transactions are implemented in the PG driver
+was proposed a long time ago
+(<a class="reference external" href="https://trac.osgeo.org/gdal/ticket/1265">https://trac.osgeo.org/gdal/ticket/1265</a>)
+to solve some of the above issues. The patch no longer applies but it is
+expected that the changes done for this RFC cover the issues that the
+ticket wanted to address.</p>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>Implementation will be done by Even Rouault
+(<a class="reference external" href="http://spatialys.com">Spatialys</a>), and sponsored by <a class="reference external" href="http://www.linz.govt.nz/">LINZ (Land
+Information New Zealand)</a>.</p>
+<p>The proposed implementation lies in the “rfc54_dataset_transactions”
+branch of the
+<a class="reference external" href="https://github.com/rouault/gdal2/tree/rfc54_dataset_transactions">https://github.com/rouault/gdal2/tree/rfc54_dataset_transactions</a>
+repository.</p>
+<p>The list of changes:
+<a class="reference external" href="https://github.com/rouault/gdal2/compare/rfc54_dataset_transactions">https://github.com/rouault/gdal2/compare/rfc54_dataset_transactions</a></p>
+</div>
+<div class="section" id="voting-history">
+<h2>Voting history<a class="headerlink" href="#voting-history" title="Permalink to this headline">¶</a></h2>
+<p>+1 from JukkaR, HowardB and EvenR</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rfc55_refined_setfeature_deletefeature_semantics.html" class="btn btn-neutral float-right" title="RFC 55: Refined SetFeature() and DeleteFeature() semantics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc53_ogr_notnull_default.html" class="btn btn-neutral float-left" title="RFC 53: OGR not-null constraints and default values" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

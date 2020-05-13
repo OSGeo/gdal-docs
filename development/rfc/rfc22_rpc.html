@@ -1,0 +1,599 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RFC 22: RPC Georeferencing &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdevelopment/rfc/rfc22_rpc.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="RFC 23.1: Unicode support in OGR" href="rfc23_ogr_unicode.html" />
+    <link rel="prev" title="RFC 21: OGR SQL type cast and field name alias" href="rfc21_ogrsqlcast.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 22: RPC Georeferencing</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rpc-domain-metadata">RPC Domain Metadata</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#updating-nitf-driver">Updating NITF Driver</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#updating-geotiff-driver">Updating GeoTIFF Driver</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#changes-to-genimgproj-transformer">Changes to GenImgProj Transformer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#changes-to-gdalwarp-and-gdaltransform">Changes to gdalwarp and gdaltransform</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#preserving-geolocation-through-translation">Preserving Geolocation Through Translation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#changes-to-rpc-transformer">Changes to RPC Transformer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#backward-compatibility-issues">Backward Compatibility Issues</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#swig-bindings-issues">SWIG Bindings Issues</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#testing">Testing</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 22: RPC Georeferencing</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/development/rfc/rfc22_rpc.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="rfc23_ogr_unicode.html" class="btn btn-neutral float-right" title="RFC 23.1: Unicode support in OGR" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc21_ogrsqlcast.html" class="btn btn-neutral float-left" title="RFC 21: OGR SQL type cast and field name alias" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rfc-22-rpc-georeferencing">
+<span id="rfc-22"></span><h1>RFC 22: RPC Georeferencing<a class="headerlink" href="#rfc-22-rpc-georeferencing" title="Permalink to this headline">¶</a></h1>
+<p>Author: Frank Warmerdam</p>
+<p>Contact: <a class="reference external" href="mailto:warmerdam&#37;&#52;&#48;pobox&#46;com">warmerdam<span>&#64;</span>pobox<span>&#46;</span>com</a></p>
+<p>Status: Adopted, Implemented</p>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>It is proposed that GDAL support an additional mechanism for geolocation
+of imagery based on rational polynomial coefficients (RPCs) represented
+as metadata.</p>
+<p>Many modern raw satellite products are distributed with RPCs, including
+products from GeoEye, and DigitalGlobe. RPCs provide a higher systematic
+description of georeferencing over an image, and also contain
+information on the viewing geometry that in theory makes orthocorrection
+(given a DEM) and some 3D operations like building height computation
+possible.</p>
+</div>
+<div class="section" id="rpc-domain-metadata">
+<h2>RPC Domain Metadata<a class="headerlink" href="#rpc-domain-metadata" title="Permalink to this headline">¶</a></h2>
+<p>Datasets with RPCs will include the following dataset level metadata
+items in the “RPC” domain to identify the rational polynomials.</p>
+<ul class="simple">
+<li><p>ERR_BIAS: Error - Bias. The RMS bias error in meters per horizontal
+axis of all points in the image (-1.0 if unknown)</p></li>
+<li><p>ERR_RAND: Error - Random. RMS random error in meters per horizontal
+axis of each point in the image (-1.0 if unknown)</p></li>
+<li><p>LINE_OFF: Line Offset</p></li>
+<li><p>SAMP_OFF: Sample Offset</p></li>
+<li><p>LAT_OFF: Geodetic Latitude Offset</p></li>
+<li><p>LONG_OFF: Geodetic Longitude Offset</p></li>
+<li><p>HEIGHT_OFF: Geodetic Height Offset</p></li>
+<li><p>LINE_SCALE: Line Scale</p></li>
+<li><p>SAMP_SCALE: Sample Scale</p></li>
+<li><p>LAT_SCALE: Geodetic Latitude Scale</p></li>
+<li><p>LONG_SCALE: Geodetic Longitude Scale</p></li>
+<li><p>HEIGHT_SCALE: Geodetic Height Scale</p></li>
+<li><p>LINE_NUM_COEFF (1-20): Line Numerator Coefficients. Twenty
+coefficients for the polynomial in the Numerator of the rn equation.
+(space separated)</p></li>
+<li><p>LINE_DEN_COEFF (1-20): Line Denominator Coefficients. Twenty
+coefficients for the polynomial in the Denominator of the rn
+equation. (space separated)</p></li>
+<li><p>SAMP_NUM_COEFF (1-20): Sample Numerator Coefficients. Twenty
+coefficients for the polynomial in the Numerator of the cn equation.
+(space separated)</p></li>
+<li><p>SAMP_DEN_COEFF (1-20): Sample Denominator Coefficients. Twenty
+coefficients for the polynomial in the Denominator of the cn
+equation. (space separated)</p></li>
+</ul>
+<p>These fields are directly derived from the document prospective GeoTIFF
+RPC document at:</p>
+<p><a class="reference external" href="http://geotiff.maptools.org/rpc_prop.html">http://geotiff.maptools.org/rpc_prop.html</a></p>
+<p>The line and pixel offset expressed with LINE_OFF and SAMP_OFF are with
+respect to the center of the pixel (#5993)</p>
+</div>
+<div class="section" id="updating-nitf-driver">
+<h2>Updating NITF Driver<a class="headerlink" href="#updating-nitf-driver" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Already supports RPCs in this model, but will be modified to put them
+in the RPC domain instead of the primary metadata domain.</p></li>
+<li><p>Add support for reading Digital Globe .RPB files.</p></li>
+<li><p>No support for writing RPCs for now.</p></li>
+</ul>
+</div>
+<div class="section" id="updating-geotiff-driver">
+<h2>Updating GeoTIFF Driver<a class="headerlink" href="#updating-geotiff-driver" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Upgrade to support reading Digital Globe .RPB files.</p></li>
+<li><p>Possible support reading Space Imaging (GeoEye?) rpc.txt files.</p></li>
+<li><p>Support reading RPC TIFF tag (per
+<a class="reference external" href="http://geotiff.maptools.org/rpc_prop.html">http://geotiff.maptools.org/rpc_prop.html</a>)</p></li>
+<li><p>Support writing RPC TIFF tag.</p></li>
+<li><p>Support writing .RPB files (if RPB=YES or PROFILE not GDALGeoTIFF).</p></li>
+</ul>
+</div>
+<div class="section" id="changes-to-genimgproj-transformer">
+<h2>Changes to GenImgProj Transformer<a class="headerlink" href="#changes-to-genimgproj-transformer" title="Permalink to this headline">¶</a></h2>
+<p>Currently it is difficult to reliably create a warp transformer based on
+RPCs using GDALGenImgProjTransformer() as it will use a geotransform in
+preference to RPCs if available. Many images with useful RPC information
+also include a geotransform (approximate or accurate). It is therefore
+proposed to modify the GDALCreateGenImgProjTransformer() function to
+make it practical to provide more direction in the creation of the
+transformer. The proposed new function is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="o">*</span>
+<span class="n">GDALCreateGenImgProjTransformer2</span><span class="p">(</span> <span class="n">GDALDatasetH</span> <span class="n">hSrcDS</span><span class="p">,</span> <span class="n">GDALDatasetH</span> <span class="n">hDstDS</span><span class="p">,</span>
+                                  <span class="n">char</span> <span class="o">**</span><span class="n">papszOptions</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>Supported Options:</p>
+<ul class="simple">
+<li><p>SRC_SRS: WKT SRS to be used as an override for hSrcDS.</p></li>
+<li><p>DST_SRS: WKT SRS to be used as an override for hDstDS.</p></li>
+<li><p>GCPS_OK: If false, GCPs will not be used, default is TRUE.</p></li>
+<li><p>MAX_GCP_ORDER: the maximum order to use for GCP derived polynomials
+if possible. The default is to autoselect based on the number of
+GCPs. A value of -1 triggers use of Thin Plate Spline instead of
+polynomials.</p></li>
+<li><p>METHOD: may have a value which is one of GEOTRANSFORM,
+GCP_POLYNOMIAL, GCP_TPS, GEOLOC_ARRAY, RPC to force only one
+geolocation method to be considered on the source dataset.</p></li>
+<li><p>RPC_HEIGHT: A fixed height to be used with RPC calculations.</p></li>
+</ul>
+<p>This replaces the older function which did not include support for
+passing arbitrary options, and was thus not easily extended. The old
+function will be re-implemented with a call to the new functions.</p>
+<p>The most important addition is the METHOD option which can be set to
+specifically use one of the image to georeferenced coordinate system
+methods instead of leaving it up to the code to pick the one it thinks
+is best.</p>
+</div>
+<div class="section" id="changes-to-gdalwarp-and-gdaltransform">
+<h2>Changes to gdalwarp and gdaltransform<a class="headerlink" href="#changes-to-gdalwarp-and-gdaltransform" title="Permalink to this headline">¶</a></h2>
+<p>In order to facilitate passing transformer options into the updated
+GDALCreateGenImgProjTransformer2(), the gdalwarp and gdaltransform
+programs (built on this function) will be updated to include a -to
+(transformer option) switch, and to use the new function.</p>
+</div>
+<div class="section" id="preserving-geolocation-through-translation">
+<h2>Preserving Geolocation Through Translation<a class="headerlink" href="#preserving-geolocation-through-translation" title="Permalink to this headline">¶</a></h2>
+<p>The RPC information needs to be copied and preserved through
+translations that do not alter the spatial arrangement of the data. To
+that end RPC metadata copying will be added to:</p>
+<ul class="simple">
+<li><p>VRT driver’s CreateCopy().</p></li>
+<li><p>GDALDriver’s default CreateCopy().</p></li>
+<li><p>GDALPamDataset::CopyInfo()</p></li>
+<li><p>gdal_translate will be updated to copy RPC metadata to the
+intermediate internal VRT if, and only if, no resizing or subsetting
+is being done.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-to-rpc-transformer">
+<h2>Changes to RPC Transformer<a class="headerlink" href="#changes-to-rpc-transformer" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Implement iterative “back transform” from pixel/line to
+lat/long/height instead of simple linear approximator.</p></li>
+<li><p>Add support for RPC_HEIGHT offset, so all Z values to transformer are
+assumed to be relative to this offset (normally really and average
+elevation for the scene).</p></li>
+<li><p>Make RPC Transformer serializable (in VRT files, etc).</p></li>
+</ul>
+</div>
+<div class="section" id="backward-compatibility-issues">
+<h2>Backward Compatibility Issues<a class="headerlink" href="#backward-compatibility-issues" title="Permalink to this headline">¶</a></h2>
+<p>Previously the NITF driver returned RPC metadata in the default domain.
+With the implementation of this RFC for GDAL 1.6.0 any applications
+using this metadata would need to consult the RPC domain instead. The
+RPC_ prefix on the metadata values has also been removed.</p>
+<p>The GDALCreateGenImgProjTransformer() function is preserved, so no
+compatibility issues are anticipated by the addition of the new
+generalized factory.</p>
+</div>
+<div class="section" id="swig-bindings-issues">
+<h2>SWIG Bindings Issues<a class="headerlink" href="#swig-bindings-issues" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>The raw access is by the established metadata api, so no changes are
+needed for this.</p></li>
+<li><p>The Warp API is only bound at a high level, so there should be no
+changes in this regard.</p></li>
+<li><p>For testing purposes it is desirable to provide a binding around the
+GDAL transformer API. The following planned binding is based loosely
+on OGRCoordinateTransformation API binding. So far I have only found
+the TransformPoint( bDstToSrc, x, y, z ) entry point to be useful in
+Python and even that ends up returning a (bSuccess, (x, y, z)) result
+which is somewhat awkward. Is there a better way of doing this?</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/************************************************************************/</span>
+<span class="o">/*</span>                             <span class="n">Transformer</span>                              <span class="o">*/</span>
+<span class="o">/************************************************************************/</span>
+
+<span class="o">%</span><span class="n">rename</span> <span class="p">(</span><span class="n">Transformer</span><span class="p">)</span> <span class="n">GDALTransformerInfoShadow</span><span class="p">;</span>
+<span class="k">class</span> <span class="nc">GDALTransformerInfoShadow</span> <span class="p">{</span>
+<span class="n">private</span><span class="p">:</span>
+  <span class="n">GDALTransformerInfoShadow</span><span class="p">();</span>
+<span class="n">public</span><span class="p">:</span>
+<span class="o">%</span><span class="n">extend</span> <span class="p">{</span>
+
+  <span class="n">GDALTransformerInfoShadow</span><span class="p">(</span> <span class="n">GDALDatasetShadow</span> <span class="o">*</span><span class="n">src</span><span class="p">,</span> <span class="n">GDALDatasetShadow</span> <span class="o">*</span><span class="n">dst</span><span class="p">,</span>
+                             <span class="n">char</span> <span class="o">**</span><span class="n">options</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="n">GDALTransformerInfoShadow</span> <span class="o">*</span><span class="n">obj</span> <span class="o">=</span> <span class="p">(</span><span class="n">GDALTransformerInfoShadow</span><span class="o">*</span><span class="p">)</span>
+       <span class="n">GDALCreateGenImgProjTransformer2</span><span class="p">(</span> <span class="p">(</span><span class="n">GDALDatasetH</span><span class="p">)</span><span class="n">src</span><span class="p">,</span> <span class="p">(</span><span class="n">GDALDatasetH</span><span class="p">)</span><span class="n">dst</span><span class="p">,</span>
+                                         <span class="n">options</span> <span class="p">);</span>
+    <span class="k">return</span> <span class="n">obj</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="o">~</span><span class="n">GDALTransformerInfoShadow</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">GDALDestroyTransformer</span><span class="p">(</span> <span class="bp">self</span> <span class="p">);</span>
+  <span class="p">}</span>
+
+<span class="o">//</span> <span class="n">Need</span> <span class="n">to</span> <span class="n">apply</span> <span class="n">argin</span> <span class="n">typemap</span> <span class="n">second</span> <span class="n">so</span> <span class="n">the</span> <span class="n">numinputs</span><span class="o">=</span><span class="mi">1</span> <span class="n">version</span> <span class="n">gets</span> <span class="n">applied</span>
+<span class="o">//</span> <span class="n">instead</span> <span class="n">of</span> <span class="n">the</span> <span class="n">numinputs</span><span class="o">=</span><span class="mi">0</span> <span class="n">version</span> <span class="kn">from</span> <span class="nn">argout.</span>
+<span class="o">%</span><span class="n">apply</span> <span class="p">(</span><span class="n">double</span> <span class="n">argout</span><span class="p">[</span><span class="n">ANY</span><span class="p">])</span> <span class="p">{(</span><span class="n">double</span> <span class="n">inout</span><span class="p">[</span><span class="mi">3</span><span class="p">])};</span>
+<span class="o">%</span><span class="n">apply</span> <span class="p">(</span><span class="n">double</span> <span class="n">argin</span><span class="p">[</span><span class="n">ANY</span><span class="p">])</span> <span class="p">{(</span><span class="n">double</span> <span class="n">inout</span><span class="p">[</span><span class="mi">3</span><span class="p">])};</span>
+  <span class="nb">int</span> <span class="n">TransformPoint</span><span class="p">(</span> <span class="nb">int</span> <span class="n">bDstToSrc</span><span class="p">,</span> <span class="n">double</span> <span class="n">inout</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="nb">int</span> <span class="n">nRet</span><span class="p">,</span> <span class="n">nSuccess</span> <span class="o">=</span> <span class="n">TRUE</span><span class="p">;</span>
+
+    <span class="n">nRet</span> <span class="o">=</span> <span class="n">GDALUseTransformer</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">bDstToSrc</span><span class="p">,</span>
+                               <span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">inout</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">&amp;</span><span class="n">inout</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">&amp;</span><span class="n">inout</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                               <span class="o">&amp;</span><span class="n">nSuccess</span> <span class="p">);</span>
+
+    <span class="k">return</span> <span class="n">nRet</span> <span class="o">&amp;&amp;</span> <span class="n">nSuccess</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="o">%</span><span class="n">clear</span> <span class="p">(</span><span class="n">double</span> <span class="n">inout</span><span class="p">[</span><span class="mi">3</span><span class="p">]);</span>
+
+  <span class="nb">int</span> <span class="n">TransformPoint</span><span class="p">(</span> <span class="n">double</span> <span class="n">argout</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="nb">int</span> <span class="n">bDstToSrc</span><span class="p">,</span>
+                      <span class="n">double</span> <span class="n">x</span><span class="p">,</span> <span class="n">double</span> <span class="n">y</span><span class="p">,</span> <span class="n">double</span> <span class="n">z</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="nb">int</span> <span class="n">nRet</span><span class="p">,</span> <span class="n">nSuccess</span> <span class="o">=</span> <span class="n">TRUE</span><span class="p">;</span>
+
+    <span class="n">argout</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span>
+    <span class="n">argout</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span><span class="p">;</span>
+    <span class="n">argout</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span><span class="p">;</span>
+    <span class="n">nRet</span> <span class="o">=</span> <span class="n">GDALUseTransformer</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">bDstToSrc</span><span class="p">,</span>
+                               <span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">argout</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">&amp;</span><span class="n">argout</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">&amp;</span><span class="n">argout</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                               <span class="o">&amp;</span><span class="n">nSuccess</span> <span class="p">);</span>
+
+    <span class="k">return</span> <span class="n">nRet</span> <span class="o">&amp;&amp;</span> <span class="n">nSuccess</span><span class="p">;</span>
+  <span class="p">}</span>
+
+<span class="c1">#ifdef SWIGCSHARP</span>
+  <span class="o">%</span><span class="n">apply</span> <span class="p">(</span><span class="n">double</span> <span class="o">*</span><span class="n">inout</span><span class="p">)</span> <span class="p">{(</span><span class="n">double</span><span class="o">*</span><span class="p">)};</span>
+  <span class="o">%</span><span class="n">apply</span> <span class="p">(</span><span class="n">double</span> <span class="o">*</span><span class="n">inout</span><span class="p">)</span> <span class="p">{(</span><span class="nb">int</span><span class="o">*</span><span class="p">)};</span>
+<span class="c1">#endif</span>
+  <span class="nb">int</span> <span class="n">TransformPoints</span><span class="p">(</span> <span class="nb">int</span> <span class="n">bDstToSrc</span><span class="p">,</span>
+                       <span class="nb">int</span> <span class="n">nCount</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="n">x</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="n">y</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="n">z</span><span class="p">,</span>
+                       <span class="nb">int</span> <span class="o">*</span><span class="n">panSuccess</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="nb">int</span> <span class="n">nRet</span><span class="p">;</span>
+
+    <span class="n">nRet</span> <span class="o">=</span> <span class="n">GDALUseTransformer</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">bDstToSrc</span><span class="p">,</span> <span class="n">nCount</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">panSuccess</span> <span class="p">);</span>
+
+    <span class="k">return</span> <span class="n">nRet</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="c1">#ifdef SWIGCSHARP</span>
+  <span class="o">%</span><span class="n">clear</span> <span class="p">(</span><span class="n">double</span><span class="o">*</span><span class="p">);</span>
+  <span class="o">%</span><span class="n">clear</span> <span class="p">(</span><span class="nb">int</span><span class="o">*</span><span class="p">);</span>
+<span class="c1">#endif</span>
+
+<span class="p">}</span> <span class="o">/*</span><span class="n">extend</span> <span class="o">*/</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<p>In addition to standard API documentation, the RPC metadata mechanism
+will be introduced into the “GDAL Data Model” document.</p>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>This work will be implemented by Frank Warmerdam with support from the
+Canadian Nuclear Safety Commission.</p>
+</div>
+<div class="section" id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>A test script for the transformer API covering RPC, GCP_TPS,
+GCP_POLYNOMIAL, GEOLOC and GEOTRANSFORM methods will be implemented.</p></li>
+<li><p>A test script for reading and writing RPB, and GeoTIFF RPC tags will
+be written.</p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rfc23_ogr_unicode.html" class="btn btn-neutral float-right" title="RFC 23.1: Unicode support in OGR" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc21_ogrsqlcast.html" class="btn btn-neutral float-left" title="RFC 21: OGR SQL type cast and field name alias" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

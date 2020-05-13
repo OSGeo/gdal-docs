@@ -1,0 +1,918 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RFC 49: Curve geometries &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdevelopment/rfc/rfc49_curve_geometries.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="RFC 50: OGR field subtypes" href="rfc50_ogr_field_subtype.html" />
+    <link rel="prev" title="RFC 48: Geographical networks support" href="rfc48_geographical_networks_support.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 49: Curve geometries</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#reference-documents">Reference documents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#core-changes">Core changes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#changes-in-drivers">Changes in drivers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#changes-in-utilities">Changes in utilities</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#changes-in-swig-bindings">Changes in SWIG bindings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#related-changes-that-are-not-included-in-this-rfc">Related changes that are <em>NOT</em> included in this RFC</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#backward-compatibility">Backward compatibility</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#testing">Testing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voting-history">Voting history</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 49: Curve geometries</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/development/rfc/rfc49_curve_geometries.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="rfc50_ogr_field_subtype.html" class="btn btn-neutral float-right" title="RFC 50: OGR field subtypes" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc48_geographical_networks_support.html" class="btn btn-neutral float-left" title="RFC 48: Geographical networks support" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rfc-49-curve-geometries">
+<span id="rfc-49"></span><h1>RFC 49: Curve geometries<a class="headerlink" href="#rfc-49-curve-geometries" title="Permalink to this headline">¶</a></h1>
+<p>Author: Even Rouault</p>
+<p>Contact: even dot rouault at spatialys dot com</p>
+<p>Status: Adopted, implemented in GDAL 2.0</p>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>The current geometry model in GDAL 1.X makes use of points, lines,
+polygons and aggregations of them (multipoints, multilines,
+multipolygons and geometry collections). It was modeled from the
+geometry class hierarchy of the “OpenGIS Simple Feature Access Part 1 :
+Common Architecture” (in its 1.1.0 version).</p>
+<p>This RFC covers the addition of new geometry types that have been added
+in ISO/IEC 13249 Part 3 Spatial (abbreviated as ISO SQL/MM Part 3):</p>
+<ul class="simple">
+<li><p>circular string: a circular arc, or a sequence of connected circular
+arcs, each of them describe by 3 points: the first point of the arc,
+an intermediate point and the final point</p></li>
+<li><p>compound curve: a sequence of connected curves, either line strings
+or circular strings</p></li>
+<li><p>curve polygon: polygon consisting of one outer ring, and zero or more
+inner ring. Each ring can be one of the curve implementations: line
+strings, circular strings, compound curves.</p></li>
+<li><p>multicurve: a collection of curves (line strings, circular strings,
+compound curves)</p></li>
+<li><p>multisurface: a collection of surfaces (polygons, curve polygons)</p></li>
+</ul>
+<p>The scope of this RFC consists in :</p>
+<ul class="simple">
+<li><p>adding the new geometry classes to the existing geometry class
+hierarchy, with the corresponding importer and exporter of WKT (Well
+Known Text) and WKB (Well Known Binary) encodings</p></li>
+<li><p>adding methods to convert those curve geometries into their
+approximated linear version, and to do the reverse operation</p></li>
+<li><p>upgrading some of the drivers that can support such geometries : GML
+(and indirectly NAS, WFS), PostGIS/PGDump, GeoPackage, SQLite, CSV,
+VRT.</p></li>
+</ul>
+</div>
+<div class="section" id="reference-documents">
+<h2>Reference documents<a class="headerlink" href="#reference-documents" title="Permalink to this headline">¶</a></h2>
+<p>The following documents have been used for the implementation :</p>
+<ul class="simple">
+<li><p><a class="reference external" href="http://jtc1sc32.org/doc/N1101-1150/32N1107-WD13249-3--spatial.pdf">Old draft version of ISO/IEC 13249 Part 3 Spatial, dating from
+2004-05-09</a>,
+a.k.a SQL/MM Part 3 : Caution the WKB codes given at page 137 and
+following are not the latest ones used. Refer to SFA 1.2.1</p></li>
+<li><p><a class="reference external" href="http://portal.opengeospatial.org/files/?artifact_id=25355">OpenGIS Simple Feature Access Part 1 : Common Architecture,v
+1.2.1</a>,
+a.k.a. SFA 1.2.1</p></li>
+<li><p><a class="reference external" href="https://github.com/postgis/postgis/blob/svn-trunk/doc/bnf-wkt.txt">BNF of WKT
+encoding</a>:
+extracted from SQL/MM Part 3</p></li>
+<li><p><a class="reference external" href="https://github.com/postgis/postgis/blob/svn-trunk/doc/bnf-wkb.txt">BNF of WKB
+encoding</a>:
+extracted from SQL/MM Part 3</p></li>
+</ul>
+</div>
+<div class="section" id="core-changes">
+<h2>Core changes<a class="headerlink" href="#core-changes" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="new-cass-hierarchy">
+<h3>New cass hierarchy<a class="headerlink" href="#new-cass-hierarchy" title="Permalink to this headline">¶</a></h3>
+<p>The new class hierarchy is the following and is mostly consistent with
+SQL/MM Part 3</p>
+<img alt="../../_images/classOGRGeometry.png" src="../../_images/classOGRGeometry.png" />
+<p>The only exceptions are :</p>
+<ul class="simple">
+<li><p>OGRLinearRing: this class present in GDAL 1.X is kept for backward
+compatibility and also because it is still present in SFA 1.2.1, even
+if absent from SQL/MM Part 3</p></li>
+<li><p>OGRSimpleCurve: this abstract class is an implementation detail in
+OGR that simplifies the implementation of OGRCircularString, by
+sharing code with what was in OGRLineString only.</p></li>
+</ul>
+</div>
+<div class="section" id="geometry-types">
+<h3>Geometry types<a class="headerlink" href="#geometry-types" title="Permalink to this headline">¶</a></h3>
+<p>The OGRwkbGeometryType enumeration has been extended with the following
+values :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">wkbCircularString</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>  <span class="o">/**&lt;</span> <span class="n">one</span> <span class="ow">or</span> <span class="n">more</span> <span class="n">circular</span> <span class="n">arc</span> <span class="n">segments</span> <span class="n">connected</span> <span class="n">end</span> <span class="n">to</span> <span class="n">end</span><span class="p">,</span>
+                         <span class="o">*</span>   <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&gt;=</span> <span class="mf">2.0</span> <span class="o">*/</span>
+<span class="n">wkbCompoundCurve</span> <span class="o">=</span> <span class="mi">9</span><span class="p">,</span>   <span class="o">/**&lt;</span> <span class="n">sequence</span> <span class="n">of</span> <span class="n">contiguous</span> <span class="n">curves</span><span class="p">,</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&gt;=</span> <span class="mf">2.0</span> <span class="o">*/</span>
+<span class="n">wkbCurvePolygon</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>   <span class="o">/**&lt;</span> <span class="n">planar</span> <span class="n">surface</span><span class="p">,</span> <span class="n">defined</span> <span class="n">by</span> <span class="mi">1</span> <span class="n">exterior</span> <span class="n">boundary</span>
+                         <span class="o">*</span>   <span class="ow">and</span> <span class="n">zero</span> <span class="ow">or</span> <span class="n">more</span> <span class="n">interior</span> <span class="n">boundaries</span><span class="p">,</span> <span class="n">that</span> <span class="n">are</span> <span class="n">curves</span><span class="o">.</span>
+                         <span class="o">*</span>    <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&gt;=</span> <span class="mf">2.0</span> <span class="o">*/</span>
+<span class="n">wkbMultiCurve</span> <span class="o">=</span> <span class="mi">11</span><span class="p">,</span>     <span class="o">/**&lt;</span> <span class="n">GeometryCollection</span> <span class="n">of</span> <span class="n">Curves</span><span class="p">,</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&gt;=</span> <span class="mf">2.0</span> <span class="o">*/</span>
+<span class="n">wkbMultiSurface</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span>   <span class="o">/**&lt;</span> <span class="n">GeometryCollection</span> <span class="n">of</span> <span class="n">Surfaces</span><span class="p">,</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&gt;=</span> <span class="mf">2.0</span> <span class="o">*/</span>
+
+<span class="n">wkbCircularStringZ</span> <span class="o">=</span> <span class="mi">1008</span><span class="p">,</span>  <span class="o">/**&lt;</span> <span class="n">wkbCircularString</span> <span class="k">with</span> <span class="n">Z</span> <span class="n">component</span><span class="o">.</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&gt;=</span> <span class="mf">2.0</span> <span class="o">*/</span>
+<span class="n">wkbCompoundCurveZ</span> <span class="o">=</span> <span class="mi">1009</span><span class="p">,</span>   <span class="o">/**&lt;</span> <span class="n">wkbCompoundCurve</span> <span class="k">with</span> <span class="n">Z</span> <span class="n">component</span><span class="o">.</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&gt;=</span> <span class="mf">2.0</span> <span class="o">*/</span>
+<span class="n">wkbCurvePolygonZ</span> <span class="o">=</span> <span class="mi">1010</span><span class="p">,</span>    <span class="o">/**&lt;</span> <span class="n">wkbCurvePolygon</span> <span class="k">with</span> <span class="n">Z</span> <span class="n">component</span><span class="o">.</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&gt;=</span> <span class="mf">2.0</span> <span class="o">*/</span>
+<span class="n">wkbMultiCurveZ</span> <span class="o">=</span> <span class="mi">1011</span><span class="p">,</span>      <span class="o">/**&lt;</span> <span class="n">wkbMultiCurve</span> <span class="k">with</span> <span class="n">Z</span> <span class="n">component</span><span class="o">.</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&gt;=</span> <span class="mf">2.0</span> <span class="o">*/</span>
+<span class="n">wkbMultiSurfaceZ</span> <span class="o">=</span> <span class="mi">1012</span><span class="p">,</span>    <span class="o">/**&lt;</span> <span class="n">wkbMultiSurface</span> <span class="k">with</span> <span class="n">Z</span> <span class="n">component</span><span class="o">.</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&gt;=</span> <span class="mf">2.0</span> <span class="o">*/</span>
+</pre></div>
+</div>
+<p>The codes have been taken from SFA 1.2.1, and are consistent with the
+PostGIS 2 implementation. Note that ISO SQL/MM Part 3 allows alternates
+values for wkbCircularString (8 or 1000001) : see Table 15 in the above
+mentioned draft. The values in the range 10000XX probably date back
+from an earlier draft version. OGR will import them, but will use the
+values from SFA 1.2.1 when exporting WKB.</p>
+<p>It has been considered if it would worth to modify the enumeration
+values of the existing 2.5D geometries (wkbPoint25D, etc…) to conform
+with the WKB codes of ISO SQL/MM Part 3 / SFA 1.2.1, but there was not a
+clear advantage in doing so, with respect to the impact on existing
+users of OGR API.</p>
+<p>Note: the mix of different ways of expression the Z dimension (wkb25DBit
+bit for “old” geometry types, and +1000 for “new” geometry types) has no
+direct impact on the export of geometries as WKB. There is no direct
+coupling between the values of OGRwkbGeometryType and what goes to WKB
+geometries. The exportToWkb() method of OGRGeometry takes a wkbVariant
+parameter to select the variant of WKB that is wished.</p>
+<p>The use of the wkb25DBit value (0x8000000) that was sometimes used to
+test if a geometry type was 3D is now clearly deprecated since it will
+not work for the new geometry type. The wkbHasZ() and wkbSetZ() have
+been added to respectively test if a geometry type is 3D, or modify a
+geometry type to be 3D. The wkb25DBit constant is now disabled for all
+code in GDAL (but still accessible by user code) and all drivers have
+been converted to use the new macros.</p>
+<p>A new family of functions have been used to operate on geometry types :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">OGRwkbGeometryType</span> <span class="n">CPL_DLL</span> <span class="n">OGR_GT_Flatten</span><span class="p">(</span> <span class="n">OGRwkbGeometryType</span> <span class="n">eType</span> <span class="p">);</span>
+    <span class="o">--&gt;</span> <span class="n">Returns</span> <span class="n">the</span> <span class="mi">2</span><span class="n">D</span> <span class="n">geometry</span> <span class="nb">type</span> <span class="n">corresponding</span> <span class="n">to</span> <span class="n">the</span> <span class="n">passed</span> <span class="n">geometry</span> <span class="nb">type</span><span class="o">.</span>
+
+<span class="n">OGRwkbGeometryType</span> <span class="n">CPL_DLL</span> <span class="n">OGR_GT_SetZ</span><span class="p">(</span> <span class="n">OGRwkbGeometryType</span> <span class="n">eType</span> <span class="p">);</span>
+    <span class="o">--&gt;</span> <span class="n">Returns</span> <span class="n">the</span> <span class="mi">3</span><span class="n">D</span> <span class="n">geometry</span> <span class="nb">type</span> <span class="n">corresponding</span> <span class="n">to</span> <span class="n">the</span> <span class="n">passed</span> <span class="n">geometry</span> <span class="nb">type</span><span class="o">.</span>
+
+<span class="n">OGRwkbGeometryType</span> <span class="n">CPL_DLL</span> <span class="n">OGR_GT_SetModifier</span><span class="p">(</span> <span class="n">OGRwkbGeometryType</span> <span class="n">eType</span><span class="p">,</span> <span class="nb">int</span> <span class="n">bSetZ</span><span class="p">,</span> <span class="nb">int</span> <span class="n">bSetM</span> <span class="p">);</span>
+    <span class="o">--&gt;</span> <span class="n">Returns</span> <span class="n">a</span> <span class="mi">2</span><span class="n">D</span> <span class="ow">or</span> <span class="mi">3</span><span class="n">D</span> <span class="n">geometry</span> <span class="nb">type</span> <span class="n">depending</span> <span class="n">on</span> <span class="n">parameter</span><span class="o">.</span>
+
+<span class="nb">int</span>                <span class="n">CPL_DLL</span> <span class="n">OGR_GT_HasZ</span><span class="p">(</span> <span class="n">OGRwkbGeometryType</span> <span class="n">eType</span> <span class="p">);</span>
+    <span class="o">--&gt;</span> <span class="n">Return</span> <span class="k">if</span> <span class="n">the</span> <span class="n">geometry</span> <span class="nb">type</span> <span class="ow">is</span> <span class="n">a</span> <span class="mi">3</span><span class="n">D</span> <span class="n">geometry</span> <span class="nb">type</span><span class="o">.</span>
+
+<span class="nb">int</span>                <span class="n">CPL_DLL</span> <span class="n">OGR_GT_IsSubClassOf</span><span class="p">(</span> <span class="n">OGRwkbGeometryType</span> <span class="n">eType</span><span class="p">,</span>
+                                                <span class="n">OGRwkbGeometryType</span> <span class="n">eSuperType</span> <span class="p">);</span>
+    <span class="o">--&gt;</span> <span class="n">Returns</span> <span class="k">if</span> <span class="n">a</span> <span class="nb">type</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">subclass</span> <span class="n">of</span> <span class="n">another</span> <span class="n">one</span>
+
+<span class="nb">int</span>                <span class="n">CPL_DLL</span> <span class="n">OGR_GT_IsCurve</span><span class="p">(</span> <span class="n">OGRwkbGeometryType</span> <span class="p">);</span>
+    <span class="o">--&gt;</span>  <span class="n">Return</span> <span class="k">if</span> <span class="n">a</span> <span class="n">geometry</span> <span class="nb">type</span> <span class="ow">is</span> <span class="n">an</span> <span class="n">instance</span> <span class="n">of</span> <span class="n">Curve</span>
+        <span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">e</span><span class="o">.</span> <span class="n">wkbLineString</span><span class="p">,</span> <span class="n">wkbCircularString</span> <span class="ow">or</span> <span class="n">wkbCompoundCurve</span><span class="p">)</span>
+
+<span class="nb">int</span>                <span class="n">CPL_DLL</span> <span class="n">OGR_GT_IsSurface</span><span class="p">(</span> <span class="n">OGRwkbGeometryType</span> <span class="p">);</span>
+    <span class="o">--&gt;</span>  <span class="n">Return</span> <span class="k">if</span> <span class="n">a</span> <span class="n">geometry</span> <span class="nb">type</span> <span class="ow">is</span> <span class="n">an</span> <span class="n">instance</span> <span class="n">of</span> <span class="n">Surface</span>
+        <span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">e</span><span class="o">.</span> <span class="n">wkbPolygon</span> <span class="ow">or</span> <span class="n">wkbCurvePolygon</span><span class="p">)</span>
+
+<span class="nb">int</span>                <span class="n">CPL_DLL</span> <span class="n">OGR_GT_IsNonLinear</span><span class="p">(</span> <span class="n">OGRwkbGeometryType</span> <span class="p">);</span>
+    <span class="o">--&gt;</span> <span class="n">Return</span> <span class="k">if</span> <span class="n">a</span> <span class="n">geometry</span> <span class="nb">type</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">non</span><span class="o">-</span><span class="n">linear</span> <span class="n">geometry</span> <span class="nb">type</span><span class="o">.</span>
+        <span class="n">Such</span> <span class="n">geometry</span> <span class="nb">type</span> <span class="n">are</span> <span class="n">wkbCircularString</span><span class="p">,</span> <span class="n">wkbCompoundCurve</span><span class="p">,</span> <span class="n">wkbCurvePolygon</span><span class="p">,</span>
+        <span class="n">wkbMultiCurve</span><span class="p">,</span> <span class="n">wkbMultiSurface</span> <span class="ow">and</span> <span class="n">their</span> <span class="mi">3</span><span class="n">D</span> <span class="n">variant</span><span class="o">.</span>
+
+<span class="n">OGRwkbGeometryType</span> <span class="n">CPL_DLL</span> <span class="n">OGR_GT_GetCollection</span><span class="p">(</span> <span class="n">OGRwkbGeometryType</span> <span class="n">eType</span> <span class="p">);</span>
+    <span class="o">--&gt;</span>  <span class="n">Returns</span> <span class="n">the</span> <span class="n">collection</span> <span class="nb">type</span> <span class="n">that</span> <span class="n">can</span> <span class="n">contain</span> <span class="n">the</span> <span class="n">passed</span> <span class="n">geometry</span> <span class="nb">type</span>
+
+<span class="n">OGRwkbGeometryType</span> <span class="n">CPL_DLL</span> <span class="n">OGR_GT_GetCurve</span><span class="p">(</span> <span class="n">OGRwkbGeometryType</span> <span class="n">eType</span> <span class="p">);</span>
+    <span class="o">--&gt;</span> <span class="n">Returns</span> <span class="n">the</span> <span class="n">curve</span> <span class="n">geometry</span> <span class="nb">type</span> <span class="n">that</span> <span class="n">can</span> <span class="n">contain</span> <span class="n">the</span> <span class="n">passed</span> <span class="n">geometry</span> <span class="nb">type</span><span class="o">.</span>
+        <span class="n">Handled</span> <span class="n">conversions</span> <span class="n">are</span> <span class="p">:</span> <span class="n">wkbPolygon</span> <span class="o">-&gt;</span> <span class="n">wkbCurvePolygon</span><span class="p">,</span>
+        <span class="n">wkbLineString</span><span class="o">-&gt;</span><span class="n">wkbCompoundCurve</span><span class="p">,</span> <span class="n">wkbMultiPolygon</span><span class="o">-&gt;</span><span class="n">wkbMultiSurface</span>
+        <span class="ow">and</span> <span class="n">wkbMultiLineString</span><span class="o">-&gt;</span><span class="n">wkbMultiCurve</span><span class="o">.</span>
+
+<span class="n">OGRwkbGeometryType</span> <span class="n">CPL_DLL</span> <span class="n">OGR_GT_GetLinear</span><span class="p">(</span> <span class="n">OGRwkbGeometryType</span> <span class="n">eType</span> <span class="p">);</span>
+    <span class="o">--&gt;</span> <span class="n">Returns</span> <span class="n">the</span> <span class="n">non</span><span class="o">-</span><span class="n">curve</span> <span class="n">geometry</span> <span class="nb">type</span> <span class="n">that</span> <span class="n">can</span> <span class="n">contain</span> <span class="n">the</span> <span class="n">passed</span> <span class="n">geometry</span> <span class="nb">type</span>
+        <span class="n">Handled</span> <span class="n">conversions</span> <span class="n">are</span> <span class="p">:</span> <span class="n">wkbCurvePolygon</span> <span class="o">-&gt;</span> <span class="n">wkbPolygon</span><span class="p">,</span>
+        <span class="n">wkbCircularString</span><span class="o">-&gt;</span><span class="n">wkbLineString</span><span class="p">,</span> <span class="n">wkbCompoundCurve</span><span class="o">-&gt;</span><span class="n">wkbLineString</span><span class="p">,</span>
+        <span class="n">wkbMultiSurface</span><span class="o">-&gt;</span><span class="n">wkbMultiPolygon</span> <span class="ow">and</span> <span class="n">wkbMultiCurve</span><span class="o">-&gt;</span><span class="n">wkbMultiLineString</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>The existing wkbFlatten() is an alias of OGR_GT_Flatten(), the new
+wkbHasZ() an alias of OGR_GT_HasZ() and wkbSetZ() an alias of
+OGR_GT_SetZ().</p>
+</div>
+<div class="section" id="new-methods">
+<h3>New methods<a class="headerlink" href="#new-methods" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>In OGRGeometry class :</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="n">virtual</span> <span class="n">OGRBoolean</span> <span class="n">hasCurveGeometry</span><span class="p">(</span><span class="nb">int</span> <span class="n">bLookForNonLinear</span> <span class="o">=</span> <span class="n">FALSE</span><span class="p">)</span> <span class="n">const</span><span class="p">;</span>
+
+<span class="o">/**</span>
+ <span class="o">*</span> \<span class="n">brief</span> <span class="n">Returns</span> <span class="k">if</span> <span class="n">this</span> <span class="n">geometry</span> <span class="ow">is</span> <span class="ow">or</span> <span class="n">has</span> <span class="n">curve</span> <span class="n">geometry</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">Returns</span> <span class="k">if</span> <span class="n">a</span> <span class="n">geometry</span> <span class="ow">is</span><span class="p">,</span> <span class="n">contains</span> <span class="ow">or</span> <span class="n">may</span> <span class="n">contain</span> <span class="n">a</span> <span class="n">CIRCULARSTRING</span><span class="p">,</span> <span class="n">COMPOUNDCURVE</span><span class="p">,</span>
+ <span class="o">*</span> <span class="n">CURVEPOLYGON</span><span class="p">,</span> <span class="n">MULTICURVE</span> <span class="ow">or</span> <span class="n">MULTISURFACE</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">If</span> <span class="n">bLookForNonLinear</span> <span class="ow">is</span> <span class="nb">set</span> <span class="n">to</span> <span class="n">TRUE</span><span class="p">,</span> <span class="n">it</span> <span class="n">will</span> <span class="n">be</span> <span class="n">actually</span> <span class="n">looked</span> <span class="k">if</span> <span class="n">the</span>
+ <span class="o">*</span> <span class="n">geometry</span> <span class="ow">or</span> <span class="n">its</span> <span class="n">subgeometries</span> <span class="n">are</span> <span class="ow">or</span> <span class="n">contain</span> <span class="n">a</span> <span class="n">non</span><span class="o">-</span><span class="n">linear</span> <span class="n">geometry</span> <span class="ow">in</span> <span class="n">them</span><span class="o">.</span> <span class="n">In</span> <span class="n">which</span>
+ <span class="o">*</span> <span class="n">case</span><span class="p">,</span> <span class="k">if</span> <span class="n">the</span> <span class="n">method</span> <span class="n">returns</span> <span class="n">TRUE</span><span class="p">,</span> <span class="n">it</span> <span class="n">means</span> <span class="n">that</span> <span class="n">getLinearGeometry</span><span class="p">()</span> <span class="n">would</span>
+ <span class="o">*</span> <span class="k">return</span> <span class="n">an</span> <span class="n">approximate</span> <span class="n">version</span> <span class="n">of</span> <span class="n">the</span> <span class="n">geometry</span><span class="o">.</span> <span class="n">Otherwise</span><span class="p">,</span> <span class="n">getLinearGeometry</span><span class="p">()</span>
+ <span class="o">*</span> <span class="n">would</span> <span class="n">do</span> <span class="n">a</span> <span class="n">conversion</span><span class="p">,</span> <span class="n">but</span> <span class="k">with</span> <span class="n">just</span> <span class="n">converting</span> <span class="n">container</span> <span class="nb">type</span><span class="p">,</span> <span class="n">like</span>
+ <span class="o">*</span> <span class="n">COMPOUNDCURVE</span> <span class="o">-&gt;</span> <span class="n">LINESTRING</span><span class="p">,</span> <span class="n">MULTICURVE</span> <span class="o">-&gt;</span> <span class="n">MULTILINESTRING</span> <span class="ow">or</span> <span class="n">MULTISURFACE</span> <span class="o">-&gt;</span> <span class="n">MULTIPOLYGON</span><span class="p">,</span>
+ <span class="o">*</span> <span class="n">resulting</span> <span class="ow">in</span> <span class="n">a</span> <span class="s2">&quot;loss-less&quot;</span> <span class="n">conversion</span><span class="o">.</span>
+ <span class="o">*/</span>
+
+    <span class="n">virtual</span> <span class="n">OGRGeometry</span><span class="o">*</span> <span class="n">getCurveGeometry</span><span class="p">(</span><span class="n">const</span> <span class="n">char</span><span class="o">*</span> <span class="n">const</span><span class="o">*</span> <span class="n">papszOptions</span> <span class="o">=</span> <span class="n">NULL</span><span class="p">)</span> <span class="n">const</span><span class="p">;</span>
+
+<span class="o">/**</span>
+ <span class="o">*</span> \<span class="n">brief</span> <span class="n">Return</span> <span class="n">curve</span> <span class="n">version</span> <span class="n">of</span> <span class="n">this</span> <span class="n">geometry</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">Returns</span> <span class="n">a</span> <span class="n">geometry</span> <span class="n">that</span> <span class="n">has</span> <span class="n">possibly</span> <span class="n">CIRCULARSTRING</span><span class="p">,</span> <span class="n">COMPOUNDCURVE</span><span class="p">,</span> <span class="n">CURVEPOLYGON</span><span class="p">,</span>
+ <span class="o">*</span> <span class="n">MULTICURVE</span> <span class="ow">or</span> <span class="n">MULTISURFACE</span> <span class="ow">in</span> <span class="n">it</span><span class="p">,</span> <span class="n">by</span> <span class="n">de</span><span class="o">-</span><span class="n">approximating</span> <span class="n">curve</span> <span class="n">geometries</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">If</span> <span class="n">the</span> <span class="n">geometry</span> <span class="n">has</span> <span class="n">no</span> <span class="n">curve</span> <span class="n">portion</span><span class="p">,</span> <span class="n">the</span> <span class="n">returned</span> <span class="n">geometry</span> <span class="n">will</span> <span class="n">be</span> <span class="n">a</span> <span class="n">clone</span>
+ <span class="o">*</span> <span class="n">of</span> <span class="n">it</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">The</span> <span class="n">ownership</span> <span class="n">of</span> <span class="n">the</span> <span class="n">returned</span> <span class="n">geometry</span> <span class="n">belongs</span> <span class="n">to</span> <span class="n">the</span> <span class="n">caller</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">The</span> <span class="n">reverse</span> <span class="n">method</span> <span class="ow">is</span> <span class="n">OGRGeometry</span><span class="p">::</span><span class="n">getLinearGeometry</span><span class="p">()</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">same</span> <span class="k">as</span> <span class="n">C</span> <span class="n">function</span> <span class="n">OGR_G_GetCurveGeometry</span><span class="p">()</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="nd">@param</span> <span class="n">papszOptions</span> <span class="n">options</span> <span class="k">as</span> <span class="n">a</span> <span class="n">null</span><span class="o">-</span><span class="n">terminated</span> <span class="nb">list</span> <span class="n">of</span> <span class="n">strings</span><span class="o">.</span>
+ <span class="o">*</span>                     <span class="n">Unused</span> <span class="k">for</span> <span class="n">now</span><span class="o">.</span> <span class="n">Must</span> <span class="n">be</span> <span class="nb">set</span> <span class="n">to</span> <span class="n">NULL</span><span class="o">.</span>
+ <span class="o">*/</span>
+
+    <span class="n">virtual</span> <span class="n">OGRGeometry</span><span class="o">*</span> <span class="n">getLinearGeometry</span><span class="p">(</span><span class="n">double</span> <span class="n">dfMaxAngleStepSizeDegrees</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+                                             <span class="n">const</span> <span class="n">char</span><span class="o">*</span> <span class="n">const</span><span class="o">*</span> <span class="n">papszOptions</span> <span class="o">=</span> <span class="n">NULL</span><span class="p">)</span> <span class="n">const</span><span class="p">;</span>
+
+
+<span class="o">/**</span>
+ <span class="o">*</span> \<span class="n">brief</span> <span class="n">Return</span><span class="p">,</span> <span class="n">possibly</span> <span class="n">approximate</span><span class="p">,</span> <span class="n">non</span><span class="o">-</span><span class="n">curve</span> <span class="n">version</span> <span class="n">of</span> <span class="n">this</span> <span class="n">geometry</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">Returns</span> <span class="n">a</span> <span class="n">geometry</span> <span class="n">that</span> <span class="n">has</span> <span class="n">no</span> <span class="n">CIRCULARSTRING</span><span class="p">,</span> <span class="n">COMPOUNDCURVE</span><span class="p">,</span> <span class="n">CURVEPOLYGON</span><span class="p">,</span>
+ <span class="o">*</span> <span class="n">MULTICURVE</span> <span class="ow">or</span> <span class="n">MULTISURFACE</span> <span class="ow">in</span> <span class="n">it</span><span class="p">,</span> <span class="n">by</span> <span class="n">approximating</span> <span class="n">curve</span> <span class="n">geometries</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">The</span> <span class="n">ownership</span> <span class="n">of</span> <span class="n">the</span> <span class="n">returned</span> <span class="n">geometry</span> <span class="n">belongs</span> <span class="n">to</span> <span class="n">the</span> <span class="n">caller</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">The</span> <span class="n">reverse</span> <span class="n">method</span> <span class="ow">is</span> <span class="n">OGRGeometry</span><span class="p">::</span><span class="n">getCurveGeometry</span><span class="p">()</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">This</span> <span class="n">method</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">same</span> <span class="k">as</span> <span class="n">the</span> <span class="n">C</span> <span class="n">function</span> <span class="n">OGR_G_GetLinearGeometry</span><span class="p">()</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="nd">@param</span> <span class="n">dfMaxAngleStepSizeDegrees</span> <span class="n">the</span> <span class="n">largest</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">degrees</span> <span class="n">along</span> <span class="n">the</span>
+ <span class="o">*</span> <span class="n">arc</span><span class="p">,</span> <span class="n">zero</span> <span class="n">to</span> <span class="n">use</span> <span class="n">the</span> <span class="n">default</span> <span class="n">setting</span><span class="o">.</span>
+ <span class="o">*</span> <span class="nd">@param</span> <span class="n">papszOptions</span> <span class="n">options</span> <span class="k">as</span> <span class="n">a</span> <span class="n">null</span><span class="o">-</span><span class="n">terminated</span> <span class="nb">list</span> <span class="n">of</span> <span class="n">strings</span><span class="o">.</span>
+ <span class="o">*</span>                     <span class="n">See</span> <span class="n">OGRGeometryFactory</span><span class="p">::</span><span class="n">curveToLineString</span><span class="p">()</span> <span class="k">for</span> <span class="n">valid</span> <span class="n">options</span><span class="o">.</span>
+ <span class="o">*/</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>In OGRGeometryFactory class :</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">static</span> <span class="n">OGRLineString</span><span class="o">*</span> <span class="n">curveToLineString</span><span class="p">(</span>
+                                            <span class="n">double</span> <span class="n">x0</span><span class="p">,</span> <span class="n">double</span> <span class="n">y0</span><span class="p">,</span> <span class="n">double</span> <span class="n">z0</span><span class="p">,</span>
+                                            <span class="n">double</span> <span class="n">x1</span><span class="p">,</span> <span class="n">double</span> <span class="n">y1</span><span class="p">,</span> <span class="n">double</span> <span class="n">z1</span><span class="p">,</span>
+                                            <span class="n">double</span> <span class="n">x2</span><span class="p">,</span> <span class="n">double</span> <span class="n">y2</span><span class="p">,</span> <span class="n">double</span> <span class="n">z2</span><span class="p">,</span>
+                                            <span class="nb">int</span> <span class="n">bHasZ</span><span class="p">,</span>
+                                            <span class="n">double</span> <span class="n">dfMaxAngleStepSizeDegrees</span><span class="p">,</span>
+                                            <span class="n">const</span> <span class="n">char</span><span class="o">*</span><span class="n">const</span><span class="o">*</span> <span class="n">papszOptions</span> <span class="p">)</span>
+<span class="o">/**</span>
+ <span class="o">*</span> \<span class="n">brief</span> <span class="n">Converts</span> <span class="n">an</span> <span class="n">arc</span> <span class="n">circle</span> <span class="n">into</span> <span class="n">an</span> <span class="n">approximate</span> <span class="n">line</span> <span class="n">string</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">The</span> <span class="n">arc</span> <span class="n">circle</span> <span class="ow">is</span> <span class="n">defined</span> <span class="n">by</span> <span class="n">a</span> <span class="n">first</span> <span class="n">point</span><span class="p">,</span> <span class="n">an</span> <span class="n">intermediate</span> <span class="n">point</span> <span class="ow">and</span> <span class="n">a</span>
+ <span class="o">*</span> <span class="n">final</span> <span class="n">point</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">The</span> <span class="n">provided</span> <span class="n">dfMaxAngleStepSizeDegrees</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">hint</span><span class="o">.</span> <span class="n">The</span> <span class="n">discretization</span>
+ <span class="o">*</span> <span class="n">algorithm</span> <span class="n">may</span> <span class="n">pick</span> <span class="n">a</span> <span class="n">slightly</span> <span class="n">different</span> <span class="n">value</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">So</span> <span class="k">as</span> <span class="n">to</span> <span class="n">avoid</span> <span class="n">gaps</span> <span class="n">when</span> <span class="n">rendering</span> <span class="n">curve</span> <span class="n">polygons</span> <span class="n">that</span> <span class="n">share</span> <span class="n">common</span> <span class="n">arcs</span><span class="p">,</span>
+ <span class="o">*</span> <span class="n">this</span> <span class="n">method</span> <span class="ow">is</span> <span class="n">guaranteed</span> <span class="n">to</span> <span class="k">return</span> <span class="n">a</span> <span class="n">line</span> <span class="k">with</span> <span class="nb">reversed</span> <span class="n">vertex</span> <span class="k">if</span> <span class="n">called</span>
+ <span class="o">*</span> <span class="k">with</span> <span class="n">inverted</span> <span class="n">first</span> <span class="ow">and</span> <span class="n">final</span> <span class="n">point</span><span class="p">,</span> <span class="ow">and</span> <span class="n">identical</span> <span class="n">intermediate</span> <span class="n">point</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="nd">@param</span> <span class="n">x0</span> <span class="n">x</span> <span class="n">of</span> <span class="n">first</span> <span class="n">point</span>
+ <span class="o">*</span> <span class="nd">@param</span> <span class="n">y0</span> <span class="n">y</span> <span class="n">of</span> <span class="n">first</span> <span class="n">point</span>
+ <span class="o">*</span> <span class="nd">@param</span> <span class="n">z0</span> <span class="n">z</span> <span class="n">of</span> <span class="n">first</span> <span class="n">point</span>
+ <span class="o">*</span> <span class="nd">@param</span> <span class="n">x1</span> <span class="n">x</span> <span class="n">of</span> <span class="n">intermediate</span> <span class="n">point</span>
+ <span class="o">*</span> <span class="nd">@param</span> <span class="n">y1</span> <span class="n">y</span> <span class="n">of</span> <span class="n">intermediate</span> <span class="n">point</span>
+ <span class="o">*</span> <span class="nd">@param</span> <span class="n">z1</span> <span class="n">z</span> <span class="n">of</span> <span class="n">intermediate</span> <span class="n">point</span>
+ <span class="o">*</span> <span class="nd">@param</span> <span class="n">x2</span> <span class="n">x</span> <span class="n">of</span> <span class="n">final</span> <span class="n">point</span>
+ <span class="o">*</span> <span class="nd">@param</span> <span class="n">y2</span> <span class="n">y</span> <span class="n">of</span> <span class="n">final</span> <span class="n">point</span>
+ <span class="o">*</span> <span class="nd">@param</span> <span class="n">z2</span> <span class="n">z</span> <span class="n">of</span> <span class="n">final</span> <span class="n">point</span>
+ <span class="o">*</span> <span class="nd">@param</span> <span class="n">bHasZ</span> <span class="n">TRUE</span> <span class="k">if</span> <span class="n">z</span> <span class="n">must</span> <span class="n">be</span> <span class="n">taken</span> <span class="n">into</span> <span class="n">account</span>
+ <span class="o">*</span> <span class="nd">@param</span> <span class="n">dfMaxAngleStepSizeDegrees</span>  <span class="n">the</span> <span class="n">largest</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">degrees</span> <span class="n">along</span> <span class="n">the</span>
+ <span class="o">*</span> <span class="n">arc</span><span class="p">,</span> <span class="n">zero</span> <span class="n">to</span> <span class="n">use</span> <span class="n">the</span> <span class="n">default</span> <span class="n">setting</span><span class="o">.</span>
+ <span class="o">*</span> <span class="nd">@param</span> <span class="n">papszOptions</span> <span class="n">options</span> <span class="k">as</span> <span class="n">a</span> <span class="n">null</span><span class="o">-</span><span class="n">terminated</span> <span class="nb">list</span> <span class="n">of</span> <span class="n">strings</span> <span class="ow">or</span> <span class="n">NULL</span><span class="o">.</span>
+ <span class="o">*</span> <span class="n">Recognized</span> <span class="n">options</span><span class="p">:</span>
+ <span class="o">*</span> <span class="o">&lt;</span><span class="n">ul</span><span class="o">&gt;</span>
+ <span class="o">*</span> <span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;</span><span class="n">ADD_INTERMEDIATE_POINT</span><span class="o">=</span><span class="n">STEALTH</span><span class="o">/</span><span class="n">YES</span><span class="o">/</span><span class="n">NO</span> <span class="p">(</span><span class="n">Default</span> <span class="n">to</span> <span class="n">STEALTH</span><span class="p">)</span><span class="o">.</span>
+ <span class="o">*</span>         <span class="n">Determine</span> <span class="k">if</span> <span class="ow">and</span> <span class="n">how</span> <span class="n">the</span> <span class="n">intermediate</span> <span class="n">point</span> <span class="n">must</span> <span class="n">be</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">linestring</span><span class="o">.</span>
+ <span class="o">*</span>         <span class="n">If</span> <span class="nb">set</span> <span class="n">to</span> <span class="n">STEALTH</span><span class="p">,</span> <span class="n">no</span> <span class="n">explicit</span> <span class="n">intermediate</span> <span class="n">point</span> <span class="ow">is</span> <span class="n">added</span> <span class="n">but</span> <span class="n">its</span>
+ <span class="o">*</span>         <span class="n">properties</span> <span class="n">are</span> <span class="n">encoded</span> <span class="ow">in</span> <span class="n">low</span> <span class="n">significant</span> <span class="n">bits</span> <span class="n">of</span> <span class="n">intermediate</span> <span class="n">points</span>
+ <span class="o">*</span>         <span class="ow">and</span> <span class="n">OGRGeometryFactory</span><span class="p">::</span><span class="n">curveFromLineString</span><span class="p">()</span> <span class="n">can</span> <span class="n">decode</span> <span class="n">them</span><span class="o">.</span>
+ <span class="o">*</span>         <span class="n">This</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">best</span> <span class="n">compromise</span> <span class="k">for</span> <span class="nb">round</span><span class="o">-</span><span class="n">tripping</span> <span class="ow">in</span> <span class="n">OGR</span> <span class="ow">and</span> <span class="n">better</span> <span class="n">results</span>
+ <span class="o">*</span>         <span class="k">with</span> <span class="n">PostGIS</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s2">&quot;http://postgis.org/docs/ST_LineToCurve.html&quot;</span><span class="o">&gt;</span><span class="n">ST_LineToCurve</span><span class="p">()</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+ <span class="o">*</span>         <span class="n">If</span> <span class="nb">set</span> <span class="n">to</span> <span class="n">YES</span><span class="p">,</span> <span class="n">the</span> <span class="n">intermediate</span> <span class="n">point</span> <span class="ow">is</span> <span class="n">explicitly</span> <span class="n">added</span> <span class="n">to</span> <span class="n">the</span> <span class="n">linestring</span><span class="o">.</span>
+ <span class="o">*</span>         <span class="n">If</span> <span class="nb">set</span> <span class="n">to</span> <span class="n">NO</span><span class="p">,</span> <span class="n">the</span> <span class="n">intermediate</span> <span class="n">point</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">explicitly</span> <span class="n">added</span><span class="o">.</span>
+ <span class="o">*</span> <span class="o">&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
+ <span class="o">*</span> <span class="o">&lt;/</span><span class="n">ul</span><span class="o">&gt;</span>
+ <span class="o">*/</span>
+
+<span class="o">--&gt;</span> <span class="n">This</span> <span class="n">method</span> <span class="ow">is</span> <span class="n">used</span> <span class="n">by</span> <span class="n">OGRCircularString</span><span class="p">::</span><span class="n">getLinearGeometry</span><span class="p">()</span>
+
+<span class="n">OGRCurve</span><span class="o">*</span> <span class="n">OGRGeometryFactory</span><span class="p">::</span><span class="n">curveFromLineString</span><span class="p">(</span><span class="n">const</span> <span class="n">OGRLineString</span><span class="o">*</span> <span class="n">poLS</span><span class="p">,</span>
+                                                  <span class="n">CPL_UNUSED</span> <span class="n">const</span> <span class="n">char</span><span class="o">*</span><span class="n">const</span><span class="o">*</span> <span class="n">papszOptions</span><span class="p">)</span>
+
+<span class="o">/**</span>
+ <span class="o">*</span> \<span class="n">brief</span> <span class="n">Try</span> <span class="n">to</span> <span class="n">convert</span> <span class="n">a</span> <span class="n">linestring</span> <span class="n">approximating</span> <span class="n">curves</span> <span class="n">into</span> <span class="n">a</span> <span class="n">curve</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">This</span> <span class="n">method</span> <span class="n">can</span> <span class="k">return</span> <span class="n">a</span> <span class="n">COMPOUNDCURVE</span><span class="p">,</span> <span class="n">a</span> <span class="n">CIRCULARSTRING</span> <span class="ow">or</span> <span class="n">a</span> <span class="n">LINESTRING</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">This</span> <span class="n">method</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">reverse</span> <span class="n">of</span> <span class="n">curveFromLineString</span><span class="p">()</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="nd">@param</span> <span class="n">poLS</span> <span class="n">handle</span> <span class="n">to</span> <span class="n">the</span> <span class="n">geometry</span> <span class="n">to</span> <span class="n">convert</span><span class="o">.</span>
+ <span class="o">*</span> <span class="nd">@param</span> <span class="n">papszOptions</span> <span class="n">options</span> <span class="k">as</span> <span class="n">a</span> <span class="n">null</span><span class="o">-</span><span class="n">terminated</span> <span class="nb">list</span> <span class="n">of</span> <span class="n">strings</span><span class="o">.</span>
+ <span class="o">*</span>                     <span class="n">Unused</span> <span class="k">for</span> <span class="n">now</span><span class="o">.</span> <span class="n">Must</span> <span class="n">be</span> <span class="nb">set</span> <span class="n">to</span> <span class="n">NULL</span><span class="o">.</span>
+ <span class="o">*/</span>
+
+<span class="o">--&gt;</span> <span class="n">This</span> <span class="n">method</span> <span class="ow">is</span> <span class="n">used</span> <span class="n">by</span> <span class="n">OGRLineString</span><span class="p">::</span><span class="n">getCurveGeometry</span><span class="p">()</span>
+
+
+<span class="n">OGRGeometry</span><span class="o">*</span> <span class="n">OGRGeometryFactory</span><span class="p">::</span><span class="n">forceTo</span><span class="p">(</span> <span class="n">OGRGeometry</span><span class="o">*</span> <span class="n">poGeom</span><span class="p">,</span>
+                                          <span class="n">OGRwkbGeometryType</span> <span class="n">eTargetType</span><span class="p">,</span>
+                                          <span class="n">const</span> <span class="n">char</span><span class="o">*</span><span class="n">const</span><span class="o">*</span> <span class="n">papszOptions</span> <span class="p">)</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">Tries</span> <span class="n">to</span> <span class="n">force</span> <span class="n">the</span> <span class="n">provided</span> <span class="n">geometry</span> <span class="n">to</span> <span class="n">the</span> <span class="n">specified</span> <span class="n">geometry</span> <span class="nb">type</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">It</span> <span class="n">can</span> <span class="n">promote</span> <span class="s1">&#39;single&#39;</span> <span class="n">geometry</span> <span class="nb">type</span> <span class="n">to</span> <span class="n">their</span> <span class="n">corresponding</span> <span class="n">collection</span> <span class="nb">type</span>
+ <span class="o">*</span> <span class="p">(</span><span class="n">see</span> <span class="n">OGR_GT_GetCollection</span><span class="p">())</span> <span class="ow">or</span> <span class="n">the</span> <span class="n">reverse</span><span class="o">.</span> <span class="n">non</span><span class="o">-</span><span class="n">linear</span> <span class="n">geometry</span> <span class="nb">type</span> <span class="n">to</span>
+ <span class="o">*</span> <span class="n">their</span> <span class="n">corresponding</span> <span class="n">linear</span> <span class="n">geometry</span> <span class="nb">type</span> <span class="p">(</span><span class="n">see</span> <span class="n">OGR_GT_GetLinear</span><span class="p">()),</span> <span class="n">by</span>
+ <span class="o">*</span> <span class="n">possibly</span> <span class="n">approximating</span> <span class="n">circular</span> <span class="n">arcs</span> <span class="n">they</span> <span class="n">may</span> <span class="n">contain</span><span class="o">.</span>
+ <span class="o">*</span> <span class="n">Regarding</span> <span class="n">conversion</span> <span class="kn">from</span> <span class="nn">linear</span> <span class="n">geometry</span> <span class="n">types</span> <span class="n">to</span> <span class="n">curve</span> <span class="n">geometry</span> <span class="n">types</span><span class="p">,</span> <span class="n">only</span>
+ <span class="o">*</span> <span class="s2">&quot;wraping&quot;</span> <span class="n">will</span> <span class="n">be</span> <span class="n">done</span><span class="o">.</span> <span class="n">No</span> <span class="n">attempt</span> <span class="n">to</span> <span class="n">retrieve</span> <span class="n">potential</span> <span class="n">circular</span> <span class="n">arcs</span> <span class="n">by</span>
+ <span class="o">*</span> <span class="n">de</span><span class="o">-</span><span class="n">approximating</span> <span class="n">stroking</span> <span class="n">will</span> <span class="n">be</span> <span class="n">done</span><span class="o">.</span> <span class="n">For</span> <span class="n">that</span><span class="p">,</span> <span class="n">OGRGeometry</span><span class="p">::</span><span class="n">getCurveGeometry</span><span class="p">()</span>
+ <span class="o">*</span> <span class="n">can</span> <span class="n">be</span> <span class="n">used</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">The</span> <span class="n">passed</span> <span class="ow">in</span> <span class="n">geometry</span> <span class="ow">is</span> <span class="n">consumed</span> <span class="ow">and</span> <span class="n">a</span> <span class="n">new</span> <span class="n">one</span> <span class="n">returned</span> <span class="p">(</span><span class="ow">or</span> <span class="n">potentially</span> <span class="n">the</span> <span class="n">same</span> <span class="n">one</span><span class="p">)</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="nd">@param</span> <span class="n">poGeom</span> <span class="n">the</span> <span class="nb">input</span> <span class="n">geometry</span> <span class="o">-</span> <span class="n">ownership</span> <span class="ow">is</span> <span class="n">passed</span> <span class="n">to</span> <span class="n">the</span> <span class="n">method</span><span class="o">.</span>
+ <span class="o">*</span> <span class="nd">@param</span> <span class="n">eTargetType</span> <span class="n">target</span> <span class="n">output</span> <span class="n">geometry</span> <span class="nb">type</span><span class="o">.</span>
+ <span class="o">*</span> <span class="nd">@param</span> <span class="n">papszOptions</span> <span class="n">options</span> <span class="k">as</span> <span class="n">a</span> <span class="n">null</span><span class="o">-</span><span class="n">terminated</span> <span class="nb">list</span> <span class="n">of</span> <span class="n">strings</span> <span class="ow">or</span> <span class="n">NULL</span><span class="o">.</span>
+ <span class="o">*</span> <span class="nd">@return</span> <span class="n">new</span> <span class="n">geometry</span><span class="o">.</span>
+ <span class="o">*/</span>
+
+<span class="o">--&gt;</span> <span class="n">This</span> <span class="n">method</span> <span class="n">generalizes</span> <span class="n">the</span> <span class="n">existing</span> <span class="n">forceToPolygon</span><span class="p">(),</span> <span class="n">forceToLineString</span><span class="p">(),</span>
+<span class="n">forceToMultiPolygon</span><span class="p">(),</span> <span class="n">forceToMultiLineString</span><span class="p">(),</span> <span class="n">that</span> <span class="n">have</span> <span class="n">been</span> <span class="n">extended</span> <span class="n">to</span>
+<span class="n">deal</span> <span class="k">with</span> <span class="n">the</span> <span class="n">new</span> <span class="n">geometry</span> <span class="n">types</span><span class="o">.</span> <span class="n">forceTo</span><span class="p">()</span> <span class="ow">and</span> <span class="n">actually</span> <span class="n">calls</span> <span class="n">them</span> <span class="k">if</span> <span class="n">they</span>
+<span class="n">can</span> <span class="n">be</span> <span class="n">used</span> <span class="k">for</span> <span class="n">the</span> <span class="n">requested</span> <span class="n">conversion</span><span class="p">,</span> <span class="ow">and</span> <span class="n">also</span> <span class="n">deal</span> <span class="k">with</span> <span class="n">conversion</span> <span class="n">between</span>
+<span class="n">linear</span> <span class="ow">and</span> <span class="n">non</span><span class="o">-</span><span class="n">linear</span> <span class="n">geometry</span> <span class="n">types</span><span class="o">.</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="implementation-of-existing-ogrgeometry-methods">
+<h3>Implementation of existing OGRGeometry methods<a class="headerlink" href="#implementation-of-existing-ogrgeometry-methods" title="Permalink to this headline">¶</a></h3>
+<p>As GEOS does not support curve geometries for now, all GEOS related
+operations, the ones returning a boolean value such as Intersects(), or
+the ones returning a new geometry such as Intersection(), have been
+adapted so that non-linear geometries are first converted to their
+linear approximation (this might be revisited if GEOS supports curve
+geometries in the future) When GEOS returns a geometry, and that one of
+the input parameters was a non-linear geometry, the reverse operation is
+done to attempt retrieving as much as possible of the curve geometry. Of
+course, the result will not generally perfect, but it is better than
+nothing.</p>
+<p>Simple example doing the union of 2 half-circles that are contiguous:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">g1</span> <span class="o">=</span> <span class="n">ogr</span><span class="o">.</span><span class="n">CreateGeometryFromWkt</span><span class="p">(</span><span class="s1">&#39;CURVEPOLYGON(COMPOUNDCURVE(CIRCULARSTRING (0 0,1 1,2 0),(2 0,0 0)))&#39;</span><span class="p">)</span>
+<span class="n">g2</span> <span class="o">=</span> <span class="n">ogr</span><span class="o">.</span><span class="n">CreateGeometryFromWkt</span><span class="p">(</span><span class="s1">&#39;CURVEPOLYGON(COMPOUNDCURVE(CIRCULARSTRING (0 0,1 -1,2 0),(2 0,0 0)))&#39;</span><span class="p">)</span>
+<span class="n">g3</span> <span class="o">=</span> <span class="n">g1</span><span class="o">.</span><span class="n">Union</span><span class="p">(</span><span class="n">g2</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">g3</span><span class="o">.</span><span class="n">ExportToWkt</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;CURVEPOLYGON (CIRCULARSTRING (0 0,1 1,2 0,1 -1,0 0))&#39;</span>
+</pre></div>
+</div>
+<p>Or using GetCurveGeometry() explicitly on the result of a buffer
+operation:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">g1</span> <span class="o">=</span> <span class="n">ogr</span><span class="o">.</span><span class="n">CreateGeometryFromWkt</span><span class="p">(</span><span class="s1">&#39;POINT(1 2)&#39;</span><span class="p">)</span>
+<span class="n">g2</span> <span class="o">=</span> <span class="n">g1</span><span class="o">.</span><span class="n">Buffer</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">g3</span> <span class="o">=</span> <span class="n">g2</span><span class="o">.</span><span class="n">GetCurveGeometry</span><span class="p">()</span>
+<span class="k">assert</span> <span class="n">g3</span><span class="o">.</span><span class="n">ExportToWkt</span><span class="p">()</span> <span class="o">!=</span> <span class="s1">&#39;CURVEPOLYGON (CIRCULARSTRING (1.5 2.0,0.5 2.0,1.5 2.0))&#39;</span>
+</pre></div>
+</div>
+<p>The Length() operation on OGRCircularString (and thus OGRCompoundCurve)
+uses circle geometry to compute the exact length, without falling back
+to linear approximation. The Area() operation on OGRCurvePolygon will
+generally need to go to linear approximation. When operating on a full
+circle, or a curve polygon that is convex, an optimization is done to
+avoid this (by computing the area of the polygon formed with all the
+vertex including in the circular parts of the description, and adding
+the area of the <a class="reference external" href="http://en.wikipedia.org/wiki/Circular_segment">circular
+segments</a>)</p>
+</div>
+<div class="section" id="c-api-changes">
+<h3>C API changes<a class="headerlink" href="#c-api-changes" title="Permalink to this headline">¶</a></h3>
+<p>Deprecation:</p>
+<ul class="simple">
+<li><p>wkb25DBit still present, but deprecated since incompatible with the
+new geometry type. Use the wkbFlatten(), wkbHasZ(), wkbSetZ() macros
+instead</p></li>
+</ul>
+<p>Additions:</p>
+<ul class="simple">
+<li><p>OGR_GT_xxxx (for Geometry Type): described above</p></li>
+<li><p>OGRErr OGR_G_ExportToIsoWkb( OGRGeometryH, OGRwkbByteOrder, unsigned
+char*) : Export geometry as WKB conforming to ISO SQL/MM Part 3.</p></li>
+<li><p>OGRErr OGR_G_ExportToIsoWkt( OGRGeometryH, char ** ) : Export
+geometry as WKT conforming to ISO SQL/MM Part 3, i.e. 2.5D geometries
+names are suffixed by ” Z”, e.g. “POINT Z (1 2 3)”.</p></li>
+<li><p>OGRGeometryH OGR_G_Value( OGRGeometryH, double dfDistance ) : mapping
+of existing OGRGeometry::Value()</p></li>
+<li><p>int OGR_G_HasCurveGeometry( OGRGeometryH, int bLookForNonLinear ) :
+mapping of OGRGeometry::hasCurveGeometry()</p></li>
+<li><p>OGRGeometryH OGR_G_GetLinearGeometry( OGRGeometryH hGeom, double
+dfMaxAngleStepSizeDegrees, char** papszOptions) : mapping of
+OGRGeometry::hasCurveGeometry()</p></li>
+<li><p>OGRGeometryH OGR_G_GetCurveGeometry( OGRGeometryH hGeom, char**
+papszOptions ) : mapping of OGRGeometry::hasCurveGeometry()</p></li>
+<li><p>void OGRSetNonLinearGeometriesEnabledFlag(int bFlag) : discussed in
+Backward compatibility section</p></li>
+<li><p>int OGRGetNonLinearGeometriesEnabledFlag() : discussed in Backward
+compatibility section</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="changes-in-drivers">
+<h2>Changes in drivers<a class="headerlink" href="#changes-in-drivers" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>GML geometry importer: Arc, ArcString, ArcByBulge, ArcByCenterPoint,
+Circle and CircleByCenterPoints GML elements will be returned as
+circular string OGR geometries. If they are included in other GML
+elements such as CurveComposite, MultiCurve, Surface, corresponding
+non-linear OGR geometries will be returned as well. When reading
+geometries that are made of or consist of Surface, MultiSurface,
+Curve, MultiCurve, an effort is made to return the OGR geometry class
+of a linear type as much as possible, i.e. OGRCurvePolygon,
+OGRCompoundCurve, etc… will only be returned if there’s a circular
+string in the geometry.</p></li>
+<li><p>GML geometry exporter: can generate ArcString and Circle GML elements
+when passed a geometry with circular string in it.</p></li>
+<li><p>GML driver: Can read/write all the new geometry types. When reading
+GML3 application schemas, declarations of geometry fields such as
+CurvePropertyType, SurfacePropertyType, MultiCurvePropertyType or
+MultiSurfacePropertyType will be also interpreted as being potential
+non-linear geometries, and corresponding OGR geometry type will be
+used for the layer geometry type, and the geometries of the feature
+will also follow that layer geometry type. This can affect the WFS
+drivers.</p></li>
+<li><p>NAS driver: Can return the new geometry types. NAS layers will use
+the new geometry types only if the NAS file contains arcs.</p></li>
+<li><p>PG/PostGIS: Can read/write all the new geometry types for both
+PostGIS 2.X and PostGIS 1.X. For PostGIS 1.X compatibility, special
+processing must be done in the importFromWkb()/exportToWkb() to deal
+with the non standard codes used by PostGIS 1.X for curvepolygon,
+multicurve and multisurface. This is done with a wkbVariantPostGIS1
+value added to OGRwkbVariant enumeration used by those methods.</p></li>
+<li><p>PGDump: Can write all new geometry types. Above remark related to the
+differences among version make it important to specify correctly the
+POSTGIS_VERSION dataset creation option.</p></li>
+<li><p>GeoPackage: Can read/write all the new geometry types. Note: this
+isn’t in the core of the GeoPackage specification, but it is still a
+registered extension.</p></li>
+<li><p>SQLite: Can read/write all the new geometry types for databases that
+are NOT Spatialite databases, since Spatialite does no support curve
+geometry types. However an attempt (well a hack) is done so that the
+SQLite SQL dialect can still be used. Basically when converting a OGR
+geometry to Spatialite, if it is of one of the curve geometry type,
+the resulting blob will first contain the spatialite compatible blob
+of the linear geometry, and afterwards the WKB of the curve geometry.
+Spatialite functions, if called with a ST_ function for example,
+will ignore the later one. When reading a blob from sqlite, if the
+added WKB of the curve geometry is still there, it will be used.
+Otherwise the spatialite geometry blob will be used. So SELECT
+statement just selecting the geometry column without doing any
+operation on it should preserve curve geometries.</p></li>
+<li><p>MEM: Can read/write all the new geometry types.</p></li>
+<li><p>CSV: Can read/write all the new geometry types.</p></li>
+<li><p>VRT: Declared as compatible with all the new geometry types. Actual
+capability will depend on the underlying layers wrapped by the VRT.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-utilities">
+<h2>Changes in utilities<a class="headerlink" href="#changes-in-utilities" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>ogr2ogr: the new geometry names (CIRCULARSTRING, etc…) are
+supported in the -nlt option. “-nlt CONVERT_TO_LINEAR” can also be
+used to ask curve geometries to be converted into their linear
+approximation ( what is used to do that is forceTo(xxx,
+OGR_GT_GetLinear()) ). Note: this isn’t strictly necessary as all
+drivers should be able to deal with the non-linear geometry types
+with the compatibility mechanism described in Backward compatibility.
+But this might be useful to produce a PostGIS table or GeoPackage
+database with linear geometry types even if the source contains
+non-linear geometries. “-nlt CONVERT_TO_LINEAR” can be combined with
+“-nlt PROMOTE_TO_MULTI”.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-swig-bindings">
+<h2>Changes in SWIG bindings<a class="headerlink" href="#changes-in-swig-bindings" title="Permalink to this headline">¶</a></h2>
+<p>Addition of :</p>
+<ul class="simple">
+<li><p>the new geometry types as ogr.wkbXXXXX</p></li>
+<li><p>ogr.ForceTo()</p></li>
+<li><p>Geometry.ExportToIsoWkt()</p></li>
+<li><p>Geometry.ExportToIsoWkb()</p></li>
+<li><p>Geometry.HasCurveGeometry(int bLookForCircular = FALSE)</p></li>
+<li><p>Geometry.GetLinearGeometry(double dfMaxAngleStepSizeDegrees =
+0.0,char** options = NULL)</p></li>
+<li><p>Geometry.GetCurveGeometry(char** options = NULL)</p></li>
+<li><p>ogr.SetNonLinearGeometriesEnabledFlag(int bFlag)</p></li>
+<li><p>ogr.GetNonLinearGeometriesEnabledFlag()</p></li>
+<li><p>ogr.GT_xxxxx functions</p></li>
+</ul>
+<p>Using ogr.wkb25DBit will issue a deprecation warning</p>
+</div>
+<div class="section" id="related-changes-that-are-not-included-in-this-rfc">
+<h2>Related changes that are <em>NOT</em> included in this RFC<a class="headerlink" href="#related-changes-that-are-not-included-in-this-rfc" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Support for other ISO SQL/MM geometries such as Polyhedral Surface,
+Triangulated Irregular Network (TIN), Triangle.</p></li>
+<li><p>Support for the M (Measure) dimension of geometries.</p></li>
+<li><p>Upgrade of other drivers that could make use of curve geometries :
+MSSQL Spatial, Oracle Spatial, DXF, DWG, …</p></li>
+<li><p>Support for arbitrary new geometry types: Conceptually one could hope
+that a new class extending OGRCurve (Bezier or Spline curve) for
+example could be added without touching OGR core. This isn’t
+currently possible: changes in OGRGeometryFactory and the OGR_GT_
+functions would be needed to remove a few hardcoded assumptions.</p></li>
+</ul>
+</div>
+<div class="section" id="backward-compatibility">
+<h2>Backward compatibility<a class="headerlink" href="#backward-compatibility" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="regarding-code-using-gdal">
+<h3>Regarding code using GDAL<a class="headerlink" href="#regarding-code-using-gdal" title="Permalink to this headline">¶</a></h3>
+<p>Many applications will not be able to properly deal with the new
+geometry types that may now be returned by some drivers. If they don’t
+want to test the geometry type and explicitly calling the conversion
+function, they can call OGRSetNonLinearGeometriesEnabledFlag(FALSE) (the
+default value is TRUE, i.e. non-linear geometries can be returned). In
+which case, they will be transformed into their closest linear geometry,
+by doing linear approximation, with OGR_G_ForceTo().</p>
+<p>This flag has only an effect on the OGR_F_GetGeometryRef(),
+OGR_F_GetGeomFieldRef(), OGR_L_GetGeomType(), OGR_GFld_GetType() and
+OGR_FD_GetGeomType() C API, and corresponding methods in the SWIG
+bindings.</p>
+<p>Libraries should generally <em>not</em> use that method, since that could
+interfere with other libraries or applications.</p>
+<p>Note that it does <em>not</em> affect the behavior of the C++ API. It has been
+deemed dangerous/complicated to try doing that at the C++ level as it
+could confuse drivers since they might call GetGeomType() for example.</p>
+</div>
+<div class="section" id="regarding-ogr-drivers">
+<h3>Regarding OGR drivers<a class="headerlink" href="#regarding-ogr-drivers" title="Permalink to this headline">¶</a></h3>
+<p>Drivers that can deal with the new geometry types SHOULD declare the new
+dataset level ODsCCurveGeometries AND layer level OLCCurveGeometries
+capabilities. The virtual methods CreateFeature() and SetFeature()
+implemented by drivers have been renamed ICreateFeature() and
+ISetFeature(). OGRLayer has now a non-virtual CreateFeature() and
+SetFeature() that checks if the layer has curve geometry capability. If
+it has not, and that the passed feature has non-linear geometries, they
+will be transparently converted to their linear approximation before
+calling the driver ICreateFeature()/ISetFeature() method. Similarly the
+CreateLayer() method at datasource level will convert the passed
+geometry type to a non-linear corresponding type if necessary.</p>
+<p>All in-tree drivers have been converted to switch from CreateFeature()
+to ICreateFeature() and SetFeature() to ISetFeature(). Out-of-tree
+drivers will have to be adapted similarly otherwise those methods will
+fails (the now non-virtual methods in OGRLayer class will try to create
+the default implementation of the same class, which will fail).</p>
+</div>
+</div>
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<p>All new methods and OGR geometry classes are documented. Driver
+documentation is updated when necessary. MIGRATION_GUIDE.TXT is updated
+with a summary of the text of this RFC.</p>
+</div>
+<div class="section" id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
+<p>Very few changes have been made so that the existing autotest suite
+still passes. Very comprehensive testing of new geometry classes and
+conversion methods has been added to ogr_geom.py and ogr_gml_geom.py.
+Updated drivers have received new tests also.</p>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>Implementation will be done by Even Rouault. Coordinated with Sourcepole
+(see <a class="reference external" href="https://github.com/mhugent/QGIS-Enhancement-Proposals/blob/master/QEP-8-geometry_redesign.rst">QGIS Enhancement 8: Geometry
+redesign</a>),
+sponsored by Swiss QGIS User Group.</p>
+<p>The proposed implementation lies in the “curve_geometries” branch of the
+<a class="reference external" href="https://github.com/rouault/gdal2/tree/curve_geometries">https://github.com/rouault/gdal2/tree/curve_geometries</a>
+repository.</p>
+<p>The list of changes :
+<a class="reference external" href="https://github.com/rouault/gdal2/compare/curve_geometries">https://github.com/rouault/gdal2/compare/curve_geometries</a></p>
+</div>
+<div class="section" id="voting-history">
+<h2>Voting history<a class="headerlink" href="#voting-history" title="Permalink to this headline">¶</a></h2>
+<p>+1 from TamasS, JukkaR and EvenR</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rfc50_ogr_field_subtype.html" class="btn btn-neutral float-right" title="RFC 50: OGR field subtypes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc48_geographical_networks_support.html" class="btn btn-neutral float-left" title="RFC 48: Geographical networks support" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

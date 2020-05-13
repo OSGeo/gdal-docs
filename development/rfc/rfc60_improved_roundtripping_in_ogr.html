@@ -1,0 +1,598 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RFC 60 : Improved round-tripping in OGR &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdevelopment/rfc/rfc60_improved_roundtripping_in_ogr.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="RFC 61 : Support for measured geometries" href="rfc61_support_for_measured_geometries.html" />
+    <link rel="prev" title="RFC 59 : GDAL/OGR utilities as a library" href="rfc59_utilities_as_a_library.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 60 : Improved round-tripping in OGR</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rationale">Rationale</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#changes">Changes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#c-api">C API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sql-result-layers">SQL result layers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#swig-bindings-python-java-c-perl-changes">SWIG bindings (Python / Java / C# / Perl) changes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#drivers">Drivers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#utilities">Utilities</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#test-suite">Test Suite</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#compatibility-issues">Compatibility Issues</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#related-ticket">Related ticket</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voting-history">Voting history</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 60 : Improved round-tripping in OGR</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/development/rfc/rfc60_improved_roundtripping_in_ogr.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="rfc61_support_for_measured_geometries.html" class="btn btn-neutral float-right" title="RFC 61 : Support for measured geometries" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc59_utilities_as_a_library.html" class="btn btn-neutral float-left" title="RFC 59 : GDAL/OGR utilities as a library" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rfc-60-improved-round-tripping-in-ogr">
+<span id="rfc-60"></span><h1>RFC 60 : Improved round-tripping in OGR<a class="headerlink" href="#rfc-60-improved-round-tripping-in-ogr" title="Permalink to this headline">¶</a></h1>
+<p>Author: Even Rouault</p>
+<p>Contact: even.rouault at spatialys.com</p>
+<p>Status: Adopted, implemented</p>
+<p>Implementation version: 2.1</p>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>This RFC defines how to improve better round-tripping in conversion of
+vector formats, in particular for GeoJSON extensions.</p>
+</div>
+<div class="section" id="rationale">
+<h2>Rationale<a class="headerlink" href="#rationale" title="Permalink to this headline">¶</a></h2>
+<p>Some formats have concepts that are not well modeled by the OGR
+abstraction, but that are desirable to be preserved in transformation
+scenarios involving reprojection, spatial/attribute filtering, clipping,
+etc… where the target format is the source format.</p>
+<p>Various extensions exist above the core GeoJSON specification: at the
+FeatureCollection, Feature or Geometry levels.</p>
+<p>See
+<a class="reference external" href="https://github.com/mapbox/carmen/blob/master/carmen-geojson.md">https://github.com/mapbox/carmen/blob/master/carmen-geojson.md</a>,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;FeatureCollection&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;austin&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Feature&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;place.4201&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Austin&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;place_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Austin, Texas, United States&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;bbox&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">97.9383829999999</span><span class="p">,</span> <span class="mf">30.098659</span><span class="p">,</span> <span class="o">-</span><span class="mf">97.5614889999999</span><span class="p">,</span> <span class="mf">30.516863</span><span class="p">],</span>
+            <span class="s2">&quot;center&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">97.7559964</span><span class="p">,</span> <span class="mf">30.3071816</span><span class="p">],</span>
+            <span class="s2">&quot;geometry&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Point&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">97.7559964</span><span class="p">,</span> <span class="mf">30.3071816</span><span class="p">]</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Austin&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;city&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="mf">600000790107194.8</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;context&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;province.293&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Texas&quot;</span>
+                <span class="p">},</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;country.51&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;United States&quot;</span>
+                <span class="p">}</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="o">...</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><a class="reference external" href="https://github.com/geocoders/geocodejson-spec/blob/master/draft/README.md">https://github.com/geocoders/geocodejson-spec/blob/master/draft/README.md</a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+
+  <span class="o">//</span> <span class="n">REQUIRED</span><span class="o">.</span> <span class="n">GeocodeJSON</span> <span class="n">result</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">FeatureCollection</span><span class="o">.</span>
+  <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;FeatureCollection&quot;</span><span class="p">,</span>
+
+  <span class="o">//</span> <span class="n">REQUIRED</span><span class="o">.</span> <span class="n">Namespace</span><span class="o">.</span>
+  <span class="s2">&quot;geocoding&quot;</span><span class="p">:</span> <span class="p">{</span>
+
+    <span class="o">//</span> <span class="n">REQUIRED</span><span class="o">.</span> <span class="n">A</span> <span class="n">semver</span><span class="o">.</span><span class="n">org</span> <span class="n">compliant</span> <span class="n">version</span> <span class="n">number</span><span class="o">.</span> <span class="n">Describes</span> <span class="n">the</span> <span class="n">version</span> <span class="n">of</span>
+    <span class="o">//</span> <span class="n">the</span> <span class="n">GeocodeJSON</span> <span class="n">spec</span> <span class="n">that</span> <span class="ow">is</span> <span class="n">implemented</span> <span class="n">by</span> <span class="n">this</span> <span class="n">instance</span><span class="o">.</span>
+    <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;0.1.0&quot;</span><span class="p">,</span>
+
+    <span class="o">//</span> <span class="n">OPTIONAL</span><span class="o">.</span> <span class="n">Default</span><span class="p">:</span> <span class="n">null</span><span class="o">.</span> <span class="n">The</span> <span class="n">licence</span> <span class="n">of</span> <span class="n">the</span> <span class="n">data</span><span class="o">.</span> <span class="n">In</span> <span class="n">case</span> <span class="n">of</span> <span class="n">multiple</span> <span class="n">sources</span><span class="p">,</span>
+    <span class="o">//</span> <span class="ow">and</span> <span class="n">then</span> <span class="n">multiple</span> <span class="n">licences</span><span class="p">,</span> <span class="n">can</span> <span class="n">be</span> <span class="n">an</span> <span class="nb">object</span> <span class="k">with</span> <span class="n">one</span> <span class="n">key</span> <span class="n">by</span> <span class="n">source</span><span class="o">.</span>
+    <span class="s2">&quot;licence&quot;</span><span class="p">:</span> <span class="s2">&quot;ODbL&quot;</span><span class="p">,</span>
+
+    <span class="o">//</span> <span class="n">OPTIONAL</span><span class="o">.</span> <span class="n">Default</span><span class="p">:</span> <span class="n">null</span><span class="o">.</span> <span class="n">The</span> <span class="n">attribution</span> <span class="n">of</span> <span class="n">the</span> <span class="n">data</span><span class="o">.</span> <span class="n">In</span> <span class="n">case</span> <span class="n">of</span> <span class="n">multiple</span> <span class="n">sources</span><span class="p">,</span>
+    <span class="o">//</span> <span class="ow">and</span> <span class="n">then</span> <span class="n">multiple</span> <span class="n">attributions</span><span class="p">,</span> <span class="n">can</span> <span class="n">be</span> <span class="n">an</span> <span class="nb">object</span> <span class="k">with</span> <span class="n">one</span> <span class="n">key</span> <span class="n">by</span> <span class="n">source</span><span class="o">.</span>
+    <span class="s2">&quot;attribution&quot;</span><span class="p">:</span> <span class="s2">&quot;OpenStreetMap Contributors&quot;</span><span class="p">,</span>
+
+    <span class="o">//</span> <span class="n">OPTIONAL</span><span class="o">.</span> <span class="n">Default</span><span class="p">:</span> <span class="n">null</span><span class="o">.</span> <span class="n">The</span> <span class="n">query</span> <span class="n">that</span> <span class="n">has</span> <span class="n">been</span> <span class="n">issued</span> <span class="n">to</span> <span class="n">trigger</span> <span class="n">the</span>
+    <span class="o">//</span> <span class="n">search</span><span class="o">.</span>
+    <span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="s2">&quot;24 allée de Bercy 75012 Paris&quot;</span><span class="p">,</span>
+
+  <span class="p">},</span>
+
+  <span class="o">//</span> <span class="n">REQUIRED</span><span class="o">.</span> <span class="n">As</span> <span class="n">per</span> <span class="n">GeoJSON</span> <span class="n">spec</span><span class="o">.</span>
+  <span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="o">//</span> <span class="n">OPTIONAL</span><span class="o">.</span> <span class="n">An</span> <span class="n">array</span> <span class="n">of</span> <span class="n">feature</span> <span class="n">objects</span><span class="o">.</span> <span class="n">See</span> <span class="n">below</span><span class="o">.</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>or
+<a class="reference external" href="https://github.com/geojson/draft-geojson/issues/80#issuecomment-138037554">https://github.com/geojson/draft-geojson/issues/80#issuecomment-138037554</a>
+for a few examples.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="s2">&quot;type&quot;</span> <span class="p">:</span> <span class="s2">&quot;GeometryCollection&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;geometries&quot;</span> <span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span> <span class="s2">&quot;type&quot;</span> <span class="p">:</span> <span class="s2">&quot;LineString&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;extensions&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;atemp&quot;</span><span class="p">,</span> <span class="s2">&quot;hr&quot;</span><span class="p">,</span> <span class="s2">&quot;cad&quot;</span> <span class="p">],</span>
+      <span class="s2">&quot;coordinates&quot;</span> <span class="p">:</span> <span class="p">[</span>
+        <span class="p">[</span>
+          <span class="o">-</span><span class="mf">122.45671039447188</span><span class="p">,</span>
+          <span class="mf">37.786870915442705</span><span class="p">,</span>
+          <span class="mf">0.4000000059604645</span><span class="p">,</span>
+          <span class="s2">&quot;2014-11-06T19:16:06.000Z&quot;</span><span class="p">,</span>
+          <span class="mf">31.0</span><span class="p">,</span>
+          <span class="mi">99</span><span class="p">,</span>
+          <span class="mi">0</span>
+        <span class="p">],</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="changes">
+<h2>Changes<a class="headerlink" href="#changes" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="ogrfeature">
+<h3>OGRFeature<a class="headerlink" href="#ogrfeature" title="Permalink to this headline">¶</a></h3>
+<p>Two new members will be added to the OGRFeature class, m_pszNativeData
+(string) and m_pszNativeMediaType (string). m_pszNativeData will contain
+the representation (or part of the representation) of the original
+feature, and m_pszNativeMediaType the <a class="reference external" href="https://en.wikipedia.org/wiki/Media_type">media
+type</a></p>
+<p>The following methods will be added to OGRFeature class:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">public</span><span class="p">:</span>
+    <span class="n">const</span> <span class="n">char</span> <span class="o">*</span><span class="n">GetNativeData</span><span class="p">()</span> <span class="n">const</span><span class="p">;</span>
+    <span class="n">const</span> <span class="n">char</span> <span class="o">*</span><span class="n">GetNativeMediaType</span><span class="p">()</span> <span class="n">const</span><span class="p">;</span>
+    <span class="n">void</span>        <span class="n">SetNativeData</span><span class="p">(</span> <span class="n">const</span> <span class="n">char</span><span class="o">*</span> <span class="n">pszNativeData</span> <span class="p">);</span>
+    <span class="n">void</span>        <span class="n">SetNativeMediaType</span><span class="p">(</span> <span class="n">const</span> <span class="n">char</span><span class="o">*</span> <span class="n">pszNativeMediaType</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>Thus, in the GeoJSON case, nativeData would contain the full
+serialization of a GeoJSON Feature. m_pszNativeMediaType would be set to
+“application/vnd.geo+json” The writer side of the GeoJSON driver would
+start from the nativeData if present (and if nativeMediaType =
+“application/vnd.geo+json”, replace its properties member with the
+content of the OGR fields and patch its geometry to include additional
+JSON objects.</p>
+<p>The OGRFeature::Clone() and ::SetFrom() methods will propagate
+nativeData and nativeMediaType.</p>
+</div>
+<div class="section" id="ogrlayer">
+<h3>OGRLayer<a class="headerlink" href="#ogrlayer" title="Permalink to this headline">¶</a></h3>
+<p>A dedicated metadata domain “NATIVE_DATA” in which there would be a
+“NATIVE_DATA” and “NATIVE_MEDIA_TYPE” items would be used. In the
+GeoJSON case, this would contain JSON members at the FeatureCollection
+level (excluding the features array of course).</p>
+</div>
+<div class="section" id="driver-open-options-and-layer-creation-options">
+<h3>Driver open options and layer creation options<a class="headerlink" href="#driver-open-options-and-layer-creation-options" title="Permalink to this headline">¶</a></h3>
+<p>Drivers that support nativeData on read should expose a NATIVE_DATA
+boolean open option, and disable it by default so as not to impact
+performance. ogr2ogr will by default turn this option on.</p>
+<p>Drivers that support nativeData on write at the layer level should
+expose a NATIVE_DATA string and NATIVE_MEDIA_TYPE string layer creation
+options, so that ogr2ogr can fill them with the content of the
+NATIVE_DATA metadata domain of the source layer(s).</p>
+</div>
+</div>
+<div class="section" id="c-api">
+<h2>C API<a class="headerlink" href="#c-api" title="Permalink to this headline">¶</a></h2>
+<p>The following functions will be added:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">const</span> <span class="n">char</span> <span class="n">CPL_DLL</span> <span class="o">*</span><span class="n">OGR_F_GetNativeData</span><span class="p">(</span><span class="n">OGRFeatureH</span><span class="p">);</span>
+<span class="n">void</span> <span class="n">OGR_F_SetNativeData</span><span class="p">(</span><span class="n">OGRFeatureH</span><span class="p">,</span> <span class="n">const</span> <span class="n">char</span><span class="o">*</span><span class="p">);</span>
+<span class="n">const</span> <span class="n">char</span> <span class="n">CPL_DLL</span> <span class="o">*</span><span class="n">OGR_F_GetNativeMediaType</span><span class="p">(</span><span class="n">OGRFeatureH</span><span class="p">);</span>
+<span class="n">void</span> <span class="n">OGR_F_SetNativeMediaType</span><span class="p">(</span><span class="n">OGRFeatureH</span><span class="p">,</span> <span class="n">const</span> <span class="n">char</span><span class="o">*</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="sql-result-layers">
+<h2>SQL result layers<a class="headerlink" href="#sql-result-layers" title="Permalink to this headline">¶</a></h2>
+<p>Both OGR SQL and SQLite SQL dialect implementations have been modified
+to propagate the content of the NATIVE_DATA metadata domain of the
+source layer (the one of the FROM table) to the target layer, and
+NativeData and NativeMediaType from source features are copied into
+target features.</p>
+</div>
+<div class="section" id="swig-bindings-python-java-c-perl-changes">
+<h2>SWIG bindings (Python / Java / C# / Perl) changes<a class="headerlink" href="#swig-bindings-python-java-c-perl-changes" title="Permalink to this headline">¶</a></h2>
+<p>The new functions will mapped to SWIG as GetNativeData(),
+SetNativeData(), GetNativeMediaType() and SetNativeMediaType()</p>
+</div>
+<div class="section" id="drivers">
+<h2>Drivers<a class="headerlink" href="#drivers" title="Permalink to this headline">¶</a></h2>
+<p>The GeoJSON driver will be modified to implement this RFC, in read and
+write, and thus will* :</p>
+<ul class="simple">
+<li><p>declare a NATIVE_DATA open option to enable storing layer and feature
+native data.</p></li>
+<li><p>and NATIVE_DATA &amp; NATIVE_MEDIA_TYPE layer creation options so as to
+be able to write native data at FeatureCollection levels</p></li>
+<li><p>use OGRFeature nativeData on write.</p></li>
+</ul>
+<p>The effect of this is that ogr2ogr will be able to preserve the members
+marked between <code class="docutils literal notranslate"><span class="pre">***</span></code> in the below snippet:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;FeatureCollection&quot;</span><span class="p">,</span>
+  <span class="o">***</span><span class="s2">&quot;extra_fc_member&quot;</span><span class="p">:</span> <span class="s2">&quot;foo&quot;</span><span class="p">,</span><span class="o">***</span>
+  <span class="s2">&quot;features&quot;</span><span class="p">:</span>
+  <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Feature&quot;</span><span class="p">,</span>
+      <span class="o">***</span><span class="s2">&quot;extra_feat_member&quot;</span><span class="p">:</span> <span class="s2">&quot;bar&quot;</span><span class="p">,</span><span class="o">***</span>
+      <span class="s2">&quot;geometry&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Point&quot;</span><span class="p">,</span>
+        <span class="o">***</span><span class="n">extra_geom_member</span><span class="s2">&quot;: &quot;</span><span class="n">baz</span><span class="s2">&quot;,***</span>
+        <span class="s2">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">49</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="o">***</span><span class="mi">100</span><span class="p">,</span> <span class="mi">101</span><span class="o">***</span> <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;a_property&quot;</span><span class="p">:</span> <span class="s2">&quot;foo&quot;</span><span class="p">,</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Other drivers like ElasticSearch and MongoDB drivers, that use a _json
+OGR field for round-tripping could potentially be upgraded to benefit
+from the mechanism of this RFC.</p>
+</div>
+<div class="section" id="utilities">
+<h2>Utilities<a class="headerlink" href="#utilities" title="Permalink to this headline">¶</a></h2>
+<p>ogr2ogr will be modified to automatically copy nativeData at layer and
+feature level. A -noNativeData flag will be added to avoid doing so,
+when this is not desirable.</p>
+<p>By default, ogr2ogr will open datasources with the NATIVE_DATA=YES open
+option so that drivers that can store nativeData do so. And if the
+output datasource supports the NATIVE_DATA and NATIVE_MEDIA_TYPE layer
+creation options, it will feel them with the content of the source layer
+NATIVE_DATA metadata domain.</p>
+</div>
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<p>All new methods/functions are documented.</p>
+</div>
+<div class="section" id="test-suite">
+<h2>Test Suite<a class="headerlink" href="#test-suite" title="Permalink to this headline">¶</a></h2>
+<p>The GeoJSON and ogr2ogr related tests will be extended</p>
+</div>
+<div class="section" id="compatibility-issues">
+<h2>Compatibility Issues<a class="headerlink" href="#compatibility-issues" title="Permalink to this headline">¶</a></h2>
+<p>Nothing severe expected. Potentially existing scripts might need to add
+-noNativeData to get previous behavior.</p>
+</div>
+<div class="section" id="related-ticket">
+<h2>Related ticket<a class="headerlink" href="#related-ticket" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://trac.osgeo.org/gdal/ticket/5310">https://trac.osgeo.org/gdal/ticket/5310</a></p>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>The implementation will be done by Even Rouault (Spatialys) and be
+sponsored by Mapbox.</p>
+<p>The proposed implementation lies in the “rfc60_native_data” branch of
+the
+​<a class="reference external" href="https://github.com/rouault/gdal2/tree/rfc60_native_data">https://github.com/rouault/gdal2/tree/rfc60_native_data</a>,
+in pull request
+<a class="reference external" href="https://github.com/OSGeo/gdal/pull/75">https://github.com/OSGeo/gdal/pull/75</a></p>
+</div>
+<div class="section" id="voting-history">
+<h2>Voting history<a class="headerlink" href="#voting-history" title="Permalink to this headline">¶</a></h2>
+<p>+1 from HowardB, KurtS, TamasS, JukkaR and EvenR</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rfc61_support_for_measured_geometries.html" class="btn btn-neutral float-right" title="RFC 61 : Support for measured geometries" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc59_utilities_as_a_library.html" class="btn btn-neutral float-left" title="RFC 59 : GDAL/OGR utilities as a library" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

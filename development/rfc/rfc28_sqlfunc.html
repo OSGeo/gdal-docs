@@ -1,0 +1,499 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RFC 28: OGR SQL Generalized Expressions &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdevelopment/rfc/rfc28_sqlfunc.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="RFC 29: OGR Set Ignored Fields" href="rfc29_desired_fields.html" />
+    <link rel="prev" title="RFC 27: Improved Supporting Data File Options" href="rfc27_supportdata.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 28: OGR SQL Generalized Expressions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#technical-approach">Technical Approach</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#new-functions">New Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#select-rules">SELECT Rules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#special-notes">Special Notes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#compatibility-implications">Compatibility Implications</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#performance-implications">Performance Implications</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation-plan">Implementation Plan</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#testing">Testing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#documentation">Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 28: OGR SQL Generalized Expressions</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/development/rfc/rfc28_sqlfunc.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="rfc29_desired_fields.html" class="btn btn-neutral float-right" title="RFC 29: OGR Set Ignored Fields" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc27_supportdata.html" class="btn btn-neutral float-left" title="RFC 27: Improved Supporting Data File Options" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rfc-28-ogr-sql-generalized-expressions">
+<span id="rfc-28"></span><h1>RFC 28: OGR SQL Generalized Expressions<a class="headerlink" href="#rfc-28-ogr-sql-generalized-expressions" title="Permalink to this headline">¶</a></h1>
+<p>Author: Frank Warmerdam</p>
+<p>Contact: <a class="reference external" href="mailto:warmerdam&#37;&#52;&#48;pobox&#46;com">warmerdam<span>&#64;</span>pobox<span>&#46;</span>com</a></p>
+<p>Status: Adopted, Implemented</p>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>The OGR SQL evaluation engine currently does not allow general purpose
+functions to be applied to columns in SELECT statements. Some special
+purpose functions are supported (ie. CAST, COUNT, AVG, MAX, MIN, and
+SUM), but not as part of more general expressions and generally in very
+constrained arrangements. It is the intent of this work item to extend
+the OGR SQL engine to support fairly general purpose expression
+evaluation in the output field list of OGR SQL SELECT statements and to
+implement a few preliminary processing functions in a fashion compatible
+with standard SQL. As well, expressions used in WHERE clauses will be
+generalized to support evaluation of non-logical operations, such as
+math and functions. For example, after implementation it is intended the
+following could be evaluated.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SELECT</span> <span class="n">CONCAT</span><span class="p">(</span><span class="n">first_name</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">last_name</span><span class="p">)</span> <span class="n">AS</span> <span class="n">full_name</span> <span class="n">FROM</span> <span class="n">customers</span>
+<span class="n">SELECT</span> <span class="nb">id</span><span class="p">,</span> <span class="s2">&quot;Regional Road&quot;</span> <span class="n">AS</span> <span class="n">roadtypename</span> <span class="n">FROM</span> <span class="n">roads</span> <span class="n">where</span> <span class="n">roadtype</span><span class="o">=</span><span class="mi">3</span>
+<span class="n">SELECT</span> <span class="p">(</span><span class="n">subtotal</span><span class="o">+</span><span class="n">salestax</span><span class="p">)</span> <span class="k">as</span> <span class="n">totalcost</span> <span class="kn">from</span> <span class="nn">invoice_info</span> <span class="n">where</span> <span class="mi">100</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">subtotal</span><span class="o">+</span><span class="n">salestax</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A prototype implementation is now available for review in
+<a class="reference external" href="http://svn.osgeo.org/gdal/sandbox/warmerdam/gdal-rfc28">http://svn.osgeo.org/gdal/sandbox/warmerdam/gdal-rfc28</a></p>
+</div>
+<div class="section" id="technical-approach">
+<h2>Technical Approach<a class="headerlink" href="#technical-approach" title="Permalink to this headline">¶</a></h2>
+<p>Currently logical expressions take a very constrained format with the
+base elements having to be of the form * &lt;constant_value&gt;*. As part of
+the generalization non-logical expressions will be supported and the
+left and right side of operators will be equally treated. The current
+OGR SQL parser is ad hoc and cannot be practically extended to this
+generalized form of expression. So at this point we will move to a
+yacc/bison based parser grammar for expressions.</p>
+<p>Since it is not really practical to continue to use the existing ad hoc
+SELECT parsing when parts of the SELECT statement are expressions, the
+yacc/bison based parser will also be used to parse the whole SELECT
+statement.</p>
+<p>The current expression node will be generalized to have 0-n children
+(for arguments to functions), and to treat field references and constant
+values as distinct leaf nodes rather than embedding this information in
+a node defining an operation.</p>
+<p>It should be noted that as a side effect WHERE clauses will also support
+more general expressions - not just logical comparisons. For instance:</p>
+<p>SELECT * WHERE (subtotal+salestax) &gt; 100.0</p>
+</div>
+<div class="section" id="new-functions">
+<h2>New Functions<a class="headerlink" href="#new-functions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Math: +, -, *, /, **</p></li>
+<li><p>String: CONCAT, SUBSTR</p></li>
+</ul>
+</div>
+<div class="section" id="select-rules">
+<h2>SELECT Rules<a class="headerlink" href="#select-rules" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SELECT</span> <span class="o">&lt;</span><span class="n">field</span><span class="o">-</span><span class="nb">list</span><span class="o">&gt;</span> <span class="n">FROM</span> <span class="o">&lt;</span><span class="n">table_def</span><span class="o">&gt;</span>
+     <span class="p">[</span><span class="n">LEFT</span> <span class="n">JOIN</span> <span class="o">&lt;</span><span class="n">table_def</span><span class="o">&gt;</span>
+      <span class="n">ON</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">table_ref</span><span class="o">&gt;.</span><span class="p">]</span><span class="o">&lt;</span><span class="n">key_field</span><span class="o">&gt;</span> <span class="o">=</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">table_ref</span><span class="o">&gt;.</span><span class="p">]</span><span class="o">.&lt;</span><span class="n">key_field</span><span class="o">&gt;</span><span class="p">]</span><span class="o">*</span>
+     <span class="p">[</span><span class="n">WHERE</span> <span class="o">&lt;</span><span class="n">where</span><span class="o">-</span><span class="n">expr</span><span class="o">&gt;</span><span class="p">]</span>
+     <span class="p">[</span><span class="n">ORDER</span> <span class="n">BY</span> <span class="o">&lt;</span><span class="n">sort</span> <span class="n">specification</span> <span class="nb">list</span><span class="o">&gt;</span><span class="p">]</span>
+
+<span class="o">&lt;</span><span class="n">field</span><span class="o">-</span><span class="nb">list</span><span class="o">&gt;</span> <span class="p">::</span><span class="o">=</span> <span class="o">&lt;</span><span class="n">column</span><span class="o">-</span><span class="n">spec</span><span class="o">&gt;</span> <span class="p">[</span> <span class="p">{</span> <span class="p">,</span> <span class="o">&lt;</span><span class="n">column</span><span class="o">-</span><span class="n">spec</span><span class="o">&gt;</span> <span class="p">}</span><span class="o">...</span> <span class="p">]</span>
+
+<span class="o">&lt;</span><span class="n">column</span><span class="o">-</span><span class="n">spec</span><span class="o">&gt;</span> <span class="p">::</span><span class="o">=</span> <span class="o">&lt;</span><span class="n">field</span><span class="o">-</span><span class="n">spec</span><span class="o">&gt;</span> <span class="p">[</span> <span class="o">&lt;</span><span class="k">as</span> <span class="n">clause</span><span class="o">&gt;</span> <span class="p">]</span>
+                 <span class="o">|</span> <span class="n">CAST</span> <span class="p">(</span> <span class="o">&lt;</span><span class="n">field</span><span class="o">-</span><span class="n">spec</span><span class="o">&gt;</span> <span class="n">AS</span> <span class="o">&lt;</span><span class="n">data</span> <span class="nb">type</span><span class="o">&gt;</span> <span class="p">)</span> <span class="p">[</span> <span class="o">&lt;</span><span class="k">as</span> <span class="n">clause</span><span class="o">&gt;</span> <span class="p">]</span>
+
+<span class="o">&lt;</span><span class="n">field</span><span class="o">-</span><span class="n">spec</span><span class="o">&gt;</span> <span class="p">::</span><span class="o">=</span> <span class="p">[</span><span class="n">DISTINCT</span><span class="p">]</span> <span class="o">&lt;</span><span class="n">field_ref</span><span class="o">&gt;</span>
+                 <span class="o">|</span> <span class="o">&lt;</span><span class="n">cumm</span><span class="o">-</span><span class="n">field</span><span class="o">-</span><span class="n">func</span><span class="o">&gt;</span> <span class="p">(</span> <span class="p">[</span><span class="n">DISTINCT</span><span class="p">]</span> <span class="o">&lt;</span><span class="n">field</span><span class="o">-</span><span class="n">ref</span><span class="o">&gt;</span> <span class="p">)</span>
+                 <span class="o">|</span> <span class="o">&lt;</span><span class="n">field</span><span class="o">-</span><span class="n">expr</span><span class="o">&gt;</span>
+                 <span class="o">|</span> <span class="n">Count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+
+<span class="o">&lt;</span><span class="n">field</span><span class="o">-</span><span class="n">expr</span><span class="o">&gt;</span> <span class="p">::</span><span class="o">=</span> <span class="o">&lt;</span><span class="n">field_ref</span><span class="o">&gt;</span>
+                 <span class="o">|</span> <span class="o">&lt;</span><span class="n">constant</span><span class="o">-</span><span class="n">value</span><span class="o">&gt;</span>
+                 <span class="o">|</span> <span class="o">&lt;</span><span class="n">field</span><span class="o">-</span><span class="n">expr</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">field</span><span class="o">-</span><span class="n">operator</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">field</span><span class="o">-</span><span class="n">expr</span><span class="o">&gt;</span>
+                 <span class="o">|</span> <span class="o">&lt;</span><span class="n">field</span><span class="o">-</span><span class="n">func</span><span class="o">&gt;</span> <span class="p">(</span> <span class="o">&lt;</span><span class="n">field</span><span class="o">-</span><span class="n">expr</span><span class="o">-</span><span class="nb">list</span><span class="o">&gt;</span> <span class="p">)</span>
+                 <span class="o">|</span> <span class="p">(</span> <span class="o">&lt;</span><span class="n">field</span><span class="o">-</span><span class="n">expr</span><span class="o">&gt;</span> <span class="p">)</span>
+
+<span class="o">&lt;</span><span class="n">field</span><span class="o">-</span><span class="n">expr</span><span class="o">-</span><span class="nb">list</span><span class="o">&gt;</span> <span class="p">::</span><span class="o">=</span> <span class="n">field</span><span class="o">-</span><span class="n">expr</span>
+                 <span class="o">|</span>  <span class="n">field</span><span class="o">-</span><span class="n">expr</span> <span class="p">,</span> <span class="n">field</span><span class="o">-</span><span class="n">expr</span><span class="o">-</span><span class="nb">list</span>
+                 <span class="o">|</span>  <span class="o">&lt;</span><span class="n">empty</span><span class="o">&gt;</span>
+
+<span class="o">&lt;</span><span class="k">as</span> <span class="n">clause</span><span class="o">&gt;</span> <span class="p">::</span><span class="o">=</span> <span class="p">[</span> <span class="n">AS</span> <span class="p">]</span> <span class="o">&lt;</span><span class="n">column_name</span><span class="o">&gt;</span>
+
+<span class="o">&lt;</span><span class="n">data</span> <span class="nb">type</span><span class="o">&gt;</span> <span class="p">::</span><span class="o">=</span> <span class="n">character</span> <span class="p">[</span> <span class="p">(</span> <span class="n">field_length</span> <span class="p">)</span> <span class="p">]</span>
+                <span class="o">|</span> <span class="nb">float</span> <span class="p">[</span> <span class="p">(</span> <span class="n">field_length</span> <span class="p">)</span> <span class="p">]</span>
+                <span class="o">|</span> <span class="n">numeric</span> <span class="p">[</span> <span class="p">(</span> <span class="n">field_length</span> <span class="p">[,</span> <span class="n">field_precision</span> <span class="p">]</span> <span class="p">)</span> <span class="p">]</span>
+                <span class="o">|</span> <span class="n">integer</span> <span class="p">[</span> <span class="p">(</span> <span class="n">field_length</span> <span class="p">)</span> <span class="p">]</span>
+                <span class="o">|</span> <span class="n">date</span> <span class="p">[</span> <span class="p">(</span> <span class="n">field_length</span> <span class="p">)</span> <span class="p">]</span>
+                <span class="o">|</span> <span class="n">time</span> <span class="p">[</span> <span class="p">(</span> <span class="n">field_length</span> <span class="p">)</span> <span class="p">]</span>
+                <span class="o">|</span> <span class="n">timestamp</span> <span class="p">[</span> <span class="p">(</span> <span class="n">field_length</span> <span class="p">)</span> <span class="p">]</span>
+
+<span class="o">&lt;</span><span class="n">cumm</span><span class="o">-</span><span class="n">field</span><span class="o">-</span><span class="n">func</span><span class="o">&gt;</span> <span class="p">::</span><span class="o">=</span> <span class="n">AVG</span> <span class="o">|</span> <span class="n">MAX</span> <span class="o">|</span> <span class="n">MIN</span> <span class="o">|</span> <span class="n">SUM</span> <span class="o">|</span> <span class="n">COUNT</span>
+
+<span class="o">&lt;</span><span class="n">field</span><span class="o">-</span><span class="n">operator</span><span class="o">&gt;</span> <span class="p">::</span><span class="o">=</span> <span class="s1">&#39;+&#39;</span> <span class="o">|</span> <span class="s1">&#39;-&#39;</span> <span class="o">|</span> <span class="s1">&#39;/&#39;</span> <span class="o">|</span> <span class="s1">&#39;*&#39;</span> <span class="o">|</span> <span class="s1">&#39;||&#39;</span>
+
+<span class="o">&lt;</span><span class="n">field</span><span class="o">-</span><span class="n">func</span><span class="o">&gt;</span> <span class="p">::</span><span class="o">=</span> <span class="n">CONCAT</span> <span class="o">|</span> <span class="n">SUBSTR</span>
+
+<span class="o">&lt;</span><span class="n">field_ref</span><span class="o">&gt;</span>  <span class="p">::</span><span class="o">=</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">table_ref</span><span class="o">&gt;.</span><span class="p">]</span><span class="n">field_name</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="special-notes">
+<h2>Special Notes<a class="headerlink" href="#special-notes" title="Permalink to this headline">¶</a></h2>
+<p>The existing CAST, and column summary functions COUNT, AVG, MIN, MAX and
+SUM will be treated more-or-less as functions but constrained to be root
+operations on column definitions and treated as a special case (still).</p>
+</div>
+<div class="section" id="compatibility-implications">
+<h2>Compatibility Implications<a class="headerlink" href="#compatibility-implications" title="Permalink to this headline">¶</a></h2>
+<p>Some identifiers that were previously allowed as unquoted field names
+will likely now have to be quoted as they will be keywords in the
+grammar. The keyword set is:</p>
+<ul class="simple">
+<li><p>IN</p></li>
+<li><p>LIKE</p></li>
+<li><p>NULL</p></li>
+<li><p>IS</p></li>
+<li><p>SELECT</p></li>
+<li><p>LEFT</p></li>
+<li><p>JOIN</p></li>
+<li><p>WHERE</p></li>
+<li><p>ON</p></li>
+<li><p>ORDER</p></li>
+<li><p>BY</p></li>
+<li><p>FROM</p></li>
+<li><p>AS</p></li>
+<li><p>ASC</p></li>
+<li><p>DESC</p></li>
+<li><p>DISTINCT</p></li>
+<li><p>CAST</p></li>
+</ul>
+<p>The previous implementation was written in C and avoided all use of
+GDAL/OGR services so that it could be easily used in other contexts,
+including as the where clause evaluator of the OGDI library. After this
+update the code is C++, and direct use of CPL error and other services
+has been directly incorporated. This means the implementation used by
+GDAL and OGDI will diverge.</p>
+<p>For the most part the change results in some OGR SQL statements to work
+that would previously have generated an error.</p>
+</div>
+<div class="section" id="performance-implications">
+<h2>Performance Implications<a class="headerlink" href="#performance-implications" title="Permalink to this headline">¶</a></h2>
+<p>I am hopeful that the evaluation speed will not be significantly
+different for simple selections, but each output field will need to be
+evaluated as an expression (with presumably one value-from-field node).</p>
+</div>
+<div class="section" id="implementation-plan">
+<h2>Implementation Plan<a class="headerlink" href="#implementation-plan" title="Permalink to this headline">¶</a></h2>
+<p>Frank Warmerdam will implement, test and document for the GDAL/OGR 1.8
+release.</p>
+</div>
+<div class="section" id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
+<p>All existing OGR SQL test suite tests should pass. A new
+autotest/ogr/ogr_sql_rfc28.py script will be introduced to test new
+functionality.</p>
+</div>
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="../../user/ogr_sql_dialect.html#ogr-sql-dialect"><span class="std std-ref">OGR SQL</span></a> document will be
+extended to describe the new capabilities.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rfc29_desired_fields.html" class="btn btn-neutral float-right" title="RFC 29: OGR Set Ignored Fields" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc27_supportdata.html" class="btn btn-neutral float-left" title="RFC 27: Improved Supporting Data File Options" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

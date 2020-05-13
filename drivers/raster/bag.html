@@ -1,0 +1,745 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>BAG – Bathymetry Attributed Grid &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdrivers/raster/bag.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="BLX – Magellan BLX Topo File Format" href="blx.html" />
+    <link rel="prev" title="ARG – Azavea Raster Grid" href="arg.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Raster drivers</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="aaigrid.html">AAIGrid – Arc/Info ASCII Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ace2.html">ACE2 – ACE2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adrg.html">ADRG – ADRG/ARC Digitized Raster Graphics (.gen/.thf)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aig.html">AIG – Arc/Info Binary Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="airsar.html">AIRSAR – AIRSAR Polarimetric Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arg.html">ARG – Azavea Raster Grid</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">BAG – Bathymetry Attributed Grid</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#driver-capabilities">Driver capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#variable-resolution-vr-grid-support">Variable resolution (VR) grid support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#creation-support">Creation support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#usage-examples">Usage examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#see-also">See Also</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="blx.html">BLX – Magellan BLX Topo File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bmp.html">BMP – Microsoft Windows Device Independent Bitmap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bpg.html">BPG – Better Portable Graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bsb.html">BSB – Maptech/NOAA BSB Nautical Chart Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bt.html">BT – VTP .bt Binary Terrain Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="byn.html">BYN - Natural Resources Canada’s Geoid file format (.byn)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cad.html">CAD – AutoCAD DWG raster layer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cals.html">CALS – CALS Type 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ceos.html">CEOS – CEOS Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coasp.html">COASP –  DRDC COASP SAR Processor Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cog.html">COG – Cloud Optimized GeoTIFF generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cosar.html">COSAR – TerraSAR-X Complex SAR Data Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpg.html">CPG – Convair PolGASP data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctable2.html">CTable2 – CTable2 Datum Grid Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctg.html">CTG – USGS LULC Composite Theme Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="daas.html">DAAS (Airbus DS Intelligence Data As A Service driver)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="db2.html">DB2 raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dds.html">DDS – DirectDraw Surface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="derived.html">DERIVED – Derived subdatasets driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dimap.html">DIMAP – Spot DIMAP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dipex.html">DIPEx – ELAS DIPEx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dods.html">DODS – OPeNDAP Grid Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doq1.html">DOQ1 – First Generation USGS DOQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doq2.html">DOQ2 – New Labelled USGS DOQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dted.html">DTED – Military Elevation Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="e00grid.html">E00GRID – Arc/Info Export E00 GRID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ecrgtoc.html">ECRGTOC – ECRG Table Of Contents (TOC.xml)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ecw.html">ECW – Enhanced Compressed Wavelets (.ecw)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eedai.html">EEDAI - Google Earth Engine Data API Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ehdr.html">EHdr – ESRI .hdr Labelled</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eir.html">EIR – Erdas Imagine Raw</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elas.html">ELAS - Earth Resources Laboratory Applications Software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="envi.html">ENVI – ENVI .hdr Labelled Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="epsilon.html">Epsilon - Wavelet compressed images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="esat.html">ESAT – Envisat Image Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ers.html">ERS – ERMapper .ERS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exr.html">EXR – Extended Dynamic Range Image File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fast.html">FAST – EOSAT FAST Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fit.html">FIT – FIT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fits.html">FITS – Flexible Image Transport System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fujibas.html">FujiBAS – Fuji BAS Scanner Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="genbin.html">GenBin – Generic Binary (.hdr labelled)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="georaster.html">Oracle Spatial GeoRaster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gff.html">GFF – Sandia National Laboratories GSAT File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gif.html">GIF – Graphics Interchange Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gmt.html">GMT – GMT Compatible netCDF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpkg.html">GPKG – GeoPackage raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grass.html">GRASS Raster Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grassasciigrid.html">GRASSASCIIGrid – GRASS ASCII Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grib.html">GRIB – WMO General Regularly-distributed Information in Binary form</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gs7bg.html">GS7BG – Golden Software Surfer 7 Binary Grid File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gsag.html">GSAG – Golden Software ASCII Grid File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gsbg.html">GSBG – Golden Software Binary Grid File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gsc.html">GSC – GSC Geogrid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gta.html">GTA - Generic Tagged Arrays</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gtiff.html">GTiff – GeoTIFF File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gxf.html">GXF – Grid eXchange File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hdf4.html">HDF4 – Hierarchical Data Format Release 4 (HDF4)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hdf5.html">HDF5 – Hierarchical Data Format Release 5 (HDF5)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hf2.html">HF2 – HF2/HFZ heightfield raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hfa.html">HFA – Erdas Imagine .img</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ida.html">IDA – Image Display and Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Idrisi.html">RST – Idrisi Raster Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ignfheightasciigrid.html">IGNFHeightASCIIGrid – IGN-France height correction ASCII grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ilwis.html">ILWIS – Raster Map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intergraphraster.html">INGR – Intergraph Raster Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iris.html">IRIS – Vaisala’s weather radar software format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="isce.html">ISCE – ISCE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="isg.html">ISG – International Service for the Geoid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="isis2.html">ISIS2 – USGS Astrogeology ISIS Cube (Version 2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="isis3.html">ISIS3 – USGS Astrogeology ISIS Cube (Version 3)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jdem.html">JDEM – Japanese DEM (.mem)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2ecw.html">JP2ECW – ERDAS JPEG2000 (.jp2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2kak.html">JP2KAK – JPEG-2000 (based on Kakadu)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2lura.html">JP2Lura – JPEG2000 driver based on Lurawave library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2mrsid.html">JP2MrSID – JPEG2000 via MrSID SDK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2openjpeg.html">JP2OpenJPEG – JPEG2000 driver based on OpenJPEG library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jpeg2000.html">JPEG2000 – Implementation of the JPEG-2000 part 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jpegls.html">JPEGLS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jpeg.html">JPEG – JPEG JFIF File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jpipkak.html">JPIPKAK - JPIP Streaming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kea.html">KEA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kmlsuperoverlay.html">KMLSuperoverlay – KMLSuperoverlay</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kro.html">KRO – KOLOR Raw format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lan.html">LAN – Erdas 7.x .LAN and .GIS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="l1b.html">L1B – NOAA Polar Orbiter Level 1b Data Set (AVHRR)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lcp.html">LCP – FARSITE v.4 LCP Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="leveller.html">Leveller – Daylon Leveller Heightfield</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loslas.html">LOSLAS – NADCON .los/.las Datum Grid Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="map.html">MAP – OziExplorer .MAP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="marfa.html">MRF – Meta Raster Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mbtiles.html">MBTiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mem.html">MEM – In Memory Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mff.html">MFF – Vexcel MFF Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mff2.html">MFF2 – Vexcel MFF2 Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mg4lidar.html">MG4Lidar – MrSID/MG4 LiDAR Compression / Point Cloud View files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mrsid.html">MrSID – Multi-resolution Seamless Image Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="msg.html">MSG – Meteosat Second Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="msgn.html">MSGN – Meteosat Second Generation (MSG) Native Archive Format (.nat)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ndf.html">NDF – NLAPS Data Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="netcdf.html">NetCDF: Network Common Data Form</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ngsgeoid.html">NGSGEOID - NOAA NGS Geoid Height Grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ngw.html">NGW – NextGIS Web</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nitf.html">NITF – National Imagery Transmission Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ntv1.html">NTv1 – NTv1 Datum Grid Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ntv2.html">NTv2 – NTv2 Datum Grid Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nwtgrd.html">NWT_GRD/NWT_GRC – Northwood/Vertical Mapper File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ozi.html">OZI – OZF2/OZFX3 raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="palsar.html">JAXA PALSAR Processed Products</a></li>
+<li class="toctree-l2"><a class="reference internal" href="paux.html">PAux – PCI .aux Labelled Raw Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pcidsk.html">PCIDSK – PCI Geomatics Database File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pcraster.html">PCRaster – PCRaster raster file format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pdf.html">PDF – Geospatial PDF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pds.html">PDS – Planetary Data System v3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pds4.html">PDS4 – NASA Planetary Data System (Version 4)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plmosaic.html">PLMosaic (Planet Labs Mosaics API)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="png.html">PNG – Portable Network Graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pnm.html">PNM – Netpbm (.pgm, .ppm)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="postgisraster.html">PostGISRaster – PostGIS Raster driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prf.html">PHOTOMOD Raster File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasdaman.html">Rasdaman GDAL driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasterlite.html">Rasterlite - Rasters in SQLite DB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasterlite2.html">RasterLite2 - Rasters in SQLite DB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="r.html">R – R Object Data Store</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rda.html">RDA (DigitalGlobe Raster Data Access)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rdb.html">RDB - <em>RIEGL</em> Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rik.html">RIK – Swedish Grid Maps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rmf.html">RMF – Raster Matrix Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="roi_pac.html">ROI_PAC – ROI_PAC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpftoc.html">RPFTOC – Raster Product Format/RPF (a.toc)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rraster.html">RRASTER – R Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rs2.html">RS2 – RadarSat 2 XML Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="safe.html">SAFE – Sentinel-1 SAFE XML Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sar_ceos.html">SAR_CEOS – CEOS SAR Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sdat.html">SAGA – SAGA GIS Binary Grid File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sdts.html">SDTS – USGS SDTS DEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sde.html">ESRI ArcSDE Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sentinel2.html">SENTINEL2 – Sentinel-2 Products</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sgi.html">SGI – SGI Image Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sigdem.html">SIGDEM – Scaled Integer Gridded DEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="snodas.html">SNODAS – Snow Data Assimilation System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="srp.html">SRP – Standard Product Format (ASRP/USRP) (.gen)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="srtmhgt.html">SRTMHGT – SRTM HGT Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="terragen.html">Terragen – Terragen™ Terrain File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="til.html">TIL – EarthWatch/DigitalGlobe .TIL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.html">TileDB - TileDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tsx.html">TSX –  TerraSAR-X Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usgsdem.html">USGSDEM – USGS ASCII DEM (and CDED)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vicar.html">VICAR – VICAR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vrt.html">VRT – GDAL Virtual Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wcs.html">WCS – OGC Web Coverage Service</a></li>
+<li class="toctree-l2"><a class="reference internal" href="webp.html">WEBP - WEBP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wms.html">WMS – Web Map Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wmts.html">WMTS – OGC Web Map Tile Service</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xpm.html">XPM – X11 Pixmap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xyz.html">XYZ – ASCII Gridded XYZ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="zmap.html">ZMap – ZMap Plus Grid</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Raster drivers</a> &raquo;</li>
+      
+      <li>BAG – Bathymetry Attributed Grid</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/drivers/raster/bag.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="blx.html" class="btn btn-neutral float-right" title="BLX – Magellan BLX Topo File Format" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="arg.html" class="btn btn-neutral float-left" title="ARG – Azavea Raster Grid" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="bag-bathymetry-attributed-grid">
+<span id="raster-bag"></span><h1>BAG – Bathymetry Attributed Grid<a class="headerlink" href="#bag-bathymetry-attributed-grid" title="Permalink to this headline">¶</a></h1>
+<div class="admonition shortname" id="shortname-0">
+<p class="admonition-title">Driver short name</p>
+<p>BAG</p>
+</div>
+<div class="admonition build_dependencies" id="build_dependencies-0">
+<p class="admonition-title">Build dependencies</p>
+<p>libhdf5</p>
+</div>
+<p>This driver provides read-only support, and starting with GDAL 2.4 for
+creation, for bathymetry data in the BAG format. BAG files are actually
+a specific product profile in an HDF5 file, but a custom driver exists
+to present the data in a more convenient manner than is available
+through the generic HDF5 driver.</p>
+<p>BAG files have two or three image bands representing Elevation (band 1),
+Uncertainty (band 2) and Nominal Elevation (band 3) values for each cell
+in a raster grid area.</p>
+<p>The geotransform and coordinate system is extracted from the internal
+XML metadata provided with the dataset. However, some products may have
+unsupported coordinate system formats, if using the non-WKT way of
+encoding the spatial reference system.</p>
+<p>The full XML metadata is available in the “xml:BAG” metadata domain.</p>
+<p>Nodata, minimum and maximum values for each band are also reported.</p>
+<div class="section" id="driver-capabilities">
+<h2>Driver capabilities<a class="headerlink" href="#driver-capabilities" title="Permalink to this headline">¶</a></h2>
+<div class="admonition supports_createcopy" id="supports_createcopy-0">
+<p class="admonition-title">Supports CreateCopy()</p>
+<p>This driver supports the <a class="reference internal" href="../../api/gdaldriver_cpp.html#_CPPv4N10GDALDriver10CreateCopyEPKcP11GDALDatasetiPPc16GDALProgressFuncPv" title="GDALDriver::CreateCopy"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDriver::CreateCopy()</span></code></a> operation</p>
+</div>
+<div class="admonition supports_georeferencing" id="supports_georeferencing-0">
+<p class="admonition-title">Supports Georeferencing</p>
+<p>This driver supports georeferencing</p>
+</div>
+<div class="admonition supports_virtualio" id="supports_virtualio-0">
+<p class="admonition-title">Supports VirtualIO</p>
+<p>This driver supports <a class="reference internal" href="../../user/virtual_file_systems.html#virtual-file-systems"><span class="std std-ref">virtual I/O operations (/vsimem/, etc.)</span></a></p>
+</div>
+</div>
+<div class="section" id="variable-resolution-vr-grid-support">
+<h2>Variable resolution (VR) grid support<a class="headerlink" href="#variable-resolution-vr-grid-support" title="Permalink to this headline">¶</a></h2>
+<p>Starting with GDAL 2.4, GDAL can handle BAG files with <a class="reference external" href="https://bitbucket.org/ccomjhc/openns/raw/master/docs/VariableResolution/2017-08-10_VariableResolution.docx">variable
+resolution
+grids</a>.
+Such datasets are made of a low-resolution grid, which is the one
+presented by default by the driver, and for each of those low-resolution
+cells, a higher resolution grid can be present in the file. Such higher
+resolution grids are dubbed “supergrids” in GDAL.</p>
+<p>The driver has different modes of working which can be controlled by the
+MODE open option:</p>
+<ul>
+<li><p>MODE=LOW_RES_GRID: this is the default mode. The driver will expose
+the low resolution grid, and indicate in the dataset metadata if the
+dataset has supergrids (HAS_SUPERGRIDS=TRUE), as well as the minimum
+and maximum resolution of those grids.</p></li>
+<li><p>MODE=LIST_SUPERGRIDS: in this mode, the driver will report the
+various supergrids in the subdataset list. It is possible to apply in
+this mode additional open options to restrict the search</p>
+<ul class="simple">
+<li><p>SUPERGRIDS_INDICES=(y1,x1),(y2,x2),…: Tuple or list of tuples,
+of supergrids described by their y,x indices (starting from 0, y
+from the south of the grid, x from the west o the grid).</p></li>
+<li><p>MINX=value: Minimum georeferenced X value to use as a filter for
+the supergrids to list.</p></li>
+<li><p>MINY=value: Minimum georeferenced Y value to use as a filter for
+the supergrids to list.</p></li>
+<li><p>MAXX=value: Maximum georeferenced X value to use as a filter for
+the supergrids to list.</p></li>
+<li><p>MAXY=value: Maximum georeferenced Y value to use as a filter for
+the supergrids to list.</p></li>
+<li><p>RES_FILTER_MIN=value: Minimum resolution of supergrids to take
+into account (excluded bound)</p></li>
+<li><p>RES_FILTER_MAX=value: Maximum resolution of supergrids to take
+into account (included bound)</p></li>
+</ul>
+</li>
+<li><p>Opening a supergrid. This mode is triggered by using as a dataset
+name a string formatted like BAG:my.bag:supergrid:{y}:{x}, which is
+the value of the SUBDATASET_x_NAME metadata items reported by the
+above described mode. {y} is the index (starting from 0, from the
+south of the grid), and {x} is the index (starting from 0, from the
+west of the grid) of the supergrid to open.</p></li>
+<li><p>MODE=RESAMPLED_GRID: in this mode, the user specify the extent and
+resolution of a target grid, and for each cell of this target grid,
+the driver will find the nodes of the supergrids that fall into that
+cell. By default, it will select the node with the maximum elevation
+value to populate the cell value. Or if no node of any supergrid are
+found, the cell value will be set to the nodata value. Interpolation
+of cells at nodata value can also be done using a inverse distance
+weighting interpolation. Overviews are reported: note that, those
+overviews correspond to resampled grids computed with different
+values of the RESX and RESY parameters, but using the same value
+population rules (and not nearest neighbour resampling of the full
+resolution resampled grid).</p>
+<p>The available open options in this mode are:</p>
+<ul class="simple">
+<li><p>MINX=value: Minimum georeferenced X value for the resampled grid.
+By default, the corresponding value of the low resolution grid.</p></li>
+<li><p>MINY=value: Minimum georeferenced Y value for the resampled grid.
+By default, the corresponding value of the low resolution grid.</p></li>
+<li><p>MAXX=value: Maximum georeferenced X value for the resampled grid.
+By default, the corresponding value of the low resolution grid.</p></li>
+<li><p>MAXY=value: Maximum georeferenced Y value for the resampled grid.
+By default, the corresponding value of the low resolution grid.</p></li>
+<li><p>RESX=value: Horizontal resolution. By default, and if RES_STRATEGY
+is set to AUTO, this will be the minimum resolution among all the
+supergrids.</p></li>
+<li><p>RESY=value: Vertical resolution (positive value). By default, and
+if RES_STRATEGY is set to AUTO, this will be the minimum
+resolution among all the supergrids.</p></li>
+<li><p>RES_STRATEGY=AUTO/MIN/MAX/MEAN: Which strategy to apply to set the
+resampled grid resolution. By default, if none of RESX, RESY,
+RES_FILTER_MIN and RES_FILTER_MAX is specified, the AUTO strategy
+will correspond to the MIN strategy: that is the minimum
+resolution among all the supergrids is used. If MAX is specified,
+the maximum resolution among all the supergrids is used. If MEAN
+is specified, the mean resolution among all the supergrids is
+used. RESX and RESY, if defined, will override the resolution
+determined by RES_STRATEGY.</p></li>
+<li><p>RES_FILTER_MIN=value: Minimum resolution of supergrids to take
+into account (excluded bound, except if it is the minimum
+resolution of supergrids). By default, the minimum resolution of
+supergrids available. If this value is specified and none of
+RES_STRATEGY, RES_FILTER_MAX, RESX or RESY is specified, the
+maximum resolution among all the supergrids will be used as the
+resolution for the resampled grid.</p></li>
+<li><p>RES_FILTER_MAX=value: Maximum resolution of supergrids to take
+into account (included bound). By default, the maximum resolution
+of supergrids available. If this value is specified and none of
+RES_STRATEGY, RESX or RESY is specified, this will also be used as
+the resolution for the resampled grid.</p></li>
+<li><p>VALUE_POPULATION=MIN/MAX/MEAN: Which value population strategy to
+apply to compute the resampled cell values. This default to MAX:
+the elevation value of a target cell is the maximum elevation of
+all supergrid nodes (potentially filtered with RES_FILTER_MIN
+and/or RES_FILTER_MAX) that fall into this cell; the corresponding
+uncertainty will be the uncertainty of the source node where this
+maximum elevation si reached. If no supergrid node fall into the
+target cell, the nodata value is set. The MIN strategy is similar,
+except that this is the minimum elevation value among intersecting
+nodes that is selected. The MEAN strategy use the mean value of
+the elevation of intersecting nodes, and the maximum uncertainty
+of those nodes.</p></li>
+<li><p>SUPERGRIDS_MASK=YES/NO. Default to NO. If set to YES, instead of
+the elevation and uncertainty band, the dataset contains a single
+Byte band which is boolean valued. For a target cell, if at least
+one supergrids nodes (potentially filtered with RES_FILTER_MIN
+and/or RES_FILTER_MAX) falls into the cell, the cell value is set
+at 255. Otherwise it is set at 0. This can be used to distinguish
+if elevation values at nodata are due to no source supergrid node
+falling into them, or if that/those supergrid nodes were
+themselves at the nodata value.</p></li>
+<li><p>INTERPOLATION=NO/INVDIST. Default to NO. If set to INVDIST, a
+inverse distance weighting interpolation of nodata values is
+applied after the above describe value population. Interpolation
+cannot be used together with SUPERGRIDS_MASK=YES.</p></li>
+<li><p>NODATA_VALUE=value. Override the default value, which is usually
+1000000.</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="creation-support">
+<h2>Creation support<a class="headerlink" href="#creation-support" title="Permalink to this headline">¶</a></h2>
+<p>Starting with GDAL 2.4, the driver can create a BAG dataset (without
+variable resolution extension) with the elevation and uncertainty bands
+from a source dataset. The source dataset must be georeferenced, and
+have one or two bands. The first band is assumed to be the elevation
+band, and the second band the uncertainty band. If the second band is
+missing, the uncertainty will be set to nodata.</p>
+<p>The driver will instantiate the BAG XML metadata by using a template
+file, which is by default,
+<a class="reference external" href="https://raw.githubusercontent.com/OSGeo/gdal/master/gdal/data/bag_template.xml">bag_template.xml</a>,
+found in the GDAL data definition files. This template contains
+variables, present as ${KEYNAME} or ${KEYNAME:default_value} in the XML
+file, that can be substituted by providing a creation option whose name
+is the VAR_ string prefixed to the key name. Currently those creation
+options are:</p>
+<ul class="simple">
+<li><p>VAR_INDIVIDUAL_NAME=string: to fill
+contact/CI_ResponsibleParty/individualName. If not provided, default
+to “unknown”.</p></li>
+<li><p>VAR_ORGANISATION_NAME=string: to fill
+contact/CI_ResponsibleParty/organisationName. If not provided,
+default to “unknown”.</p></li>
+<li><p>VAR_POSITION_NAME=string: to fill
+contact/CI_ResponsibleParty/positionName. If not provided, default to
+“unknown”.</p></li>
+<li><p>VAR_DATE=YYYY-MM-DD: to fill dateStamp/Date. If not provided, default
+to current date.</p></li>
+<li><p>VAR_VERT_WKT=wkt_string: to fill
+referenceSystemInfo/MD_ReferenceSystem/referenceSystemIdentifier/RS_Identifier/code
+for the vertical coordinate reference system. If not provided, and if
+the input CRS is not a compound CRS, default to VERT_CS[“unknown”,
+VERT_DATUM[“unknown”, 2000]].</p></li>
+<li><p>VAR_ABSTRACT=string: to fill identificationInfo/abstract. If not
+provided, default to empty string</p></li>
+<li><p>VAR_PROCESS_STEP_DESCRIPTION=string: to fill
+dataQualityInfo/lineage/LI_Lineage/processStep/LI_ProcessStep/description.
+If not provided, default to “Generated by GDAL x.y.z”.</p></li>
+<li><p>VAR_DATETIME=YYYY-MM-DDTHH:MM:SS : to fill
+dataQualityInfo/lineage/LI_Lineage/processStep/LI_ProcessStep/dateTime/DateTime.
+If not provided, default to current datetime.</p></li>
+<li><p>VAR_RESTRICTION_CODE=enumerated_value: to fill
+metadataConstraints/MD_LegalConstraints/useConstraints/MD_RestrictionCode.
+If not provided, default to “otherRestrictions”.</p></li>
+<li><p>VAR_OTHER_CONSTRAINTS=string: to fill
+metadataConstraints/MD_LegalConstraints/otherConstraints. If not
+provided, default to “unknown”.</p></li>
+<li><p>VAR_CLASSIFICATION=enumerated_value: to fill
+metadataConstraints/MD_SecurityConstraints/classification/MD_ClassificationCode.
+If not provided, default to “unclassified”.</p></li>
+<li><p>VAR_SECURITY_USER_NOTE=string: to fill
+metadataConstraints/MD_SecurityConstraints/userNote. If not provided,
+default to “none”.</p></li>
+</ul>
+<p>Other required variables found in the template, such as RES, RESX, RESY,
+RES_UNIT, HEIGHT, WIDTH, CORNER_POINTS and HORIZ_WKT will be
+automatically filled from the input dataset metadata.</p>
+<p>The other following creation options are available:</p>
+<ul class="simple">
+<li><p>TEMPLATE=filename: Path to a XML file that can serve as a template.
+This will typically be a customized version of the base
+bag_template.xml file. The file can contain other substituable
+variables than the ones mentioned above by using a similar syntax.</p></li>
+<li><p>VAR_xxxx=value: Substitute variable ${xxxx} in the template XML value
+by the provided value.</p></li>
+<li><p>BAG_VERSION=string: Value to write in the /BAG_root/BAG Version
+attribute. Default to 1.6.2.</p></li>
+<li><p>COMPRESS=NONE/DEFLATE: Compression for elevation and uncertainty
+grids. Default to DEFLATE.</p></li>
+<li><p>ZLEVEL=[1-9]: Deflate compression level. Defaults to 6.</p></li>
+<li><p>BLOCK_SIZE=value_in_pixel: Chunking size of the HDF5 arrays. Default
+to 100, or the maximum dimension of the raster if smaller than 100.</p></li>
+</ul>
+</div>
+<div class="section" id="usage-examples">
+<h2>Usage examples<a class="headerlink" href="#usage-examples" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p>Opening in low resolution mode:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gdalinfo data/test_vr.bag
+
+[...]
+Size is 6, 4
+[...]
+  HAS_SUPERGRIDS=TRUE
+  MAX_RESOLUTION_X=29.900000
+  MAX_RESOLUTION_Y=31.900000
+  MIN_RESOLUTION_X=4.983333
+  MIN_RESOLUTION_Y=5.316667
+[...]
+</pre></div>
+</div>
+</li>
+<li><p>Displaying available supergrids:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gdalinfo data/test_vr.bag -oo MODE=LIST_SUPERGRIDS
+
+[...]
+Subdatasets:
+  SUBDATASET_1_NAME=BAG:&quot;data/test_vr.bag&quot;:supergrid:0:0
+  SUBDATASET_1_DESC=Supergrid (y=0, x=0) from (x=70.100000,y=499968.100000) to (x=129.900000,y=500031.900000), resolution (x=29.900000,y=31.900000)
+  SUBDATASET_2_NAME=BAG:&quot;data/test_vr.bag&quot;:supergrid:0:1
+  SUBDATASET_2_DESC=Supergrid (y=0, x=1) from (x=107.575000,y=499976.075000) to (x=152.424999,y=500023.924999), resolution (x=14.950000,y=15.950000)
+[...]
+  SUBDATASET_24_NAME=BAG:&quot;data/test_vr.bag&quot;:supergrid:3:5
+  SUBDATASET_24_DESC=Supergrid (y=3, x=5) from (x=232.558335,y=500077.391667) to (x=267.441666,y=500114.608334), resolution (x=4.983333,y=5.316667)
+[...]
+</pre></div>
+</div>
+</li>
+<li><p>Opening a particular supergrid:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gdalinfo BAG:&quot;data/test_vr.bag&quot;:supergrid:3:5
+</pre></div>
+</div>
+</li>
+<li><p>Converting a BAG in resampling mode with default parameters (use of
+minimum resolution of supergrids, MAX value population rule, no
+interpolation):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gdal_translate data/test_vr.bag -oo MODE=RESAMPLED_GRID out.tif
+</pre></div>
+</div>
+</li>
+<li><p>Converting a BAG in resampling mode with a particular grid origin and
+resolution</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gdal_translate data/test_vr.bag -oo MODE=RESAMPLED_GRID -oo MINX=80 -oo MINY=500000 -oo RESX=16 -oo RESY=16 out.tif
+</pre></div>
+</div>
+</li>
+<li><p>Converting a BAG in resampling mode, with a mask indicating where
+supergrids nodes intersect the cell of the resampled dataset.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gdal_translate data/test_vr.bag -oo MODE=RESAMPLED_GRID -oo SUPERGRIDS_MASK=YES out.tif
+</pre></div>
+</div>
+</li>
+<li><p>Converting a BAG in resampling mode, with interpolation of nodata
+values.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gdal_translate data/test_vr.bag -oo MODE=RESAMPLED_GRID -oo INTERPOLATION=INVDIST out.tif
+</pre></div>
+</div>
+</li>
+<li><p>Converting a BAG in resampling mode, by filtering on supergrid
+resolutions (and the resampled grid will use 4 meter resolution by
+default)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gdal_translate data/test_vr.bag -oo MODE=RESAMPLED_GRID -oo RES_FILTER_MIN=4 -oo RES_FILTER_MAX=8 out.tif
+</pre></div>
+</div>
+</li>
+<li><p>Converting a GeoTIFF file to a BAG dataset, and provide a custom
+value for the ABSTRACT substituable variable.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gdal_translate in.tif out.bag -co &quot;VAR_ABSTRACT=My abstract&quot;
+</pre></div>
+</div>
+</li>
+<li><p>Converting a (VR) BAG in resampling mode with a particular grid
+resolution (5m) to a BAG dataset (without variable resolution
+extension), and provide a custom value for the ABSTRACT metadata:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gdal_translate data/test_vr.bag -oo MODE=RESAMPLED_GRID -oo RESX=5 -oo RESY=5 out.bag -co &quot;VAR_ABSTRACT=My abstract&quot;
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="see-also">
+<h2>See Also<a class="headerlink" href="#see-also" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Implemented as <code class="docutils literal notranslate"><span class="pre">gdal/frmts/hdf5/bagdataset.cpp</span></code>.</p></li>
+<li><p><a class="reference external" href="http://www.opennavsurf.org">The Open Navigation Surface Project</a></p></li>
+<li><p><a class="reference external" href="https://github.com/OpenNavigationSurface/BAG/raw/master/docs/BAG_FSD_Release_1.6.3.doc">Description of Bathymetric Attributed Grid Object (BAG) Version
+1.6</a></p></li>
+<li><p><a class="reference external" href="https://github.com/OpenNavigationSurface/BAG/raw/master/docs/VariableResolution/2017-08-10_VariableResolution.docx">Variable resolution grid extension for BAG
+files</a></p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="blx.html" class="btn btn-neutral float-right" title="BLX – Magellan BLX Topo File Format" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="arg.html" class="btn btn-neutral float-left" title="ARG – Azavea Raster Grid" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,438 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>CSW - OGC CSW (Catalog Service for the Web) &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdrivers/vector/csw.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="DB2 Spatial" href="db2.html" />
+    <link rel="prev" title="Comma Separated Value (.csv)" href="csv.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Vector drivers</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="aeronavfaa.html">Aeronav FAA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="amigocloud.html">AmigoCloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ao.html">ESRI ArcObjects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arcgen.html">ARCGEN - Arc/Info Generate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="avcbin.html">Arc/Info Binary Coverage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="avce00.html">Arc/Info E00 (ASCII) Coverage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bna.html">BNA - Atlas BNA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cad.html">CAD – AutoCAD DWG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="carto.html">Carto</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cloudant.html">Cloudant – Cloudant</a></li>
+<li class="toctree-l2"><a class="reference internal" href="couchdb.html">CouchDB - CouchDB/GeoCouch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csv.html">Comma Separated Value (.csv)</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">CSW - OGC CSW (Catalog Service for the Web)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#driver-capabilities">Driver capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dataset-name-syntax">Dataset name syntax</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#filtering">Filtering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#issues">Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#see-also">See Also</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="db2.html">DB2 Spatial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dgn.html">Microstation DGN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dgnv8.html">Microstation DGN v8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dods.html">DODS/OPeNDAP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dwg.html">AutoCAD DWG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dxf.html">AutoCAD DXF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eeda.html">Google Earth Engine Data API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="edigeo.html">EDIGEO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elasticsearch.html">Elasticsearch: Geographically Encoded Objects for Elasticsearch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="esrijson.html">ESRIJSON / FeatureService driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filegdb.html">ESRI File Geodatabase (FileGDB)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flatgeobuf.html">FlatGeobuf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fme.html">FMEObjects Gateway</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoconcept.html">GeoConcept text export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geojson.html">GeoJSON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geojsonseq.html">GeoJSONSeq: sequence of GeoJSON features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomedia.html">Geomedia MDB database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="georss.html">GeoRSS : Geographically Encoded Objects for RSS feeds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gmlas.html">GMLAS - Geography Markup Language (GML) driven by application schemas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gml.html">GML - Geography Markup Language</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gmt.html">GMT ASCII Vectors (.gmt)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpkg.html">GPKG – GeoPackage vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpsbabel.html">GPSBabel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpx.html">GPX - GPS Exchange Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grass.html">GRASS Vector Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gtm.html">GTM - GPS TrackMaker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="htf.html">HTF - Hydrographic Transfer Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="idb.html">IDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="idrisi.html">Idrisi Vector (.VCT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ili.html">“INTERLIS 1” and “INTERLIS 2” drivers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingres.html">INGRES</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jml.html">JML: OpenJUMP JML format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kml.html">KML - Keyhole Markup Language</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libkml.html">LIBKML Driver (.kml .kmz)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mapml.html">MapML</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mdb.html">Access MDB databases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="memory.html">Memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mitab.html">MapInfo TAB and MIF/MID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mongodb.html">MongoDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mongodbv3.html">MongoDBv3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mssqlspatial.html">MSSQLSpatial - Microsoft SQL Server Spatial Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mvt.html">MVT: Mapbox Vector Tiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mysql.html">MySQL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nas.html">NAS - ALKIS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="netcdf.html">NetCDF: Network Common Data Form - Vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ngw.html">NGW – NextGIS Web</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ntf.html">UK .NTF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="oapif.html">OGC API - Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="oci.html">Oracle Spatial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="odbc.html">ODBC RDBMS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ods.html">ODS - Open Document Spreadsheet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ogdi.html">OGDI Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="openair.html">OpenAir - OpenAir Special Use Airspace Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="openfilegdb.html">ESRI File Geodatabase (OpenFileGDB)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="osm.html">OSM - OpenStreetMap XML and PBF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pdf.html">PDF – Geospatial PDF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pds.html">PDS - Planetary Data Systems TABLE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pgdump.html">PostgreSQL SQL Dump</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pgeo.html">ESRI Personal GeoDatabase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pg.html">PostgreSQL / PostGIS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plscenes.html">PLScenes (Planet Labs Scenes/Catalog API)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s57.html">IHO S-57 (ENC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sde.html">ESRI ArcSDE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sdts.html">SDTS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="segukooa.html">SEG-P1 / UKOOA P1/90</a></li>
+<li class="toctree-l2"><a class="reference internal" href="segy.html">SEG-Y / SEGY</a></li>
+<li class="toctree-l2"><a class="reference internal" href="selafin.html">Selafin files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shapefile.html">ESRI Shapefile / DBF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sosi.html">Norwegian SOSI Standard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sqlite.html">SQLite / Spatialite RDBMS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sua.html">SUA - Tim Newport-Peace’s Special Use Airspace Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="svg.html">SVG - Scalable Vector Graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sxf.html">Storage and eXchange Format - SXF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiger.html">U.S. Census TIGER/Line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="topojson.html">TopoJSON driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vdv.html">VDV - VDV-451/VDV-452/INTREST Data Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vfk.html">VFK - Czech Cadastral Exchange Data Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vrt.html">VRT – Virtual Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="walk.html">Walk - Walk Spatial Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wasp.html">WAsP - WAsP .map format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wfs.html">WFS - OGC WFS service</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xls.html">XLS - MS Excel format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xlsx.html">XLSX - MS Office Open XML spreadsheet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xplane.html">X-Plane/Flightgear aeronautical data</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Vector drivers</a> &raquo;</li>
+      
+      <li>CSW - OGC CSW (Catalog Service for the Web)</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/drivers/vector/csw.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="db2.html" class="btn btn-neutral float-right" title="DB2 Spatial" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="csv.html" class="btn btn-neutral float-left" title="Comma Separated Value (.csv)" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="csw-ogc-csw-catalog-service-for-the-web">
+<span id="vector-csw"></span><h1>CSW - OGC CSW (Catalog Service for the Web)<a class="headerlink" href="#csw-ogc-csw-catalog-service-for-the-web" title="Permalink to this headline">¶</a></h1>
+<div class="admonition shortname" id="shortname-0">
+<p class="admonition-title">Driver short name</p>
+<p>CSW</p>
+</div>
+<div class="admonition build_dependencies" id="build_dependencies-0">
+<p class="admonition-title">Build dependencies</p>
+<p>libcurl</p>
+</div>
+<p>This driver can connect to a OGC CSW service. It supports CSW 2.0.2
+protocol. GDAL/OGR must be built with Curl support in order to the CSW
+driver to be compiled. And the GML driver should be set-up for read
+support (thus requiring GDAL/OGR to be built with Xerces or Expat
+support).</p>
+<p>It retrieves records with Dublin Core metadata.</p>
+<div class="section" id="driver-capabilities">
+<h2>Driver capabilities<a class="headerlink" href="#driver-capabilities" title="Permalink to this headline">¶</a></h2>
+<div class="admonition supports_georeferencing" id="supports_georeferencing-0">
+<p class="admonition-title">Supports Georeferencing</p>
+<p>This driver supports georeferencing</p>
+</div>
+</div>
+<div class="section" id="dataset-name-syntax">
+<h2>Dataset name syntax<a class="headerlink" href="#dataset-name-syntax" title="Permalink to this headline">¶</a></h2>
+<p>The minimal syntax to open a CSW datasource is : <em>CSW:</em> and the URL open
+option, or <em>CSW:http://path/to/CSW/endpoint</em></p>
+<p>The following open options are available:</p>
+<ul class="simple">
+<li><p><strong>URL</strong>: URL to the CSW server endpoint (if not specified in the
+connection string already)</p></li>
+<li><p><strong>ELEMENTSETNAME</strong>=brief/summary/full: Level of details of
+properties. Defaults to <em>full</em>.</p></li>
+<li><p><strong>FULL_EXTENT_RECORDS_AS_NON_SPATIAL</strong>=YES/NO: Whether records with
+(-180,-90,180,90) extent should be considered non-spatial. Defaults
+to NO.</p></li>
+<li><p><strong>OUTPUT_SCHEMA</strong>=URL : Value of outputSchema parameter, in the
+restricted set supported by the serve. Special value <em>gmd</em> can be
+used as a shortcut for <a class="reference external" href="http://www.isotc211.org/2005/gmd">http://www.isotc211.org/2005/gmd</a>, <em>csw</em> for
+<a class="reference external" href="http://www.opengis.net/cat/csw/2.0.2">http://www.opengis.net/cat/csw/2.0.2</a>. When this open option is set, a
+<em>raw_xml</em> field will be filled with the XML content of each record.
+Other metadata fields will remain empty.</p></li>
+<li><p><strong>MAX_RECORDS</strong>=value : Maximum number of records to retrieve in a
+single time. Defaults to 500. Servers might have a lower accepted
+value.</p></li>
+</ul>
+</div>
+<div class="section" id="filtering">
+<h2>Filtering<a class="headerlink" href="#filtering" title="Permalink to this headline">¶</a></h2>
+<p>The driver will forward any spatial filter set with SetSpatialFilter()
+to the server. It also makes its best effort to do the same for
+attribute filters set with SetAttributeFilter() when possible (turning
+OGR SQL language into OGC filter description).</p>
+<p>The <em>anytext</em> field can be queried to do a search in any text field.
+Note that we always return it as null content however in OGR side, to
+avoid duplicating information.</p>
+</div>
+<div class="section" id="issues">
+<h2>Issues<a class="headerlink" href="#issues" title="Permalink to this headline">¶</a></h2>
+<p>Some servers do not respect EPSG axis order, in particular latitude,
+longitude order for WGS 84 geodetic coordinates, so it might be needed
+to specify the GML_INVERT_AXIS_ORDER_IF_LAT_LONG=NO configuration option
+in those cases.</p>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>Listing all the records of a CSW server:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogrinfo</span> <span class="o">-</span><span class="n">ro</span> <span class="o">-</span><span class="n">al</span> <span class="o">-</span><span class="n">noextent</span> <span class="n">CSW</span><span class="p">:</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">catalog</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">gov</span><span class="o">/</span><span class="n">csw</span>
+</pre></div>
+</div>
+<p>Listing all the records of a CSW server with spatial and an attribute
+filter on a give field:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogrinfo</span> <span class="o">-</span><span class="n">ro</span> <span class="o">-</span><span class="n">al</span> <span class="o">-</span><span class="n">noextent</span> <span class="n">CSW</span><span class="p">:</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">catalog</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">gov</span><span class="o">/</span><span class="n">csw</span> <span class="o">-</span><span class="n">spat</span> <span class="mi">2</span> <span class="mi">49</span> <span class="mi">2</span> <span class="mi">49</span> <span class="o">-</span><span class="n">where</span> <span class="s2">&quot;subject LIKE &#39;%mineralogy%&#39;&quot;</span>
+</pre></div>
+</div>
+<p>Listing all the records of a CSW server that matches a text on any text
+field:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogrinfo</span> <span class="o">-</span><span class="n">ro</span> <span class="o">-</span><span class="n">al</span> <span class="o">-</span><span class="n">q</span> <span class="n">CSW</span><span class="p">:</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">catalog</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">gov</span><span class="o">/</span><span class="n">csw</span> <span class="o">-</span><span class="n">spat</span> <span class="mi">2</span> <span class="mi">49</span> <span class="mi">2</span> <span class="mi">49</span> <span class="o">-</span><span class="n">where</span> <span class="s2">&quot;anytext LIKE &#39;</span><span class="si">%F</span><span class="s2">rance%&#39;&quot;</span>
+</pre></div>
+</div>
+<p>Listing all the records of a CSW server as ISO 19115/19119:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogrinfo</span> <span class="o">-</span><span class="n">ro</span> <span class="o">-</span><span class="n">al</span> <span class="o">-</span><span class="n">q</span> <span class="n">CSW</span><span class="p">:</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">catalog</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">gov</span><span class="o">/</span><span class="n">csw</span> <span class="o">-</span><span class="n">oo</span> <span class="n">OUTPUT_SCHEMA</span><span class="o">=</span><span class="n">gmd</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="see-also">
+<h2>See Also<a class="headerlink" href="#see-also" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="http://www.opengeospatial.org/standards/cat">OGC CSW Standard</a></p></li>
+<li><p><a class="reference internal" href="gml.html#vector-gml"><span class="std std-ref">GML driver documentation</span></a></p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="db2.html" class="btn btn-neutral float-right" title="DB2 Spatial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="csv.html" class="btn btn-neutral float-left" title="Comma Separated Value (.csv)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

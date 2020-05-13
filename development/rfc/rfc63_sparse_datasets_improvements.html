@@ -1,0 +1,597 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RFC 63 : Sparse datasets improvements &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdevelopment/rfc/rfc63_sparse_datasets_improvements.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="RFC 64: Triangle, Polyhedral surface and TIN" href="rfc64_triangle_polyhedralsurface_tin.html" />
+    <link rel="prev" title="RFC 62 : Raster algebra" href="rfc62_raster_algebra.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 63 : Sparse datasets improvements</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#approach">Approach</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#c-api">C++ API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#changes">Changes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#drivers">Drivers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bindings">Bindings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#utilities">Utilities</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#results">Results</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#future-work">Future work</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#test-suite">Test Suite</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#compatibility-issues">Compatibility Issues</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voting-history">Voting history</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 63 : Sparse datasets improvements</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/development/rfc/rfc63_sparse_datasets_improvements.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="rfc64_triangle_polyhedralsurface_tin.html" class="btn btn-neutral float-right" title="RFC 64: Triangle, Polyhedral surface and TIN" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc62_raster_algebra.html" class="btn btn-neutral float-left" title="RFC 62 : Raster algebra" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rfc-63-sparse-datasets-improvements">
+<span id="rfc-63"></span><h1>RFC 63 : Sparse datasets improvements<a class="headerlink" href="#rfc-63-sparse-datasets-improvements" title="Permalink to this headline">¶</a></h1>
+<p>Author: Even Rouault</p>
+<p>Contact: even.rouault at spatialys.com</p>
+<p>Status: Adopted, implemented</p>
+<p>Version: 2.2</p>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>This RFC covers an improvement to manage sparse datasets, that is to say
+datasets that contain substantial empty regions.</p>
+</div>
+<div class="section" id="approach">
+<h2>Approach<a class="headerlink" href="#approach" title="Permalink to this headline">¶</a></h2>
+<p>There are use cases where one needs to read or generate a dataset that
+covers a large spatial extent, but in which significant parts are not
+covered by data. There is no way in the GDAL API to quickly know which
+areas are covered or not by data, hence requiring to process all pixels,
+which is rather inefficient. Whereas some formats like GeoTIFF, VRT or
+GeoPackage can potentially give such an information without processing
+pixels.</p>
+<p>It is thus proposed to add a new method GetDataCoverageStatus() in the
+GDALRasterBand class, that takes as input a window of interest and
+returns whether it is made of data, empty blocks or a mix of them.</p>
+<p>This method will be used by the GDALDatasetCopyWholeRaster() method
+(used by CreateCopy() / gdal_translate) to avoid processing sparse
+regions when the output driver instructs it to do so.</p>
+</div>
+<div class="section" id="c-api">
+<h2>C++ API<a class="headerlink" href="#c-api" title="Permalink to this headline">¶</a></h2>
+<p>In GDALRasterBand class, a new virtual method is added :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="n">virtual</span> <span class="nb">int</span> <span class="n">IGetDataCoverageStatus</span><span class="p">(</span> <span class="nb">int</span> <span class="n">nXOff</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nYOff</span><span class="p">,</span>
+                                     <span class="nb">int</span> <span class="n">nXSize</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nYSize</span><span class="p">,</span>
+                                     <span class="nb">int</span> <span class="n">nMaskFlagStop</span><span class="p">,</span>
+                                     <span class="n">double</span><span class="o">*</span> <span class="n">pdfDataPct</span><span class="p">);</span>
+
+
+<span class="o">/**</span>
+ <span class="o">*</span> \<span class="n">brief</span> <span class="n">Get</span> <span class="n">the</span> <span class="n">coverage</span> <span class="n">status</span> <span class="n">of</span> <span class="n">a</span> <span class="n">sub</span><span class="o">-</span><span class="n">window</span> <span class="n">of</span> <span class="n">the</span> <span class="n">raster</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">Returns</span> <span class="n">whether</span> <span class="n">a</span> <span class="n">sub</span><span class="o">-</span><span class="n">window</span> <span class="n">of</span> <span class="n">the</span> <span class="n">raster</span> <span class="n">contains</span> <span class="n">only</span> <span class="n">data</span><span class="p">,</span> <span class="n">only</span> <span class="n">empty</span>
+ <span class="o">*</span> <span class="n">blocks</span> <span class="ow">or</span> <span class="n">a</span> <span class="n">mix</span> <span class="n">of</span> <span class="n">both</span><span class="o">.</span> <span class="n">This</span> <span class="n">function</span> <span class="n">can</span> <span class="n">be</span> <span class="n">used</span> <span class="n">to</span> <span class="n">determine</span> <span class="n">quickly</span>
+ <span class="o">*</span> <span class="k">if</span> <span class="n">it</span> <span class="ow">is</span> <span class="n">worth</span> <span class="n">issuing</span> <span class="n">RasterIO</span> <span class="o">/</span> <span class="n">ReadBlock</span> <span class="n">requests</span> <span class="ow">in</span> <span class="n">datasets</span> <span class="n">that</span> <span class="n">may</span>
+ <span class="o">*</span> <span class="n">be</span> <span class="n">sparse</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">Empty</span> <span class="n">blocks</span> <span class="n">are</span> <span class="n">blocks</span> <span class="n">that</span> <span class="n">contain</span> <span class="n">only</span> <span class="n">pixels</span> <span class="n">whose</span> <span class="n">value</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">nodata</span>
+ <span class="o">*</span> <span class="n">value</span> <span class="n">when</span> <span class="n">it</span> <span class="ow">is</span> <span class="nb">set</span><span class="p">,</span> <span class="ow">or</span> <span class="n">whose</span> <span class="n">value</span> <span class="ow">is</span> <span class="mi">0</span> <span class="n">when</span> <span class="n">the</span> <span class="n">nodata</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">set</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">The</span> <span class="n">query</span> <span class="ow">is</span> <span class="n">done</span> <span class="ow">in</span> <span class="n">an</span> <span class="n">efficient</span> <span class="n">way</span> <span class="n">without</span> <span class="n">reading</span> <span class="n">the</span> <span class="n">actual</span> <span class="n">pixel</span>
+ <span class="o">*</span> <span class="n">values</span><span class="o">.</span> <span class="n">If</span> <span class="ow">not</span> <span class="n">possible</span><span class="p">,</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">implemented</span> <span class="n">at</span> <span class="nb">all</span> <span class="n">by</span> <span class="n">the</span> <span class="n">driver</span><span class="p">,</span>
+ <span class="o">*</span> <span class="n">GDAL_DATA_COVERAGE_STATUS_UNIMPLEMENTED</span> <span class="o">|</span> <span class="n">GDAL_DATA_COVERAGE_STATUS_DATA</span> <span class="n">will</span>
+ <span class="o">*</span> <span class="n">be</span> <span class="n">returned</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">The</span> <span class="n">values</span> <span class="n">that</span> <span class="n">can</span> <span class="n">be</span> <span class="n">returned</span> <span class="n">by</span> <span class="n">the</span> <span class="n">function</span> <span class="n">are</span> <span class="n">the</span> <span class="n">following</span><span class="p">,</span>
+ <span class="o">*</span> <span class="n">potentially</span> <span class="n">combined</span> <span class="k">with</span> <span class="n">the</span> <span class="n">binary</span> <span class="ow">or</span> <span class="n">operator</span> <span class="p">:</span>
+ <span class="o">*</span> <span class="o">&lt;</span><span class="n">ul</span><span class="o">&gt;</span>
+ <span class="o">*</span> <span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;</span><span class="n">GDAL_DATA_COVERAGE_STATUS_UNIMPLEMENTED</span> <span class="p">:</span> <span class="n">the</span> <span class="n">driver</span> <span class="n">does</span> <span class="ow">not</span> <span class="n">implement</span>
+ <span class="o">*</span> <span class="n">GetDataCoverageStatus</span><span class="p">()</span><span class="o">.</span> <span class="n">This</span> <span class="n">flag</span> <span class="n">should</span> <span class="n">be</span> <span class="n">returned</span> <span class="n">together</span> <span class="k">with</span>
+ <span class="o">*</span> <span class="n">GDAL_DATA_COVERAGE_STATUS_DATA</span><span class="o">.&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
+ <span class="o">*</span> <span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;</span><span class="n">GDAL_DATA_COVERAGE_STATUS_DATA</span><span class="p">:</span> <span class="n">There</span> <span class="ow">is</span> <span class="p">(</span><span class="n">potentially</span><span class="p">)</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">queried</span>
+ <span class="o">*</span> <span class="n">window</span><span class="o">.&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
+ <span class="o">*</span> <span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;</span><span class="n">GDAL_DATA_COVERAGE_STATUS_EMPTY</span><span class="p">:</span> <span class="n">There</span> <span class="ow">is</span> <span class="n">nodata</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">queried</span> <span class="n">window</span><span class="o">.</span>
+ <span class="o">*</span> <span class="n">This</span> <span class="ow">is</span> <span class="n">typically</span> <span class="n">identified</span> <span class="n">by</span> <span class="n">the</span> <span class="n">concept</span> <span class="n">of</span> <span class="n">missing</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">formats</span> <span class="n">that</span>
+ <span class="o">*</span> <span class="n">supports</span> <span class="n">it</span><span class="o">.</span>
+ <span class="o">*</span> <span class="o">&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
+ <span class="o">*</span> <span class="o">&lt;/</span><span class="n">ul</span><span class="o">&gt;</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">Note</span> <span class="n">that</span> <span class="n">GDAL_DATA_COVERAGE_STATUS_DATA</span> <span class="n">might</span> <span class="n">have</span> <span class="n">false</span> <span class="n">positives</span> <span class="ow">and</span>
+ <span class="o">*</span> <span class="n">should</span> <span class="n">be</span> <span class="n">interpreted</span> <span class="n">more</span> <span class="k">as</span> <span class="n">hint</span> <span class="n">of</span> <span class="n">potential</span> <span class="n">presence</span> <span class="n">of</span> <span class="n">data</span><span class="o">.</span> <span class="n">For</span> <span class="n">example</span>
+ <span class="o">*</span> <span class="k">if</span> <span class="n">a</span> <span class="n">GeoTIFF</span> <span class="n">file</span> <span class="ow">is</span> <span class="n">created</span> <span class="k">with</span> <span class="n">blocks</span> <span class="n">filled</span> <span class="k">with</span> <span class="n">zeroes</span> <span class="p">(</span><span class="ow">or</span> <span class="nb">set</span> <span class="n">to</span> <span class="n">the</span>
+ <span class="o">*</span> <span class="n">nodata</span> <span class="n">value</span><span class="p">),</span> <span class="n">instead</span> <span class="n">of</span> <span class="n">using</span> <span class="n">the</span> <span class="n">missing</span> <span class="n">block</span> <span class="n">mechanism</span><span class="p">,</span>
+ <span class="o">*</span> <span class="n">GDAL_DATA_COVERAGE_STATUS_DATA</span> <span class="n">will</span> <span class="n">be</span> <span class="n">returned</span><span class="o">.</span> <span class="n">On</span> <span class="n">the</span> <span class="n">contrary</span><span class="p">,</span>
+ <span class="o">*</span> <span class="n">GDAL_DATA_COVERAGE_STATUS_EMPTY</span> <span class="n">should</span> <span class="n">have</span> <span class="n">no</span> <span class="n">false</span> <span class="n">positives</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">The</span> <span class="n">nMaskFlagStop</span> <span class="n">should</span> <span class="n">be</span> <span class="n">generally</span> <span class="nb">set</span> <span class="n">to</span> <span class="mf">0.</span> <span class="n">It</span> <span class="n">can</span> <span class="n">be</span> <span class="nb">set</span> <span class="n">to</span> <span class="n">a</span>
+ <span class="o">*</span> <span class="n">binary</span><span class="o">-</span><span class="ow">or</span><span class="s1">&#39;ed mask of the above mentioned values to enable a quick exiting of</span>
+ <span class="o">*</span> <span class="n">the</span> <span class="n">function</span> <span class="k">as</span> <span class="n">soon</span> <span class="k">as</span> <span class="n">the</span> <span class="n">computed</span> <span class="n">mask</span> <span class="n">matches</span> <span class="n">the</span> <span class="n">nMaskFlagStop</span><span class="o">.</span> <span class="n">For</span>
+ <span class="o">*</span> <span class="n">example</span><span class="p">,</span> <span class="n">you</span> <span class="n">can</span> <span class="n">issue</span> <span class="n">a</span> <span class="n">request</span> <span class="n">on</span> <span class="n">the</span> <span class="n">whole</span> <span class="n">raster</span> <span class="k">with</span> <span class="n">nMaskFlagStop</span> <span class="o">=</span>
+ <span class="o">*</span> <span class="n">GDAL_DATA_COVERAGE_STATUS_EMPTY</span><span class="o">.</span> <span class="n">As</span> <span class="n">soon</span> <span class="k">as</span> <span class="n">one</span> <span class="n">missing</span> <span class="n">block</span> <span class="ow">is</span> <span class="n">encountered</span><span class="p">,</span>
+ <span class="o">*</span> <span class="n">the</span> <span class="n">function</span> <span class="n">will</span> <span class="n">exit</span><span class="p">,</span> <span class="n">so</span> <span class="n">that</span> <span class="n">you</span> <span class="n">can</span> <span class="n">potentially</span> <span class="n">refine</span> <span class="n">the</span> <span class="n">requested</span> <span class="n">area</span>
+ <span class="o">*</span> <span class="n">to</span> <span class="n">find</span> <span class="n">which</span> <span class="n">particular</span> <span class="n">region</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="n">have</span> <span class="n">missing</span> <span class="n">blocks</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="nd">@see</span> <span class="n">GDALGetDataCoverageStatus</span><span class="p">()</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="nd">@param</span> <span class="n">nXOff</span> <span class="n">The</span> <span class="n">pixel</span> <span class="n">offset</span> <span class="n">to</span> <span class="n">the</span> <span class="n">top</span> <span class="n">left</span> <span class="n">corner</span> <span class="n">of</span> <span class="n">the</span> <span class="n">region</span>
+ <span class="o">*</span> <span class="n">of</span> <span class="n">the</span> <span class="n">band</span> <span class="n">to</span> <span class="n">be</span> <span class="n">queried</span><span class="o">.</span> <span class="n">This</span> <span class="n">would</span> <span class="n">be</span> <span class="n">zero</span> <span class="n">to</span> <span class="n">start</span> <span class="kn">from</span> <span class="nn">the</span> <span class="n">left</span> <span class="n">side</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="nd">@param</span> <span class="n">nYOff</span> <span class="n">The</span> <span class="n">line</span> <span class="n">offset</span> <span class="n">to</span> <span class="n">the</span> <span class="n">top</span> <span class="n">left</span> <span class="n">corner</span> <span class="n">of</span> <span class="n">the</span> <span class="n">region</span>
+ <span class="o">*</span> <span class="n">of</span> <span class="n">the</span> <span class="n">band</span> <span class="n">to</span> <span class="n">be</span> <span class="n">queried</span><span class="o">.</span> <span class="n">This</span> <span class="n">would</span> <span class="n">be</span> <span class="n">zero</span> <span class="n">to</span> <span class="n">start</span> <span class="kn">from</span> <span class="nn">the</span> <span class="n">top</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="nd">@param</span> <span class="n">nXSize</span> <span class="n">The</span> <span class="n">width</span> <span class="n">of</span> <span class="n">the</span> <span class="n">region</span> <span class="n">of</span> <span class="n">the</span> <span class="n">band</span> <span class="n">to</span> <span class="n">be</span> <span class="n">queried</span> <span class="ow">in</span> <span class="n">pixels</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="nd">@param</span> <span class="n">nYSize</span> <span class="n">The</span> <span class="n">height</span> <span class="n">of</span> <span class="n">the</span> <span class="n">region</span> <span class="n">of</span> <span class="n">the</span> <span class="n">band</span> <span class="n">to</span> <span class="n">be</span> <span class="n">queried</span> <span class="ow">in</span> <span class="n">lines</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="nd">@param</span> <span class="n">nMaskFlagStop</span> <span class="mi">0</span><span class="p">,</span> <span class="ow">or</span> <span class="n">a</span> <span class="n">binary</span><span class="o">-</span><span class="ow">or</span><span class="s1">&#39;ed mask of possible values</span>
+ <span class="o">*</span> <span class="n">GDAL_DATA_COVERAGE_STATUS_UNIMPLEMENTED</span><span class="p">,</span>
+ <span class="o">*</span> <span class="n">GDAL_DATA_COVERAGE_STATUS_DATA</span> <span class="ow">and</span> <span class="n">GDAL_DATA_COVERAGE_STATUS_EMPTY</span><span class="o">.</span> <span class="n">As</span> <span class="n">soon</span>
+ <span class="o">*</span> <span class="k">as</span> <span class="n">the</span> <span class="n">computation</span> <span class="n">of</span> <span class="n">the</span> <span class="n">coverage</span> <span class="n">matches</span> <span class="n">the</span> <span class="n">mask</span><span class="p">,</span> <span class="n">the</span> <span class="n">computation</span> <span class="n">will</span> <span class="n">be</span>
+ <span class="o">*</span> <span class="n">stopped</span><span class="o">.</span> <span class="o">*</span><span class="n">pdfDataPct</span> <span class="n">will</span> <span class="ow">not</span> <span class="n">be</span> <span class="n">valid</span> <span class="ow">in</span> <span class="n">that</span> <span class="n">case</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="nd">@param</span> <span class="n">pdfDataPct</span> <span class="n">Optional</span> <span class="n">output</span> <span class="n">parameter</span> <span class="n">whose</span> <span class="n">pointed</span> <span class="n">value</span> <span class="n">will</span> <span class="n">be</span> <span class="nb">set</span>
+ <span class="o">*</span> <span class="n">to</span> <span class="n">the</span> <span class="p">(</span><span class="n">approximate</span><span class="p">)</span> <span class="n">percentage</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">]</span> <span class="n">of</span> <span class="n">pixels</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">queried</span>
+ <span class="o">*</span> <span class="n">sub</span><span class="o">-</span><span class="n">window</span> <span class="n">that</span> <span class="n">have</span> <span class="n">valid</span> <span class="n">values</span><span class="o">.</span> <span class="n">The</span> <span class="n">implementation</span> <span class="n">might</span> <span class="ow">not</span> <span class="n">always</span> <span class="n">be</span>
+ <span class="o">*</span> <span class="n">able</span> <span class="n">to</span> <span class="n">compute</span> <span class="n">it</span><span class="p">,</span> <span class="ow">in</span> <span class="n">which</span> <span class="n">case</span> <span class="n">it</span> <span class="n">will</span> <span class="n">be</span> <span class="nb">set</span> <span class="n">to</span> <span class="n">a</span> <span class="n">negative</span> <span class="n">value</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="nd">@return</span> <span class="n">a</span> <span class="n">binary</span><span class="o">-</span><span class="ow">or</span><span class="s1">&#39;ed combination of possible values</span>
+ <span class="o">*</span> <span class="n">GDAL_DATA_COVERAGE_STATUS_UNIMPLEMENTED</span><span class="p">,</span>
+ <span class="o">*</span> <span class="n">GDAL_DATA_COVERAGE_STATUS_DATA</span> <span class="ow">and</span> <span class="n">GDAL_DATA_COVERAGE_STATUS_EMPTY</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="nd">@note</span> <span class="n">Added</span> <span class="ow">in</span> <span class="n">GDAL</span> <span class="mf">2.2</span>
+ <span class="o">*/</span>
+</pre></div>
+</div>
+<p>This method has a dumb default implementation that returns
+GDAL_DATA_COVERAGE_STATUS_UNIMPLEMENTED |
+GDAL_DATA_COVERAGE_STATUS_DATA</p>
+<p>The public API is made of :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/**</span> <span class="n">Flag</span> <span class="n">returned</span> <span class="n">by</span> <span class="n">GDALGetDataCoverageStatus</span><span class="p">()</span> <span class="n">when</span> <span class="n">the</span> <span class="n">driver</span> <span class="n">does</span> <span class="ow">not</span>
+ <span class="o">*</span> <span class="n">implement</span> <span class="n">GetDataCoverageStatus</span><span class="p">()</span><span class="o">.</span> <span class="n">This</span> <span class="n">flag</span> <span class="n">should</span> <span class="n">be</span> <span class="n">returned</span> <span class="n">together</span>
+ <span class="o">*</span> <span class="k">with</span> <span class="n">GDAL_DATA_COVERAGE_STATUS_DATA</span> <span class="o">*/</span>
+<span class="c1">#define GDAL_DATA_COVERAGE_STATUS_UNIMPLEMENTED 0x01</span>
+
+<span class="o">/**</span> <span class="n">Flag</span> <span class="n">returned</span> <span class="n">by</span> <span class="n">GDALGetDataCoverageStatus</span><span class="p">()</span> <span class="n">when</span> <span class="n">there</span> <span class="ow">is</span> <span class="p">(</span><span class="n">potentially</span><span class="p">)</span>
+ <span class="o">*</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">queried</span> <span class="n">window</span><span class="o">.</span> <span class="n">Can</span> <span class="n">be</span> <span class="n">combined</span> <span class="k">with</span> <span class="n">the</span> <span class="n">binary</span> <span class="ow">or</span> <span class="n">operator</span>
+ <span class="o">*</span> <span class="k">with</span> <span class="n">GDAL_DATA_COVERAGE_STATUS_UNIMPLEMENTED</span> <span class="ow">or</span>
+ <span class="o">*</span> <span class="n">GDAL_DATA_COVERAGE_STATUS_EMPTY</span> <span class="o">*/</span>
+<span class="c1">#define GDAL_DATA_COVERAGE_STATUS_DATA          0x02</span>
+
+<span class="o">/**</span> <span class="n">Flag</span> <span class="n">returned</span> <span class="n">by</span> <span class="n">GDALGetDataCoverageStatus</span><span class="p">()</span> <span class="n">when</span> <span class="n">there</span> <span class="ow">is</span> <span class="n">nodata</span> <span class="ow">in</span> <span class="n">the</span>
+ <span class="o">*</span> <span class="n">queried</span> <span class="n">window</span><span class="o">.</span> <span class="n">This</span> <span class="ow">is</span> <span class="n">typically</span> <span class="n">identified</span> <span class="n">by</span> <span class="n">the</span> <span class="n">concept</span> <span class="n">of</span> <span class="n">missing</span> <span class="n">block</span>
+ <span class="o">*</span> <span class="ow">in</span> <span class="n">formats</span> <span class="n">that</span> <span class="n">supports</span> <span class="n">it</span><span class="o">.</span>
+ <span class="o">*</span> <span class="n">Can</span> <span class="n">be</span> <span class="n">combined</span> <span class="k">with</span> <span class="n">the</span> <span class="n">binary</span> <span class="ow">or</span> <span class="n">operator</span> <span class="k">with</span>
+ <span class="o">*</span> <span class="n">GDAL_DATA_COVERAGE_STATUS_DATA</span> <span class="o">*/</span>
+<span class="c1">#define GDAL_DATA_COVERAGE_STATUS_EMPTY         0x04</span>
+
+
+<span class="n">C</span><span class="o">++</span> <span class="p">:</span>
+
+<span class="nb">int</span>  <span class="n">GDALRasterBand</span><span class="p">::</span><span class="n">GetDataCoverageStatus</span><span class="p">(</span> <span class="nb">int</span> <span class="n">nXOff</span><span class="p">,</span>
+                                            <span class="nb">int</span> <span class="n">nYOff</span><span class="p">,</span>
+                                            <span class="nb">int</span> <span class="n">nXSize</span><span class="p">,</span>
+                                            <span class="nb">int</span> <span class="n">nYSize</span><span class="p">,</span>
+                                            <span class="nb">int</span> <span class="n">nMaskFlagStop</span><span class="p">,</span>
+                                            <span class="n">double</span><span class="o">*</span> <span class="n">pdfDataPct</span><span class="p">)</span>
+
+<span class="n">C</span> <span class="p">:</span>
+<span class="nb">int</span> <span class="n">GDALGetDataCoverageStatus</span><span class="p">(</span> <span class="n">GDALRasterBandH</span> <span class="n">hBand</span><span class="p">,</span>
+                               <span class="nb">int</span> <span class="n">nXOff</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nYOff</span><span class="p">,</span>
+                               <span class="nb">int</span> <span class="n">nXSize</span><span class="p">,</span>
+                               <span class="nb">int</span> <span class="n">nYSize</span><span class="p">,</span>
+                               <span class="nb">int</span> <span class="n">nMaskFlagStop</span><span class="p">,</span>
+                               <span class="n">double</span><span class="o">*</span> <span class="n">pdfDataPct</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>GDALRasterBand::GetDataCoverageStatus() does basic checks on the
+validity of the window before calling IGetDataCoverageStatus()</p>
+</div>
+<div class="section" id="changes">
+<h2>Changes<a class="headerlink" href="#changes" title="Permalink to this headline">¶</a></h2>
+<p>GDALDatasetCopyWholeRaster() and GDALRasterBandCopyWholeRaster() accepts
+a SKIP_HOLES option that can be set to YES by the output driver to cause
+GetDataCoverageStatus() to be called on each chunk of the source dataset
+to determine if contains only holes or not.</p>
+</div>
+<div class="section" id="drivers">
+<h2>Drivers<a class="headerlink" href="#drivers" title="Permalink to this headline">¶</a></h2>
+<p>This RFC upgrades the GeoTIFF and VRT drivers to implement the
+IGetDataCoverageStatus() method.</p>
+<p>The GeoTIFF driver has also receive a number of prior enhancements,
+related to that topic, for example to accept the SPARSE_OK=YES creation
+option in CreateCopy() mode (or the SPARSE_OK open option in update
+mode).</p>
+<p>Extract of the documentation of the driver:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">GDAL</span> <span class="n">makes</span> <span class="n">a</span> <span class="n">special</span> <span class="n">interpretation</span> <span class="n">of</span> <span class="n">a</span> <span class="n">TIFF</span> <span class="n">tile</span> <span class="ow">or</span> <span class="n">strip</span> <span class="n">whose</span> <span class="n">offset</span>
+<span class="ow">and</span> <span class="n">byte</span> <span class="n">count</span> <span class="n">are</span> <span class="nb">set</span> <span class="n">to</span> <span class="mi">0</span><span class="p">,</span> <span class="n">that</span> <span class="ow">is</span> <span class="n">to</span> <span class="n">say</span> <span class="n">a</span> <span class="n">tile</span> <span class="ow">or</span> <span class="n">strip</span> <span class="n">that</span> <span class="n">has</span> <span class="n">no</span> <span class="n">corresponding</span>
+<span class="n">allocated</span> <span class="n">physical</span> <span class="n">storage</span><span class="o">.</span> <span class="n">On</span> <span class="n">reading</span><span class="p">,</span> <span class="n">such</span> <span class="n">tiles</span> <span class="ow">or</span> <span class="n">strips</span> <span class="n">are</span> <span class="n">considered</span> <span class="n">to</span>
+<span class="n">be</span> <span class="n">implicitly</span> <span class="nb">set</span> <span class="n">to</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">to</span> <span class="n">the</span> <span class="n">nodata</span> <span class="n">value</span> <span class="n">when</span> <span class="n">it</span> <span class="ow">is</span> <span class="n">defined</span><span class="o">.</span> <span class="n">On</span> <span class="n">writing</span><span class="p">,</span> <span class="n">it</span>
+<span class="ow">is</span> <span class="n">possible</span> <span class="n">to</span> <span class="n">enable</span> <span class="n">generating</span> <span class="n">such</span> <span class="n">files</span> <span class="n">through</span> <span class="n">the</span> <span class="n">Create</span><span class="p">()</span> <span class="n">interface</span> <span class="n">by</span> <span class="n">setting</span>
+<span class="n">the</span> <span class="n">SPARSE_OK</span> <span class="n">creation</span> <span class="n">option</span> <span class="n">to</span> <span class="n">YES</span><span class="o">.</span> <span class="n">Then</span><span class="p">,</span> <span class="n">blocks</span> <span class="n">that</span> <span class="n">are</span> <span class="n">never</span> <span class="n">written</span>
+<span class="n">through</span> <span class="n">the</span> <span class="n">IWriteBlock</span><span class="p">()</span><span class="o">/</span><span class="n">IRasterIO</span><span class="p">()</span> <span class="n">interfaces</span> <span class="n">will</span> <span class="n">have</span> <span class="n">their</span> <span class="n">offset</span> <span class="ow">and</span>
+<span class="n">byte</span> <span class="n">count</span> <span class="nb">set</span> <span class="n">to</span> <span class="mf">0.</span> <span class="n">This</span> <span class="ow">is</span> <span class="n">particularly</span> <span class="n">useful</span> <span class="n">to</span> <span class="n">save</span> <span class="n">disk</span> <span class="n">space</span> <span class="ow">and</span> <span class="n">time</span> <span class="n">when</span>
+<span class="n">the</span> <span class="n">file</span> <span class="n">must</span> <span class="n">be</span> <span class="n">initialized</span> <span class="n">empty</span> <span class="n">before</span> <span class="n">being</span> <span class="n">passed</span> <span class="n">to</span> <span class="n">a</span> <span class="n">further</span> <span class="n">processing</span>
+<span class="n">stage</span> <span class="n">that</span> <span class="n">will</span> <span class="n">fill</span> <span class="n">it</span><span class="o">.</span>
+<span class="n">To</span> <span class="n">avoid</span> <span class="n">ambiguities</span> <span class="k">with</span> <span class="n">anoter</span> <span class="n">sparse</span> <span class="n">mechanism</span> <span class="n">discussed</span> <span class="ow">in</span> <span class="n">the</span> <span class="nb">next</span> <span class="n">paragraphs</span><span class="p">,</span>
+<span class="n">we</span> <span class="n">will</span> <span class="n">call</span> <span class="n">such</span> <span class="n">files</span> <span class="k">with</span> <span class="n">implicit</span> <span class="n">tiles</span><span class="o">/</span><span class="n">strips</span> <span class="s2">&quot;TIFF sparse files&quot;</span><span class="o">.</span> <span class="n">They</span> <span class="n">will</span>
+<span class="n">be</span> <span class="n">likely</span> <span class="o">*</span><span class="ow">not</span><span class="o">*</span> <span class="n">interoperable</span> <span class="k">with</span> <span class="n">TIFF</span> <span class="n">readers</span> <span class="n">that</span> <span class="n">are</span> <span class="ow">not</span> <span class="n">GDAL</span> <span class="n">based</span> <span class="ow">and</span>
+<span class="n">would</span> <span class="n">consider</span> <span class="n">such</span> <span class="n">files</span> <span class="k">with</span> <span class="n">implicit</span> <span class="n">tiles</span><span class="o">/</span><span class="n">strips</span> <span class="k">as</span> <span class="n">defective</span><span class="o">.</span>
+
+<span class="n">Starting</span> <span class="k">with</span> <span class="n">GDAL</span> <span class="mf">2.2</span><span class="p">,</span> <span class="n">this</span> <span class="n">mechanism</span> <span class="ow">is</span> <span class="n">extended</span> <span class="n">to</span> <span class="n">the</span> <span class="n">CreateCopy</span><span class="p">()</span> <span class="ow">and</span>
+<span class="n">Open</span><span class="p">()</span> <span class="n">interfaces</span> <span class="p">(</span><span class="k">for</span> <span class="n">update</span> <span class="n">mode</span><span class="p">)</span> <span class="k">as</span> <span class="n">well</span><span class="o">.</span> <span class="n">If</span> <span class="n">the</span> <span class="n">SPARSE_OK</span> <span class="n">creation</span> <span class="n">option</span>
+<span class="p">(</span><span class="ow">or</span> <span class="n">the</span> <span class="n">SPARSE_OK</span> <span class="nb">open</span> <span class="n">option</span> <span class="k">for</span> <span class="n">Open</span><span class="p">())</span> <span class="ow">is</span> <span class="nb">set</span> <span class="n">to</span> <span class="n">YES</span><span class="p">,</span> <span class="n">even</span> <span class="n">an</span> <span class="n">attempt</span> <span class="n">to</span>
+<span class="n">write</span> <span class="n">a</span> <span class="nb">all</span> <span class="mi">0</span><span class="o">/</span><span class="n">nodata</span> <span class="n">block</span> <span class="n">will</span> <span class="n">be</span> <span class="n">detected</span> <span class="n">so</span> <span class="n">that</span> <span class="n">the</span> <span class="n">tile</span><span class="o">/</span><span class="n">strip</span> <span class="ow">is</span> <span class="ow">not</span>
+<span class="n">allocated</span> <span class="p">(</span><span class="k">if</span> <span class="n">it</span> <span class="n">was</span> <span class="n">already</span> <span class="n">allocated</span><span class="p">,</span> <span class="n">then</span> <span class="n">its</span> <span class="n">content</span> <span class="n">will</span> <span class="n">be</span> <span class="n">replaced</span> <span class="n">by</span>
+<span class="n">the</span> <span class="mi">0</span><span class="o">/</span><span class="n">nodata</span> <span class="n">content</span><span class="p">)</span><span class="o">.</span>
+
+<span class="n">Starting</span> <span class="k">with</span> <span class="n">GDAL</span> <span class="mf">2.2</span><span class="p">,</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">case</span> <span class="n">where</span> <span class="n">SPARSE_OK</span> <span class="ow">is</span> <span class="o">*</span><span class="ow">not</span><span class="o">*</span> <span class="n">defined</span> <span class="p">(</span><span class="ow">or</span> <span class="nb">set</span>
+<span class="n">to</span> <span class="n">its</span> <span class="n">default</span> <span class="n">value</span> <span class="n">FALSE</span><span class="p">),</span> <span class="k">for</span> <span class="n">uncompressed</span> <span class="n">files</span> <span class="n">whose</span> <span class="n">nodata</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span>
+<span class="nb">set</span><span class="p">,</span> <span class="ow">or</span> <span class="nb">set</span> <span class="n">to</span> <span class="mi">0</span><span class="p">,</span> <span class="ow">in</span> <span class="n">Create</span><span class="p">()</span> <span class="ow">and</span> <span class="n">CreateCopy</span><span class="p">()</span> <span class="n">mode</span><span class="p">,</span> <span class="n">the</span> <span class="n">driver</span> <span class="n">will</span> <span class="n">delay</span> <span class="n">the</span>
+<span class="n">allocation</span> <span class="n">of</span> <span class="mi">0</span><span class="o">-</span><span class="n">blocks</span> <span class="n">until</span> <span class="n">file</span> <span class="n">closing</span><span class="p">,</span> <span class="n">so</span> <span class="k">as</span> <span class="n">to</span> <span class="n">be</span> <span class="n">able</span> <span class="n">to</span> <span class="n">write</span> <span class="n">them</span> <span class="n">at</span>
+<span class="n">the</span> <span class="n">very</span> <span class="n">end</span> <span class="n">of</span> <span class="n">the</span> <span class="n">file</span><span class="p">,</span> <span class="ow">and</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">way</span> <span class="n">compatible</span> <span class="n">of</span> <span class="n">the</span> <span class="n">filesystem</span> <span class="n">sparse</span> <span class="n">file</span>
+<span class="n">mechanisms</span> <span class="p">(</span><span class="n">to</span> <span class="n">be</span> <span class="n">distinguished</span> <span class="kn">from</span> <span class="nn">the</span> <span class="n">TIFF</span> <span class="n">sparse</span> <span class="n">file</span> <span class="n">extension</span> <span class="n">discussed</span>
+<span class="n">earlier</span><span class="p">)</span><span class="o">.</span> <span class="n">That</span> <span class="ow">is</span> <span class="n">that</span> <span class="nb">all</span> <span class="n">the</span> <span class="n">empty</span> <span class="n">blocks</span> <span class="n">will</span> <span class="n">be</span> <span class="n">seen</span> <span class="k">as</span> <span class="n">properly</span> <span class="n">allocated</span>
+<span class="kn">from</span> <span class="nn">the</span> <span class="n">TIFF</span> <span class="n">point</span> <span class="n">of</span> <span class="n">view</span> <span class="p">(</span><span class="n">corresponding</span> <span class="n">strips</span><span class="o">/</span><span class="n">tiles</span> <span class="n">will</span> <span class="n">have</span> <span class="n">valid</span> <span class="n">offsets</span>
+<span class="ow">and</span> <span class="n">byte</span> <span class="n">counts</span><span class="p">),</span> <span class="n">but</span> <span class="n">will</span> <span class="n">have</span> <span class="n">no</span> <span class="n">corresponding</span> <span class="n">physical</span> <span class="n">storage</span><span class="o">.</span> <span class="n">Provided</span> <span class="n">that</span>
+<span class="n">the</span> <span class="n">filesystem</span> <span class="n">supports</span> <span class="n">such</span> <span class="n">sparse</span> <span class="n">files</span><span class="p">,</span> <span class="n">which</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">case</span> <span class="k">for</span> <span class="n">most</span> <span class="n">Linux</span>
+<span class="n">popular</span> <span class="n">filesystems</span> <span class="p">(</span><span class="n">ext2</span><span class="o">/</span><span class="mi">3</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span> <span class="n">xfs</span><span class="p">,</span> <span class="n">btfs</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span> <span class="ow">or</span> <span class="n">NTFS</span> <span class="n">on</span> <span class="n">Windows</span><span class="o">.</span> <span class="n">If</span> <span class="n">the</span> <span class="n">file</span>
+<span class="n">system</span> <span class="n">does</span> <span class="ow">not</span> <span class="n">support</span> <span class="n">sparse</span> <span class="n">files</span><span class="p">,</span> <span class="n">physical</span> <span class="n">storage</span> <span class="n">will</span> <span class="n">be</span>
+<span class="n">allocated</span> <span class="ow">and</span> <span class="n">filled</span> <span class="k">with</span> <span class="n">zeros</span><span class="o">.</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="bindings">
+<h2>Bindings<a class="headerlink" href="#bindings" title="Permalink to this headline">¶</a></h2>
+<p>The Python bindings has a mapping of GDALGetDataCoverageStatus(). Other
+bindings could be updated (need to figure out how to return both a
+status flag and a percentage)</p>
+</div>
+<div class="section" id="utilities">
+<h2>Utilities<a class="headerlink" href="#utilities" title="Permalink to this headline">¶</a></h2>
+<p>No direct changes in utilities.</p>
+</div>
+<div class="section" id="results">
+<h2>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
+<p>With this new capability, a VRT of size 200 000 x 200 000 pixels that
+contains 2 regions of 20x20 pixels each can be gdal_translated as a
+sparse tiled GeoTIFF in 2 seconds. The resulting GeoTIFF can be itself
+translated into another sparse tiled GeoTIFF in the same time.</p>
+</div>
+<div class="section" id="future-work">
+<h2>Future work<a class="headerlink" href="#future-work" title="Permalink to this headline">¶</a></h2>
+<p>Future work using the new capability could be done in overview building
+or warping. Other drivers could also benefit from that new capability:
+GeoPackage, ERDAS Imagine, …</p>
+</div>
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<p>The new method is documented.</p>
+</div>
+<div class="section" id="test-suite">
+<h2>Test Suite<a class="headerlink" href="#test-suite" title="Permalink to this headline">¶</a></h2>
+<p>Tests of the VRT and GeoTIFF drivers are enhanced to test their
+IGetDataCoverageStatus() implementation.</p>
+</div>
+<div class="section" id="compatibility-issues">
+<h2>Compatibility Issues<a class="headerlink" href="#compatibility-issues" title="Permalink to this headline">¶</a></h2>
+<p>C++ ABI change. No functional incompatibility foreseen.</p>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>The implementation will be done by Even Rouault.</p>
+<p>The proposed implementation is in
+<a class="reference external" href="https://github.com/rouault/gdal2/tree/sparse_datasets">https://github.com/rouault/gdal2/tree/sparse_datasets</a></p>
+<p>Changes can be seen with
+<a class="reference external" href="https://github.com/OSGeo/gdal/compare/trunk...rouault:sparse_datasets?expand=1">https://github.com/OSGeo/gdal/compare/trunk…rouault:sparse_datasets?expand=1</a></p>
+</div>
+<div class="section" id="voting-history">
+<h2>Voting history<a class="headerlink" href="#voting-history" title="Permalink to this headline">¶</a></h2>
+<p>+1 from EvenR and DanielM</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rfc64_triangle_polyhedralsurface_tin.html" class="btn btn-neutral float-right" title="RFC 64: Triangle, Polyhedral surface and TIN" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc62_raster_algebra.html" class="btn btn-neutral float-left" title="RFC 62 : Raster algebra" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

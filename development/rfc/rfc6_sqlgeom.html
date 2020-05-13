@@ -1,0 +1,745 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RFC 6: Geometry and Feature Style as OGR Special Fields &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdevelopment/rfc/rfc6_sqlgeom.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="RFC 7: Use VSILFILE for VSI*L Functions" href="rfc7_vsilapi.html" />
+    <link rel="prev" title="RFC 5: Unicode support in GDAL" href="rfc5_unicode.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 6: Geometry and Feature Style as OGR Special Fields</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main-concepts">Main concepts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#adding-new-special-fields">Adding New Special Fields</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#backward-compatibility">Backward Compatibility</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#regression-testing">Regression Testing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation-staffing">Implementation Staffing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#references">References</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voting-history">Voting History</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 6: Geometry and Feature Style as OGR Special Fields</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/development/rfc/rfc6_sqlgeom.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="rfc7_vsilapi.html" class="btn btn-neutral float-right" title="RFC 7: Use VSILFILE for VSI*L Functions" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc5_unicode.html" class="btn btn-neutral float-left" title="RFC 5: Unicode support in GDAL" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rfc-6-geometry-and-feature-style-as-ogr-special-fields">
+<span id="rfc-6"></span><h1>RFC 6: Geometry and Feature Style as OGR Special Fields<a class="headerlink" href="#rfc-6-geometry-and-feature-style-as-ogr-special-fields" title="Permalink to this headline">¶</a></h1>
+<p>Author: Tamas Szekeres</p>
+<p>Contact: <a class="reference external" href="mailto:szekerest&#37;&#52;&#48;gmail&#46;com">szekerest<span>&#64;</span>gmail<span>&#46;</span>com</a></p>
+<p>Status: Adopted</p>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>This proposal addresses and issue have been discovered long ago, and OGR
+provides no equivalent solution so far.</p>
+<p>Some of the supported formats like Mapinfo.tab may contain multiple
+geometry types and style information. In order to handle this kind of
+data sources properly a support for selecting the layers by geometry
+type or by the style info would be highly required. For more details see
+the following MapServer related bugs later in this document.</p>
+<p>All of the proposed changes can be found at the tracking bug of this RFC
+referenced later in this document.</p>
+</div>
+<div class="section" id="main-concepts">
+<h2>Main concepts<a class="headerlink" href="#main-concepts" title="Permalink to this headline">¶</a></h2>
+<p>The most reasonable way to support this feature is to extend the
+currently existing ‘special field’ approach to allow specifying more
+than one fields. Along with the already definied ‘FID’ field we will add
+the following ones:</p>
+<ul class="simple">
+<li><p>‘OGR_GEOMETRY’ containing the geometry type like ‘POINT’ or
+‘POLYGON’.</p></li>
+<li><p>‘OGR_STYLE’ containing the style string.</p></li>
+<li><p>‘OGR_GEOM_WKT’ containing the full WKT of the geometry.</p></li>
+</ul>
+<p>By providing the aforementioned fields one can make for example the
+following selections:</p>
+<ul class="simple">
+<li><p>select FID, OGR_GEOMETRY, OGR_STYLE, OGR_GEOM_WKT, * from MyTable
+where OGR_GEOMETRY=’POINT’ OR OGR_GEOMETRY=’POLYGON’</p></li>
+<li><p>select FID, OGR_GEOMETRY, OGR_STYLE, OGR_GEOM_WKT, * from MyTable
+where OGR_STYLE LIKE ‘%BRUSH%’</p></li>
+<li><p>select FID, OGR_GEOMETRY, OGR_STYLE, OGR_GEOM_WKT, * from MyTable
+where OGR_GEOM_WKT LIKE ‘POLYGON%’</p></li>
+<li><p>select distinct OGR_GEOMETRY from MyTable order by OGR_GEOMETRY desc</p></li>
+</ul>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>There are two distinct areas where this feature plays a role</p>
+<ul class="simple">
+<li><p>Feature query implemented at ogrfeaturequery.cpp</p></li>
+<li><p>SQL based selection implemented at ogr_gensql.cpp and
+ogrdatasource.cpp</p></li>
+</ul>
+<p>To specify arbitrary number of special fields we will declare an array
+for the field names and types in ogrfeaturequery.cpp as</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">char</span><span class="o">*</span> <span class="n">SpecialFieldNames</span><span class="p">[</span><span class="n">SPECIAL_FIELD_COUNT</span><span class="p">]</span>
+    <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;FID&quot;</span><span class="p">,</span> <span class="s2">&quot;OGR_GEOMETRY&quot;</span><span class="p">,</span> <span class="s2">&quot;OGR_STYLE&quot;</span><span class="p">,</span> <span class="s2">&quot;OGR_GEOM_WKT&quot;</span><span class="p">};</span>
+<span class="n">swq_field_type</span> <span class="n">SpecialFieldTypes</span><span class="p">[</span><span class="n">SPECIAL_FIELD_COUNT</span><span class="p">]</span>
+    <span class="o">=</span> <span class="p">{</span><span class="n">SWQ_INTEGER</span><span class="p">,</span> <span class="n">SWQ_STRING</span><span class="p">,</span> <span class="n">SWQ_STRING</span><span class="p">,</span> <span class="n">SWQ_STRING</span><span class="p">};</span>
+</pre></div>
+</div>
+<p>So as to make this array accessible to the other files the followings
+will be added to ogr_p.h</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CPL_C_START</span>
+<span class="c1">#include &quot;ogr_swq.h&quot;</span>
+<span class="n">CPL_C_END</span>
+
+<span class="c1">#define SPF_FID 0</span>
+<span class="c1">#define SPF_OGR_GEOMETRY 1</span>
+<span class="c1">#define SPF_OGR_STYLE 2</span>
+<span class="c1">#define SPF_OGR_GEOM_WKT 3</span>
+<span class="c1">#define SPECIAL_FIELD_COUNT 4</span>
+
+<span class="n">extern</span> <span class="n">char</span><span class="o">*</span> <span class="n">SpecialFieldNames</span><span class="p">[</span><span class="n">SPECIAL_FIELD_COUNT</span><span class="p">];</span>
+<span class="n">extern</span> <span class="n">swq_field_type</span> <span class="n">SpecialFieldTypes</span><span class="p">[</span><span class="n">SPECIAL_FIELD_COUNT</span><span class="p">];</span>
+</pre></div>
+</div>
+<p>In ogrfeature.cpp the field accessor functions (GetFieldAsString,
+GetFieldAsInteger, GetFieldAsDouble) will be modified providing the
+values of the special fields by the field index</p>
+<p>The following code will be added to the beginning of
+OGRFeature::GetFieldAsInteger:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">int</span> <span class="n">iSpecialField</span> <span class="o">=</span> <span class="n">iField</span> <span class="o">-</span> <span class="n">poDefn</span><span class="o">-&gt;</span><span class="n">GetFieldCount</span><span class="p">();</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">iSpecialField</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="o">//</span> <span class="n">special</span> <span class="n">field</span> <span class="n">value</span> <span class="n">accessors</span>
+    <span class="n">switch</span> <span class="p">(</span><span class="n">iSpecialField</span><span class="p">)</span>
+    <span class="p">{</span>
+    <span class="n">case</span> <span class="n">SPF_FID</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">GetFID</span><span class="p">();</span>
+    <span class="n">default</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The following code will be added to the beginning of
+OGRFeature::GetFieldAsDouble:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">int</span> <span class="n">iSpecialField</span> <span class="o">=</span> <span class="n">iField</span> <span class="o">-</span> <span class="n">poDefn</span><span class="o">-&gt;</span><span class="n">GetFieldCount</span><span class="p">();</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">iSpecialField</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="o">//</span> <span class="n">special</span> <span class="n">field</span> <span class="n">value</span> <span class="n">accessors</span>
+    <span class="n">switch</span> <span class="p">(</span><span class="n">iSpecialField</span><span class="p">)</span>
+    <span class="p">{</span>
+    <span class="n">case</span> <span class="n">SPF_FID</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">GetFID</span><span class="p">();</span>
+    <span class="n">default</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">0.0</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The following code will be added to the beginning of
+OGRFeature::GetFieldAsString:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">int</span> <span class="n">iSpecialField</span> <span class="o">=</span> <span class="n">iField</span> <span class="o">-</span> <span class="n">poDefn</span><span class="o">-&gt;</span><span class="n">GetFieldCount</span><span class="p">();</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">iSpecialField</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="o">//</span> <span class="n">special</span> <span class="n">field</span> <span class="n">value</span> <span class="n">accessors</span>
+    <span class="n">switch</span> <span class="p">(</span><span class="n">iSpecialField</span><span class="p">)</span>
+    <span class="p">{</span>
+    <span class="n">case</span> <span class="n">SPF_FID</span><span class="p">:</span>
+        <span class="n">sprintf</span><span class="p">(</span> <span class="n">szTempBuffer</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">GetFID</span><span class="p">()</span> <span class="p">);</span>
+        <span class="k">return</span> <span class="n">m_pszTmpFieldValue</span> <span class="o">=</span> <span class="n">CPLStrdup</span><span class="p">(</span> <span class="n">szTempBuffer</span> <span class="p">);</span>
+    <span class="n">case</span> <span class="n">SPF_OGR_GEOMETRY</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">poGeometry</span><span class="o">-&gt;</span><span class="n">getGeometryName</span><span class="p">();</span>
+    <span class="n">case</span> <span class="n">SPF_OGR_STYLE</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">GetStyleString</span><span class="p">();</span>
+    <span class="n">case</span> <span class="n">SPF_OGR_GEOM_WKT</span><span class="p">:</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">poGeometry</span><span class="o">-&gt;</span><span class="n">exportToWkt</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">m_pszTmpFieldValue</span> <span class="p">)</span> <span class="o">==</span> <span class="n">OGRERR_NONE</span> <span class="p">)</span>
+                <span class="k">return</span> <span class="n">m_pszTmpFieldValue</span><span class="p">;</span>
+            <span class="k">else</span>
+                <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="n">default</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The current implementation of OGRFeature::GetFieldAsString uses a static
+string to hold the const char* return value that is highly avoidable
+and makes the code thread unsafe. In this regard the ‘static char
+szTempBuffer[80]’ will be changed to non static and a new member will be
+added to OGRFeature in ogrfeature.h as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">char</span> <span class="o">*</span> <span class="n">m_pszTmpFieldValue</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>This member will be initialized to NULL at the constructor, and will be
+freed using CPLFree() at the destructor of OGRFeature.</p>
+<p>In OGRFeature::GetFieldAsString all of the occurrences of ‘return
+szTempBuffer;’ will be changed to ‘return m_pszTmpFieldValue =
+CPLStrdup( szTempBuffer );’</p>
+<p>OGRFeature::GetFieldAsString is responsible to destroy the old value of
+m_pszTmpFieldValue at the beginning of the function:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CPLFree</span><span class="p">(</span><span class="n">m_pszTmpFieldValue</span><span class="p">);</span>
+<span class="n">m_pszTmpFieldValue</span> <span class="o">=</span> <span class="n">NULL</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>In ogrfeaturequery.cpp we should change OGRFeatureQuery::Compile to add
+the special fields like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">iField</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="k">while</span> <span class="p">(</span><span class="n">iField</span> <span class="o">&lt;</span> <span class="n">SPECIAL_FIELD_COUNT</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">papszFieldNames</span><span class="p">[</span><span class="n">poDefn</span><span class="o">-&gt;</span><span class="n">GetFieldCount</span><span class="p">()</span> <span class="o">+</span> <span class="n">iField</span><span class="p">]</span> <span class="o">=</span> <span class="n">SpecialFieldNames</span><span class="p">[</span><span class="n">iField</span><span class="p">];</span>
+    <span class="n">paeFieldTypes</span><span class="p">[</span><span class="n">poDefn</span><span class="o">-&gt;</span><span class="n">GetFieldCount</span><span class="p">()</span> <span class="o">+</span> <span class="n">iField</span><span class="p">]</span> <span class="o">=</span> <span class="n">SpecialFieldTypes</span><span class="p">[</span><span class="n">iField</span><span class="p">];</span>
+    <span class="o">++</span><span class="n">iField</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>In ogrfeaturequery.cpp OGRFeatureQueryEvaluator() should be modifyed
+according to the field specific actions like</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">int</span> <span class="n">iSpecialField</span> <span class="o">=</span> <span class="n">op</span><span class="o">-&gt;</span><span class="n">field_index</span> <span class="o">-</span> <span class="n">poFeature</span><span class="o">-&gt;</span><span class="n">GetDefnRef</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetFieldCount</span><span class="p">();</span>
+<span class="k">if</span><span class="p">(</span> <span class="n">iSpecialField</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="n">iSpecialField</span> <span class="o">&lt;</span> <span class="n">SPECIAL_FIELD_COUNT</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">switch</span> <span class="p">(</span> <span class="n">SpecialFieldTypes</span><span class="p">[</span><span class="n">iSpecialField</span><span class="p">]</span> <span class="p">)</span>
+        <span class="p">{</span>
+        <span class="n">case</span> <span class="n">SWQ_INTEGER</span><span class="p">:</span>
+            <span class="n">sField</span><span class="o">.</span><span class="n">Integer</span> <span class="o">=</span> <span class="n">poFeature</span><span class="o">-&gt;</span><span class="n">GetFieldAsInteger</span><span class="p">(</span> <span class="n">op</span><span class="o">-&gt;</span><span class="n">field_index</span> <span class="p">);</span>
+        <span class="n">case</span> <span class="n">SWQ_STRING</span><span class="p">:</span>
+            <span class="n">sField</span><span class="o">.</span><span class="n">String</span> <span class="o">=</span> <span class="p">(</span><span class="n">char</span><span class="o">*</span><span class="p">)</span> <span class="n">poFeature</span><span class="o">-&gt;</span><span class="n">GetFieldAsString</span><span class="p">(</span> <span class="n">op</span><span class="o">-&gt;</span><span class="n">field_index</span> <span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="n">CPLDebug</span><span class="p">(</span> <span class="s2">&quot;OGRFeatureQuery&quot;</span><span class="p">,</span> <span class="s2">&quot;Illegal special field index.&quot;</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">psField</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">sField</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">else</span>
+    <span class="n">psField</span> <span class="o">=</span> <span class="n">poFeature</span><span class="o">-&gt;</span><span class="n">GetRawFieldRef</span><span class="p">(</span> <span class="n">op</span><span class="o">-&gt;</span><span class="n">field_index</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>In ogrfeaturequery.cpp OGRFeatureQuery::FieldCollector should be
+modifyed to add the field names like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="p">(</span> <span class="n">op</span><span class="o">-&gt;</span><span class="n">field_index</span> <span class="o">&gt;=</span> <span class="n">poTargetDefn</span><span class="o">-&gt;</span><span class="n">GetFieldCount</span><span class="p">()</span>
+        <span class="o">&amp;&amp;</span> <span class="n">op</span><span class="o">-&gt;</span><span class="n">field_index</span> <span class="o">&lt;</span> <span class="n">poTargetDefn</span><span class="o">-&gt;</span><span class="n">GetFieldCount</span><span class="p">()</span> <span class="o">+</span> <span class="n">SPECIAL_FIELD_COUNT</span><span class="p">)</span>
+        <span class="n">pszFieldName</span> <span class="o">=</span> <span class="n">SpecialFieldNames</span><span class="p">[</span><span class="n">op</span><span class="o">-&gt;</span><span class="n">field_index</span><span class="p">];</span>
+</pre></div>
+</div>
+<p>In ogrdatasource.cpp ExecuteSQL() will allocate the arrays according to
+the number of the special fields:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sFieldList</span><span class="o">.</span><span class="n">names</span> <span class="o">=</span> <span class="p">(</span><span class="n">char</span> <span class="o">**</span><span class="p">)</span>
+        <span class="n">CPLMalloc</span><span class="p">(</span> <span class="n">sizeof</span><span class="p">(</span><span class="n">char</span> <span class="o">*</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">nFieldCount</span><span class="o">+</span><span class="n">SPECIAL_FIELD_COUNT</span><span class="p">)</span> <span class="p">);</span>
+<span class="n">sFieldList</span><span class="o">.</span><span class="n">types</span> <span class="o">=</span> <span class="p">(</span><span class="n">swq_field_type</span> <span class="o">*</span><span class="p">)</span>
+        <span class="n">CPLMalloc</span><span class="p">(</span> <span class="n">sizeof</span><span class="p">(</span><span class="n">swq_field_type</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">nFieldCount</span><span class="o">+</span><span class="n">SPECIAL_FIELD_COUNT</span><span class="p">)</span> <span class="p">);</span>
+<span class="n">sFieldList</span><span class="o">.</span><span class="n">table_ids</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span> <span class="o">*</span><span class="p">)</span>
+        <span class="n">CPLMalloc</span><span class="p">(</span> <span class="n">sizeof</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">nFieldCount</span><span class="o">+</span><span class="n">SPECIAL_FIELD_COUNT</span><span class="p">)</span> <span class="p">);</span>
+<span class="n">sFieldList</span><span class="o">.</span><span class="n">ids</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span> <span class="o">*</span><span class="p">)</span>
+        <span class="n">CPLMalloc</span><span class="p">(</span> <span class="n">sizeof</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">nFieldCount</span><span class="o">+</span><span class="n">SPECIAL_FIELD_COUNT</span><span class="p">)</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>And the fields will be added as</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="p">(</span><span class="n">iField</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">iField</span> <span class="o">&lt;</span> <span class="n">SPECIAL_FIELD_COUNT</span><span class="p">;</span> <span class="n">iField</span><span class="o">++</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">sFieldList</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="n">sFieldList</span><span class="o">.</span><span class="n">count</span><span class="p">]</span> <span class="o">=</span> <span class="n">SpecialFieldNames</span><span class="p">[</span><span class="n">iField</span><span class="p">];</span>
+    <span class="n">sFieldList</span><span class="o">.</span><span class="n">types</span><span class="p">[</span><span class="n">sFieldList</span><span class="o">.</span><span class="n">count</span><span class="p">]</span> <span class="o">=</span> <span class="n">SpecialFieldTypes</span><span class="p">[</span><span class="n">iField</span><span class="p">];</span>
+    <span class="n">sFieldList</span><span class="o">.</span><span class="n">table_ids</span><span class="p">[</span><span class="n">sFieldList</span><span class="o">.</span><span class="n">count</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">sFieldList</span><span class="o">.</span><span class="n">ids</span><span class="p">[</span><span class="n">sFieldList</span><span class="o">.</span><span class="n">count</span><span class="p">]</span> <span class="o">=</span> <span class="n">nFIDIndex</span> <span class="o">+</span> <span class="n">iField</span><span class="p">;</span>
+    <span class="n">sFieldList</span><span class="o">.</span><span class="n">count</span><span class="o">++</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>For supporting the SQL based queries we should also modify the
+constructor of OGRGenSQLResultsLayer in ogr_gensql.cpp and set the field
+type properly:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">else</span> <span class="k">if</span> <span class="p">(</span> <span class="n">psColDef</span><span class="o">-&gt;</span><span class="n">field_index</span> <span class="o">&gt;=</span> <span class="n">iFIDFieldIndex</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">switch</span> <span class="p">(</span> <span class="n">SpecialFieldTypes</span><span class="p">[</span><span class="n">psColDef</span><span class="o">-&gt;</span><span class="n">field_index</span> <span class="o">-</span> <span class="n">iFIDFieldIndex</span><span class="p">]</span> <span class="p">)</span>
+    <span class="p">{</span>
+    <span class="n">case</span> <span class="n">SWQ_INTEGER</span><span class="p">:</span>
+        <span class="n">oFDefn</span><span class="o">.</span><span class="n">SetType</span><span class="p">(</span> <span class="n">OFTInteger</span> <span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="n">case</span> <span class="n">SWQ_STRING</span><span class="p">:</span>
+        <span class="n">oFDefn</span><span class="o">.</span><span class="n">SetType</span><span class="p">(</span> <span class="n">OFTString</span> <span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="n">case</span> <span class="n">SWQ_FLOAT</span><span class="p">:</span>
+        <span class="n">oFDefn</span><span class="o">.</span><span class="n">SetType</span><span class="p">(</span> <span class="n">OFTReal</span> <span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Some of the queries will require to modify
+OGRGenSQLResultsLayer::PrepareSummary in ogr_gensql.cpp will be
+simplified (GetFieldAsString will be used in all cases to access the
+field values):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pszError</span> <span class="o">=</span> <span class="n">swq_select_summarize</span><span class="p">(</span> <span class="n">psSelectInfo</span><span class="p">,</span> <span class="n">iField</span><span class="p">,</span>
+<span class="n">poSrcFeature</span><span class="o">-&gt;</span><span class="n">GetFieldAsString</span><span class="p">(</span> <span class="n">psColDef</span><span class="o">-&gt;</span><span class="n">field_index</span> <span class="p">)</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>OGRGenSQLResultsLayer::TranslateFeature should also be modifyed when
+copying the fields from primary record to the destination feature</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="k">if</span> <span class="p">(</span> <span class="n">psColDef</span><span class="o">-&gt;</span><span class="n">field_index</span> <span class="o">&gt;=</span> <span class="n">iFIDFieldIndex</span> <span class="o">&amp;&amp;</span>
+            <span class="n">psColDef</span><span class="o">-&gt;</span><span class="n">field_index</span> <span class="o">&lt;</span> <span class="n">iFIDFieldIndex</span> <span class="o">+</span> <span class="n">SPECIAL_FIELD_COUNT</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">switch</span> <span class="p">(</span><span class="n">SpecialFieldTypes</span><span class="p">[</span><span class="n">psColDef</span><span class="o">-&gt;</span><span class="n">field_index</span> <span class="o">-</span> <span class="n">iFIDFieldIndex</span><span class="p">])</span>
+    <span class="p">{</span>
+    <span class="n">case</span> <span class="n">SWQ_INTEGER</span><span class="p">:</span>
+        <span class="n">poDstFeat</span><span class="o">-&gt;</span><span class="n">SetField</span><span class="p">(</span> <span class="n">iField</span><span class="p">,</span> <span class="n">poSrcFeat</span><span class="o">-&gt;</span><span class="n">GetFieldAsInteger</span><span class="p">(</span><span class="n">psColDef</span><span class="o">-&gt;</span><span class="n">field_index</span><span class="p">)</span> <span class="p">);</span>
+    <span class="n">case</span> <span class="n">SWQ_STRING</span><span class="p">:</span>
+        <span class="n">poDstFeat</span><span class="o">-&gt;</span><span class="n">SetField</span><span class="p">(</span> <span class="n">iField</span><span class="p">,</span> <span class="n">poSrcFeat</span><span class="o">-&gt;</span><span class="n">GetFieldAsString</span><span class="p">(</span><span class="n">psColDef</span><span class="o">-&gt;</span><span class="n">field_index</span><span class="p">)</span> <span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>For supporting the ‘order by’ queries we should also modify
+OGRGenSQLResultsLayer::CreateOrderByIndex() as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="p">(</span> <span class="n">psKeyDef</span><span class="o">-&gt;</span><span class="n">field_index</span> <span class="o">&gt;=</span> <span class="n">iFIDFieldIndex</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="n">psKeyDef</span><span class="o">-&gt;</span><span class="n">field_index</span> <span class="o">&lt;</span> <span class="n">iFIDFieldIndex</span> <span class="o">+</span> <span class="n">SPECIAL_FIELD_COUNT</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">switch</span> <span class="p">(</span><span class="n">SpecialFieldTypes</span><span class="p">[</span><span class="n">psKeyDef</span><span class="o">-&gt;</span><span class="n">field_index</span> <span class="o">-</span> <span class="n">iFIDFieldIndex</span><span class="p">])</span>
+        <span class="p">{</span>
+        <span class="n">case</span> <span class="n">SWQ_INTEGER</span><span class="p">:</span>
+            <span class="n">psDstField</span><span class="o">-&gt;</span><span class="n">Integer</span> <span class="o">=</span> <span class="n">poSrcFeat</span><span class="o">-&gt;</span><span class="n">GetFieldAsInteger</span><span class="p">(</span><span class="n">psKeyDef</span><span class="o">-&gt;</span><span class="n">field_index</span><span class="p">);</span>
+        <span class="n">case</span> <span class="n">SWQ_STRING</span><span class="p">:</span>
+            <span class="n">psDstField</span><span class="o">-&gt;</span><span class="n">String</span> <span class="o">=</span> <span class="n">CPLStrdup</span><span class="p">(</span> <span class="n">poSrcFeat</span><span class="o">-&gt;</span><span class="n">GetFieldAsString</span><span class="p">(</span><span class="n">psKeyDef</span><span class="o">-&gt;</span><span class="n">field_index</span><span class="p">)</span> <span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">continue</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>All of the strings allocated previously should be deallocated later in
+the same function as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="p">(</span> <span class="n">psKeyDef</span><span class="o">-&gt;</span><span class="n">field_index</span> <span class="o">&gt;=</span> <span class="n">iFIDFieldIndex</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="o">/*</span> <span class="n">warning</span><span class="p">:</span> <span class="n">only</span> <span class="n">special</span> <span class="n">fields</span> <span class="n">of</span> <span class="nb">type</span> <span class="n">string</span> <span class="n">should</span> <span class="n">be</span> <span class="n">deallocated</span> <span class="o">*/</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">SpecialFieldTypes</span><span class="p">[</span><span class="n">psKeyDef</span><span class="o">-&gt;</span><span class="n">field_index</span> <span class="o">-</span> <span class="n">iFIDFieldIndex</span><span class="p">]</span> <span class="o">==</span> <span class="n">SWQ_STRING</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">for</span><span class="p">(</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nIndexSize</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">OGRField</span> <span class="o">*</span><span class="n">psField</span> <span class="o">=</span> <span class="n">pasIndexFields</span> <span class="o">+</span> <span class="n">iKey</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">nOrderItems</span><span class="p">;</span>
+            <span class="n">CPLFree</span><span class="p">(</span> <span class="n">psField</span><span class="o">-&gt;</span><span class="n">String</span> <span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">continue</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>When ordering by the field values the OGRGenSQLResultsLayer::Compare
+should also be modifyed:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="p">(</span> <span class="n">psKeyDef</span><span class="o">-&gt;</span><span class="n">field_index</span> <span class="o">&gt;=</span> <span class="n">iFIDFieldIndex</span> <span class="p">)</span>
+    <span class="n">poFDefn</span> <span class="o">=</span> <span class="n">NULL</span><span class="p">;</span>
+<span class="k">else</span>
+    <span class="n">poFDefn</span> <span class="o">=</span> <span class="n">poSrcLayer</span><span class="o">-&gt;</span><span class="n">GetLayerDefn</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetFieldDefn</span><span class="p">(</span>
+        <span class="n">psKeyDef</span><span class="o">-&gt;</span><span class="n">field_index</span> <span class="p">);</span>
+
+<span class="k">if</span><span class="p">(</span> <span class="p">(</span><span class="n">pasFirstTuple</span><span class="p">[</span><span class="n">iKey</span><span class="p">]</span><span class="o">.</span><span class="n">Set</span><span class="o">.</span><span class="n">nMarker1</span> <span class="o">==</span> <span class="n">OGRUnsetMarker</span>
+        <span class="o">&amp;&amp;</span> <span class="n">pasFirstTuple</span><span class="p">[</span><span class="n">iKey</span><span class="p">]</span><span class="o">.</span><span class="n">Set</span><span class="o">.</span><span class="n">nMarker2</span> <span class="o">==</span> <span class="n">OGRUnsetMarker</span><span class="p">)</span>
+    <span class="o">||</span> <span class="p">(</span><span class="n">pasSecondTuple</span><span class="p">[</span><span class="n">iKey</span><span class="p">]</span><span class="o">.</span><span class="n">Set</span><span class="o">.</span><span class="n">nMarker1</span> <span class="o">==</span> <span class="n">OGRUnsetMarker</span>
+        <span class="o">&amp;&amp;</span> <span class="n">pasSecondTuple</span><span class="p">[</span><span class="n">iKey</span><span class="p">]</span><span class="o">.</span><span class="n">Set</span><span class="o">.</span><span class="n">nMarker2</span> <span class="o">==</span> <span class="n">OGRUnsetMarker</span><span class="p">)</span> <span class="p">)</span>
+    <span class="n">nResult</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="k">else</span> <span class="k">if</span> <span class="p">(</span> <span class="n">poFDefn</span> <span class="o">==</span> <span class="n">NULL</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">switch</span> <span class="p">(</span><span class="n">SpecialFieldTypes</span><span class="p">[</span><span class="n">psKeyDef</span><span class="o">-&gt;</span><span class="n">field_index</span> <span class="o">-</span> <span class="n">iFIDFieldIndex</span><span class="p">])</span>
+    <span class="p">{</span>
+    <span class="n">case</span> <span class="n">SWQ_INTEGER</span><span class="p">:</span>
+        <span class="k">if</span><span class="p">(</span> <span class="n">pasFirstTuple</span><span class="p">[</span><span class="n">iKey</span><span class="p">]</span><span class="o">.</span><span class="n">Integer</span> <span class="o">&lt;</span> <span class="n">pasSecondTuple</span><span class="p">[</span><span class="n">iKey</span><span class="p">]</span><span class="o">.</span><span class="n">Integer</span> <span class="p">)</span>
+            <span class="n">nResult</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+        <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="n">pasFirstTuple</span><span class="p">[</span><span class="n">iKey</span><span class="p">]</span><span class="o">.</span><span class="n">Integer</span> <span class="o">&gt;</span> <span class="n">pasSecondTuple</span><span class="p">[</span><span class="n">iKey</span><span class="p">]</span><span class="o">.</span><span class="n">Integer</span> <span class="p">)</span>
+            <span class="n">nResult</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="n">case</span> <span class="n">SWQ_STRING</span><span class="p">:</span>
+        <span class="n">nResult</span> <span class="o">=</span> <span class="n">strcmp</span><span class="p">(</span><span class="n">pasFirstTuple</span><span class="p">[</span><span class="n">iKey</span><span class="p">]</span><span class="o">.</span><span class="n">String</span><span class="p">,</span>
+                        <span class="n">pasSecondTuple</span><span class="p">[</span><span class="n">iKey</span><span class="p">]</span><span class="o">.</span><span class="n">String</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="adding-new-special-fields">
+<h2>Adding New Special Fields<a class="headerlink" href="#adding-new-special-fields" title="Permalink to this headline">¶</a></h2>
+<p>Adding a new special field in a subsequent development phase is fairly
+straightforward and the following steps should be made:</p>
+<ol class="arabic simple">
+<li><p>In ogr_p.h a new constant should be added with the value of the
+SPECIAL_FIELD_COUNT and SPECIAL_FIELD_COUNT should be incremented by
+one.</p></li>
+<li><p>In ogrfeaturequery.cpp the special field string and the type should
+be added to SpecialFieldNames and SpecialFieldTypes respectively</p></li>
+<li><p>The field value accessors (OGRFeature::GetFieldAsString,
+OGRFeature::GetFieldAsInteger, OGRFeature::GetFieldAsDouble) should
+be modifyed to provide the value of the new special field. All of
+these functions provide const return values so GetFieldAsString
+should retain the value in the m_pszTmpFieldValue member.</p></li>
+<li><p>When adding a new value with a type other than SWQ_INTEGER and
+SWQ_STRING the following functions might also be modified
+accordingly:</p></li>
+</ol>
+<ul class="simple">
+<li><p>OGRGenSQLResultsLayer::OGRGenSQLResultsLayer</p></li>
+<li><p>OGRGenSQLResultsLayer::TranslateFeature</p></li>
+<li><p>OGRGenSQLResultsLayer::CreateOrderByIndex</p></li>
+<li><p>OGRGenSQLResultsLayer::Compare</p></li>
+<li><p>OGRFeatureQueryEvaluator</p></li>
+</ul>
+</div>
+<div class="section" id="backward-compatibility">
+<h2>Backward Compatibility<a class="headerlink" href="#backward-compatibility" title="Permalink to this headline">¶</a></h2>
+<p>In most cases the backward compatibility of the OGR library will be
+retained. However the special fields will potentially conflict with
+regard fields with the given names. When accessing the field values the
+special fields will take pecedence over the other fields with the same
+names.</p>
+<p>When using OGRFeature::GetFieldAsString the returned value will be
+stored as a member variable instead of a static variable. The string
+will be deallocated and will no longer be usable after the destruction
+of the feature.</p>
+</div>
+<div class="section" id="regression-testing">
+<h2>Regression Testing<a class="headerlink" href="#regression-testing" title="Permalink to this headline">¶</a></h2>
+<p>A new gdalautotest/ogr/ogr_sqlspecials.py script to test support for all
+special fields in the ExecuteSQL() call and with WHERE clauses.</p>
+</div>
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<p>The OGR SQL document will be updated to reflect the support for special
+fields.</p>
+</div>
+<div class="section" id="implementation-staffing">
+<h2>Implementation Staffing<a class="headerlink" href="#implementation-staffing" title="Permalink to this headline">¶</a></h2>
+<p>Tamas Szekeres will implement the bulk of the RFC in time for GDAL/OGR
+1.4.0.</p>
+<p>Frank Warmerdam will consider how the backward compatibility issues
+(with special regard to the modified lifespan of the GetFieldAsString
+returned value) will affect the other parts of the OGR project and will
+write the Python regression testing script.</p>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Tracking bug for this feature (containing all of the proposed code
+changes): #1333</p></li>
+<li><p>MapServer related bugs:</p>
+<ul>
+<li><p><a class="reference external" href="http://trac.osgeo.org/mapserver/ticket/1129">1129</a></p></li>
+<li><p><a class="reference external" href="http://trac.osgeo.org/mapserver/ticket/1438">1438</a></p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="voting-history">
+<h2>Voting History<a class="headerlink" href="#voting-history" title="Permalink to this headline">¶</a></h2>
+<p>Frank Warmerdam +1</p>
+<p>Daniel Morissette +1</p>
+<p>Howard Butler +0</p>
+<p>Andrey Kiselev +1</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rfc7_vsilapi.html" class="btn btn-neutral float-right" title="RFC 7: Use VSILFILE for VSI*L Functions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc5_unicode.html" class="btn btn-neutral float-left" title="RFC 5: Unicode support in GDAL" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

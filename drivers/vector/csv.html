@@ -1,0 +1,768 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Comma Separated Value (.csv) &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdrivers/vector/csv.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="CSW - OGC CSW (Catalog Service for the Web)" href="csw.html" />
+    <link rel="prev" title="CouchDB - CouchDB/GeoCouch" href="couchdb.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Vector drivers</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="aeronavfaa.html">Aeronav FAA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="amigocloud.html">AmigoCloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ao.html">ESRI ArcObjects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arcgen.html">ARCGEN - Arc/Info Generate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="avcbin.html">Arc/Info Binary Coverage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="avce00.html">Arc/Info E00 (ASCII) Coverage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bna.html">BNA - Atlas BNA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cad.html">CAD – AutoCAD DWG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="carto.html">Carto</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cloudant.html">Cloudant – Cloudant</a></li>
+<li class="toctree-l2"><a class="reference internal" href="couchdb.html">CouchDB - CouchDB/GeoCouch</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Comma Separated Value (.csv)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#driver-capabilities">Driver capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#format">Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reading-csv-containing-spatial-information">Reading CSV containing spatial information</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#building-point-geometries">Building point geometries</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#building-line-geometries">Building line geometries</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#open-options">Open options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#creation-issues">Creation Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vsi-virtual-file-system-api-support">VSI Virtual File System API support</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#particular-datasources">Particular datasources</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#other-notes">Other Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="csw.html">CSW - OGC CSW (Catalog Service for the Web)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="db2.html">DB2 Spatial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dgn.html">Microstation DGN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dgnv8.html">Microstation DGN v8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dods.html">DODS/OPeNDAP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dwg.html">AutoCAD DWG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dxf.html">AutoCAD DXF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eeda.html">Google Earth Engine Data API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="edigeo.html">EDIGEO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elasticsearch.html">Elasticsearch: Geographically Encoded Objects for Elasticsearch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="esrijson.html">ESRIJSON / FeatureService driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filegdb.html">ESRI File Geodatabase (FileGDB)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flatgeobuf.html">FlatGeobuf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fme.html">FMEObjects Gateway</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoconcept.html">GeoConcept text export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geojson.html">GeoJSON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geojsonseq.html">GeoJSONSeq: sequence of GeoJSON features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomedia.html">Geomedia MDB database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="georss.html">GeoRSS : Geographically Encoded Objects for RSS feeds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gmlas.html">GMLAS - Geography Markup Language (GML) driven by application schemas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gml.html">GML - Geography Markup Language</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gmt.html">GMT ASCII Vectors (.gmt)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpkg.html">GPKG – GeoPackage vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpsbabel.html">GPSBabel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpx.html">GPX - GPS Exchange Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grass.html">GRASS Vector Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gtm.html">GTM - GPS TrackMaker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="htf.html">HTF - Hydrographic Transfer Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="idb.html">IDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="idrisi.html">Idrisi Vector (.VCT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ili.html">“INTERLIS 1” and “INTERLIS 2” drivers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingres.html">INGRES</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jml.html">JML: OpenJUMP JML format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kml.html">KML - Keyhole Markup Language</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libkml.html">LIBKML Driver (.kml .kmz)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mapml.html">MapML</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mdb.html">Access MDB databases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="memory.html">Memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mitab.html">MapInfo TAB and MIF/MID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mongodb.html">MongoDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mongodbv3.html">MongoDBv3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mssqlspatial.html">MSSQLSpatial - Microsoft SQL Server Spatial Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mvt.html">MVT: Mapbox Vector Tiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mysql.html">MySQL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nas.html">NAS - ALKIS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="netcdf.html">NetCDF: Network Common Data Form - Vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ngw.html">NGW – NextGIS Web</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ntf.html">UK .NTF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="oapif.html">OGC API - Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="oci.html">Oracle Spatial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="odbc.html">ODBC RDBMS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ods.html">ODS - Open Document Spreadsheet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ogdi.html">OGDI Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="openair.html">OpenAir - OpenAir Special Use Airspace Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="openfilegdb.html">ESRI File Geodatabase (OpenFileGDB)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="osm.html">OSM - OpenStreetMap XML and PBF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pdf.html">PDF – Geospatial PDF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pds.html">PDS - Planetary Data Systems TABLE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pgdump.html">PostgreSQL SQL Dump</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pgeo.html">ESRI Personal GeoDatabase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pg.html">PostgreSQL / PostGIS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plscenes.html">PLScenes (Planet Labs Scenes/Catalog API)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s57.html">IHO S-57 (ENC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sde.html">ESRI ArcSDE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sdts.html">SDTS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="segukooa.html">SEG-P1 / UKOOA P1/90</a></li>
+<li class="toctree-l2"><a class="reference internal" href="segy.html">SEG-Y / SEGY</a></li>
+<li class="toctree-l2"><a class="reference internal" href="selafin.html">Selafin files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shapefile.html">ESRI Shapefile / DBF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sosi.html">Norwegian SOSI Standard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sqlite.html">SQLite / Spatialite RDBMS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sua.html">SUA - Tim Newport-Peace’s Special Use Airspace Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="svg.html">SVG - Scalable Vector Graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sxf.html">Storage and eXchange Format - SXF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiger.html">U.S. Census TIGER/Line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="topojson.html">TopoJSON driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vdv.html">VDV - VDV-451/VDV-452/INTREST Data Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vfk.html">VFK - Czech Cadastral Exchange Data Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vrt.html">VRT – Virtual Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="walk.html">Walk - Walk Spatial Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wasp.html">WAsP - WAsP .map format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wfs.html">WFS - OGC WFS service</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xls.html">XLS - MS Excel format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xlsx.html">XLSX - MS Office Open XML spreadsheet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xplane.html">X-Plane/Flightgear aeronautical data</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Vector drivers</a> &raquo;</li>
+      
+      <li>Comma Separated Value (.csv)</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/drivers/vector/csv.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="csw.html" class="btn btn-neutral float-right" title="CSW - OGC CSW (Catalog Service for the Web)" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="couchdb.html" class="btn btn-neutral float-left" title="CouchDB - CouchDB/GeoCouch" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="comma-separated-value-csv">
+<span id="vector-csv"></span><h1>Comma Separated Value (.csv)<a class="headerlink" href="#comma-separated-value-csv" title="Permalink to this headline">¶</a></h1>
+<div class="admonition shortname" id="shortname-0">
+<p class="admonition-title">Driver short name</p>
+<p>CSV</p>
+</div>
+<div class="admonition built_in_by_default" id="built_in_by_default-0">
+<p class="admonition-title">Driver built-in by default</p>
+<p>This driver is built-in by default</p>
+</div>
+<p>OGR supports reading and writing primarily non-spatial tabular data
+stored in text CSV files. CSV files are a common interchange format
+between software packages supporting tabular data and are also easily
+produced manually with a text editor or with end-user written scripts or
+programs.</p>
+<p>While in theory .csv files could have any extension, in order to
+auto-recognise the format OGR only supports CSV files ending with the
+extension “.csv”. The datasource name may be either a single CSV file or
+point to a directory. For a directory to be recognised as a .csv
+datasource at least half the files in the directory need to have the
+extension .csv. One layer (table) is produced from each .csv file
+accessed.</p>
+<p>Starting with GDAL 1.8.0, for files structured as CSV, but not ending
+with .CSV extension, the ‘CSV:’ prefix can be added before the filename
+to force loading by the CSV driver.</p>
+<p>The OGR CSV driver supports reading and writing. Because the CSV format
+has variable length text lines, reading is done sequentially. Reading
+features in random order will generally be very slow. OGR CSV layer
+might have a coordinate system stored in a .prj file (see GeoCSV
+specification). When reading a field named “WKT” is assumed to contain
+WKT geometry, but also is treated as a regular field. The OGR CSV driver
+returns all attribute columns as string data types if no field type
+information file (with .csvt extension) is available.</p>
+<p>Limited type recognition can be done for Integer, Real, String, Date
+(YYYY-MM-DD), Time (HH:MM:SS+nn), DateTime (YYYY-MM-DD HH:MM:SS+nn)
+columns through a descriptive file with the same name as the CSV file,
+but a .csvt extension. In a single line the types for each column have
+to be listed with double quotes and be comma separated (e.g.,
+“Integer”,”String”). It is also possible to specify explicitly the width
+and precision of each column, e.g.
+“Integer(5)”,”Real(10.7)”,”String(15)”. The driver will then use these
+types as specified for the csv columns. Starting with GDAL 2.0, subtypes
+can be passed between parenthesis, such as “Integer(Boolean)”,
+“Integer(Int16)” and “Real(Float32)”. Starting with GDAL 2.1,
+accordingly with the <a class="reference external" href="http://giswiki.hsr.ch/GeoCSV">GeoCSV
+specification</a>, the “CoordX” or
+“Point(X)” type can be used to specify a column with longitude/easting
+values, “CoordY” or “Point(Y)” for latitude/northing values and “WKT”
+for geometries encoded in WKT</p>
+<p>Starting with GDAL 2.2, the “JSonStringList”, “JSonIntegerList”,
+“JSonInteger64List” and “JSonRealList” types can be used in .csvt to map
+to the corresponding OGR StringList, IntegerList, Integer64List and
+RealList types. The field values are then encoded as JSon arrays, with
+proper CSV escaping.</p>
+<p>Starting with GDAL 2.0, automatic field type guessing can also be done
+if specifying the open options described in the below “Open options”
+section.</p>
+<div class="section" id="driver-capabilities">
+<h2>Driver capabilities<a class="headerlink" href="#driver-capabilities" title="Permalink to this headline">¶</a></h2>
+<div class="admonition supports_create" id="supports_create-0">
+<p class="admonition-title">Supports Create()</p>
+<p>This driver supports the <a class="reference internal" href="../../api/gdaldriver_cpp.html#_CPPv4N10GDALDriver6CreateEPKciii12GDALDataTypePPc" title="GDALDriver::Create"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDriver::Create()</span></code></a> operation</p>
+</div>
+<div class="admonition supports_georeferencing" id="supports_georeferencing-0">
+<p class="admonition-title">Supports Georeferencing</p>
+<p>This driver supports georeferencing</p>
+</div>
+<div class="admonition supports_virtualio" id="supports_virtualio-0">
+<p class="admonition-title">Supports VirtualIO</p>
+<p>This driver supports <a class="reference internal" href="../../user/virtual_file_systems.html#virtual-file-systems"><span class="std std-ref">virtual I/O operations (/vsimem/, etc.)</span></a></p>
+</div>
+</div>
+<div class="section" id="format">
+<h2>Format<a class="headerlink" href="#format" title="Permalink to this headline">¶</a></h2>
+<p>CSV files have one line for each feature (record) in the layer (table).
+The attribute field values are separated by commas. At least two fields
+per line must be present. Lines may be terminated by a DOS (CR/LF) or
+Unix (LF) style line terminators. Each record should have the same
+number of fields. The driver will also accept a semicolon, a tabulation
+or a space (GDAL &gt;= 2.0 for the later) character as field separator .
+This autodetection will work only if there’s no other potential
+separator on the first line of the CSV file. Otherwise it will default
+to comma as separator.</p>
+<p>Complex attribute values (such as those containing commas, quotes or
+newlines) may be placed in double quotes. Any occurrences of double
+quotes within the quoted string should be doubled up to “escape” them.</p>
+<p>By default, the driver attempts to treat the first line of the file as a
+list of field names for all the fields. However, if one or more of the
+names is all numeric it is assumed that the first line is actually data
+values and dummy field names are generated internally (field_1 through
+field_n) and the first record is treated as a feature. Starting with
+GDAL 1.9.0 numeric values are treated as field names if they are
+enclosed in double quotes. Starting with GDAL 2.1, this behavior can be
+modified via the HEADERS open option.</p>
+<p>All CSV files are treated as UTF-8 encoded. Starting with GDAL 1.9.0, a
+Byte Order Mark (BOM) at the beginning of the file will be parsed
+correctly. From 1.9.2, The option WRITE_BOM can be used to create a file
+with a Byte Order Mark, which can improve compatibility with some
+software (particularly Excel).</p>
+<p>Example (employee.csv):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ID</span><span class="p">,</span><span class="n">Salary</span><span class="p">,</span><span class="n">Name</span><span class="p">,</span><span class="n">Comments</span>
+<span class="mi">132</span><span class="p">,</span><span class="mf">55000.0</span><span class="p">,</span><span class="n">John</span> <span class="n">Walker</span><span class="p">,</span><span class="s2">&quot;The &quot;&quot;big&quot;&quot; cheese.&quot;</span>
+<span class="mi">133</span><span class="p">,</span><span class="mf">11000.0</span><span class="p">,</span><span class="n">Jane</span> <span class="n">Lake</span><span class="p">,</span><span class="n">Cleaning</span> <span class="n">Staff</span>
+</pre></div>
+</div>
+<p>Note that the Comments value for the first data record is placed in
+double quotes because the value contains quotes, and those quotes have
+to be doubled up so we know we haven’t reached the end of the quoted
+string yet.</p>
+<p>Many variations of textual input are sometimes called Comma Separated
+Value files, including files without commas, but fixed column widths,
+those using tabs as separators or those with other auxiliary data
+defining field types or structure. This driver does not attempt to
+support all such files, but instead to support simple .csv files that
+can be auto-recognised. Scripts or other mechanisms can generally be
+used to convert other variations into a form that is compatible with the
+OGR CSV driver.</p>
+</div>
+<div class="section" id="reading-csv-containing-spatial-information">
+<h2>Reading CSV containing spatial information<a class="headerlink" href="#reading-csv-containing-spatial-information" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="building-point-geometries">
+<h3>Building point geometries<a class="headerlink" href="#building-point-geometries" title="Permalink to this headline">¶</a></h3>
+<p>Consider the following CSV file (test.csv):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Latitude</span><span class="p">,</span><span class="n">Longitude</span><span class="p">,</span><span class="n">Name</span>
+<span class="mf">48.1</span><span class="p">,</span><span class="mf">0.25</span><span class="p">,</span><span class="s2">&quot;First point&quot;</span>
+<span class="mf">49.2</span><span class="p">,</span><span class="mf">1.1</span><span class="p">,</span><span class="s2">&quot;Second point&quot;</span>
+<span class="mf">47.5</span><span class="p">,</span><span class="mf">0.75</span><span class="p">,</span><span class="s2">&quot;Third point&quot;</span>
+</pre></div>
+</div>
+<p>Starting with GDAL 2.1, it is possible to directly specify the potential
+names of the columns that can contain X/longitude and Y/latitude with
+the X_POSSIBLE_NAMES and Y_POSSIBLE_NAMES open option.</p>
+<p><em>ogrinfo -ro -al test.csv -oo X_POSSIBLE_NAMES=Lon* -oo
+Y_POSSIBLE_NAMES=Lat* -oo KEEP_GEOM_COLUMNS=NO</em> will return :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">OGRFeature</span><span class="p">(</span><span class="n">test</span><span class="p">):</span><span class="mi">1</span>
+  <span class="n">Name</span> <span class="p">(</span><span class="n">String</span><span class="p">)</span> <span class="o">=</span> <span class="n">First</span> <span class="n">point</span>
+  <span class="n">POINT</span> <span class="p">(</span><span class="mf">0.25</span> <span class="mf">48.1</span><span class="p">)</span>
+
+<span class="n">OGRFeature</span><span class="p">(</span><span class="n">test</span><span class="p">):</span><span class="mi">2</span>
+  <span class="n">Name</span> <span class="p">(</span><span class="n">String</span><span class="p">)</span> <span class="o">=</span> <span class="n">Second</span> <span class="n">point</span>
+  <span class="n">POINT</span> <span class="p">(</span><span class="mf">1.1</span> <span class="mf">49.2</span><span class="p">)</span>
+
+<span class="n">OGRFeature</span><span class="p">(</span><span class="n">test</span><span class="p">):</span><span class="mi">3</span>
+  <span class="n">Name</span> <span class="p">(</span><span class="n">String</span><span class="p">)</span> <span class="o">=</span> <span class="n">Third</span> <span class="n">point</span>
+  <span class="n">POINT</span> <span class="p">(</span><span class="mf">0.75</span> <span class="mf">47.5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If CSV file does not have a header line the dummy “field_n” names can be
+used as possible names for coordinate fieds. For example plain XYZ point
+data can be opened as</p>
+<p><em>ogrinfo -ro -al elevation.xyz -oo X_POSSIBLE_NAMES=field_1 -oo
+Y_POSSIBLE_NAMES=field_2 -oo Z_POSSIBLE_NAMES=field_3</em></p>
+<p>Otherwise, if one or several columns contain a geometry definition
+encoded as WKT, WKB (encoded in hexadecimal) or GeoJSON (in which case
+the GeoJSON content must be formatted to follow CSV rules, that is to
+say it must be surrounded by double-quotes, and double-quotes inside the
+string must be repeated for proper escaping), the name of such column(s)
+the GEOM_POSSIBLE_NAMES open option.</p>
+<p>For older versions, it is possible to extract spatial information
+(points) from a CSV file which has columns for the X and Y coordinates,
+through the use of the <a class="reference internal" href="vrt.html#vector-vrt"><span class="std std-ref">VRT</span></a> driver.</p>
+<p>You can write the associated VRT file (test.vrt):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">OGRVRTDataSource</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">OGRVRTLayer</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;test&quot;</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="n">SrcDataSource</span><span class="o">&gt;</span><span class="n">test</span><span class="o">.</span><span class="n">csv</span><span class="o">&lt;/</span><span class="n">SrcDataSource</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="n">GeometryType</span><span class="o">&gt;</span><span class="n">wkbPoint</span><span class="o">&lt;/</span><span class="n">GeometryType</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="n">LayerSRS</span><span class="o">&gt;</span><span class="n">WGS84</span><span class="o">&lt;/</span><span class="n">LayerSRS</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="n">GeometryField</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;PointFromColumns&quot;</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;Longitude&quot;</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;Latitude&quot;</span><span class="o">/&gt;</span>
+    <span class="o">&lt;/</span><span class="n">OGRVRTLayer</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">OGRVRTDataSource</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>and <em>ogrinfo -ro -al test.vrt</em> will return :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">OGRFeature</span><span class="p">(</span><span class="n">test</span><span class="p">):</span><span class="mi">1</span>
+  <span class="n">Latitude</span> <span class="p">(</span><span class="n">String</span><span class="p">)</span> <span class="o">=</span> <span class="mf">48.1</span>
+  <span class="n">Longitude</span> <span class="p">(</span><span class="n">String</span><span class="p">)</span> <span class="o">=</span> <span class="mf">0.25</span>
+  <span class="n">Name</span> <span class="p">(</span><span class="n">String</span><span class="p">)</span> <span class="o">=</span> <span class="n">First</span> <span class="n">point</span>
+  <span class="n">POINT</span> <span class="p">(</span><span class="mf">0.25</span> <span class="mf">48.1</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="n">OGRFeature</span><span class="p">(</span><span class="n">test</span><span class="p">):</span><span class="mi">2</span>
+  <span class="n">Latitude</span> <span class="p">(</span><span class="n">String</span><span class="p">)</span> <span class="o">=</span> <span class="mf">49.2</span>
+  <span class="n">Longitude</span> <span class="p">(</span><span class="n">String</span><span class="p">)</span> <span class="o">=</span> <span class="mf">1.1</span>
+  <span class="n">Name</span> <span class="p">(</span><span class="n">String</span><span class="p">)</span> <span class="o">=</span> <span class="n">Second</span> <span class="n">point</span>
+  <span class="n">POINT</span> <span class="p">(</span><span class="mf">1.1</span> <span class="mf">49.200000000000003</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="n">OGRFeature</span><span class="p">(</span><span class="n">test</span><span class="p">):</span><span class="mi">3</span>
+  <span class="n">Latitude</span> <span class="p">(</span><span class="n">String</span><span class="p">)</span> <span class="o">=</span> <span class="mf">47.5</span>
+  <span class="n">Longitude</span> <span class="p">(</span><span class="n">String</span><span class="p">)</span> <span class="o">=</span> <span class="mf">0.75</span>
+  <span class="n">Name</span> <span class="p">(</span><span class="n">String</span><span class="p">)</span> <span class="o">=</span> <span class="n">Third</span> <span class="n">point</span>
+  <span class="n">POINT</span> <span class="p">(</span><span class="mf">0.75</span> <span class="mf">47.5</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="building-line-geometries">
+<h3>Building line geometries<a class="headerlink" href="#building-line-geometries" title="Permalink to this headline">¶</a></h3>
+<p>Consider the following CSV file (test.csv):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">way_id</span><span class="p">,</span><span class="n">pt_id</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span>
+<span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">49</span>
+<span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">50</span>
+<span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">49</span>
+<span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">50</span>
+</pre></div>
+</div>
+<p>With a GDAL build with Spatialite enabled, <em>ogrinfo test.csv -dialect
+SQLite -sql “SELECT way_id, MakeLine(MakePoint(CAST(x AS float),CAST(y
+AS float))) FROM test GROUP BY way_id”</em> will return :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">OGRFeature</span><span class="p">(</span><span class="n">SELECT</span><span class="p">):</span><span class="mi">0</span>
+  <span class="n">way_id</span> <span class="p">(</span><span class="n">String</span><span class="p">)</span> <span class="o">=</span> <span class="mi">1</span>
+  <span class="n">LINESTRING</span> <span class="p">(</span><span class="mi">2</span> <span class="mi">49</span><span class="p">,</span><span class="mi">3</span> <span class="mi">50</span><span class="p">)</span>
+
+<span class="n">OGRFeature</span><span class="p">(</span><span class="n">SELECT</span><span class="p">):</span><span class="mi">1</span>
+  <span class="n">way_id</span> <span class="p">(</span><span class="n">String</span><span class="p">)</span> <span class="o">=</span> <span class="mi">2</span>
+  <span class="n">LINESTRING</span> <span class="p">(</span><span class="o">-</span><span class="mi">2</span> <span class="mi">49</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span> <span class="mi">50</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="open-options">
+<h2>Open options<a class="headerlink" href="#open-options" title="Permalink to this headline">¶</a></h2>
+<p>Starting with GDAL 2.0, the following open options can be specified
+(typically with the -oo name=value parameters of ogrinfo or ogr2ogr):</p>
+<ul class="simple">
+<li><p><strong>MERGE_SEPARATOR</strong>=YES/NO (defaults to NO). Setting it to YES will
+enable merging consecutive separators. Mostly useful when it is the
+space character.</p></li>
+<li><p><strong>AUTODETECT_TYPE</strong>=YES/NO (defaults to NO). Setting it to YES will
+enable auto-detection of field data types. If while reading the
+records (beyond the records used for autodetection), a value is found
+to not correspond to the autodetected data type, a warning will be
+emitted and the field will be emptied.</p></li>
+<li><p><strong>KEEP_SOURCE_COLUMNS</strong>=YES/NO (default NO) keep a copy of the
+original columns where the guessing is active, and the guessed type
+is different from string. The name of the original columns will be
+suffixed with “_original”. This flag should be used only when
+AUTODETECT_TYPE=YES.</p></li>
+<li><p><strong>AUTODETECT_WIDTH</strong>=YES/NO/STRING_ONLY (defaults to NO). Setting
+it to YES to detect the width of string and integer fields, and the
+width and precision of real fields. Setting it to STRING_ONLY
+restricts to string fields. Setting it to NO select default size and
+width. If while reading the records (beyond the records used for
+autodetection), a value is found to not correspond to the
+autodetected width/precision, a warning will be emitted and the field
+will be emptied.</p></li>
+<li><p><strong>AUTODETECT_SIZE_LIMIT</strong>=size to specify the number of bytes to
+inspect to determine the data type and width/precision. The default
+will be 100000. Setting 0 means inspecting the whole file. Note :
+specifying a value over 1 MB (or 0 if the file is larger than 1MB)
+will prevent reading from standard input.</p></li>
+<li><p><strong>QUOTED_FIELDS_AS_STRING</strong>=YES/NO (default NO). Only used if
+AUTODETECT_TYPE=YES. Whether to enforce quoted fields as string
+fields when set to YES. Otherwise, by default, the content of quoted
+fields will be tested for real, integer, etc… data types.</p></li>
+<li><p><strong>X_POSSIBLE_NAMES</strong>=list_of_names. (GDAL &gt;= 2.1) Comma separated
+list of possible names for X/longitude coordinate of a point. Each
+name might be a pattern using the star character in starting and/or
+ending position. E.g.: prefix*, *suffix or *middle*. The values in
+the column must be floating point values. X_POSSIBLE_NAMES and
+Y_POSSIBLE_NAMES must be both specified and a matching for each must
+be found in the columns of the CSV file. Only one geometry column per
+layer might be built when using X_POSSIBLE_NAMES/Y_POSSIBLE_NAMES.</p></li>
+<li><p><strong>Y_POSSIBLE_NAMES</strong>=list_of_names. (GDAL &gt;= 2.1) Comma separated
+list of possible names for Y/latitude coordinate of a point. Each
+name might be a pattern using the star character in starting and/or
+ending position. E.g.: prefix*, *suffix or *middle*. The values in
+the column must be floating point values. X_POSSIBLE_NAMES and
+Y_POSSIBLE_NAMES must be both specified and a matching for each must
+be found in the columns of the CSV file.</p></li>
+<li><p><strong>Z_POSSIBLE_NAMES</strong>=list_of_names. (GDAL &gt;= 2.1) Comma separated
+list of possible names for Z/elevation coordinate of a point. Each
+name might be a pattern using the star character in starting and/or
+ending position. E.g.: prefix*, *suffix or *middle*. The values in
+the column must be floating point values. Only taken into account in
+combination with X_POSSIBLE_NAMES and Y_POSSIBLE_NAMES.</p></li>
+<li><p><strong>GEOM_POSSIBLE_NAMES</strong>=list_of_names. (GDAL &gt;= 2.1) Comma
+separated list of possible names for geometry columns that contain
+geometry definitions encoded as WKT, WKB (in hexadecimal form,
+potentially in PostGIS 2.0 extended WKB) or GeoJSON. Each name might
+be a pattern using the star character in starting and/or ending
+position. E.g.: prefix*, *suffix or *middle*</p></li>
+<li><p><strong>KEEP_GEOM_COLUMNS</strong>=YES/NO (default YES) Expose the detected
+X,Y,Z or geometry columns as regular attribute fields.</p></li>
+<li><p><strong>HEADERS</strong>=YES/NO/AUTO (default AUTO) (GDAL &gt;= 2.1) Whether the
+first line of the file contains column names or not. When set to
+AUTO, GDAL will assume the first line is column names if none of the
+values are strictly numeric.</p></li>
+<li><p><strong>EMPTY_STRING_AS_NULL</strong>=YES/NO (default NO) (GDAL &gt;= 2.1) Whether
+to consider empty strings as null fields on reading’.</p></li>
+</ul>
+</div>
+<div class="section" id="creation-issues">
+<h2>Creation Issues<a class="headerlink" href="#creation-issues" title="Permalink to this headline">¶</a></h2>
+<p>The driver supports creating new databases (as a directory of .csv
+files), adding new .csv files to an existing directory or .csv files or
+appending features to an existing .csv table. Starting with GDAL 2.1,
+deleting or replacing existing features, or adding/modifying/deleting
+fields is supported, provided the modifications done are small enough to
+be stored in RAM temporarily before flushing to disk.</p>
+<p>Layer Creation options:</p>
+<ul class="simple">
+<li><p><strong>LINEFORMAT</strong>: By default when creating new .csv files they are
+created with the line termination conventions of the local platform
+(CR/LF on win32 or LF on all other systems). This may be overridden
+through use of the LINEFORMAT layer creation option which may have a
+value of <strong>CRLF</strong> (DOS format) or <strong>LF</strong> (Unix format).</p></li>
+<li><p><strong>GEOMETRY</strong> (Starting with GDAL 1.6.0): By default, the geometry of
+a feature written to a .csv file is discarded. It is possible to
+export the geometry in its WKT representation by specifying
+GEOMETRY=<strong>AS_WKT</strong>. It is also possible to export point geometries
+into their X,Y,Z components (different columns in the csv file) by
+specifying GEOMETRY=<strong>AS_XYZ</strong>, GEOMETRY=<strong>AS_XY</strong> or
+GEOMETRY=<strong>AS_YX</strong>. The geometry column(s) will be prepended to the
+columns with the attributes values. It is also possible to export
+geometries in GeoJSON representation using SQLite SQL dialect query,
+see example below.</p></li>
+<li><p><strong>CREATE_CSVT</strong>=YES/NO (Starting with GDAL 1.7.0): Create the
+associated .csvt file (see above paragraph) to describe the type of
+each column of the layer and its optional width and precision.
+Default value : NO</p></li>
+<li><p><strong>SEPARATOR</strong>=COMMA/SEMICOLON/TAB/SPACE (Starting with GDAL 1.7.0):
+Field separator character. Default value : COMMA</p></li>
+<li><p><strong>WRITE_BOM</strong>=YES/NO (Starting with GDAL 1.9.2): Write a UTF-8 Byte
+Order Mark (BOM) at the start of the file. Default value : NO</p></li>
+<li><p><strong>GEOMETRY_NAME</strong>=name (Starting with GDAL 2.1): Name of geometry
+column. Only used if GEOMETRY=AS_WKT and CREATE_CSVT=YES. Defaults to
+WKT</p></li>
+<li><p><strong>STRING_QUOTING</strong>=IF_NEEDED/IF_AMBIGUOUS/ALWAYS (Starting with
+GDAL 2.3): whether to double-quote strings. IF_AMBIGUOUS means that
+string values that look like numbers will be quoted (it also implies
+IF_NEEDED). Defaults to IF_AMBIGUOUS (behavior in older versions was
+IF_NEEDED)</p></li>
+</ul>
+<p>Configuration options (set with “–config key value” on command line
+utilities):</p>
+<ul class="simple">
+<li><p><strong>OGR_WKT_PRECISION</strong>=int: Number of decimals for coordinate
+values. Default to 15. A heuristics is used to remove unsignificant
+trailing 00000x or 99999x that can appear when formatting decimal
+numbers.</p></li>
+<li><p><strong>OGR_WKT_ROUND</strong>=YES/NO: (GDAL &gt;=2.3) Whether to enable the above
+mentioned heuristics to remove unsignificant trailing 00000x or
+99999x. Default to YES.</p></li>
+</ul>
+</div>
+<div class="section" id="vsi-virtual-file-system-api-support">
+<h2>VSI Virtual File System API support<a class="headerlink" href="#vsi-virtual-file-system-api-support" title="Permalink to this headline">¶</a></h2>
+<p>(Some features below might require OGR &gt;= 1.9.0)</p>
+<p>The driver supports reading and writing to files managed by VSI Virtual
+File System API, which include “regular” files, as well as files in the
+/vsizip/ (read-write) , /vsigzip/ (read-only) , /vsicurl/ (read-only)
+domains.</p>
+<p>Writing to /dev/stdout or /vsistdout/ is also supported.</p>
+<div class="section" id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p>This example shows using ogr2ogr to transform a shapefile with point
+geometry into a .csv file with the X,Y,Z coordinates of the points as
+first columns in the .csv file</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogr2ogr</span> <span class="o">-</span><span class="n">f</span> <span class="n">CSV</span> <span class="n">output</span><span class="o">.</span><span class="n">csv</span> <span class="nb">input</span><span class="o">.</span><span class="n">shp</span> <span class="o">-</span><span class="n">lco</span> <span class="n">GEOMETRY</span><span class="o">=</span><span class="n">AS_XYZ</span>
+</pre></div>
+</div>
+</li>
+<li><p>This example shows using ogr2ogr to transform a shapefile into a .csv
+file with geography field formatted using GeoJSON format.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogr2ogr</span> <span class="o">-</span><span class="n">f</span> <span class="n">CSV</span> <span class="o">-</span><span class="n">dialect</span> <span class="n">sqlite</span> <span class="o">-</span><span class="n">sql</span> <span class="s2">&quot;select AsGeoJSON(geometry) AS geom, * from input&quot;</span> <span class="n">output</span><span class="o">.</span><span class="n">csv</span> <span class="nb">input</span><span class="o">.</span><span class="n">shp</span>
+</pre></div>
+</div>
+</li>
+<li><p>Convert a CSV into a GeoPackage. Specify the names of the coordinate columns and assign a coordinate reference system.</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogr2ogr</span> \
+  <span class="o">-</span><span class="n">f</span> <span class="n">GPKG</span> <span class="n">output</span><span class="o">.</span><span class="n">gpkg</span> \
+  <span class="nb">input</span><span class="o">.</span><span class="n">csv</span> \
+  <span class="o">-</span><span class="n">oo</span> <span class="n">X_POSSIBLE_NAMES</span><span class="o">=</span><span class="n">longitude</span> \
+  <span class="o">-</span><span class="n">oo</span> <span class="n">Y_POSSIBLE_NAMES</span><span class="o">=</span><span class="n">latitude</span> \
+  <span class="o">-</span><span class="n">a_srs</span> <span class="s1">&#39;EPSG:4326&#39;</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="particular-datasources">
+<h2>Particular datasources<a class="headerlink" href="#particular-datasources" title="Permalink to this headline">¶</a></h2>
+<p>The CSV driver can also read files whose structure is close to CSV files
+:</p>
+<ul class="simple">
+<li><p>Airport data files NfdcFacilities.xls, NfdcRunways.xls,
+NfdcRemarks.xls and NfdcSchedules.xls found on tha <a class="reference external" href="http://www.faa.gov/airports/airport_safety/airportdata_5010/menu/index.cfm">FAA
+website</a>
+(OGR &gt;= 1.8.0)</p></li>
+<li><p>Files from the <a class="reference external" href="http://geonames.usgs.gov/domestic/download_data.htm">USGS
+GNIS</a>
+(Geographic Names Information System) (OGR &gt;= 1.9.0)</p></li>
+<li><p>The allCountries file from <a class="reference external" href="http://www.geonames.org">GeoNames</a>
+(OGR &gt;= 1.9.0 for direct import)</p></li>
+<li><p><a class="reference external" href="http://epp.eurostat.ec.europa.eu/NavTree_prod/everybody/BulkDownloadListing?file=read_me.pdf">Eurostat .TSV
+files</a>
+(OGR &gt;= 1.10.0)</p></li>
+</ul>
+</div>
+<div class="section" id="other-notes">
+<h2>Other Notes<a class="headerlink" href="#other-notes" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="http://giswiki.hsr.ch/GeoCSV">GeoCSV specification</a> (supported by
+GDAL &gt;= 2.1)</p></li>
+<li><p>Initial development of the OGR CSV driver was supported by <a class="reference external" href="http://www.dmsolutions.ca/">DM
+Solutions Group</a> and
+<a class="reference external" href="http://www.gomoos.org/">GoMOOS</a>.</p></li>
+<li><p><a class="reference external" href="https://carto.com/">Carto</a> funded field type auto-detection and
+open options related to geometry columns.</p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="csw.html" class="btn btn-neutral float-right" title="CSW - OGC CSW (Catalog Service for the Web)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="couchdb.html" class="btn btn-neutral float-left" title="CouchDB - CouchDB/GeoCouch" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

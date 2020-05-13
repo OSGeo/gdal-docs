@@ -1,0 +1,534 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RFC 48: Geographical networks support &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdevelopment/rfc/rfc48_geographical_networks_support.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="RFC 49: Curve geometries" href="rfc49_curve_geometries.html" />
+    <link rel="prev" title="RFC 47: Per Dataset Caching and GDALRasterBand Multithreading" href="rfc47_dataset_caching.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 48: Geographical networks support</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#purpose-and-description">Purpose and description</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bindings">Bindings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#set-of-applications">Set of applications</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#building-gdal-with-gnm-support">Building GDAL with GNM support</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#set-of-tests">Set of tests</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#documentation-structure">Documentation structure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#source-code-tree-organization">Source code tree organization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#future-ideas">Future ideas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voting-history">Voting history</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 48: Geographical networks support</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/development/rfc/rfc48_geographical_networks_support.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="rfc49_curve_geometries.html" class="btn btn-neutral float-right" title="RFC 49: Curve geometries" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc47_dataset_caching.html" class="btn btn-neutral float-left" title="RFC 47: Per Dataset Caching and GDALRasterBand Multithreading" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rfc-48-geographical-networks-support">
+<span id="rfc-48"></span><h1>RFC 48: Geographical networks support<a class="headerlink" href="#rfc-48-geographical-networks-support" title="Permalink to this headline">¶</a></h1>
+<p>Author: Mikhail Gusev, Dmitry Baryshnikov</p>
+<p>Contact: gusevmihs at gmail dot com, <a class="reference external" href="mailto:polimax&#37;&#52;&#48;mail&#46;ru">polimax<span>&#64;</span>mail<span>&#46;</span>ru</a></p>
+<p>Status: adopted, implemented in GDAL 2.1</p>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>This document proposes the integration of the results of GSoC 2014
+project “GDAL/OGR Geography Network support” into GDAL library. GNM
+(Geographical Network Model) intends to bring the capabilities to
+create, manage and analyse networks built over spatial data in GDAL.</p>
+<p>GSoC project description:
+<a class="reference external" href="http://trac.osgeo.org/gdal/wiki/geography_network_support">http://trac.osgeo.org/gdal/wiki/geography_network_support</a></p>
+<p>GDAL fork with all changes in trunk:
+<a class="reference external" href="https://github.com/MikhanGusev/gdal">https://github.com/MikhanGusev/gdal</a></p>
+<p>GSoC blog:
+<a class="reference external" href="http://gsoc2014gnm.blogspot.ru/">http://gsoc2014gnm.blogspot.ru/</a></p>
+</div>
+<div class="section" id="purpose-and-description">
+<h2>Purpose and description<a class="headerlink" href="#purpose-and-description" title="Permalink to this headline">¶</a></h2>
+<p>There is a need to have an instrument in GDAL which on the one hand
+provides an abstraction for different existed network formats
+(pgRouting, OSRM, GraphHopper, SpatiaLite networks, etc.), like GDAL
+(previously OGR) provides one for spatial vector formats, and on the
+other hand provides a network functionality to those spatial formats
+which does not have it at all (Shapefiles).</p>
+<p>Such instrument is implemented as a separate set of C++ classes, called
+GNM. The two main of them represent an abstract network (GNMNetwork
+class) and the network of ”GDAL-native” or generic format
+(GNMGenericNetwork class). An abstract network is used by user as a
+common interface to manage his network data. The list of underlying
+format-specific classes can be extended anytime like a list of GDAL
+drivers to support more network formats. The ”GDAL-native” format
+implements the abstract network and is used to provide the network
+functionality to the spatial formats which are already supported by
+GDAL. All the network data of this format is stored in the special set
+of layers along with spatial data in a spatial dataset (internally
+GDALDataset and OGRLayer are widely used).</p>
+<p>What does the interface of working with networks include:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">*</span> <span class="n">Creating</span><span class="o">/</span><span class="n">removing</span> <span class="n">networks</span>
+<span class="o">*</span> <span class="n">Creating</span> <span class="n">network</span> <span class="n">topology</span> <span class="n">over</span> <span class="n">spatial</span> <span class="n">data</span> <span class="n">manually</span> <span class="ow">or</span> <span class="n">automatically</span>
+<span class="o">*</span> <span class="n">Reading</span> <span class="n">resulting</span> <span class="n">connections</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">common</span> <span class="n">way</span>
+<span class="o">*</span> <span class="n">Adding</span><span class="o">/</span><span class="n">removing</span>  <span class="n">spatial</span> <span class="n">layers</span><span class="o">/</span><span class="n">features</span> <span class="n">to</span> <span class="n">the</span> <span class="n">network</span>
+<span class="o">*</span> <span class="n">Defining</span> <span class="n">business</span> <span class="n">logic</span> <span class="n">of</span> <span class="n">the</span> <span class="n">networks</span> <span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span> <span class="n">the</span> <span class="n">way</span> <span class="n">of</span> <span class="n">apply</span> <span class="ow">or</span> <span class="n">deny</span> <span class="n">connections</span> <span class="k">with</span> <span class="n">different</span> <span class="n">layer</span> <span class="n">features</span><span class="p">)</span>
+<span class="o">*</span> <span class="n">Several</span> <span class="n">methods</span> <span class="n">of</span> <span class="n">network</span> <span class="n">analysis</span>
+</pre></div>
+</div>
+<p>See the class architecture document (gdal/gnm/gnm_arch.dox) for more
+details and how this set of classes internally works.</p>
+</div>
+<div class="section" id="bindings">
+<h2>Bindings<a class="headerlink" href="#bindings" title="Permalink to this headline">¶</a></h2>
+<p>The C API wrapper functions are declared in gdal/gnm/gnm_api.h. All
+current python bindings are implemented in a swig interface file and use
+these C functions.</p>
+</div>
+<div class="section" id="set-of-applications">
+<h2>Set of applications<a class="headerlink" href="#set-of-applications" title="Permalink to this headline">¶</a></h2>
+<p>It is proposed to include the two following apps which use the GNM into
+GDAL source tree:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>* gnmmanage. Similar to gdalmanage purposes. Manages the networks of “GDAL-native” format: creates, removes networks, builds topology manually and automatically (as the GNMNetwork inherited from GDALDataset, the gdalmanage can be used with GNMNetwork)
+* gnmanalyse. Uses the analysing capabilities of GNM. Currently: shortest path(s) and connected components searches
+</pre></div>
+</div>
+<p>See the description of these applications in according documentation for
+more details.</p>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>There is already a pull request on github
+(<a class="reference external" href="https://github.com/OSGeo/gdal/pull/60">https://github.com/OSGeo/gdal/pull/60</a>)
+that implements this RFC.</p>
+</div>
+<div class="section" id="building-gdal-with-gnm-support">
+<h2>Building GDAL with GNM support<a class="headerlink" href="#building-gdal-with-gnm-support" title="Permalink to this headline">¶</a></h2>
+<p>By default the building of GNM support is disabled. To build GNM support
+one have to add –with-gnm key to configure or uncomment the appropriate
+line in nmake.opt.</p>
+</div>
+<div class="section" id="set-of-tests">
+<h2>Set of tests<a class="headerlink" href="#set-of-tests" title="Permalink to this headline">¶</a></h2>
+<p>All public methods of GNMNetwork tested in autotest gnm tests. The
+several tests for GNMGenericNetwork added. The console applications
+(gnmmanage and gnmanalyse) tested in autotest/utilities.</p>
+<p>All tests were implemented according to the general rules: they are
+written on Python and situated in /autotest folder:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>* GNM basic tests. Tests the basic “GDAL-network” functionality, using some small test shapefiles
+* GNM utilities tests. Simple tests of the gnmmanage and gnmanalyse utilities, similarly to ogrinfo tests
+</pre></div>
+</div>
+</div>
+<div class="section" id="documentation-structure">
+<h2>Documentation structure<a class="headerlink" href="#documentation-structure" title="Permalink to this headline">¶</a></h2>
+<p>All new methods and GNM classes are documented. GDAL documentation is
+updated when necessary.</p>
+<p>The following new Doxyfiles in /gnm and /apps directories will be
+automatically built into the main auto-generated html into the “Related
+pages” section. All them are similar to OGR docs:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">*</span> <span class="n">GNM</span> <span class="n">Architecture</span><span class="o">.</span> <span class="n">The</span> <span class="n">purpose</span> <span class="ow">and</span> <span class="n">description</span> <span class="n">of</span> <span class="nb">all</span> <span class="n">GNM</span> <span class="n">C</span><span class="o">++</span> <span class="n">classes</span>
+<span class="o">*</span> <span class="n">GNM</span> <span class="n">Tutorial</span><span class="o">.</span> <span class="n">The</span> <span class="n">guide</span> <span class="n">how</span> <span class="n">to</span> <span class="n">use</span> <span class="n">the</span> <span class="n">C</span><span class="o">++</span> <span class="n">GNM</span> <span class="n">classes</span>
+<span class="o">*</span> <span class="n">GNM</span> <span class="n">Utility</span> <span class="n">Programs</span><span class="o">.</span> <span class="n">The</span> <span class="n">references</span> <span class="n">to</span> <span class="n">two</span> <span class="n">GNM</span> <span class="n">utilities</span>
+<span class="o">*</span> <span class="n">gnmmanage</span><span class="o">.</span> <span class="n">Description</span> <span class="ow">and</span> <span class="n">usage</span> <span class="n">of</span> <span class="n">gnmmanage</span> <span class="n">utility</span>
+<span class="o">*</span> <span class="n">gnmanalyse</span><span class="o">.</span> <span class="n">Description</span> <span class="ow">and</span> <span class="n">usage</span> <span class="n">of</span> <span class="n">gnmanalyse</span> <span class="n">utility</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="source-code-tree-organization">
+<h2>Source code tree organization<a class="headerlink" href="#source-code-tree-organization" title="Permalink to this headline">¶</a></h2>
+<p><em>What is being added:</em></p>
+<p>The integration will cause the <em>addition</em> of new folders with header,
+source, make and doc files:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>* gcore/gdal.h - add new driver type GNM
+    * gdal/gnm – the main folder of GNM
+* Source code and documentation files of applications at gdal/apps
+* Testing python scripts at autotest/gnm and autotest/utilities
+* Two testing shapefiles at autotest/gnm/data (~7 Kb)
+* Swig interface file at gdal/swig/include
+</pre></div>
+</div>
+<p><em>What is being modified:</em></p>
+<p>The <em>changing</em> of the existed GDAL files <em>will be insignificant</em>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">*</span> <span class="n">GNUMakefile</span><span class="p">,</span> <span class="n">makefile</span><span class="o">.</span><span class="n">vc</span> <span class="ow">and</span> <span class="n">their</span> <span class="n">configurations</span> <span class="n">at</span> <span class="o">/</span><span class="n">gdal</span> <span class="ow">and</span> <span class="o">/</span><span class="n">gdal</span><span class="o">/</span><span class="n">apps</span>
+    <span class="o">*</span> <span class="o">/</span><span class="n">autotest</span><span class="o">/</span><span class="n">run_all</span><span class="o">.</span><span class="n">py</span> <span class="n">to</span> <span class="n">add</span> <span class="n">gnm</span> <span class="n">tests</span>
+<span class="o">*</span> <span class="o">/</span><span class="n">autotest</span><span class="o">/</span><span class="n">pymod</span><span class="o">/</span><span class="n">test_cli_utilities</span><span class="o">.</span><span class="n">py</span> <span class="n">to</span> <span class="n">add</span> <span class="n">the</span> <span class="n">utility</span> <span class="n">testing</span> <span class="n">command</span>
+    <span class="o">*</span> <span class="o">/</span><span class="n">autotest</span><span class="o">/</span><span class="n">utilities</span><span class="o">/</span><span class="n">test_gnmutils</span><span class="o">.</span><span class="n">py</span>
+<span class="o">*</span> <span class="o">/</span><span class="n">swig</span><span class="o">/</span><span class="n">python</span><span class="o">/</span><span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="ow">and</span> <span class="n">setup</span><span class="o">.</span><span class="n">cfg</span> <span class="n">to</span> <span class="n">add</span> <span class="n">gnm</span> <span class="n">module</span>
+    <span class="o">*</span> <span class="n">GNUMakefile</span> <span class="ow">and</span> <span class="n">makefile</span><span class="o">.</span><span class="n">vc</span> <span class="n">at</span> <span class="o">/</span><span class="n">swig</span><span class="o">/</span><span class="n">java</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="future-ideas">
+<h2>Future ideas<a class="headerlink" href="#future-ideas" title="Permalink to this headline">¶</a></h2>
+<p>I see many useful and interesting ways of GNM expending in future:</p>
+<ul class="simple">
+<li><p>More formats support. The important thing, which must be firstly
+implemented in future, while the GNM intends to work with as many
+network formats as possible. It includes not only the support of
+GNMGdalNetwork formats – i.e. the testing to work with other GDAL
+spatial formats (currently tested only for Shapefiles and PostGIS).
+For example:</p>
+<ul>
+<li><p>GNMPGRoutingNetwork. Works with pgRouting tables. Some ideas:</p>
+<ul>
+<li><p>GNMPGRoutingNetwork::ConnectFeatures() will add to “source” and
+“target” columns according values via OGRFeature::setField()</p></li>
+<li><p>GNMPGRoutingNetwork::AutoConnect() will internally call
+pgr_createTopology method</p></li>
+</ul>
+</li>
+<li><p>GNMSQLiteNetwork. Works with SpatiaLite VirtualNetwork networks.
+Some ideas:</p>
+<ul>
+<li><p>write all network data to the Roads_net_data table and to
+corresponding NodeFrom and NodeTo columns</p></li>
+</ul>
+</li>
+<li><p>GNMGMLNetwork. Works with the GML topology. Some ideas:</p>
+<ul>
+<li><p>write network data to the
+<a class="reference external" href="gml::TopoComplex">gml::TopoComplex</a>,
+<a class="reference external" href="gml::Node">gml::Node</a> and <a class="reference external" href="gml::Edge">gml::Edge</a>
+directly</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>More effective algorithm of topology building in GDAL-networks. The
+current one is implemented as the default for any network format and
+can connect any amount of line and point layers but is not so
+efficient – the large networks are being connected too long.
+GNMGenericNetwork can have more effective default algorithm.</p></li>
+<li><p>More rules in GDAL-networks, i.e. more complex syntax describing the
+following:</p>
+<ul>
+<li><p>costs extracted from geometrical lengths of lines</p></li>
+<li><p>turn restriction roles of features</p></li>
+<li><p>more complex connection rules: set the limit of features can be
+connected and more complex expressions</p></li>
+</ul>
+</li>
+<li><p>Applications. May be one of the most useful application which can be
+build with GNM is <em>network2network</em>, which converts the network and
+spatial data of the dataset from the one format to another (for
+example from pgRouting to Oracle Spatial networks);</p></li>
+<li><p>Analysis. The support of different graph types and the algorithms
+working with them, for different routing and even engineering
+purposes. For example:</p>
+<ul>
+<li><p>Boost library</p></li>
+<li><p>Contraction Hierarchies technology (for large graphs)</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="voting-history">
+<h2>Voting history<a class="headerlink" href="#voting-history" title="Permalink to this headline">¶</a></h2>
+<p>+1 from JukkaR, TamasS and EvenR</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rfc49_curve_geometries.html" class="btn btn-neutral float-right" title="RFC 49: Curve geometries" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc47_dataset_caching.html" class="btn btn-neutral float-left" title="RFC 47: Per Dataset Caching and GDALRasterBand Multithreading" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,593 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RFC 47: Per Dataset Caching and GDALRasterBand Multithreading &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdevelopment/rfc/rfc47_dataset_caching.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="RFC 48: Geographical networks support" href="rfc48_geographical_networks_support.html" />
+    <link rel="prev" title="RFC 46: GDAL/OGR unification" href="rfc46_gdal_ogr_unification.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#two-different-solutions">Two Different Solutions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pull-requests">Pull Requests</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#common-solution">Common Solution</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#thread-safety-and-the-two-solutions">Thread Safety and the Two Solutions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 47: Per Dataset Caching and GDALRasterBand Multithreading</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/development/rfc/rfc47_dataset_caching.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="rfc48_geographical_networks_support.html" class="btn btn-neutral float-right" title="RFC 48: Geographical networks support" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc46_gdal_ogr_unification.html" class="btn btn-neutral float-left" title="RFC 46: GDAL/OGR unification" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rfc-47-per-dataset-caching-and-gdalrasterband-multithreading">
+<span id="rfc-47"></span><h1>RFC 47: Per Dataset Caching and GDALRasterBand Multithreading<a class="headerlink" href="#rfc-47-per-dataset-caching-and-gdalrasterband-multithreading" title="Permalink to this headline">¶</a></h1>
+<p>Author: Blake Thompson</p>
+<p>Contact: flippmoke at gmail dot com</p>
+<p>Status: Development</p>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>When utilizing GDAL in multithread code, it was found that often the
+limiting portion of the code was often the LRU block cache within GDAL.
+This is an attempt to make the LRU cache more efficient in multithreaded
+situations by making it possible to have multiple LRU per dataset and
+optimizing when locking occurs. Additionally, the changes outlined
+attempt to find an efficient manner to manage data within the cache.</p>
+<p><em>This change attempts to:</em></p>
+<ul class="simple">
+<li><p>Make the caching system within raster datasets:</p>
+<ul>
+<li><p>Thread Safe</p></li>
+<li><p>Provide performance more linearly with an increasing number of
+threads</p></li>
+</ul>
+</li>
+<li><p>Reduce the scope of the current cache locking.</p></li>
+<li><p>Optionally enable a per dataset cache (rather then a global cache)</p></li>
+<li><p>Make Mem datasets READ thread safe per dataset.</p></li>
+<li><p>Lay the ground work for future development to increase thread safety
+in drivers.</p></li>
+</ul>
+<p><em>This change does NOT attempt to:</em></p>
+<ul class="simple">
+<li><p>Make all drivers thread safe</p></li>
+<li><p>Make datasets thread safe</p></li>
+</ul>
+</div>
+<div class="section" id="two-different-solutions">
+<h2>Two Different Solutions<a class="headerlink" href="#two-different-solutions" title="Permalink to this headline">¶</a></h2>
+<p>Two different ways for solving this problem are being proposed and both
+have been coded up (test code for each still to be written). However,
+both share some common solutions. First I will go over the common
+changes for the two different methods, then the ways in which the two
+solutions differ.</p>
+</div>
+<div class="section" id="pull-requests">
+<h2>Pull Requests<a class="headerlink" href="#pull-requests" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/OSGeo/gdal/pull/38">Pull Request #1</a> -
+SOLUTION 1 (Dataset RW Locking)</p></li>
+<li><p><a class="reference external" href="https://github.com/OSGeo/gdal/pull/39">Pull Request #2</a> -
+SOLUTION 2 (Block RW Locking)</p></li>
+</ul>
+</div>
+<div class="section" id="common-solution">
+<h2>Common Solution<a class="headerlink" href="#common-solution" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="dataset-caching">
+<h3>Dataset Caching<a class="headerlink" href="#dataset-caching" title="Permalink to this headline">¶</a></h3>
+<p>The static global mutex that is limiting performance is located within
+gcore/gdalrasterblock.cpp. This mutex is there to protect the setting of
+the maximum cache, the LRU cache itself itself, and the current size of
+the cache. The current scope of this mutex makes it lock for extended
+periods once the cache is full, and new memory is being initialized in
+GDALRasterBlock::Internalize().</p>
+<p>In order to remove the need for this LRU cache to be locked more often a
+new global config option is introducted “GDAL_DATASET_CACHING”. This
+causes the LRU cache to be per dataset when set to “YES”, rather then a
+global cache (“NO” Default). Doing this will also allow threaded
+applications to flush only the cache for a single dataset, improving
+performance in some situations for two reasons. First a cache of a more
+commonly used dataset, might be set separately from other datasets,
+meaning that it is more likely to remain cached. The second is that the
+lack of a common global mutex will result in a less likely situation of
+two threads locking the same mutex if operations are being performed on
+different datasets.</p>
+<p>In order to have management of the different caches, a
+GDALRasterBlockManager class is introduced. This class is responsible
+for the management of the cache in the global or per dataset situations.</p>
+<div class="section" id="gdalrasterblockmanager">
+<h4>GDALRasterBlockManager<a class="headerlink" href="#gdalrasterblockmanager" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">CPL_DLL</span> <span class="n">GDALRasterBlockManager</span>
+<span class="p">{</span>
+    <span class="n">friend</span> <span class="k">class</span> <span class="nc">GDALRasterBlock</span><span class="p">;</span>
+
+    <span class="nb">int</span>             <span class="n">bCacheMaxInitialized</span><span class="p">;</span>
+    <span class="n">GIntBig</span>         <span class="n">nCacheMax</span><span class="p">;</span>
+    <span class="n">volatile</span> <span class="n">GIntBig</span> <span class="n">nCacheUsed</span><span class="p">;</span>
+    <span class="n">volatile</span> <span class="n">GDALRasterBlock</span> <span class="o">*</span><span class="n">poOldest</span><span class="p">;</span>    <span class="o">/*</span> <span class="n">tail</span> <span class="o">*/</span>
+    <span class="n">volatile</span> <span class="n">GDALRasterBlock</span> <span class="o">*</span><span class="n">poNewest</span><span class="p">;</span>    <span class="o">/*</span> <span class="n">head</span> <span class="o">*/</span>
+    <span class="n">void</span>            <span class="o">*</span><span class="n">hRBMMutex</span><span class="p">;</span>
+
+  <span class="n">public</span><span class="p">:</span>
+                <span class="n">GDALRasterBlockManager</span><span class="p">();</span>
+    <span class="n">virtual</span>     <span class="o">~</span><span class="n">GDALRasterBlockManager</span><span class="p">();</span>
+    <span class="n">void</span>        <span class="n">SetCacheMax</span><span class="p">(</span> <span class="n">GIntBig</span> <span class="n">nBytes</span> <span class="p">);</span>
+    <span class="n">GIntBig</span>     <span class="n">GetCacheMax</span><span class="p">(</span><span class="n">void</span><span class="p">);</span>
+    <span class="n">GIntBig</span>     <span class="n">GetCacheUsed</span><span class="p">(</span><span class="n">void</span><span class="p">);</span>
+    <span class="nb">int</span>         <span class="n">FlushCacheBlock</span><span class="p">(</span><span class="n">void</span><span class="p">);</span>
+    <span class="n">void</span>        <span class="n">FlushTillBelow</span><span class="p">();</span>
+    <span class="n">void</span>        <span class="n">Verify</span><span class="p">();</span>
+    <span class="nb">int</span>         <span class="n">SafeLockBlock</span><span class="p">(</span> <span class="n">GDALRasterBlock</span> <span class="o">**</span> <span class="p">);</span>
+    <span class="n">void</span>        <span class="n">DestroyRBMMutex</span><span class="p">();</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Many of the operations originally done by statistics:* within GDALRasterBlock
+are now moved into the GDALRasterBlockManager.</p>
+</div>
+<div class="section" id="gdaldataset">
+<h4>GDALDataset<a class="headerlink" href="#gdaldataset" title="Permalink to this headline">¶</a></h4>
+<p>Every GDALDataset now has a:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">GDALRasterBlockManager</span> <span class="o">*</span><span class="n">poRasterBlockManager</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>This is set at initialization of the dataset via:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bDatasetCache</span> <span class="o">=</span>  <span class="n">CSLTestBoolean</span><span class="p">(</span>
+<span class="n">CPLGetConfigOption</span><span class="p">(</span> <span class="s2">&quot;GDAL_DATASET_CACHING&quot;</span><span class="p">,</span> <span class="s2">&quot;NO&quot;</span><span class="p">)</span> <span class="p">);</span>
+
+<span class="k">if</span> <span class="p">(</span> <span class="n">bDatasetCache</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">poRasterBlockManager</span> <span class="o">=</span> <span class="n">new</span> <span class="n">GDALRasterBlockManager</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="k">else</span>
+<span class="p">{</span>
+    <span class="n">poRasterBlockManager</span> <span class="o">=</span> <span class="n">GetGDALRasterBlockManager</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="gdalrasterband">
+<h4>GDALRasterBand<a class="headerlink" href="#gdalrasterband" title="Permalink to this headline">¶</a></h4>
+<p>In order to make caching safer and more efficient, a mutex as also
+introduced in GDALRasterBand as well. The job of this mutex is to
+protect the RasterBlock array per band (papoBlocks).</p>
+</div>
+</div>
+</div>
+<div class="section" id="thread-safety-and-the-two-solutions">
+<h2>Thread Safety and the Two Solutions<a class="headerlink" href="#thread-safety-and-the-two-solutions" title="Permalink to this headline">¶</a></h2>
+<p>The multithreading of GDAL is a complicated thing, while these changes
+do seek to <em>improve</em> threading within GDAL. It does not <em>solve</em>
+threading problems within GDAL and make it truly thread safe. The goal
+of this change is simply to make the cache thread safe, in order to
+achieve this three mutexes are utilized. Where these three mutexes are
+located is different between the two solutions proposed.</p>
+<div class="section" id="solution-1-rw-mutex-in-gdaldataset">
+<span id="id1"></span><h3>Solution 1 (RW Mutex in GDALDataset )<a class="headerlink" href="#solution-1-rw-mutex-in-gdaldataset" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="mutexes">
+<h4>Mutexes<a class="headerlink" href="#mutexes" title="Permalink to this headline">¶</a></h4>
+<p>For solution 1 the three mutexes are:</p>
+<ul class="simple">
+<li><p>Dataset RW Mutex (per GDALDataset)</p></li>
+<li><p>Band Mutex (per GDALRasterBand)</p></li>
+<li><p>RBM Mutex (per GDALRasterBlockManager)</p></li>
+</ul>
+<p>In order to prevent deadlocks, a priority of the mutexes is established
+in the order they are listed. For example if you have the Band Mutex,
+you may not obtain the Dataset RW Mutex, unless it was obtained prior to
+the Band Mutex being obtained. However, the goal should always be to
+never have more then mutex at a time!</p>
+<div class="section" id="dataset-rw-mutex">
+<h5>Dataset RW Mutex<a class="headerlink" href="#dataset-rw-mutex" title="Permalink to this headline">¶</a></h5>
+<p>The objective of the Dataset RW Mutex is to protect the data stored
+within the the GDALRasterBlocks associated with a dataset, and lock
+during large Read or Write operations. This prevents two different
+threads from using memcpy on the same GDALRasterBlock at the same time.
+This mutex normally lies within the GDALDataset, but in the case of a
+standalone GDALRasterBand, it utilizes a new mutex on the Band.</p>
+</div>
+<div class="section" id="band-mutex">
+<h5>Band Mutex<a class="headerlink" href="#band-mutex" title="Permalink to this headline">¶</a></h5>
+<p>The objective of the Band Mutex is to manage the control of the array of
+blocks in the GDALRasterBand, and manages the locking of the
+GDALRasterBlocks. This is a per GDALRasterBand Mutex.</p>
+</div>
+<div class="section" id="rbm-mutex">
+<h5>RBM Mutex<a class="headerlink" href="#rbm-mutex" title="Permalink to this headline">¶</a></h5>
+<p>The objective of the RBM Mutex is to manage control of the LRU cache.
+This mutex is responsible for the control of the management of the
+cache’s linked list and total amount of data stored in the cache.</p>
+</div>
+</div>
+<div class="section" id="pros">
+<h4>Pros<a class="headerlink" href="#pros" title="Permalink to this headline">¶</a></h4>
+<p>This is a much more simple solution of the two different possible
+solutions. Since the protection of the Blocks are done at the Dataset
+level, it prevents the problem of some drivers such as geotiff where
+more then one band might be accessed in the reading or writing of one
+band. Therefore with out this protection here it could cause issues if
+locking was just at a band level per block’s data.</p>
+</div>
+<div class="section" id="cons">
+<h4>Cons<a class="headerlink" href="#cons" title="Permalink to this headline">¶</a></h4>
+<p>This solution is not perhaps the most optimal way to lock because the
+protection of the IReadBlock, IWriteBlock, and IRasterIO routines is
+over the entire dataset. This is very limiting when you are reading the
+same dataset in a threaded environment, because it is not possible to
+read more then one block at a time.</p>
+</div>
+</div>
+<div class="section" id="solution-2-rw-mutex-in-gdalrasterblock">
+<span id="id2"></span><h3>Solution 2 (RW Mutex in GDALRasterBlock )<a class="headerlink" href="#solution-2-rw-mutex-in-gdalrasterblock" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="mutexes-1">
+<span id="id3"></span><h4>Mutexes<a class="headerlink" href="#mutexes-1" title="Permalink to this headline">¶</a></h4>
+<p>For solution 2 the three mutexes are:</p>
+<ul class="simple">
+<li><p>Band Mutex (per GDALRasterBand)</p>
+<ul>
+<li><p>RBM Mutex (per GDALRasterBlockManager)</p></li>
+<li><p>Block RW Mutex (per GDALRasterBlock)</p></li>
+</ul>
+</li>
+</ul>
+<p>In order to prevent deadlocks the band mutex has priority. This means
+that you can not get the Band Mutex if you have the RBM or Blow RW
+Mutex, unless you already had the Band Mutex prior to this. You may not
+obtain the Block mutex and the RBM mutex at the same time.</p>
+<div class="section" id="band-mutex-1">
+<span id="id4"></span><h5>Band Mutex<a class="headerlink" href="#band-mutex-1" title="Permalink to this headline">¶</a></h5>
+<p>The objective of the Band Mutex is to manage the control of the array of
+blocks in the GDALRasterBand, and manages the locking of the
+GDALRasterBlocks. This is a per GDALRasterBand Mutex.</p>
+</div>
+<div class="section" id="rbm-mutex-1">
+<span id="id5"></span><h5>RBM Mutex<a class="headerlink" href="#rbm-mutex-1" title="Permalink to this headline">¶</a></h5>
+<p>The objective of the RBM Mutex is to manage control of the LRU cache.
+This mutex is responsible for the control of the management of the
+cache’s linked list and total amount of data stored in the cache.</p>
+</div>
+<div class="section" id="block-rw-mutex">
+<h5>Block RW Mutex<a class="headerlink" href="#block-rw-mutex" title="Permalink to this headline">¶</a></h5>
+<p>The objective of the Block RW Mutex is to protect the data stored within
+the the GDALRasterBlocks associated with a dataset, and lock during
+large Read or Write operations. This prevents two different threads from
+using memcpy on the same GDALRasterBlock at the same time. It is created
+on a per block basis.</p>
+</div>
+</div>
+<div class="section" id="pros-1">
+<span id="id6"></span><h4>Pros<a class="headerlink" href="#pros-1" title="Permalink to this headline">¶</a></h4>
+<p>This is probably the most complete solution to making an intensive and
+fast threaded solution for the blocking. This is because the IReadWrite,
+IWriteBlock, and IRasterIO now are able to possibly pass a mutex with
+their calls, as a void pointer pointer. A change was made to the mutex
+as well such that a void pointer pointer that is NULL passed to
+CPLMutexHolderD, will not result in any pointer being created or any
+locking to occur. This means much of the behavior of the existing code
+can be maintained by simply passing a NULL value for the mutex. All of
+these changes allow the drivers to maintain much more control over the
+way that locking occurs when protecting the data inside a block.</p>
+</div>
+<div class="section" id="cons-1">
+<span id="id7"></span><h4>Cons<a class="headerlink" href="#cons-1" title="Permalink to this headline">¶</a></h4>
+<p>Obviously, this is a much more complex solution and therefore is harder
+to manage. It means that writing a driver is not as trivial as before
+and care must be taken in how locking is done within the driver in order
+to prevent deadlocks and maintain thread safety. The other issue that
+might arise from this is a slight slow down in non-threaded code because
+of the extra cycles spent locking data that will not be accessed in a
+threaded manner. Additionally, it might have issues in windows if too
+many mutexes are created (as there are quite a few more since it is a
+per GDALRasterBlock mutex). (Note: Not sure how I will be able to test
+this properly?)</p>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rfc48_geographical_networks_support.html" class="btn btn-neutral float-right" title="RFC 48: Geographical networks support" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc46_gdal_ogr_unification.html" class="btn btn-neutral float-left" title="RFC 46: GDAL/OGR unification" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

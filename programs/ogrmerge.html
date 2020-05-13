@@ -1,0 +1,474 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ogrmerge &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgprograms/ogrmerge.html"/>
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="gnmmanage" href="gnmmanage.html" />
+    <link rel="prev" title="ogrlineref" href="ogrlineref.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Programs</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#raster-programs">Raster programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#multidimensional-raster-programs">Multidimensional Raster programs</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#vector-programs">Vector programs</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="vector_common_options.html">Common options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ogrinfo.html">ogrinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ogr2ogr.html">ogr2ogr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ogrtindex.html">ogrtindex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ogrlineref.html">ogrlineref</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ogrmerge</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#synopsis">Synopsis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#description">Description</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#geographic-network-programs">Geographic network programs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Programs</a> &raquo;</li>
+      
+      <li>ogrmerge</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/programs/ogrmerge.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="gnmmanage.html" class="btn btn-neutral float-right" title="gnmmanage" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ogrlineref.html" class="btn btn-neutral float-left" title="ogrlineref" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="ogrmerge">
+<span id="id1"></span><h1>ogrmerge<a class="headerlink" href="#ogrmerge" title="Permalink to this headline">¶</a></h1>
+<p>Merge several vector datasets into a single one.</p>
+<div class="section" id="synopsis">
+<span id="index-0"></span><h2>Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogrmerge</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">o</span> <span class="n">out_dsname</span> <span class="n">src_dsname</span> <span class="p">[</span><span class="n">src_dsname</span><span class="p">]</span><span class="o">*</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">f</span> <span class="nb">format</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">single</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">nln</span> <span class="n">layer_name_template</span><span class="p">]</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">update</span> <span class="o">|</span> <span class="o">-</span><span class="n">overwrite_ds</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">append</span> <span class="o">|</span> <span class="o">-</span><span class="n">overwrite_layer</span><span class="p">]</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">src_geom_type</span> <span class="n">geom_type_name</span><span class="p">[,</span><span class="n">geom_type_name</span><span class="p">]</span><span class="o">*</span><span class="p">]</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">dsco</span> <span class="n">NAME</span><span class="o">=</span><span class="n">VALUE</span><span class="p">]</span><span class="o">*</span> <span class="p">[</span><span class="o">-</span><span class="n">lco</span> <span class="n">NAME</span><span class="o">=</span><span class="n">VALUE</span><span class="p">]</span><span class="o">*</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">s_srs</span> <span class="n">srs_def</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">t_srs</span> <span class="n">srs_def</span> <span class="o">|</span> <span class="o">-</span><span class="n">a_srs</span> <span class="n">srs_def</span><span class="p">]</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">progress</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">skipfailures</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">help</span><span class="o">-</span><span class="n">general</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Options specific to the <a class="reference internal" href="#ogrmerge-single-option"><span class="std std-ref">-single</span></a> option:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="o">-</span><span class="n">field_strategy</span> <span class="n">FirstLayer</span><span class="o">|</span><span class="n">Union</span><span class="o">|</span><span class="n">Intersection</span><span class="p">]</span>
+<span class="p">[</span><span class="o">-</span><span class="n">src_layer_field_name</span> <span class="n">name</span><span class="p">]</span>
+<span class="p">[</span><span class="o">-</span><span class="n">src_layer_field_content</span> <span class="n">layer_name_template</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.2.</span></p>
+</div>
+<p><strong class="program">ogrmerge.py</strong> script takes as input several vector datasets,
+each of them having one or several vector layers, and copy them in
+a target dataset.</p>
+<p>There are essential two modes:</p>
+<ul class="simple">
+<li><p>the default one, where each input vector layer, is copied as a
+separate layer into the target dataset</p></li>
+<li><p>another one, activated with the -single switch, where the content of
+all input vector layers is appended into a single target layer. This
+assumes that the schema of those vector layers is more or less the
+same.</p></li>
+</ul>
+<p>Internally this generates a <a class="reference internal" href="../drivers/vector/vrt.html#vector-vrt"><span class="std std-ref">VRT – Virtual Format</span></a> file, and if the
+output format is not VRT, final translation is done with <strong class="program">ogr2ogr</strong>
+or <code class="xref py py-func docutils literal notranslate"><span class="pre">gdal.VectorTranslate()</span></code>. So, for advanced uses, output to VRT,
+potential manual editing of it and <strong class="program">ogr2ogr</strong> can be done.</p>
+<dl class="option">
+<dt id="cmdoption-ogrmerge-py-o">
+<code class="descname">-o</code><code class="descclassname"> &lt;out_dsname</code><a class="headerlink" href="#cmdoption-ogrmerge-py-o" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output dataset name. Required.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrmerge-py-arg-src-dsname">
+<code class="descname">&lt;src_dsname&gt;</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogrmerge-py-arg-src-dsname" title="Permalink to this definition">¶</a></dt>
+<dd><p>One or several input vector datasets. Required</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrmerge-py-f">
+<code class="descname">-f</code><code class="descclassname"> &lt;format&gt;</code><a class="headerlink" href="#cmdoption-ogrmerge-py-f" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select the output format. Starting with GDAL 2.3, if not specified,
+the format is guessed from the extension (previously was ESRI
+Shapefile). Use the short format name</p>
+</dd></dl>
+
+<span class="target" id="ogrmerge-single-option"></span><dl class="option">
+<dt id="cmdoption-ogrmerge-py-single">
+<code class="descname">-single</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogrmerge-py-single" title="Permalink to this definition">¶</a></dt>
+<dd><p>If specified, all input vector layers will be merged into a single one.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrmerge-py-nln">
+<code class="descname">-nln</code><code class="descclassname"> &lt;layer_name_template&gt;</code><a class="headerlink" href="#cmdoption-ogrmerge-py-nln" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of the output vector layer (in single mode, and the default is
+“merged”), or template to name the output vector layers in default
+mode (the default value is <code class="docutils literal notranslate"><span class="pre">{AUTO_NAME}</span></code>). The template can be a
+string with the following variables that will be susbstitued with a
+value computed from the input layer being processed:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">{AUTO_NAME}</span></code>: equivalent to <code class="docutils literal notranslate"><span class="pre">{DS_BASENAME}_{LAYER_NAME}</span></code> if both
+values are different, or <code class="docutils literal notranslate"><span class="pre">{LAYER_NAME}</span></code> when they are identical
+(case of shapefile). ‘different</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">{DS_NAME}</span></code>: name of the source dataset</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">{DS_BASENAME}</span></code>: base name of the source dataset</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">{DS_INDEX}</span></code>: index of the source dataset</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">{LAYER_NAME}</span></code>: name of the source layer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">{LAYER_INDEX}</span></code>: index of the source layer</p></li>
+</ul>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrmerge-py-update">
+<code class="descname">-update</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogrmerge-py-update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open an existing dataset in update mode.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrmerge-py-overwrite-ds">
+<code class="descname">-overwrite_ds</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogrmerge-py-overwrite-ds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overwrite the existing dataset if it already exists (for file based
+datasets)</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrmerge-py-append">
+<code class="descname">-append</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogrmerge-py-append" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open an existing dataset in update mode, and if output layers
+already exist, append the content of input layers to them.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrmerge-py-overwrite-layer">
+<code class="descname">-overwrite_layer</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogrmerge-py-overwrite-layer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open an existing dataset in update mode, and if output layers
+already exist, replace their content with the one of the input
+layer.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrmerge-py-src-geom-type">
+<code class="descname">-src_geom_type</code><code class="descclassname"> &lt;geom_type_name[,geom_type_name]*]&gt;</code><a class="headerlink" href="#cmdoption-ogrmerge-py-src-geom-type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Only take into account input layers whose geometry type match the
+type(s) specified. Valid values for geom_type_name are GEOMETRY,
+POINT, LINESTRING, POLYGON, MULTIPOINT, MULTILINESTRING, MULTIPOINT,
+GEOMETRYCOLLECTION, CIRCULARSTRING, CURVEPOLYGON, MULTICURVE,
+MULTISURFACE, CURVE, SURFACE, TRIANGLE, POLYHEDRALSURFACE and TIN.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrmerge-py-dsco">
+<code class="descname">-dsco</code><code class="descclassname"> &lt;NAME=VALUE&gt;</code><a class="headerlink" href="#cmdoption-ogrmerge-py-dsco" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dataset creation option (format specific)</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrmerge-py-lco">
+<code class="descname">-lco</code><code class="descclassname"> &lt;NAME=VALUE&gt;</code><a class="headerlink" href="#cmdoption-ogrmerge-py-lco" title="Permalink to this definition">¶</a></dt>
+<dd><p>Layer creation option (format specific)</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrmerge-py-a-srs">
+<code class="descname">-a_srs</code><code class="descclassname"> &lt;srs_def&gt;</code><a class="headerlink" href="#cmdoption-ogrmerge-py-a-srs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assign an output SRS</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrmerge-py-t-srs">
+<code class="descname">-t_srs</code><code class="descclassname"> &lt;srs_def&gt;</code><a class="headerlink" href="#cmdoption-ogrmerge-py-t-srs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reproject/transform to this SRS on output</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrmerge-py-s-srs">
+<code class="descname">-s_srs</code><code class="descclassname"> &lt;srs_def&gt;</code><a class="headerlink" href="#cmdoption-ogrmerge-py-s-srs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override source SRS</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrmerge-py-progress">
+<code class="descname">-progress</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogrmerge-py-progress" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display progress on terminal. Only works if input layers have the
+“fast feature count” capability.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrmerge-py-skipfailures">
+<code class="descname">-skipfailures</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogrmerge-py-skipfailures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Continue after a failure, skipping the failed feature.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrmerge-py-field-strategy">
+<code class="descname">-field_strategy</code><code class="descclassname"> FirstLayer|Union|Intersection</code><a class="headerlink" href="#cmdoption-ogrmerge-py-field-strategy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Only used with <a class="reference internal" href="#cmdoption-ogrmerge-py-single"><code class="xref std std-option docutils literal notranslate"><span class="pre">-single</span></code></a>. Determines how the schema of the target
+layer is built from the schemas of the input layers. May be
+FirstLayer to use the fields from the first layer found, Union to
+use a super-set of all the fields from all source layers, or
+Intersection to use a sub-set of all the common fields from all
+source layers. Defaults to Union.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrmerge-py-src-layer-field-name">
+<code class="descname">-src_layer_field_name</code><code class="descclassname"> &lt;name&gt;</code><a class="headerlink" href="#cmdoption-ogrmerge-py-src-layer-field-name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Only used with <a class="reference internal" href="#cmdoption-ogrmerge-py-single"><code class="xref std std-option docutils literal notranslate"><span class="pre">-single</span></code></a>. If specified, the schema of the target layer
+will be extended with a new field ‘name’, whose content is
+determined by -src_layer_field_content.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrmerge-py-src-layer-field-content">
+<code class="descname">-src_layer_field_content</code><code class="descclassname"> &lt;layer_name_template&gt;</code><a class="headerlink" href="#cmdoption-ogrmerge-py-src-layer-field-content" title="Permalink to this definition">¶</a></dt>
+<dd><p>Only used with <a class="reference internal" href="#cmdoption-ogrmerge-py-single"><code class="xref std std-option docutils literal notranslate"><span class="pre">-single</span></code></a>. If specified, the schema of the target layer
+will be extended with a new field (whose name is given by
+<a class="reference internal" href="#cmdoption-ogrmerge-py-src-layer-field-name"><code class="xref std std-option docutils literal notranslate"><span class="pre">-src_layer_field_name</span></code></a>, or ‘source_ds_lyr’ otherwise), whose
+content is determined by <code class="docutils literal notranslate"><span class="pre">layer_name_template</span></code>. The syntax of
+<code class="docutils literal notranslate"><span class="pre">layer_name_template</span></code> is the same as for <a class="reference internal" href="#cmdoption-ogrmerge-py-nln"><code class="xref std std-option docutils literal notranslate"><span class="pre">-nln</span></code></a>.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>Create a VRT with a layer for each input shapefiles</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogrmerge</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">f</span> <span class="n">VRT</span> <span class="o">-</span><span class="n">o</span> <span class="n">merged</span><span class="o">.</span><span class="n">vrt</span> <span class="o">*.</span><span class="n">shp</span>
+</pre></div>
+</div>
+<p>Same, but creates a GeoPackage file</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogrmerge</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">f</span> <span class="n">GPKG</span> <span class="o">-</span><span class="n">o</span> <span class="n">merged</span><span class="o">.</span><span class="n">gpkg</span> <span class="o">*.</span><span class="n">shp</span>
+</pre></div>
+</div>
+<p>Concatenate the content of france.shp and germany.shp in merged.shp,
+and adds a ‘country’ field to each feature whose value is ‘france’ or
+‘germany’ depending where it comes from.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogrmerge</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">single</span> <span class="o">-</span><span class="n">o</span> <span class="n">merged</span><span class="o">.</span><span class="n">shp</span> <span class="n">france</span><span class="o">.</span><span class="n">shp</span> <span class="n">germany</span><span class="o">.</span><span class="n">shp</span> <span class="o">-</span><span class="n">src_layer_field_name</span> <span class="n">country</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="gnmmanage.html" class="btn btn-neutral float-right" title="gnmmanage" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ogrlineref.html" class="btn btn-neutral float-left" title="ogrlineref" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

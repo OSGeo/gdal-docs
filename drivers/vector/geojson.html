@@ -1,0 +1,702 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>GeoJSON &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdrivers/vector/geojson.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="GeoJSONSeq: sequence of GeoJSON features" href="geojsonseq.html" />
+    <link rel="prev" title="GeoConcept text export" href="geoconcept.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Vector drivers</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="aeronavfaa.html">Aeronav FAA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="amigocloud.html">AmigoCloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ao.html">ESRI ArcObjects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arcgen.html">ARCGEN - Arc/Info Generate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="avcbin.html">Arc/Info Binary Coverage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="avce00.html">Arc/Info E00 (ASCII) Coverage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bna.html">BNA - Atlas BNA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cad.html">CAD – AutoCAD DWG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="carto.html">Carto</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cloudant.html">Cloudant – Cloudant</a></li>
+<li class="toctree-l2"><a class="reference internal" href="couchdb.html">CouchDB - CouchDB/GeoCouch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csv.html">Comma Separated Value (.csv)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csw.html">CSW - OGC CSW (Catalog Service for the Web)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="db2.html">DB2 Spatial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dgn.html">Microstation DGN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dgnv8.html">Microstation DGN v8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dods.html">DODS/OPeNDAP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dwg.html">AutoCAD DWG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dxf.html">AutoCAD DXF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eeda.html">Google Earth Engine Data API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="edigeo.html">EDIGEO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elasticsearch.html">Elasticsearch: Geographically Encoded Objects for Elasticsearch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="esrijson.html">ESRIJSON / FeatureService driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filegdb.html">ESRI File Geodatabase (FileGDB)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flatgeobuf.html">FlatGeobuf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fme.html">FMEObjects Gateway</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoconcept.html">GeoConcept text export</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">GeoJSON</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#driver-capabilities">Driver capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#datasource">Datasource</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#layer">Layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#feature">Feature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geometry">Geometry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#environment-variables">Environment variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#open-options">Open options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#layer-creation-options">Layer creation options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vsi-virtual-file-system-api-support">VSI Virtual File System API support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#round-tripping-of-extra-json-members">Round-tripping of extra JSon members</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rfc-7946-write-support">RFC 7946 write support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#see-also">See Also</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="geojsonseq.html">GeoJSONSeq: sequence of GeoJSON features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomedia.html">Geomedia MDB database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="georss.html">GeoRSS : Geographically Encoded Objects for RSS feeds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gmlas.html">GMLAS - Geography Markup Language (GML) driven by application schemas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gml.html">GML - Geography Markup Language</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gmt.html">GMT ASCII Vectors (.gmt)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpkg.html">GPKG – GeoPackage vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpsbabel.html">GPSBabel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpx.html">GPX - GPS Exchange Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grass.html">GRASS Vector Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gtm.html">GTM - GPS TrackMaker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="htf.html">HTF - Hydrographic Transfer Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="idb.html">IDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="idrisi.html">Idrisi Vector (.VCT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ili.html">“INTERLIS 1” and “INTERLIS 2” drivers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingres.html">INGRES</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jml.html">JML: OpenJUMP JML format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kml.html">KML - Keyhole Markup Language</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libkml.html">LIBKML Driver (.kml .kmz)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mapml.html">MapML</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mdb.html">Access MDB databases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="memory.html">Memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mitab.html">MapInfo TAB and MIF/MID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mongodb.html">MongoDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mongodbv3.html">MongoDBv3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mssqlspatial.html">MSSQLSpatial - Microsoft SQL Server Spatial Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mvt.html">MVT: Mapbox Vector Tiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mysql.html">MySQL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nas.html">NAS - ALKIS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="netcdf.html">NetCDF: Network Common Data Form - Vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ngw.html">NGW – NextGIS Web</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ntf.html">UK .NTF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="oapif.html">OGC API - Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="oci.html">Oracle Spatial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="odbc.html">ODBC RDBMS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ods.html">ODS - Open Document Spreadsheet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ogdi.html">OGDI Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="openair.html">OpenAir - OpenAir Special Use Airspace Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="openfilegdb.html">ESRI File Geodatabase (OpenFileGDB)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="osm.html">OSM - OpenStreetMap XML and PBF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pdf.html">PDF – Geospatial PDF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pds.html">PDS - Planetary Data Systems TABLE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pgdump.html">PostgreSQL SQL Dump</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pgeo.html">ESRI Personal GeoDatabase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pg.html">PostgreSQL / PostGIS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plscenes.html">PLScenes (Planet Labs Scenes/Catalog API)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s57.html">IHO S-57 (ENC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sde.html">ESRI ArcSDE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sdts.html">SDTS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="segukooa.html">SEG-P1 / UKOOA P1/90</a></li>
+<li class="toctree-l2"><a class="reference internal" href="segy.html">SEG-Y / SEGY</a></li>
+<li class="toctree-l2"><a class="reference internal" href="selafin.html">Selafin files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shapefile.html">ESRI Shapefile / DBF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sosi.html">Norwegian SOSI Standard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sqlite.html">SQLite / Spatialite RDBMS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sua.html">SUA - Tim Newport-Peace’s Special Use Airspace Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="svg.html">SVG - Scalable Vector Graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sxf.html">Storage and eXchange Format - SXF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiger.html">U.S. Census TIGER/Line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="topojson.html">TopoJSON driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vdv.html">VDV - VDV-451/VDV-452/INTREST Data Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vfk.html">VFK - Czech Cadastral Exchange Data Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vrt.html">VRT – Virtual Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="walk.html">Walk - Walk Spatial Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wasp.html">WAsP - WAsP .map format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wfs.html">WFS - OGC WFS service</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xls.html">XLS - MS Excel format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xlsx.html">XLSX - MS Office Open XML spreadsheet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xplane.html">X-Plane/Flightgear aeronautical data</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Vector drivers</a> &raquo;</li>
+      
+      <li>GeoJSON</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/drivers/vector/geojson.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="geojsonseq.html" class="btn btn-neutral float-right" title="GeoJSONSeq: sequence of GeoJSON features" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="geoconcept.html" class="btn btn-neutral float-left" title="GeoConcept text export" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="geojson">
+<span id="vector-geojson"></span><h1>GeoJSON<a class="headerlink" href="#geojson" title="Permalink to this headline">¶</a></h1>
+<div class="admonition shortname" id="shortname-0">
+<p class="admonition-title">Driver short name</p>
+<p>GeoJSON</p>
+</div>
+<div class="admonition built_in_by_default" id="built_in_by_default-0">
+<p class="admonition-title">Driver built-in by default</p>
+<p>This driver is built-in by default</p>
+</div>
+<p>This driver implements read/write support for access to features encoded
+in <a class="reference external" href="http://geojson.org/">GeoJSON</a> format. GeoJSON is a dialect based
+on the <a class="reference external" href="http://json.org/">JavaScript Object Notation (JSON)</a>. JSON is
+a lightweight plain text format for data interchange and GeoJSON is
+nothing other than its specialization for geographic content.</p>
+<p>GeoJSON is supported as an output format of a number of services:
+<a class="reference external" href="http://docs.geoserver.org/2.6.x/en/user/services/wfs/outputformats.html">GeoServer</a>,
+<a class="reference external" href="http://exportgge.sourceforge.net/kml/">CartoWeb</a>, etc.</p>
+<p>The OGR GeoJSON driver translates GeoJSON encoded data to objects of the
+<a class="reference external" href="ogr_arch.html">OGR Simple Features model</a>: Datasource, Layer,
+Feature, Geometry. The implementation is based on <a class="reference external" href="http://geojson.org/geojson-spec.html">GeoJSON
+Specification, v1.0</a>.</p>
+<p>Starting with GDAL 2.1.0, the GeoJSON driver supports updating existing
+GeoJSON files. In that case, the default value for the NATIVE_DATA open
+option will be YES.</p>
+<div class="section" id="driver-capabilities">
+<h2>Driver capabilities<a class="headerlink" href="#driver-capabilities" title="Permalink to this headline">¶</a></h2>
+<div class="admonition supports_create" id="supports_create-0">
+<p class="admonition-title">Supports Create()</p>
+<p>This driver supports the <a class="reference internal" href="../../api/gdaldriver_cpp.html#_CPPv4N10GDALDriver6CreateEPKciii12GDALDataTypePPc" title="GDALDriver::Create"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDriver::Create()</span></code></a> operation</p>
+</div>
+<div class="admonition supports_georeferencing" id="supports_georeferencing-0">
+<p class="admonition-title">Supports Georeferencing</p>
+<p>This driver supports georeferencing</p>
+</div>
+<div class="admonition supports_virtualio" id="supports_virtualio-0">
+<p class="admonition-title">Supports VirtualIO</p>
+<p>This driver supports <a class="reference internal" href="../../user/virtual_file_systems.html#virtual-file-systems"><span class="std std-ref">virtual I/O operations (/vsimem/, etc.)</span></a></p>
+</div>
+</div>
+<div class="section" id="datasource">
+<h2>Datasource<a class="headerlink" href="#datasource" title="Permalink to this headline">¶</a></h2>
+<p>The OGR GeoJSON driver accepts three types of sources of data:</p>
+<ul class="simple">
+<li><p>Uniform Resource Locator (<a class="reference external" href="http://en.wikipedia.org/wiki/URL">URL</a>)
+- a Web address to perform
+<a class="reference external" href="http://en.wikipedia.org/wiki/HTTP">HTTP</a> request</p></li>
+<li><p>Plain text file with GeoJSON data - identified from the file
+extension .geojson or .json</p></li>
+<li><p>Text passed directly and encoded in GeoJSON</p></li>
+</ul>
+<p>Starting with GDAL 2.3, the URL/filename/text might be prefixed with
+GeoJSON: to avoid any ambiguity with other drivers.</p>
+</div>
+<div class="section" id="layer">
+<h2>Layer<a class="headerlink" href="#layer" title="Permalink to this headline">¶</a></h2>
+<p>A GeoJSON datasource is translated to single OGRLayer object with
+pre-defined name <em>OGRGeoJSON</em>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogrinfo</span> <span class="o">-</span><span class="n">ro</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">featureserver</span><span class="o">/</span><span class="n">data</span><span class="o">/.</span><span class="n">geojson</span> <span class="n">OGRGeoJSON</span>
+</pre></div>
+</div>
+<p>It is also valid to assume that OGRDataSource::GetLayerCount() for
+GeoJSON datasource always returns 1.</p>
+<p>Starting with GDAL 2.2, the layer name is built with the following
+logic:</p>
+<ol class="arabic simple">
+<li><p>If a “name” member is found at the FeatureCollection level, it is
+used.</p></li>
+<li><p>Otherwise if the filename is regular (ie not a URL with query
+parameters), then the filename without extension and path is used as
+the layer name.</p></li>
+<li><p>Otherwise OGRGeoJSON is used.</p></li>
+</ol>
+<p>Accessing Web Service as a datasource (i.e. FeatureServer), each request
+will produce new layer. This behavior conforms to stateless nature of
+HTTP transaction and is similar to how Web browsers operate: single
+request == single page.</p>
+<p>If a top-level member of GeoJSON data is of any other type than
+<em>FeatureCollection</em>, the driver will produce a layer with only one
+feature. Otherwise, a layer will consists of a set of features.</p>
+<p>If the NATIVE_DATA open option is set to YES, members at the level of
+the FeatureCollection will be stored as a serialized JSon object in the
+NATIVE_DATA item of the NATIVE_DATA metadata domain of the layer object
+(and “application/vnd.geo+json” in the NATIVE_MEDIA_TYPE of the
+NATIVE_DATA metadata domain).</p>
+</div>
+<div class="section" id="feature">
+<h2>Feature<a class="headerlink" href="#feature" title="Permalink to this headline">¶</a></h2>
+<p>The OGR GeoJSON driver maps each object of following types to new
+<em>OGRFeature</em> object: Point, LineString, Polygon, GeometryCollection,
+Feature.</p>
+<p>According to the <em>GeoJSON Specification</em>, only the <em>Feature</em> object must
+have a member with name <em>properties</em>. Each and every member of
+<em>properties</em> is translated to OGR object of type of OGRField and added
+to corresponding OGRFeature object.</p>
+<p>The <em>GeoJSON Specification</em> does not require all <em>Feature</em> objects in a
+collection to have the same schema of properties. If <em>Feature</em> objects
+in a set defined by <em>FeatureCollection</em> object have different schema of
+properties, then resulting schema of fields in OGRFeatureDefn is
+generated as <a class="reference external" href="http://en.wikipedia.org/wiki/Union_(set_theory)">union</a>
+of all <em>Feature</em> properties.</p>
+<p>Schema detection will recognized fields of type String, Integer, Real,
+StringList, IntegerList and RealList. Starting with GDAL 2.0,
+Integer(Boolean), Date, Time and DateTime fields are also recognized.</p>
+<p>It is possible to tell the driver to not to process attributes by
+setting environment variable <strong>ATTRIBUTES_SKIP=YES</strong>. Default behavior
+is to preserve all attributes (as an union, see previous paragraph),
+what is equal to setting <strong>ATTRIBUTES_SKIP=NO</strong>.</p>
+<p>If the NATIVE_DATA open option is set to YES, the Feature JSon object
+will be stored as a serialized JSon object in the NativeData property of
+the OGRFeature object (and “application/vnd.geo+json” in the
+NativeMediaType property). On write, if a OGRFeature to be written has
+its NativeMediaType property set to “application/vnd.geo+json” and its
+NativeData property set to a string that is a serialized JSon object,
+then extra members of this object (i.e. not the “property” dictionary,
+nor the first 3 dimensions of geometry coordinates) will be used to
+enhance the created JSon object from the OGRFeature. See <a class="reference internal" href="../../development/rfc/rfc60_improved_roundtripping_in_ogr.html#rfc-60"><span class="std std-ref">RFC 60 : Improved round-tripping in OGR</span></a>
+for more details.</p>
+</div>
+<div class="section" id="geometry">
+<h2>Geometry<a class="headerlink" href="#geometry" title="Permalink to this headline">¶</a></h2>
+<p>Similarly to the issue with mixed-properties features, the <em>GeoJSON
+Specification</em> draft does not require all <em>Feature</em> objects in a
+collection must have geometry of the same type. Fortunately, OGR objects
+model does allow to have geometries of different types in single layer -
+a heterogeneous layer. By default, the GeoJSON driver preserves type of
+geometries.</p>
+<p>However, sometimes there is a need to generate a homogeneous layer from
+a set of heterogeneous features. For this purpose, it is possible to
+tell the driver to wrap all geometries with OGRGeometryCollection type
+as a common denominator. This behavior may be controlled by setting
+<strong>GEOMETRY_AS_COLLECTION=YES</strong> in the environment (default is <strong>NO</strong>).</p>
+</div>
+<div class="section" id="environment-variables">
+<h2>Environment variables<a class="headerlink" href="#environment-variables" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>GEOMETRY_AS_COLLECTION</strong> - used to control translation of
+geometries: YES - wrap geometries with OGRGeometryCollection type</p></li>
+<li><p><strong>ATTRIBUTES_SKIP</strong> - controls translation of attributes: YES - skip
+all attributes</p></li>
+<li><p><strong>OGR_GEOJSON_MAX_OBJ_SIZE</strong> - (GDAL &gt;= 3.0.2) size in MBytes of the maximum
+accepted single feature, default value is 200MB</p></li>
+</ul>
+</div>
+<div class="section" id="open-options">
+<h2>Open options<a class="headerlink" href="#open-options" title="Permalink to this headline">¶</a></h2>
+<p>(GDAL &gt;= 2.0)</p>
+<ul class="simple">
+<li><p><strong>FLATTEN_NESTED_ATTRIBUTES</strong> = YES/NO: Whether to recursively
+explore nested objects and produce flatten OGR attributes. Defaults
+to NO.</p></li>
+<li><p><strong>NESTED_ATTRIBUTE_SEPARATOR</strong> = character: Separator between
+components of nested attributes. Defaults to ‘_’</p></li>
+<li><p><strong>FEATURE_SERVER_PAGING</strong> = YES/NO: Whether to automatically scroll
+through results with a ArcGIS Feature Service endpoint.</p></li>
+<li><p><strong>NATIVE_DATA</strong> = YES/NO: (GDAL &gt;= 2.1) Whether to store the native
+JSon representation at FeatureCollection and Feature level. Defaults
+to NO. This option can be used to improve round-tripping from GeoJSON
+to GeoJSON by preserving some extra JSon objects that would otherwise
+be ignored by the OGR abstraction. Note that ogr2ogr by default
+enable this option, unless you specify its -noNativeData switch.</p></li>
+<li><p><strong>ARRAY_AS_STRING</strong> = YES/NO: (GDAL &gt;= 2.1) Whether to expose JSon
+arrays of strings, integers or reals as a OGR String. Default is NO.
+Can also be set with the OGR_GEOJSON_ARRAY_AS_STRING configuration
+option.</p></li>
+<li><p><strong>DATE_AS_STRING</strong> = YES/NO: (GDAL &gt;= 3.0.3) Whether to expose
+date/time/date-time content using dedicated OGR date/time/date-time types
+or as a OGR String. Default is NO (that is date/time/date-time are
+detected as such).
+Can also be set with the OGR_GEOJSON_DATE_AS_STRING configuration
+option.</p></li>
+</ul>
+<p>To explain FLATTEN_NESTED_ATTRIBUTES, consider the following GeoJSON
+fragment:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;FeatureCollection&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;features&quot;</span><span class="p">:</span>
+  <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Feature&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;geometry&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Point&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">49</span> <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;a_property&quot;</span><span class="p">:</span> <span class="s2">&quot;foo&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;some_object&quot;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="s2">&quot;a_property&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+          <span class="s2">&quot;another_property&quot;</span><span class="p">:</span> <span class="mi">2</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>“ogrinfo test.json -al -oo FLATTEN_NESTED_ATTRIBUTES=yes” reports:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">OGRFeature</span><span class="p">(</span><span class="n">OGRGeoJSON</span><span class="p">):</span><span class="mi">0</span>
+  <span class="n">a_property</span> <span class="p">(</span><span class="n">String</span><span class="p">)</span> <span class="o">=</span> <span class="n">foo</span>
+  <span class="n">some_object_a_property</span> <span class="p">(</span><span class="n">Integer</span><span class="p">)</span> <span class="o">=</span> <span class="mi">1</span>
+  <span class="n">some_object_another_property</span> <span class="p">(</span><span class="n">Integer</span><span class="p">)</span> <span class="o">=</span> <span class="mi">2</span>
+  <span class="n">POINT</span> <span class="p">(</span><span class="mi">2</span> <span class="mi">49</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="layer-creation-options">
+<h2>Layer creation options<a class="headerlink" href="#layer-creation-options" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>WRITE_BBOX</strong> = YES/NO: (OGR &gt;= 1.9.0) Set to YES to write a bbox
+property with the bounding box of the geometries at the feature and
+feature collection level. Defaults to NO.</p></li>
+<li><p><strong>COORDINATE_PRECISION</strong> = int_number: (OGR &gt;= 1.9.0) Maximum number
+of figures after decimal separator to write in coordinates. Default
+to 15 for GeoJSON 2008, and 7 for RFC 7946. “Smart” truncation will
+occur to remove trailing zeros.</p></li>
+<li><p><strong>SIGNIFICANT_FIGURES</strong> = int_number: (OGR &gt;= 2.1) Maximum number of
+significant figures when writing floating-point numbers. Default to
+17. If explicitly specified, and COORDINATE_PRECISION is not, this
+will also apply to coordinates.</p></li>
+<li><p><strong>NATIVE_DATA</strong>=string. (OGR &gt;= 2.1) Serialized JSon object that
+contains extra properties to store at FeatureCollection level.</p></li>
+<li><p><strong>NATIVE_MEDIA_TYPE</strong>=string. (OGR &gt;= 2.1) Format of NATIVE_DATA.
+Must be “application/vnd.geo+json”, otherwise NATIVE_DATA will be
+ignored.</p></li>
+<li><p><strong>RFC7946</strong>=YES/NO. (OGR &gt;= 2.2) Whether to use <a class="reference external" href="https://tools.ietf.org/html/rfc7946">RFC
+7946</a> standard. Otherwise
+<a class="reference external" href="http://geojson.org/geojson-spec.html">GeoJSON 2008</a> initial
+version will be used. Default is NO (thus GeoJSON 2008)</p></li>
+<li><p><strong>WRITE_NAME</strong>=YES/NO. (OGR &gt;= 2.2) Whether to write a “name”
+property at feature collection level with layer name. Defaults to
+YES.</p></li>
+<li><p><strong>DESCRIPTION</strong>=string. (OGR &gt;= 2.2) (Long) description to write in
+a “description” property at feature collection level. On reading,
+this will be reported in the DESCRIPTION metadata item of the layer.</p></li>
+<li><p><strong>ID_FIELD</strong>=string. (OGR &gt;= 2.3) Name of the source field that
+must be written as the ‘id’ member of Feature objects.</p></li>
+<li><p><strong>ID_TYPE</strong>=AUTO/String/Integer. (OGR &gt;= 2.3) Type of the ‘id’
+member of Feature objects.</p></li>
+<li><p><strong>ID_GENERATE</strong>=YES/NO. (OGR &gt;= 3.1) Auto-generate feature ids</p></li>
+<li><p><strong>WRITE_NON_FINITE_VALUES</strong>=YES/NO. (OGR &gt;= 2.4) Whether to write
+NaN / Infinity values. Such values are not allowed in strict JSon
+mode, but some JSon parsers (libjson-c &gt;= 0.12 for exampl) can
+understand them as they are allowed by ECMAScript. Defaults to NO</p></li>
+</ul>
+</div>
+<div class="section" id="vsi-virtual-file-system-api-support">
+<h2>VSI Virtual File System API support<a class="headerlink" href="#vsi-virtual-file-system-api-support" title="Permalink to this headline">¶</a></h2>
+<p>Some features below require OGR &gt;= 1.9.0.</p>
+<p>The driver supports reading and writing to files managed by VSI Virtual
+File System API, which includes “regular” files, as well as files in the
+/vsizip/ (read-write), /vsigzip/ (read-write), /vsicurl/ (read-only)
+domains.</p>
+<p>Writing to /dev/stdout or /vsistdout/ is also supported.</p>
+</div>
+<div class="section" id="round-tripping-of-extra-json-members">
+<h2>Round-tripping of extra JSon members<a class="headerlink" href="#round-tripping-of-extra-json-members" title="Permalink to this headline">¶</a></h2>
+<p>See <a class="reference internal" href="../../development/rfc/rfc60_improved_roundtripping_in_ogr.html#rfc-60"><span class="std std-ref">RFC 60 : Improved round-tripping in OGR</span></a> for more details.</p>
+<p>Starting with GDAL 2.1, extra JSon members at the FeatureCollection,
+Feature or geometry levels that are not normally reflected in the OGR
+abstraction, such as the ones called “extra_XXXXX_member” in the below
+snippet, are by default preserved when executing ogr2ogr with GeoJSON
+both at the source and destination. This also applies to extra values in
+position tuples of geometries, beyond the 3rd dimension (100, 101 in the
+below example), if the transformation preserves the geometry structure
+(for example, reprojection is allowed, but not change in the number of
+coordinates).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;FeatureCollection&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;extra_fc_member&quot;</span><span class="p">:</span> <span class="s2">&quot;foo&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;features&quot;</span><span class="p">:</span>
+  <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Feature&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;extra_feat_member&quot;</span><span class="p">:</span> <span class="s2">&quot;bar&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;geometry&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Point&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;extra_geom_member&quot;</span><span class="p">:</span> <span class="s2">&quot;baz&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">49</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">101</span> <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;a_property&quot;</span><span class="p">:</span> <span class="s2">&quot;foo&quot;</span><span class="p">,</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This behavior can be turned off by specifying the <strong>-noNativeData</strong>
+switch of the ogr2ogr utility.</p>
+</div>
+<div class="section" id="rfc-7946-write-support">
+<h2>RFC 7946 write support<a class="headerlink" href="#rfc-7946-write-support" title="Permalink to this headline">¶</a></h2>
+<p>By default, the driver will write GeoJSON files following GeoJSON 2008
+specification. When specifying the RFC7946=YES creation option, the RFC
+7946 standard will be used instead.</p>
+<p>The differences between the 2 versions are mentioned in <a class="reference external" href="https://tools.ietf.org/html/rfc7946#appendix-B">Appendix B of
+RFC 7946</a> and
+recalled here for what matters to the driver:</p>
+<ul class="simple">
+<li><p>Coordinates must be geographic over the WGS 84 ellipsoid,
+hence if the spatial reference system specified at layer creation
+time is not EPSG:4326, on-the-fly reprojection will be done by the
+driver.</p></li>
+<li><p>Polygons will be written such as to follow the right-hand rule for
+orientation (counterclockwise external rings, clockwise internal
+rings).</p></li>
+<li><p>The values of a “bbox” array are “[west, south, east, north]”, not
+“[minx, miny, maxx, maxy]”</p></li>
+<li><p>Some extension member names (see previous section about
+round/tripping) are forbidden in the FeatureCollection, Feature and
+Geometry objects.</p></li>
+<li><p>The default coordinate precision is 7 decimal digits after decimal
+separator.</p></li>
+</ul>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>How to dump content of .geojson file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogrinfo</span> <span class="o">-</span><span class="n">ro</span> <span class="n">point</span><span class="o">.</span><span class="n">geojson</span>
+</pre></div>
+</div>
+<p>How to query features from remote service with filtering by attribute:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogrinfo</span> <span class="o">-</span><span class="n">ro</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">featureserver</span><span class="o">/</span><span class="n">cities</span><span class="o">/.</span><span class="n">geojson</span> <span class="n">OGRGeoJSON</span> <span class="o">-</span><span class="n">where</span> <span class="s2">&quot;name=Warsaw&quot;</span>
+</pre></div>
+</div>
+<p>How to translate number of features queried from FeatureServer to ESRI
+Shapefile:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogr2ogr</span> <span class="o">-</span><span class="n">f</span> <span class="s2">&quot;ESRI Shapefile&quot;</span> <span class="n">cities</span><span class="o">.</span><span class="n">shp</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">featureserver</span><span class="o">/</span><span class="n">cities</span><span class="o">/.</span><span class="n">geojson</span> <span class="n">OGRGeoJSON</span>
+</pre></div>
+</div>
+<p>How to translate a ESRI Shapefile into a RFC 7946 GeoJSON file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogr2ogr</span> <span class="o">-</span><span class="n">f</span> <span class="n">GeoJSON</span> <span class="n">cities</span><span class="o">.</span><span class="n">json</span> <span class="n">cities</span><span class="o">.</span><span class="n">shp</span> <span class="o">-</span><span class="n">lco</span> <span class="n">RFC7946</span><span class="o">=</span><span class="n">YES</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="see-also">
+<h2>See Also<a class="headerlink" href="#see-also" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="http://geojson.org/">GeoJSON</a> - encoding geographic content in
+JSON</p></li>
+<li><p><a class="reference external" href="https://tools.ietf.org/html/rfc7946">RFC 7946</a> standard.</p></li>
+<li><p><a class="reference external" href="http://geojson.org/geojson-spec.html">GeoJSON 2008</a> specification
+(obsoleted by RFC 7946).</p></li>
+<li><p><a class="reference external" href="http://json.org/">JSON</a> - JavaScript Object Notation</p></li>
+<li><p><a class="reference internal" href="geojsonseq.html#vector-geojsonseq"><span class="std std-ref">GeoJSON sequence driver</span></a></p></li>
+<li><p><a class="reference internal" href="esrijson.html#vector-esrijson"><span class="std std-ref">ESRI JSon / FeatureService driver</span></a></p></li>
+<li><p><a class="reference internal" href="topojson.html#vector-topojson"><span class="std std-ref">TopoJSON driver</span></a></p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="geojsonseq.html" class="btn btn-neutral float-right" title="GeoJSONSeq: sequence of GeoJSON features" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="geoconcept.html" class="btn btn-neutral float-left" title="GeoConcept text export" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

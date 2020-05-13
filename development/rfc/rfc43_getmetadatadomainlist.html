@@ -1,0 +1,560 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RFC 43: GDALMajorObject::GetMetadataDomainList &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdevelopment/rfc/rfc43_getmetadatadomainlist.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo" href="rfc44_gdalinfoxml.html" />
+    <link rel="prev" title="RFC 42: OGR Layer laundered field lookup" href="rfc42_find_laundered_fields.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 43: GDALMajorObject::GetMetadataDomainList</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#background">Background</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#impacted-drivers">Impacted drivers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#impacted-utilities">Impacted utilities</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#backward-compatibility">Backward Compatibility</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#testing">Testing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ticket">Ticket</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voting-history">Voting history</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 43: GDALMajorObject::GetMetadataDomainList</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/development/rfc/rfc43_getmetadatadomainlist.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="rfc44_gdalinfoxml.html" class="btn btn-neutral float-right" title="RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc42_find_laundered_fields.html" class="btn btn-neutral float-left" title="RFC 42: OGR Layer laundered field lookup" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rfc-43-gdalmajorobject-getmetadatadomainlist">
+<span id="rfc-43"></span><h1>RFC 43: GDALMajorObject::GetMetadataDomainList<a class="headerlink" href="#rfc-43-gdalmajorobject-getmetadatadomainlist" title="Permalink to this headline">¶</a></h1>
+<p>Author: Even Rouault</p>
+<p>Contact: even dot rouault at spatialys.com</p>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>This (mini)RFC proposes a new virtual method, GetMetadataDomainList(),
+in the GDALMajorObject class (and a C API) to return the list of all
+available metadata domains.</p>
+</div>
+<div class="section" id="background">
+<h2>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h2>
+<p>GDALMajorObject currently offers the GetMetadata() and GetMetadataItem()
+methods that both accept a metadata domain argument. But there is no way
+to auto-discover which metadata domains are valid for a given
+GDALMajorObject (i.e. a dataset or raster band). This make it impossible
+to have generic code that can exhaustively discover all metadata in a
+dataset/raster band.</p>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>The base implementation in GDALMajorObject just calls GetDomainList() on
+the internal oMDMD member.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/************************************************************************/</span>
+<span class="o">/*</span>                      <span class="n">GetMetadataDomainList</span><span class="p">()</span>                         <span class="o">*/</span>
+<span class="o">/************************************************************************/</span>
+
+<span class="o">/**</span>
+ <span class="o">*</span> \<span class="n">brief</span> <span class="n">Fetch</span> <span class="nb">list</span> <span class="n">of</span> <span class="n">metadata</span> <span class="n">domains</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">The</span> <span class="n">returned</span> <span class="n">string</span> <span class="nb">list</span> <span class="ow">is</span> <span class="n">the</span> <span class="nb">list</span> <span class="n">of</span> <span class="p">(</span><span class="n">non</span><span class="o">-</span><span class="n">empty</span><span class="p">)</span> <span class="n">metadata</span> <span class="n">domains</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">This</span> <span class="n">method</span> <span class="n">does</span> <span class="n">the</span> <span class="n">same</span> <span class="n">thing</span> <span class="k">as</span> <span class="n">the</span> <span class="n">C</span> <span class="n">function</span> <span class="n">GDALGetMetadataDomainList</span><span class="p">()</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="nd">@return</span> <span class="n">NULL</span> <span class="ow">or</span> <span class="n">a</span> <span class="n">string</span> <span class="nb">list</span><span class="o">.</span> <span class="n">Must</span> <span class="n">be</span> <span class="n">freed</span> <span class="k">with</span> <span class="n">CSLDestroy</span><span class="p">()</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="nd">@since</span> <span class="n">GDAL</span> <span class="mf">1.11</span>
+ <span class="o">*/</span>
+
+<span class="n">char</span> <span class="o">**</span><span class="n">GDALMajorObject</span><span class="p">::</span><span class="n">GetMetadataDomainList</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="n">CSLDuplicate</span><span class="p">(</span><span class="n">oMDMD</span><span class="o">.</span><span class="n">GetDomainList</span><span class="p">());</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This method is also available in the C API ( char ** CPL_STDCALL
+GDALGetMetadataDomainList( GDALMajorObjectH hObject) ) and Swig
+bindings.</p>
+</div>
+<div class="section" id="impacted-drivers">
+<h2>Impacted drivers<a class="headerlink" href="#impacted-drivers" title="Permalink to this headline">¶</a></h2>
+<p>Drivers that have custom implementations of GetMetadata() and/or
+GetMetadataItem() will generally have to also implement
+GetMetadataDomainList(), when they don’t modify the oMDMD member.</p>
+<p>To make it easy to implement the specialized GetMetadataDomainList(),
+GDALMajorObject will offer a protected BuildMetadataDomainList() method
+that can be used like the following :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/************************************************************************/</span>
+<span class="o">/*</span>                      <span class="n">GetMetadataDomainList</span><span class="p">()</span>                         <span class="o">*/</span>
+<span class="o">/************************************************************************/</span>
+
+<span class="n">char</span> <span class="o">**</span><span class="n">NITFDataset</span><span class="p">::</span><span class="n">GetMetadataDomainList</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="n">BuildMetadataDomainList</span><span class="p">(</span><span class="n">GDALPamDataset</span><span class="p">::</span><span class="n">GetMetadataDomainList</span><span class="p">(),</span>
+                                   <span class="n">TRUE</span><span class="p">,</span>
+                                   <span class="s2">&quot;NITF_METADATA&quot;</span><span class="p">,</span> <span class="s2">&quot;NITF_DES&quot;</span><span class="p">,</span> <span class="s2">&quot;NITF_DES_METADATA&quot;</span><span class="p">,</span>
+                                   <span class="s2">&quot;NITF_FILE_HEADER_TRES&quot;</span><span class="p">,</span> <span class="s2">&quot;NITF_IMAGE_SEGMENT_TRES&quot;</span><span class="p">,</span>
+                                   <span class="s2">&quot;CGM&quot;</span><span class="p">,</span> <span class="s2">&quot;TEXT&quot;</span><span class="p">,</span> <span class="s2">&quot;TRE&quot;</span><span class="p">,</span> <span class="s2">&quot;xml:TRE&quot;</span><span class="p">,</span> <span class="s2">&quot;OVERVIEWS&quot;</span><span class="p">,</span> <span class="n">NULL</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The TRUE parameter means that the list of domains that follows are
+potential domains, and thus BuildMetadataDomainList() will check for
+each one that GetMetadata() returns a non-NULL value.</p>
+<p>An exhaustive search in GDAL drivers has been made and all drivers that
+needed to be updated to implement GetMetadataDomainList() have been
+updated: ADRG, BAG, CEOS2, DIMAP, ECW, ENVISAT, ERS, GeoRaster (cannot
+check myself that it compiles), GIF, GTiff, HDF4, JPEG, MBTILES, netCDF,
+NITF, OGDI, PCIDSK, PDF, PNG, PostgisRaster, RasterLite, RS2, VRT, WCS,
+WebP, WMS.</p>
+<p>A few caveats :</p>
+<ul class="simple">
+<li><p>For MBTiles, WMS and VRT, GetMetadataDomainList(), at the band level,
+will return “LocationInfo” as a valid metadata domain (used by the
+gdallocationinfo utility), even if GetMetadata(“LocationInfo”) itself
+does not return metadata : you have to call
+GetMetadataItem(“Pixel_someX_someY”, “LocationInfo”) or
+GetMetadataItem(“GeoPixel_someX_someY”, “LocationInfo”).</p></li>
+<li><p>For CEOS2 and ENVISAT, the list of metadata domains cannot be
+established easily. GetMetadataDomainList() will return the pattern
+of accepted domain names.</p></li>
+</ul>
+</div>
+<div class="section" id="impacted-utilities">
+<h2>Impacted utilities<a class="headerlink" href="#impacted-utilities" title="Permalink to this headline">¶</a></h2>
+<p>The gdalinfo utility is extended to accept :</p>
+<ul class="simple">
+<li><p>a “-listmdd” option that will print the metadata domains available,</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gdalinfo ../autotest/gdrivers/data/byte_with_xmp.jpg -listmdd
+
+Driver: JPEG/JPEG JFIF
+Files: ../autotest/gdrivers/data/byte_with_xmp.jpg
+Size is 20, 20
+Coordinate System is `&#39;
+Metadata domains:
+  xml:XMP
+Corner Coordinates:
+Upper Left  (    0.0,    0.0)
+Lower Left  (    0.0,   20.0)
+Upper Right (   20.0,    0.0)
+Lower Right (   20.0,   20.0)
+Center      (   10.0,   10.0)
+Band 1 Block=20x1 Type=Byte, ColorInterp=Gray
+  Metadata domains:
+    IMAGE_STRUCTURE
+  Image Structure Metadata:
+    COMPRESSION=JPEG
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>and “-mdd all” will display the content of all metadata domains.</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gdalinfo ../autotest/gdrivers/data/byte_with_xmp.jpg -mdd all
+
+Driver: JPEG/JPEG JFIF
+Files: ../autotest/gdrivers/data/byte_with_xmp.jpg
+Size is 20, 20
+Coordinate System is `&#39;
+Metadata (xml:XMP):
+&lt;?xpacket begin=&#39;&#39; id=&#39;W5M0MpCehiHzreSzNTczkc9d&#39;?&gt;
+&lt;x:xmpmeta xmlns:x=&#39;adobe:ns:meta/&#39; x:xmptk=&#39;Image::ExifTool 7.89&#39;&gt;
+&lt;rdf:RDF xmlns:rdf=&#39;http://www.w3.org/1999/02/22-rdf-syntax-ns#&#39;&gt;
+
+ &lt;rdf:Description rdf:about=&#39;&#39;
+  xmlns:dc=&#39;http://purl.org/dc/elements/1.1/&#39;&gt;
+  &lt;dc:description&gt;
+   &lt;rdf:Alt&gt;
+    &lt;rdf:li xml:lang=&#39;x-default&#39;&gt;Description&lt;/rdf:li&gt;
+   &lt;/rdf:Alt&gt;
+  &lt;/dc:description&gt;
+  &lt;dc:subject&gt;
+   &lt;rdf:Bag&gt;
+    &lt;rdf:li&gt;XMP&lt;/rdf:li&gt;
+    &lt;rdf:li&gt;Test&lt;/rdf:li&gt;
+   &lt;/rdf:Bag&gt;
+  &lt;/dc:subject&gt;
+  &lt;dc:title&gt;
+   &lt;/rdf:Alt&gt;
+  &lt;/dc:title&gt;
+ &lt;/rdf:Description&gt;
+
+ &lt;rdf:Description rdf:about=&#39;&#39;
+  xmlns:tiff=&#39;http://ns.adobe.com/tiff/1.0/&#39;&gt;
+  &lt;tiff:BitsPerSample&gt;
+   &lt;rdf:Seq&gt;
+    &lt;rdf:li&gt;8&lt;/rdf:li&gt;
+   &lt;/rdf:Seq&gt;
+  &lt;/tiff:BitsPerSample&gt;
+  &lt;tiff:Compression&gt;1&lt;/tiff:Compression&gt;
+  &lt;tiff:ImageLength&gt;20&lt;/tiff:ImageLength&gt;
+  &lt;tiff:ImageWidth&gt;20&lt;/tiff:ImageWidth&gt;
+  &lt;tiff:PhotometricInterpretation&gt;1&lt;/tiff:PhotometricInterpretation&gt;
+  &lt;tiff:PlanarConfiguration&gt;1&lt;/tiff:PlanarConfiguration&gt;
+  &lt;tiff:SamplesPerPixel&gt;1&lt;/tiff:SamplesPerPixel&gt;
+ &lt;/rdf:Description&gt;
+&lt;/rdf:RDF&gt;
+&lt;/x:xmpmeta&gt;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+&lt;?xpacket end=&#39;w&#39;?&gt;
+Corner Coordinates:
+Upper Left  (    0.0,    0.0)
+Lower Left  (    0.0,   20.0)
+Upper Right (   20.0,    0.0)
+Lower Right (   20.0,   20.0)
+Center      (   10.0,   10.0)
+Band 1 Block=20x1 Type=Byte, ColorInterp=Gray
+  Image Structure Metadata:
+    COMPRESSION=JPEG
+</pre></div>
+</div>
+</div>
+<div class="section" id="backward-compatibility">
+<h2>Backward Compatibility<a class="headerlink" href="#backward-compatibility" title="Permalink to this headline">¶</a></h2>
+<p>This change has no impact on backward compatibility at the C API/ABI and
+C++ API levels. But it impacts C++ ABI, so it requires a full rebuild of
+all GDAL drivers.</p>
+</div>
+<div class="section" id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
+<p>The Python autotest suite will be extended to test the new API in a few
+drivers.</p>
+</div>
+<div class="section" id="ticket">
+<h2>Ticket<a class="headerlink" href="#ticket" title="Permalink to this headline">¶</a></h2>
+<p>Ticket #5275 has been opened to track the progress of this RFC.</p>
+<p>The implementation is available in <a class="reference external" href="http://trac.osgeo.org/gdal/attachment/ticket/5275/getmetadatadomainlist.patch">an attachment to ticket
+5275</a>.</p>
+</div>
+<div class="section" id="voting-history">
+<h2>Voting history<a class="headerlink" href="#voting-history" title="Permalink to this headline">¶</a></h2>
+<p>+1 from EvenR, DanielM and JukkaR</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rfc44_gdalinfoxml.html" class="btn btn-neutral float-right" title="RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc42_find_laundered_fields.html" class="btn btn-neutral float-left" title="RFC 42: OGR Layer laundered field lookup" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,723 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ESRI Shapefile / DBF &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdrivers/vector/shapefile.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Norwegian SOSI Standard" href="sosi.html" />
+    <link rel="prev" title="Selafin files" href="selafin.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Vector drivers</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="aeronavfaa.html">Aeronav FAA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="amigocloud.html">AmigoCloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ao.html">ESRI ArcObjects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arcgen.html">ARCGEN - Arc/Info Generate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="avcbin.html">Arc/Info Binary Coverage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="avce00.html">Arc/Info E00 (ASCII) Coverage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bna.html">BNA - Atlas BNA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cad.html">CAD – AutoCAD DWG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="carto.html">Carto</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cloudant.html">Cloudant – Cloudant</a></li>
+<li class="toctree-l2"><a class="reference internal" href="couchdb.html">CouchDB - CouchDB/GeoCouch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csv.html">Comma Separated Value (.csv)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csw.html">CSW - OGC CSW (Catalog Service for the Web)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="db2.html">DB2 Spatial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dgn.html">Microstation DGN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dgnv8.html">Microstation DGN v8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dods.html">DODS/OPeNDAP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dwg.html">AutoCAD DWG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dxf.html">AutoCAD DXF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eeda.html">Google Earth Engine Data API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="edigeo.html">EDIGEO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elasticsearch.html">Elasticsearch: Geographically Encoded Objects for Elasticsearch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="esrijson.html">ESRIJSON / FeatureService driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filegdb.html">ESRI File Geodatabase (FileGDB)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flatgeobuf.html">FlatGeobuf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fme.html">FMEObjects Gateway</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoconcept.html">GeoConcept text export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geojson.html">GeoJSON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geojsonseq.html">GeoJSONSeq: sequence of GeoJSON features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geomedia.html">Geomedia MDB database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="georss.html">GeoRSS : Geographically Encoded Objects for RSS feeds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gmlas.html">GMLAS - Geography Markup Language (GML) driven by application schemas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gml.html">GML - Geography Markup Language</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gmt.html">GMT ASCII Vectors (.gmt)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpkg.html">GPKG – GeoPackage vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpsbabel.html">GPSBabel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpx.html">GPX - GPS Exchange Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grass.html">GRASS Vector Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gtm.html">GTM - GPS TrackMaker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="htf.html">HTF - Hydrographic Transfer Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="idb.html">IDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="idrisi.html">Idrisi Vector (.VCT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ili.html">“INTERLIS 1” and “INTERLIS 2” drivers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingres.html">INGRES</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jml.html">JML: OpenJUMP JML format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kml.html">KML - Keyhole Markup Language</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libkml.html">LIBKML Driver (.kml .kmz)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mapml.html">MapML</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mdb.html">Access MDB databases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="memory.html">Memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mitab.html">MapInfo TAB and MIF/MID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mongodb.html">MongoDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mongodbv3.html">MongoDBv3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mssqlspatial.html">MSSQLSpatial - Microsoft SQL Server Spatial Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mvt.html">MVT: Mapbox Vector Tiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mysql.html">MySQL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nas.html">NAS - ALKIS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="netcdf.html">NetCDF: Network Common Data Form - Vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ngw.html">NGW – NextGIS Web</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ntf.html">UK .NTF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="oapif.html">OGC API - Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="oci.html">Oracle Spatial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="odbc.html">ODBC RDBMS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ods.html">ODS - Open Document Spreadsheet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ogdi.html">OGDI Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="openair.html">OpenAir - OpenAir Special Use Airspace Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="openfilegdb.html">ESRI File Geodatabase (OpenFileGDB)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="osm.html">OSM - OpenStreetMap XML and PBF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pdf.html">PDF – Geospatial PDF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pds.html">PDS - Planetary Data Systems TABLE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pgdump.html">PostgreSQL SQL Dump</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pgeo.html">ESRI Personal GeoDatabase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pg.html">PostgreSQL / PostGIS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plscenes.html">PLScenes (Planet Labs Scenes/Catalog API)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s57.html">IHO S-57 (ENC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sde.html">ESRI ArcSDE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sdts.html">SDTS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="segukooa.html">SEG-P1 / UKOOA P1/90</a></li>
+<li class="toctree-l2"><a class="reference internal" href="segy.html">SEG-Y / SEGY</a></li>
+<li class="toctree-l2"><a class="reference internal" href="selafin.html">Selafin files</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">ESRI Shapefile / DBF</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#encoding">Encoding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#open-options">Open options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#spatial-and-attribute-indexing">Spatial and Attribute Indexing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#creation-issues">Creation Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#field-sizes">Field sizes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#spatial-extent">Spatial extent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#size-issues">Size Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dataset-creation-options">Dataset Creation Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#layer-creation-options">Layer Creation Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vsi-virtual-file-system-api-support">VSI Virtual File System API support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compressed-files">Compressed files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#advanced-topics">Advanced topics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#driver-capabilities">Driver capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#see-also">See Also</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sosi.html">Norwegian SOSI Standard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sqlite.html">SQLite / Spatialite RDBMS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sua.html">SUA - Tim Newport-Peace’s Special Use Airspace Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="svg.html">SVG - Scalable Vector Graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sxf.html">Storage and eXchange Format - SXF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiger.html">U.S. Census TIGER/Line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="topojson.html">TopoJSON driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vdv.html">VDV - VDV-451/VDV-452/INTREST Data Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vfk.html">VFK - Czech Cadastral Exchange Data Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vrt.html">VRT – Virtual Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="walk.html">Walk - Walk Spatial Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wasp.html">WAsP - WAsP .map format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wfs.html">WFS - OGC WFS service</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xls.html">XLS - MS Excel format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xlsx.html">XLSX - MS Office Open XML spreadsheet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xplane.html">X-Plane/Flightgear aeronautical data</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Vector drivers</a> &raquo;</li>
+      
+      <li>ESRI Shapefile / DBF</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/drivers/vector/shapefile.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="sosi.html" class="btn btn-neutral float-right" title="Norwegian SOSI Standard" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="selafin.html" class="btn btn-neutral float-left" title="Selafin files" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="esri-shapefile-dbf">
+<span id="vector-shapefile"></span><h1>ESRI Shapefile / DBF<a class="headerlink" href="#esri-shapefile-dbf" title="Permalink to this headline">¶</a></h1>
+<div class="admonition shortname" id="shortname-0">
+<p class="admonition-title">Driver short name</p>
+<p>ESRI Shapefile</p>
+</div>
+<div class="admonition built_in_by_default" id="built_in_by_default-0">
+<p class="admonition-title">Driver built-in by default</p>
+<p>This driver is built-in by default</p>
+</div>
+<p>All varieties of ESRI Shapefiles should be available for reading, creation and
+editing. The driver can also handle standalone
+DBF files without associated .shp files.</p>
+<p>Normally the OGR Shapefile driver treats a whole directory of shapefiles
+as a dataset, and a single shapefile within that directory as a layer.
+In this case the directory name should be used as the dataset name.
+However, it is also possible to use one of the files (.shp, .shx or
+.dbf) in a shapefile set as the dataset name, and then it will be
+treated as a dataset with one layer.</p>
+<p>Note that when reading a Shapefile of type SHPT_ARC, the corresponding
+layer will be reported as of type wkbLineString, but depending on the
+number of parts of each geometry, the actual type of the geometry for
+each feature can be either OGRLineString or OGRMultiLineString. The same
+applies for SHPT_POLYGON shapefiles, reported as layers of type
+wkbPolygon, but depending on the number of parts of each geometry, the
+actual type can be either OGRPolygon or OGRMultiPolygon.</p>
+<p>Measures (M coordinate) are supported. A
+Shapefile with measures is created if the specified geometry type is
+measured or an appropriate layer creation option is used. When a
+shapefile which may have measured geometries is opened, the first shape
+is examined and if it uses measures, the geometry type of the layer is
+set accordingly. This behavior can be changed with the ADJUST_GEOM_TYPE
+open option.</p>
+<p>MultiPatch files are read and each patch geometry is turned into a TIN
+or a GEOMETRYCOLLECTION of TIN representation for fans and meshes.</p>
+<p>If a .prj files in old Arc/Info style or new ESRI OGC WKT style is
+present, it will be read and used to associate a projection with
+features. Starting with GDAL 2.3, a match will be attempted with the
+EPSG databases to identify the SRS of the .prj with an entry in the
+catalog.</p>
+<p>The read driver assumes that multipart polygons follow the
+specification, that is to say the vertices of outer rings should be
+oriented clockwise on the X/Y plane, and those of inner rings
+counterclockwise. If a Shapefile is broken w.r.t. that rule, it is
+possible to define the configuration option
+OGR_ORGANIZE_POLYGONS=DEFAULT to proceed to a full analysis based on
+topological relationships of the parts of the polygons so that the
+resulting polygons are correctly defined in the OGC Simple Feature
+convention.</p>
+<div class="section" id="encoding">
+<h2>Encoding<a class="headerlink" href="#encoding" title="Permalink to this headline">¶</a></h2>
+<p>An attempt is made to read the code page setting in the .cpg file, or as
+a fallback in the LDID/codepage setting from the .dbf file, and use it
+to translate string fields to UTF-8 on read, and back when writing. LDID
+“87 / 0x57” is treated as ISO-8859-1 which may not be appropriate. The
+<code class="decl_configoption docutils literal notranslate"><span class="pre">SHAPE_ENCODING</span></code> configuration option may be used to
+override the encoding interpretation of the shapefile with any encoding
+supported by CPLRecode or to “” to avoid any recoding.</p>
+<p>Starting with GDAL 3.1, the following metadata items are available in the
+“SHAPEFILE” domain:</p>
+<ul class="simple">
+<li><p><strong>LDID_VALUE</strong>=integer: Raw LDID value from the DBF header. Only present
+if this value is not zero.</p></li>
+<li><p><strong>ENCODING_FROM_LDID</strong>= string: Encoding name deduced from LDID_VALUE. Only
+present if LDID_VALUE is present</p></li>
+<li><p><strong>CPG_VALUE</strong>=string: Content of the .cpg file. Only present if the file
+exists.</p></li>
+<li><p><strong>ENCODING_FROM_CPG</strong>= string: Encoding name deduced from CPG_VALUE. Only
+present if CPG_VALUE is present</p></li>
+<li><p><strong>SOURCE_ENCODING</strong>= string: Encoding used by GDAL to encode/recode strings.
+If the user has provided the <code class="docutils literal notranslate"><span class="pre">SHAPE_ENCODING</span></code> configuration option or
+<code class="docutils literal notranslate"><span class="pre">ENCODING</span></code> open option have been provided (included to empty value), then
+their value is used to fill this metadata item.
+Otherwise it is equal to ENCODING_FROM_CPG if it is present. Otherwise it is
+equal to ENCODING_FROM_LDID.</p></li>
+</ul>
+</div>
+<div class="section" id="open-options">
+<h2>Open options<a class="headerlink" href="#open-options" title="Permalink to this headline">¶</a></h2>
+<p>The following open options are available.</p>
+<ul class="simple">
+<li><p><strong>ENCODING</strong>=encoding_name: to override the encoding interpretation
+of the shapefile with any encoding supported by CPLRecode or to “” to
+avoid any recoding</p></li>
+<li><p><strong>DBF_DATE_LAST_UPDATE=</strong><em>YYYY-MM-DD</em>: Modification date to write
+in DBF header with year-month-day format. If not specified, current
+date is used.</p></li>
+<li><p><strong>ADJUST_TYPE</strong>=YES/NO: Set to YES (default is NO) to read the
+whole .dbf to adjust Real-&gt;Integer/Integer64 or Integer64-&gt;Integer
+field types when possible. This can be used when field widths are
+ambiguous and that by default OGR would select the larger data type.
+For example, a numeric column with 0 decimal figures and with width
+of 10/11 character may hold Integer or Integer64, and with width
+19/20 may hold Integer64 or larger integer (hold as Real)</p></li>
+<li><p><strong>ADJUST_GEOM_TYPE</strong>=NO/FIRST_SHAPE/ALL_SHAPES. (Starting with GDAL
+2.1) Defines how layer geometry type is computed, in particular to
+distinguish shapefiles that have shapes with significant values in
+the M dimension from the ones where the M values are set to the
+nodata value. By default (FIRST_SHAPE), the driver will look at the
+first shape and if it has M values it will expose the layer as having
+a M dimension. By specifying ALL_SHAPES, the driver will iterate over
+features until a shape with a valid M value is found to decide the
+appropriate layer type.</p></li>
+<li><p><strong>AUTO_REPACK=</strong><em>YES/NO</em>: (OGR &gt;= 2.2) Default to YES in GDAL 2.2.
+Whether the shapefile should be automatically repacked when needed,
+at dataset closing or at FlushCache()/SyncToDisk() time.</p></li>
+<li><p><strong>DBF_EOF_CHAR=</strong><em>YES/NO</em>: (OGR &gt;= 2.2) Default to YES in GDAL 2.2.
+Whether the .DBF should be terminated by a 0x1A end-of-file
+character, as in the DBF spec and done by other software vendors.
+Previous GDAL versions did not write one.</p></li>
+</ul>
+</div>
+<div class="section" id="spatial-and-attribute-indexing">
+<h2>Spatial and Attribute Indexing<a class="headerlink" href="#spatial-and-attribute-indexing" title="Permalink to this headline">¶</a></h2>
+<p>The OGR Shapefile driver supports spatial indexing and a limited form of
+attribute indexing.</p>
+<p>The spatial indexing uses the same .qix quadtree spatial index files
+that are used by UMN MapServer. Spatial indexing can accelerate
+spatially filtered passes through large datasets to pick out a small
+area quite dramatically.</p>
+<p>Starting with OGR 1.10, it can also use the ESRI spatial index files
+(.sbn / .sbx), but writing them is not supported currently.</p>
+<p>To create a spatial index (in .qix format), issue a SQL command of the
+form</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">SPATIAL</span> <span class="n">INDEX</span> <span class="n">ON</span> <span class="n">tablename</span> <span class="p">[</span><span class="n">DEPTH</span> <span class="n">N</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>where optional DEPTH specifier can be used to control number of index
+tree levels generated. If DEPTH is omitted, tree depth is estimated on
+basis of number of features in a shapefile and its value ranges from 1
+to 12.</p>
+<p>To delete a spatial index issue a command of the form</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DROP</span> <span class="n">SPATIAL</span> <span class="n">INDEX</span> <span class="n">ON</span> <span class="n">tablename</span>
+</pre></div>
+</div>
+<p>Otherwise, the <a class="reference external" href="http://mapserver.org">MapServer</a> shptree utility can
+be used:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">shptree</span> <span class="o">&lt;</span><span class="n">shpfile</span><span class="o">&gt;</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">depth</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">index_format</span><span class="o">&gt;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>More information is available about this utility at the <a class="reference external" href="http://mapserver.org/utilities/shptree.html">MapServer
+shptree page</a></p>
+<p>Currently the OGR Shapefile driver only supports attribute indexes for
+looking up specific values in a unique key column. To create an
+attribute index for a column issue an SQL command of the form “CREATE
+INDEX ON tablename USING fieldname”. To drop the attribute indexes issue
+a command of the form “DROP INDEX ON tablename”. The attribute index
+will accelerate WHERE clause searches of the form “fieldname = value”.
+The attribute index is actually stored as a mapinfo format index and is
+not compatible with any other shapefile applications.</p>
+</div>
+<div class="section" id="creation-issues">
+<h2>Creation Issues<a class="headerlink" href="#creation-issues" title="Permalink to this headline">¶</a></h2>
+<p>The Shapefile driver treats a directory as a dataset, and each Shapefile
+set (.shp, .shx, and .dbf) as a layer. The dataset name will be treated
+as a directory name. If the directory already exists it is used and
+existing files in the directory are ignored. If the directory does not
+exist it will be created.</p>
+<p>As a special case attempts to create a new dataset with the extension
+.shp will result in a single file set being created instead of a
+directory.</p>
+<p>ESRI shapefiles can only store one kind of geometry per layer
+(shapefile). On creation this is may be set based on the source file (if
+a uniform geometry type is known from the source driver), or it may be
+set directly by the user with the layer creation option SHPT (shown
+below). If not set the layer creation will fail. If geometries of
+incompatible types are written to the layer, the output will be
+terminated with an error.</p>
+<p>Note that this can make it very difficult to translate a mixed geometry
+layer from another format into Shapefile format using ogr2ogr, since
+ogr2ogr has no support for separating out geometries from a source
+layer. See the
+<a class="reference external" href="http://trac.osgeo.org/gdal/wiki/FAQVector#HowdoItranslateamixedgeometryfiletoshapefileformat">FAQ</a>
+for a solution.</p>
+<p>Shapefile feature attributes are stored in an associated .dbf file, and
+so attributes suffer a number of limitations:</p>
+<ul>
+<li><p>Attribute names can only be up to 10 characters long. Starting with
+version 1.7, the OGR Shapefile driver tries to generate unique field
+names. Successive duplicate field names, including those created by
+truncation to 10 characters, will be truncated to 8 characters and
+appended with a serial number from 1 to 99.</p>
+<p>For example:</p>
+<ul class="simple">
+<li><p>a → a, a → a_1, A → A_2;</p></li>
+<li><p>abcdefghijk → abcdefghij, abcdefghijkl → abcdefgh_1</p></li>
+</ul>
+</li>
+<li><p>Only Integer, Integer64, Real, String and Date (not DateTime, just
+year/month/day) field types are supported. The various list, and
+binary field types cannot be created.</p></li>
+<li><p>The field width and precision are directly used to establish storage
+size in the .dbf file. This means that strings longer than the field
+width, or numbers that don’t fit into the indicated field format will
+suffer truncation.</p></li>
+<li><p>Integer fields without an explicit width are treated as width 9, and
+extended to 10 or 11 if needed.</p></li>
+<li><p>Integer64 fields without an explicit width are treated as width 18,
+and extended to 19 or 20 if needed.</p></li>
+<li><p>Real (floating point) fields without an explicit width are treated as
+width 24 with 15 decimal places of precision.</p></li>
+<li><p>String fields without an assigned width are treated as 80 characters.</p></li>
+</ul>
+<p>Also, .dbf files are required to have at least one field. If none are
+created by the application an “FID” field will be automatically created
+and populated with the record number.</p>
+<p>The OGR shapefile driver supports rewriting existing shapes in a
+shapefile as well as deleting shapes. Deleted shapes are marked for
+deletion in the .dbf file, and then ignored by OGR. To actually remove
+them permanently (resulting in renumbering of FIDs) invoke the SQL
+‘REPACK &lt;tablename&gt;’ via the datasource ExecuteSQL() method.</p>
+<p>Starting with GDAL 2.0, REPACK will also result in .shp being rewritten
+if a feature geometry has been modified with SetFeature() and resulted
+in a change of the size the binary encoding of the geometry in the .shp
+file.</p>
+<p>Starting with GDAL 2.2, REPACK is also done automatically at file
+closing, or at FlushCache()/SyncToDisk() time, since shapefiles with
+holes can cause interoperability issues with other software.</p>
+</div>
+<div class="section" id="field-sizes">
+<h2>Field sizes<a class="headerlink" href="#field-sizes" title="Permalink to this headline">¶</a></h2>
+<p>Starting with GDAL/OGR 1.10, the driver knows to auto-extend string and
+integer fields (up to the 255 bytes limit imposed by the DBF format) to
+dynamically accommodate for the length of the data to be inserted.</p>
+<p>It is also possible to force a resize of the fields to the optimal width
+by issuing a SQL ‘RESIZE &lt;tablename&gt;’ via the datasource ExecuteSQL()
+method. This is convenient in situations where the default column width
+(80 characters for a string field) is bigger than necessary.</p>
+</div>
+<div class="section" id="spatial-extent">
+<h2>Spatial extent<a class="headerlink" href="#spatial-extent" title="Permalink to this headline">¶</a></h2>
+<p>Shapefiles store the layer spatial extent in the .SHP file. The layer
+spatial extent is automatically updated when inserting a new feature in
+a shapefile. However when updating an existing feature, if its previous
+shape was touching the bounding box of the layer extent but the updated
+shape does not touch the new extent, the computed extent will not be
+correct. It is then necessary to force a recomputation by invoking the
+SQL ‘RECOMPUTE EXTENT ON &lt;tablename&gt;’ via the datasource ExecuteSQL()
+method. The same applies for the deletion of a shape.</p>
+<p>Note: RECOMPUTE EXTENT ON is available in OGR &gt;= 1.9.0.</p>
+</div>
+<div class="section" id="size-issues">
+<h2>Size Issues<a class="headerlink" href="#size-issues" title="Permalink to this headline">¶</a></h2>
+<p>Geometry: The Shapefile format explicitly uses 32bit offsets and so
+cannot go over 8GB (it actually uses 32bit offsets to 16bit words), but
+the OGR shapefile implementation has a limitation to 4GB.</p>
+<p>Attributes: The dbf format does not have any offsets in it, so it can be
+arbitrarily large.</p>
+<p>However, for compatibility with other software implementation, it is not
+recommended to use a file size over 2GB for both .SHP and .DBF files.</p>
+<p>Starting with OGR 1.11, the 2GB_LIMIT=YES layer creation option can be
+used to strictly enforce that limit. For update mode, the
+SHAPE_2GB_LIMIT configuration option can be set to YES for similar
+effect. If nothing is set, a warning will be emitted when the 2GB limit
+is reached.</p>
+</div>
+<div class="section" id="dataset-creation-options">
+<h2>Dataset Creation Options<a class="headerlink" href="#dataset-creation-options" title="Permalink to this headline">¶</a></h2>
+<p>None</p>
+</div>
+<div class="section" id="layer-creation-options">
+<h2>Layer Creation Options<a class="headerlink" href="#layer-creation-options" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>SHPT=type</strong>: Override the type of shapefile created. Can be one of
+NULL for a simple .dbf file with no .shp file, POINT, ARC, POLYGON or
+MULTIPOINT for 2D; POINTZ, ARCZ, POLYGONZ, MULTIPOINTZ or MULTIPATCH
+for 3D; POINTM, ARCM, POLYGONM or MULTIPOINTM for measured
+geometries; and POINTZM, ARCZM, POLYGONZM or MULTIPOINTZM for 3D
+measured geometries. The measure support was added in GDAL 2.1.
+MULTIPATCH files are supported since GDAL 2.2.</p></li>
+<li><p><strong>ENCODING=</strong><em>value</em>: set the encoding value in the DBF file. The
+default value is “LDID/87”. It is not clear what other values may be
+appropriate.</p></li>
+<li><p><strong>RESIZE=</strong><em>YES/NO</em>: (OGR &gt;= 1.10.0) set the YES to resize fields
+to their optimal size. See above “Field sizes” section. Defaults to
+NO.</p></li>
+<li><p><strong>2GB_LIMIT=</strong><em>YES/NO</em>: (OGR &gt;= 1.11) set the YES to enforce the
+2GB file size for .SHP or .DBF files. Defaults to NO.</p></li>
+<li><p><strong>SPATIAL_INDEX=</strong><em>YES/NO</em>: (OGR &gt;= 2.0) set the YES to create a
+spatial index (.qix). Defaults to NO.</p></li>
+<li><p><strong>DBF_DATE_LAST_UPDATE=</strong><em>YYYY-MM-DD</em>: (OGR &gt;= 2.0) Modification
+date to write in DBF header with year-month-day format. If not
+specified, current date is used. Note: behavior of past GDAL
+releases was to write 1995-07-26</p></li>
+<li><p><strong>AUTO_REPACK=</strong><em>YES/NO</em>: (OGR &gt;= 2.2) Default to YES in GDAL 2.2.
+Whether the shapefile should be automatically repacked when needed,
+at dataset closing or at FlushCache()/SyncToDisk() time.</p></li>
+<li><p><strong>DBF_EOF_CHAR=</strong><em>YES/NO</em>: (OGR &gt;= 2.2) Default to YES in GDAL 2.2.
+Whether the .DBF should be terminated by a 0x1A end-of-file
+character, as in the DBF spec and done by other software vendors.
+Previous GDAL versions did not write one.</p></li>
+</ul>
+</div>
+<div class="section" id="vsi-virtual-file-system-api-support">
+<h2>VSI Virtual File System API support<a class="headerlink" href="#vsi-virtual-file-system-api-support" title="Permalink to this headline">¶</a></h2>
+<p>The driver supports reading from files managed by VSI Virtual File
+System API, which include “regular” files, as well as files in the
+/vsizip/, /vsigzip/ , /vsicurl/ domains.</p>
+</div>
+<div class="section" id="compressed-files">
+<h2>Compressed files<a class="headerlink" href="#compressed-files" title="Permalink to this headline">¶</a></h2>
+<p>Starting with GDAL 3.1, the driver can also support reading, creating and
+editing .shz files (ZIP files containing the .shp, .shx, .dbf and other side-car
+files of a single layer) and .shp.zip files (ZIP files contains one or several
+layers). Creation and editing involves the creation of temporary files.</p>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p>A merge of two shapefiles ‘file1.shp’ and ‘file2.shp’ into a new file
+‘file_merged.shp’ is performed like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">ogr2ogr</span> <span class="n">file_merged</span><span class="o">.</span><span class="n">shp</span> <span class="n">file1</span><span class="o">.</span><span class="n">shp</span>
+<span class="o">%</span> <span class="n">ogr2ogr</span> <span class="o">-</span><span class="n">update</span> <span class="o">-</span><span class="n">append</span> <span class="n">file_merged</span><span class="o">.</span><span class="n">shp</span> <span class="n">file2</span><span class="o">.</span><span class="n">shp</span> <span class="o">-</span><span class="n">nln</span> <span class="n">file_merged</span>
+</pre></div>
+</div>
+<p>The second command is opening file_merged.shp in update mode, and
+trying to find existing layers and append the features being copied.</p>
+<p>The -nln option sets the name of the layer to be copied to.</p>
+</li>
+<li><p>Building a spatial index :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">ogrinfo</span> <span class="n">file1</span><span class="o">.</span><span class="n">shp</span> <span class="o">-</span><span class="n">sql</span> <span class="s2">&quot;CREATE SPATIAL INDEX ON file1&quot;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Resizing columns of a DBF file to their optimal size (OGR &gt;= 1.10.0)
+:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">ogrinfo</span> <span class="n">file1</span><span class="o">.</span><span class="n">dbf</span> <span class="o">-</span><span class="n">sql</span> <span class="s2">&quot;RESIZE file1&quot;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="advanced-topics">
+<h2>Advanced topics<a class="headerlink" href="#advanced-topics" title="Permalink to this headline">¶</a></h2>
+<p>(GDAL &gt;= 2.0) The SHAPE_REWIND_ON_WRITE configuration option/environment
+variable can be set to NO to prevent the shapefile writer to correct the
+winding order of exterior/interior rings to be conformant with the one
+mandated by the Shapefile specification. This can be useful in some
+situations where a MultiPolygon passed to the shapefile writer is not
+really a compliant Single Feature polygon, but originates from example
+from a MultiPatch object (from a Shapefile/FileGDB/PGeo datasource).</p>
+<p>(GDAL &gt;= 2.1) The SHAPE_RESTORE_SHX configuration option/environment
+variable can be set to YES (default NO) to restore broken or absent .shx
+file from associated .shp file during opening.</p>
+</div>
+<div class="section" id="driver-capabilities">
+<h2>Driver capabilities<a class="headerlink" href="#driver-capabilities" title="Permalink to this headline">¶</a></h2>
+<div class="admonition supports_create" id="supports_create-0">
+<p class="admonition-title">Supports Create()</p>
+<p>This driver supports the <a class="reference internal" href="../../api/gdaldriver_cpp.html#_CPPv4N10GDALDriver6CreateEPKciii12GDALDataTypePPc" title="GDALDriver::Create"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDriver::Create()</span></code></a> operation</p>
+</div>
+<div class="admonition supports_georeferencing" id="supports_georeferencing-0">
+<p class="admonition-title">Supports Georeferencing</p>
+<p>This driver supports georeferencing</p>
+</div>
+<div class="admonition supports_virtualio" id="supports_virtualio-0">
+<p class="admonition-title">Supports VirtualIO</p>
+<p>This driver supports <a class="reference internal" href="../../user/virtual_file_systems.html#virtual-file-systems"><span class="std std-ref">virtual I/O operations (/vsimem/, etc.)</span></a></p>
+</div>
+</div>
+<div class="section" id="see-also">
+<h2>See Also<a class="headerlink" href="#see-also" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="http://shapelib.maptools.org/">Shapelib Page</a></p></li>
+<li><p><a class="reference external" href="http://trac.osgeo.org/gdal/wiki/UserDocs/Shapefiles">User Notes on OGR Shapefile
+Driver</a></p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="sosi.html" class="btn btn-neutral float-right" title="Norwegian SOSI Standard" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="selafin.html" class="btn btn-neutral float-left" title="Selafin files" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,861 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>MBTiles &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdrivers/raster/mbtiles.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="MEM – In Memory Raster" href="mem.html" />
+    <link rel="prev" title="MRF – Meta Raster Format" href="marfa.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Raster drivers</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="aaigrid.html">AAIGrid – Arc/Info ASCII Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ace2.html">ACE2 – ACE2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adrg.html">ADRG – ADRG/ARC Digitized Raster Graphics (.gen/.thf)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aig.html">AIG – Arc/Info Binary Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="airsar.html">AIRSAR – AIRSAR Polarimetric Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arg.html">ARG – Azavea Raster Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bag.html">BAG – Bathymetry Attributed Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blx.html">BLX – Magellan BLX Topo File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bmp.html">BMP – Microsoft Windows Device Independent Bitmap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bpg.html">BPG – Better Portable Graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bsb.html">BSB – Maptech/NOAA BSB Nautical Chart Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bt.html">BT – VTP .bt Binary Terrain Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="byn.html">BYN - Natural Resources Canada’s Geoid file format (.byn)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cad.html">CAD – AutoCAD DWG raster layer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cals.html">CALS – CALS Type 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ceos.html">CEOS – CEOS Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coasp.html">COASP –  DRDC COASP SAR Processor Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cog.html">COG – Cloud Optimized GeoTIFF generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cosar.html">COSAR – TerraSAR-X Complex SAR Data Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpg.html">CPG – Convair PolGASP data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctable2.html">CTable2 – CTable2 Datum Grid Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctg.html">CTG – USGS LULC Composite Theme Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="daas.html">DAAS (Airbus DS Intelligence Data As A Service driver)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="db2.html">DB2 raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dds.html">DDS – DirectDraw Surface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="derived.html">DERIVED – Derived subdatasets driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dimap.html">DIMAP – Spot DIMAP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dipex.html">DIPEx – ELAS DIPEx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dods.html">DODS – OPeNDAP Grid Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doq1.html">DOQ1 – First Generation USGS DOQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doq2.html">DOQ2 – New Labelled USGS DOQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dted.html">DTED – Military Elevation Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="e00grid.html">E00GRID – Arc/Info Export E00 GRID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ecrgtoc.html">ECRGTOC – ECRG Table Of Contents (TOC.xml)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ecw.html">ECW – Enhanced Compressed Wavelets (.ecw)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eedai.html">EEDAI - Google Earth Engine Data API Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ehdr.html">EHdr – ESRI .hdr Labelled</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eir.html">EIR – Erdas Imagine Raw</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elas.html">ELAS - Earth Resources Laboratory Applications Software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="envi.html">ENVI – ENVI .hdr Labelled Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="epsilon.html">Epsilon - Wavelet compressed images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="esat.html">ESAT – Envisat Image Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ers.html">ERS – ERMapper .ERS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exr.html">EXR – Extended Dynamic Range Image File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fast.html">FAST – EOSAT FAST Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fit.html">FIT – FIT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fits.html">FITS – Flexible Image Transport System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fujibas.html">FujiBAS – Fuji BAS Scanner Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="genbin.html">GenBin – Generic Binary (.hdr labelled)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="georaster.html">Oracle Spatial GeoRaster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gff.html">GFF – Sandia National Laboratories GSAT File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gif.html">GIF – Graphics Interchange Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gmt.html">GMT – GMT Compatible netCDF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpkg.html">GPKG – GeoPackage raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grass.html">GRASS Raster Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grassasciigrid.html">GRASSASCIIGrid – GRASS ASCII Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grib.html">GRIB – WMO General Regularly-distributed Information in Binary form</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gs7bg.html">GS7BG – Golden Software Surfer 7 Binary Grid File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gsag.html">GSAG – Golden Software ASCII Grid File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gsbg.html">GSBG – Golden Software Binary Grid File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gsc.html">GSC – GSC Geogrid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gta.html">GTA - Generic Tagged Arrays</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gtiff.html">GTiff – GeoTIFF File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gxf.html">GXF – Grid eXchange File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hdf4.html">HDF4 – Hierarchical Data Format Release 4 (HDF4)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hdf5.html">HDF5 – Hierarchical Data Format Release 5 (HDF5)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hf2.html">HF2 – HF2/HFZ heightfield raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hfa.html">HFA – Erdas Imagine .img</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ida.html">IDA – Image Display and Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Idrisi.html">RST – Idrisi Raster Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ignfheightasciigrid.html">IGNFHeightASCIIGrid – IGN-France height correction ASCII grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ilwis.html">ILWIS – Raster Map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intergraphraster.html">INGR – Intergraph Raster Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iris.html">IRIS – Vaisala’s weather radar software format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="isce.html">ISCE – ISCE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="isg.html">ISG – International Service for the Geoid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="isis2.html">ISIS2 – USGS Astrogeology ISIS Cube (Version 2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="isis3.html">ISIS3 – USGS Astrogeology ISIS Cube (Version 3)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jdem.html">JDEM – Japanese DEM (.mem)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2ecw.html">JP2ECW – ERDAS JPEG2000 (.jp2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2kak.html">JP2KAK – JPEG-2000 (based on Kakadu)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2lura.html">JP2Lura – JPEG2000 driver based on Lurawave library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2mrsid.html">JP2MrSID – JPEG2000 via MrSID SDK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2openjpeg.html">JP2OpenJPEG – JPEG2000 driver based on OpenJPEG library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jpeg2000.html">JPEG2000 – Implementation of the JPEG-2000 part 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jpegls.html">JPEGLS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jpeg.html">JPEG – JPEG JFIF File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jpipkak.html">JPIPKAK - JPIP Streaming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kea.html">KEA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kmlsuperoverlay.html">KMLSuperoverlay – KMLSuperoverlay</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kro.html">KRO – KOLOR Raw format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lan.html">LAN – Erdas 7.x .LAN and .GIS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="l1b.html">L1B – NOAA Polar Orbiter Level 1b Data Set (AVHRR)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lcp.html">LCP – FARSITE v.4 LCP Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="leveller.html">Leveller – Daylon Leveller Heightfield</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loslas.html">LOSLAS – NADCON .los/.las Datum Grid Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="map.html">MAP – OziExplorer .MAP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="marfa.html">MRF – Meta Raster Format</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">MBTiles</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#driver-capabilities">Driver capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#opening-options">Opening options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#raster-creation-issues">Raster creation issues</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#tile-formats">Tile formats</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#vector-creation-issues">Vector creation issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#creation-options">Creation options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#layer-configuration-vector">Layer configuration (vector)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#layer-creation-options-vector">Layer creation options (vector)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#overviews-raster">Overviews (raster)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vector-tiles">Vector tiles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#examples">Examples:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#see-also">See Also</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="mem.html">MEM – In Memory Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mff.html">MFF – Vexcel MFF Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mff2.html">MFF2 – Vexcel MFF2 Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mg4lidar.html">MG4Lidar – MrSID/MG4 LiDAR Compression / Point Cloud View files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mrsid.html">MrSID – Multi-resolution Seamless Image Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="msg.html">MSG – Meteosat Second Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="msgn.html">MSGN – Meteosat Second Generation (MSG) Native Archive Format (.nat)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ndf.html">NDF – NLAPS Data Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="netcdf.html">NetCDF: Network Common Data Form</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ngsgeoid.html">NGSGEOID - NOAA NGS Geoid Height Grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ngw.html">NGW – NextGIS Web</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nitf.html">NITF – National Imagery Transmission Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ntv1.html">NTv1 – NTv1 Datum Grid Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ntv2.html">NTv2 – NTv2 Datum Grid Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nwtgrd.html">NWT_GRD/NWT_GRC – Northwood/Vertical Mapper File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ozi.html">OZI – OZF2/OZFX3 raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="palsar.html">JAXA PALSAR Processed Products</a></li>
+<li class="toctree-l2"><a class="reference internal" href="paux.html">PAux – PCI .aux Labelled Raw Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pcidsk.html">PCIDSK – PCI Geomatics Database File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pcraster.html">PCRaster – PCRaster raster file format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pdf.html">PDF – Geospatial PDF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pds.html">PDS – Planetary Data System v3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pds4.html">PDS4 – NASA Planetary Data System (Version 4)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plmosaic.html">PLMosaic (Planet Labs Mosaics API)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="png.html">PNG – Portable Network Graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pnm.html">PNM – Netpbm (.pgm, .ppm)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="postgisraster.html">PostGISRaster – PostGIS Raster driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prf.html">PHOTOMOD Raster File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasdaman.html">Rasdaman GDAL driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasterlite.html">Rasterlite - Rasters in SQLite DB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasterlite2.html">RasterLite2 - Rasters in SQLite DB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="r.html">R – R Object Data Store</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rda.html">RDA (DigitalGlobe Raster Data Access)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rdb.html">RDB - <em>RIEGL</em> Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rik.html">RIK – Swedish Grid Maps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rmf.html">RMF – Raster Matrix Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="roi_pac.html">ROI_PAC – ROI_PAC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpftoc.html">RPFTOC – Raster Product Format/RPF (a.toc)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rraster.html">RRASTER – R Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rs2.html">RS2 – RadarSat 2 XML Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="safe.html">SAFE – Sentinel-1 SAFE XML Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sar_ceos.html">SAR_CEOS – CEOS SAR Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sdat.html">SAGA – SAGA GIS Binary Grid File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sdts.html">SDTS – USGS SDTS DEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sde.html">ESRI ArcSDE Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sentinel2.html">SENTINEL2 – Sentinel-2 Products</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sgi.html">SGI – SGI Image Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sigdem.html">SIGDEM – Scaled Integer Gridded DEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="snodas.html">SNODAS – Snow Data Assimilation System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="srp.html">SRP – Standard Product Format (ASRP/USRP) (.gen)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="srtmhgt.html">SRTMHGT – SRTM HGT Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="terragen.html">Terragen – Terragen™ Terrain File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="til.html">TIL – EarthWatch/DigitalGlobe .TIL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.html">TileDB - TileDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tsx.html">TSX –  TerraSAR-X Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usgsdem.html">USGSDEM – USGS ASCII DEM (and CDED)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vicar.html">VICAR – VICAR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vrt.html">VRT – GDAL Virtual Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wcs.html">WCS – OGC Web Coverage Service</a></li>
+<li class="toctree-l2"><a class="reference internal" href="webp.html">WEBP - WEBP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wms.html">WMS – Web Map Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wmts.html">WMTS – OGC Web Map Tile Service</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xpm.html">XPM – X11 Pixmap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xyz.html">XYZ – ASCII Gridded XYZ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="zmap.html">ZMap – ZMap Plus Grid</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Raster drivers</a> &raquo;</li>
+      
+      <li>MBTiles</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/drivers/raster/mbtiles.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="mem.html" class="btn btn-neutral float-right" title="MEM – In Memory Raster" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="marfa.html" class="btn btn-neutral float-left" title="MRF – Meta Raster Format" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="mbtiles">
+<span id="raster-mbtiles"></span><h1>MBTiles<a class="headerlink" href="#mbtiles" title="Permalink to this headline">¶</a></h1>
+<div class="admonition shortname" id="shortname-0">
+<p class="admonition-title">Driver short name</p>
+<p>MBTiles</p>
+</div>
+<div class="admonition build_dependencies" id="build_dependencies-0">
+<p class="admonition-title">Build dependencies</p>
+<p>libsqlite3</p>
+</div>
+<p>The MBTiles driver allows reading rasters in
+the MBTiles format, which is a specification for storing tiled map data
+in SQLite databases.</p>
+<p>Starting with GDAL 2.1, the MBTiles driver has creation and write
+support for MBTiles raster datasets.</p>
+<p>Starting with GDAL 2.3, the MBTiles driver has read and write support
+for MBTiles vector datasets. For standalone Mapbox Vector Tile files or
+set of MVT files, see the <a class="reference internal" href="../vector/mvt.html#vector-mvt"><span class="std std-ref">MVT</span></a> driver. Note: vector
+write support requires GDAL to be built with GEOS.</p>
+<p>GDAL/OGR must be compiled with OGR SQLite driver support, and JPEG and
+PNG drivers.</p>
+<p>The SRS is always the Pseudo-Mercator (a.k.a Google Mercator)
+projection.</p>
+<p>Starting with GDAL 2.3, the driver will open a dataset as RGBA. For
+previous versions, the driver will try to determine the number of bands
+by probing the content of one tile. It is possible to alter this
+behavior by defining the MBTILES_BAND_COUNT configuration option (or
+starting with GDAL 2.1, the BAND_COUNT open option) to the number of
+bands. The values supported are 1, 2, 3 or 4. Four band
+(Red,Green,Blue,Alpha) dataset gives the maximum compatibility with the
+various encodings of tiles that can be stored.</p>
+<p>The driver will use the ‘bounds’ metadata in the metadata table and do
+necessary tile clipping, if needed, to respect that extent. However that
+information being optional, if omitted, the driver will use the extent
+of the tiles at the maximum zoom level. The user can also specify the
+USE_BOUNDS=NO open option to force the use of the actual extent of tiles
+at the maximum zoom level. Or it can specify any of MINX/MINY/MAXX/MAXY
+to have a custom extent.</p>
+<p>The driver can retrieve pixel attributes encoded according to the
+UTFGrid specification available in some MBTiles files. They can be
+obtained with the gdallocationinfo utility, or with a
+GetMetadataItem(“Pixel_iCol_iLine”, “LocationInfo”) call on a band
+object.</p>
+<div class="section" id="driver-capabilities">
+<h2>Driver capabilities<a class="headerlink" href="#driver-capabilities" title="Permalink to this headline">¶</a></h2>
+<div class="admonition supports_createcopy" id="supports_createcopy-0">
+<p class="admonition-title">Supports CreateCopy()</p>
+<p>This driver supports the <a class="reference internal" href="../../api/gdaldriver_cpp.html#_CPPv4N10GDALDriver10CreateCopyEPKcP11GDALDatasetiPPc16GDALProgressFuncPv" title="GDALDriver::CreateCopy"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDriver::CreateCopy()</span></code></a> operation</p>
+</div>
+<div class="admonition supports_create" id="supports_create-0">
+<p class="admonition-title">Supports Create()</p>
+<p>This driver supports the <a class="reference internal" href="../../api/gdaldriver_cpp.html#_CPPv4N10GDALDriver6CreateEPKciii12GDALDataTypePPc" title="GDALDriver::Create"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDriver::Create()</span></code></a> operation</p>
+</div>
+<div class="admonition supports_georeferencing" id="supports_georeferencing-0">
+<p class="admonition-title">Supports Georeferencing</p>
+<p>This driver supports georeferencing</p>
+</div>
+<div class="admonition supports_virtualio" id="supports_virtualio-0">
+<p class="admonition-title">Supports VirtualIO</p>
+<p>This driver supports <a class="reference internal" href="../../user/virtual_file_systems.html#virtual-file-systems"><span class="std std-ref">virtual I/O operations (/vsimem/, etc.)</span></a></p>
+</div>
+</div>
+<div class="section" id="opening-options">
+<h2>Opening options<a class="headerlink" href="#opening-options" title="Permalink to this headline">¶</a></h2>
+<p>Starting with GDAL 2.1, the following open options are available:</p>
+<ul class="simple">
+<li><p>Raster and vector:</p>
+<ul>
+<li><p><strong>ZOOM_LEVEL</strong>=value: Integer value between 0 and the maximum
+filled in the <em>tiles</em> table. By default, the driver will select
+the maximum zoom level, such as at least one tile at that zoom
+level is found in the ‘tiles’ table.</p></li>
+<li><p><strong>USE_BOUNDS</strong>=YES/NO: Whether to use the ‘bounds’ metadata,
+when available, to determine the AOI. Defaults to YES.</p></li>
+<li><p><strong>MINX</strong>=value: Minimum easting (in EPSG:3857) of the area of
+interest.</p></li>
+<li><p><strong>MINY</strong>=value: Minimum northing (in EPSG:3857) of the area of
+interest.</p></li>
+<li><p><strong>MAXX</strong>=value: Maximum easting (in EPSG:3857) of the area of
+interest.</p></li>
+<li><p><strong>MAXY</strong>=value: Maximum northing (in EPSG:3857) of the area of
+interest.</p></li>
+</ul>
+</li>
+<li><p>Raster only:</p>
+<ul>
+<li><p><strong>BAND_COUNT</strong>=AUTO/1/2/3/4: Number of bands of the dataset
+exposed after opening. Some conversions will be done when possible
+and implemented, but this might fail in some cases, depending on
+the BAND_COUNT value and the number of bands of the tile. Defaults
+to AUTO.</p></li>
+<li><p><strong>TILE_FORMAT</strong>=PNG/PNG8/JPEG: Format used to store tiles. See
+<a class="reference external" href="#tile_formats">Tile formats</a> section. Only used in update
+mode. Defaults to PNG.</p></li>
+<li><p><strong>QUALITY</strong>=1-100: Quality setting for JPEG compression. Only
+used in update mode. Default to 75.</p></li>
+<li><p><strong>ZLEVEL</strong>=1-9: DEFLATE compression level for PNG tiles. Only
+used in update mode. Default to 6.</p></li>
+<li><p><strong>DITHER</strong>=YES/NO: Whether to use Floyd-Steinberg dithering (for
+TILE_FORMAT=PNG8). Only used in update mode. Defaults to NO.</p></li>
+</ul>
+</li>
+<li><p>Vector only (GDAL &gt;= 2.3):</p>
+<ul>
+<li><p><strong>CLIP</strong>=YES/NO: Whether to clip geometries of vector features
+to tile extent. Defaults to YES.</p></li>
+<li><p><strong>ZOOM_LEVEL_AUTO</strong>=YES/NO: Whether to auto-select the zoom
+level for vector layers according to the spatial filter extent.
+Only for display purpose. Defaults to NO.</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="raster-creation-issues">
+<h2>Raster creation issues<a class="headerlink" href="#raster-creation-issues" title="Permalink to this headline">¶</a></h2>
+<p>Depending of the number of bands of the input dataset and the tile
+format selected, the driver will do the necessary conversions to be
+compatible with the tile format. When using the CreateCopy() API (such
+as with gdal_translate), automatic reprojection of the input dataset to
+EPSG:3857 (WebMercator) will be done, with selection of the appropriate
+zoom level.</p>
+<p>Fully transparent tiles will not be written to the database, as allowed
+by the format.</p>
+<p>The driver implements the Create() and IWriteBlock() methods, so that
+arbitrary writing of raster blocks is possible, enabling the direct use
+of MBTiles as the output dataset of utilities such as gdalwarp.</p>
+<p>On creation, raster blocks can be written only if the geotransformation
+matrix has been set with SetGeoTransform() This is effectively needed to
+determine the zoom level of the full resolution dataset based on the
+pixel resolution, dataset and tile dimensions.</p>
+<p>Technical/implementation note: in the general case, GDAL blocks do not
+exactly match a single MBTiles tile. In which case, each GDAL block will
+overlap four MBTiles tiles. This is easily handled on the read side, but
+on creation/update side, such configuration could cause numerous
+decompression/ recompression of tiles to be done, which might cause
+unnecessary quality loss when using lossy compression (JPEG). To avoid
+that, the driver will create a temporary database next to the main
+MBTiles file to store partial MBTiles tiles in a lossless (and
+uncompressed) way. Once a tile has received data for its four quadrants
+and for all the bands (or the dataset is closed or explicitly flushed
+with FlushCache()), those uncompressed tiles are definitely transferred
+to the MBTiles file with the appropriate compression. All of this is
+transparent to the user of GDAL API/utilities</p>
+<div class="section" id="tile-formats">
+<h3>Tile formats<a class="headerlink" href="#tile-formats" title="Permalink to this headline">¶</a></h3>
+<p>MBTiles can store tiles in PNG or JPEG. Support for those tile formats
+depend if the underlying drivers are available in GDAL. By default, GDAL
+will PNG tiles.</p>
+<p>It is possible to select the tile format by setting the creation/open
+option TILE_FORMAT to one of PNG, PNG8 or JPEG. When using JPEG, the
+alpha channel will not be stored.</p>
+<p>PNG8 can be selected to use 8-bit PNG with a color table up to 256
+colors. On creation, an optimized color table is computed for each tile.
+The DITHER option can be set to YES to use Floyd/Steinberg dithering
+algorithm, which spreads the quantization error on neighbouring pixels
+for better rendering (note however than when zooming in, this can cause
+non desirable visual artifacts). Setting it to YES will generally cause
+less effective compression. Note that at that time, such an 8-bit PNG
+formulation is only used for fully opaque tiles, as the median-cut
+algorithm currently implemented to compute the optimal color table does
+not support alpha channel (even if PNG8 format would potentially allow
+color table with transparency). So when selecting PNG8, non fully opaque
+tiles will be stored as 32-bit PNG.</p>
+</div>
+</div>
+<div class="section" id="vector-creation-issues">
+<h2>Vector creation issues<a class="headerlink" href="#vector-creation-issues" title="Permalink to this headline">¶</a></h2>
+<p>Tiles are generated with WebMercator (EPSG:3857) projection. Several
+layers can be written. It is possible to decide at which zoom level
+ranges a given layer is written.</p>
+</div>
+<div class="section" id="creation-options">
+<h2>Creation options<a class="headerlink" href="#creation-options" title="Permalink to this headline">¶</a></h2>
+<p>The following creation options are available:</p>
+<ul class="simple">
+<li><p>Raster and vector:</p>
+<ul>
+<li><p><strong>NAME</strong>=string. Tileset name, used to set the ‘name’ metadata
+item. If not specified, the basename of the filename will be used.</p></li>
+<li><p><strong>DESCRIPTION</strong>=string. A description of the layer, used to set
+the ‘description’ metadata item. If not specified, the basename of
+the filename will be used.</p></li>
+<li><p><strong>TYPE</strong>=overlay/baselayer. The layer type, used to set the
+‘type’ metadata item. Default to ‘overlay’.</p></li>
+</ul>
+</li>
+<li><p>Raster only:</p>
+<ul>
+<li><p><strong>VERSION</strong>=string. The version of the tileset, as a plain
+number, used to set the ‘version’ metadata item. Default to ‘1.1’.</p></li>
+<li><p><strong>BLOCKSIZE</strong>=integer. (GDAL &gt;= 2.3) Block/tile size in width
+and height in pixels. Defaults to 256. Maximum supported is 4096.</p></li>
+<li><p><strong>TILE_FORMAT</strong>=PNG/PNG8/JPEG: Format used to store tiles. See
+<a class="reference external" href="#tile_formats">Tile formats</a> section. Defaults to PNG.</p></li>
+<li><p><strong>QUALITY</strong>=1-100: Quality setting for JPEG compression. Default
+to 75.</p></li>
+<li><p><strong>ZLEVEL</strong>=1-9: DEFLATE compression level for PNG tiles. Default
+to 6.</p></li>
+<li><p><strong>DITHER</strong>=YES/NO: Whether to use Floyd-Steinberg dithering (for
+TILE_FORMAT=PNG8). Defaults to NO.</p></li>
+<li><p><strong>ZOOM_LEVEL_STRATEGY</strong>=AUTO/LOWER/UPPER. Strategy to determine
+zoom level. LOWER will select the zoom level immediately below the
+theoretical computed non-integral zoom level, leading to
+subsampling. On the contrary, UPPER will select the immediately
+above zoom level, leading to oversampling. Defaults to AUTO which
+selects the closest zoom level.</p></li>
+<li><p><strong>RESAMPLING</strong>=NEAREST/BILINEAR/CUBIC/CUBICSPLINE/LANCZOS/MODE/AVERAGE.
+Resampling algorithm. Defaults to BILINEAR.</p></li>
+<li><p><strong>WRITE_BOUNDS</strong>=YES/NO: Whether to write the bounds ‘metadata’
+item. Defaults to YES.</p></li>
+</ul>
+</li>
+<li><p>Vector only (GDAL &gt;= 2.3):</p>
+<ul>
+<li><p><strong>MINZOOM</strong>=integer: Minimum zoom level at which tiles are
+generated. Defaults to 0.</p></li>
+<li><p><strong>MAXZOOM</strong>=integer: Minimum zoom level at which tiles are
+generated. Defaults to 5. Maximum supported value is 22</p></li>
+<li><p><strong>CONF</strong>=string: Layer configuration as a JSon serialized
+string.</p></li>
+<li><p><strong>SIMPLIFICATION</strong>=float: Simplification factor for linear or
+polygonal geometries. The unit is the integer unit of tiles after
+quantification of geometry coordinates to tile coordinates.
+Applies to all zoom levels, unless SIMPLIFICATION_MAX_ZOOM is also
+defined.</p></li>
+<li><p><strong>SIMPLIFICATION_MAX_ZOOM</strong>=float: Simplification factor for
+linear or polygonal geometries, that applies only for the maximum
+zoom level.</p></li>
+<li><p><strong>EXTENT</strong>=positive_integer. Number of units in a tile. The
+greater, the more accurate geometry coordinates (at the expense of
+tile byte size). Defaults to 4096</p></li>
+<li><p><strong>BUFFER</strong>=positive_integer. Number of units for geometry
+buffering. This value corresponds to a buffer around each side of
+a tile into which geometries are fetched and clipped. This is used
+for proper rendering of geometries that spread over tile
+boundaries by some rendering clients. Defaults to 80 if
+EXTENT=4096.</p></li>
+<li><p><strong>COMPRESS</strong>=YES/NO. Whether to compress tiles with the
+Deflate/GZip algorithm. Defaults to YES. Should be left to YES for
+FORMAT=MBTILES.</p></li>
+<li><p><strong>TEMPORARY_DB</strong>=string. Filename with path for the temporary
+database used for tile generation. By default, this will be a file
+in the same directory as the output file/directory.</p></li>
+<li><p><strong>MAX_SIZE</strong>=integer. Maximum size of a tile in bytes (after
+compression). Defaults to 500 000. If a tile is greater than this
+threshold, features will be written with reduced precision, or
+discarded.</p></li>
+<li><p><strong>MAX_FEATURES</strong>=integer. Maximum number of features per tile.
+Defaults to 200 000.</p></li>
+<li><p><strong>BOUNDS</strong>=min_long,min_lat,max_long,max_lat. Override default
+value for bounds metadata item which is computed from the extent
+of features written.</p></li>
+<li><p><strong>CENTER</strong>=long,lat,zoom_level. Override default value for
+center metadata item, which is the center of BOUNDS at minimum
+zoom level.</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="layer-configuration-vector">
+<h2>Layer configuration (vector)<a class="headerlink" href="#layer-configuration-vector" title="Permalink to this headline">¶</a></h2>
+<p>The above mentioned CONF dataset creation option can be set to a string
+whose value is a JSon serialized document such as the below one:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;boundaries_lod0&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;target_name&quot;</span><span class="p">:</span> <span class="s2">&quot;boundaries&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Country boundaries&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;minzoom&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;maxzoom&quot;</span><span class="p">:</span> <span class="mi">2</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;boundaries_lod1&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;target_name&quot;</span><span class="p">:</span> <span class="s2">&quot;boundaries&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;minzoom&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="s2">&quot;maxzoom&quot;</span><span class="p">:</span> <span class="mi">5</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><em>boundaries_lod0</em> and <em>boundaries_lod1</em> are the name of the OGR layers
+that are created into the target MVT dataset. They are mapped to the MVT
+target layer <em>boundaries</em>.</p>
+<p>It is also possible to get the same behavior with the below layer
+creation options, although that is not convenient in the ogr2ogr use
+case.</p>
+</div>
+<div class="section" id="layer-creation-options-vector">
+<h2>Layer creation options (vector)<a class="headerlink" href="#layer-creation-options-vector" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>MINZOOM</strong>=integer: Minimum zoom level at which tiles are
+generated. Defaults to the dataset creation option MINZOOM value.</p></li>
+<li><p><strong>MAXZOOM</strong>=integer: Minimum zoom level at which tiles are
+generated. Defaults to the dataset creation option MAXZOOM value.
+Maximum supported value is 22</p></li>
+<li><p><strong>NAME</strong>=string: Target layer name. Defaults to the layer name, but
+can be overridden so that several OGR layers map to a single target
+MVT layer. The typical use case is to have different OGR layers for
+mutually exclusive zoom level ranges.</p></li>
+<li><p><strong>DESCRIPTION</strong>=string: A description of the layer.</p></li>
+</ul>
+</div>
+<div class="section" id="overviews-raster">
+<h2>Overviews (raster)<a class="headerlink" href="#overviews-raster" title="Permalink to this headline">¶</a></h2>
+<p>gdaladdo / BuildOverviews() can be used to compute overviews. Only
+power-of-two overview factors (2,4,8,16,…) are supported.</p>
+<p>If more overview levels are specified than available, the extra ones are
+silently ignored.</p>
+<p>Overviews can also be cleared with the -clean option of gdaladdo (or
+BuildOverviews() with nOverviews=0)</p>
+</div>
+<div class="section" id="vector-tiles">
+<h2>Vector tiles<a class="headerlink" href="#vector-tiles" title="Permalink to this headline">¶</a></h2>
+<p>Starting with GDAL 2.3, the MBTiles driver can read MBTiles files
+containing vector tiles conforming to the Mapbox Vector Tile format
+(format=pbf).</p>
+<p>The driver requires the ‘metadata’ table to contain a name=’json’ entry,
+that has a ‘vector_layers’ array describing layers and their schema. See
+<a class="reference internal" href="../vector/mvt.html#mvt-metadata-json"><span class="std std-ref">metadata.json</span></a></p>
+<p>Note: The driver will make no effort of stiching together geometries for
+features that overlap several tiles.</p>
+</div>
+<div class="section" id="examples">
+<h2>Examples:<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p>Accessing a remote MBTiles raster :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gdalinfo /vsicurl/http://a.tiles.mapbox.com/v3/kkaefer.iceland.mbtiles
+</pre></div>
+</div>
+<p>Output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Driver</span><span class="p">:</span> <span class="n">MBTiles</span><span class="o">/</span><span class="n">MBTiles</span>
+<span class="n">Files</span><span class="p">:</span> <span class="o">/</span><span class="n">vsicurl</span><span class="o">/</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">a</span><span class="o">.</span><span class="n">tiles</span><span class="o">.</span><span class="n">mapbox</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">v3</span><span class="o">/</span><span class="n">kkaefer</span><span class="o">.</span><span class="n">iceland</span><span class="o">.</span><span class="n">mbtiles</span>
+<span class="n">Size</span> <span class="ow">is</span> <span class="mi">16384</span><span class="p">,</span> <span class="mi">16384</span>
+<span class="n">Coordinate</span> <span class="n">System</span> <span class="ow">is</span><span class="p">:</span>
+<span class="n">PROJCS</span><span class="p">[</span><span class="s2">&quot;WGS 84 / Pseudo-Mercator&quot;</span><span class="p">,</span>
+    <span class="n">GEOGCS</span><span class="p">[</span><span class="s2">&quot;WGS 84&quot;</span><span class="p">,</span>
+        <span class="n">DATUM</span><span class="p">[</span><span class="s2">&quot;WGS_1984&quot;</span><span class="p">,</span>
+            <span class="n">SPHEROID</span><span class="p">[</span><span class="s2">&quot;WGS 84&quot;</span><span class="p">,</span><span class="mi">6378137</span><span class="p">,</span><span class="mf">298.257223563</span><span class="p">,</span>
+                <span class="n">AUTHORITY</span><span class="p">[</span><span class="s2">&quot;EPSG&quot;</span><span class="p">,</span><span class="s2">&quot;7030&quot;</span><span class="p">]],</span>
+            <span class="n">AUTHORITY</span><span class="p">[</span><span class="s2">&quot;EPSG&quot;</span><span class="p">,</span><span class="s2">&quot;6326&quot;</span><span class="p">]],</span>
+        <span class="n">PRIMEM</span><span class="p">[</span><span class="s2">&quot;Greenwich&quot;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">AUTHORITY</span><span class="p">[</span><span class="s2">&quot;EPSG&quot;</span><span class="p">,</span><span class="s2">&quot;8901&quot;</span><span class="p">]],</span>
+        <span class="n">UNIT</span><span class="p">[</span><span class="s2">&quot;degree&quot;</span><span class="p">,</span><span class="mf">0.0174532925199433</span><span class="p">,</span>
+            <span class="n">AUTHORITY</span><span class="p">[</span><span class="s2">&quot;EPSG&quot;</span><span class="p">,</span><span class="s2">&quot;9122&quot;</span><span class="p">]],</span>
+        <span class="n">AUTHORITY</span><span class="p">[</span><span class="s2">&quot;EPSG&quot;</span><span class="p">,</span><span class="s2">&quot;4326&quot;</span><span class="p">]],</span>
+    <span class="n">PROJECTION</span><span class="p">[</span><span class="s2">&quot;Mercator_1SP&quot;</span><span class="p">],</span>
+    <span class="n">PARAMETER</span><span class="p">[</span><span class="s2">&quot;central_meridian&quot;</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+    <span class="n">PARAMETER</span><span class="p">[</span><span class="s2">&quot;scale_factor&quot;</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span>
+    <span class="n">PARAMETER</span><span class="p">[</span><span class="s2">&quot;false_easting&quot;</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+    <span class="n">PARAMETER</span><span class="p">[</span><span class="s2">&quot;false_northing&quot;</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+    <span class="n">UNIT</span><span class="p">[</span><span class="s2">&quot;metre&quot;</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">AUTHORITY</span><span class="p">[</span><span class="s2">&quot;EPSG&quot;</span><span class="p">,</span><span class="s2">&quot;9001&quot;</span><span class="p">]],</span>
+    <span class="n">AXIS</span><span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">,</span><span class="n">EAST</span><span class="p">],</span>
+    <span class="n">AXIS</span><span class="p">[</span><span class="s2">&quot;Y&quot;</span><span class="p">,</span><span class="n">NORTH</span><span class="p">],</span>
+    <span class="n">EXTENSION</span><span class="p">[</span><span class="s2">&quot;PROJ4&quot;</span><span class="p">,</span><span class="s2">&quot;+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs&quot;</span><span class="p">],</span>
+    <span class="n">AUTHORITY</span><span class="p">[</span><span class="s2">&quot;EPSG&quot;</span><span class="p">,</span><span class="s2">&quot;3857&quot;</span><span class="p">]]</span>
+<span class="n">Origin</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">3757031.250000000000000</span><span class="p">,</span><span class="mf">11271093.750000000000000</span><span class="p">)</span>
+<span class="n">Pixel</span> <span class="n">Size</span> <span class="o">=</span> <span class="p">(</span><span class="mf">152.873992919921875</span><span class="p">,</span><span class="o">-</span><span class="mf">152.873992919921875</span><span class="p">)</span>
+<span class="n">Image</span> <span class="n">Structure</span> <span class="n">Metadata</span><span class="p">:</span>
+  <span class="n">INTERLEAVE</span><span class="o">=</span><span class="n">PIXEL</span>
+<span class="n">Corner</span> <span class="n">Coordinates</span><span class="p">:</span>
+<span class="n">Upper</span> <span class="n">Left</span>  <span class="p">(</span><span class="o">-</span><span class="mf">3757031.250</span><span class="p">,</span><span class="mf">11271093.750</span><span class="p">)</span> <span class="p">(</span> <span class="mi">33</span><span class="n">d44</span><span class="s1">&#39;59.95&quot;W, 70d36&#39;</span><span class="mf">45.36</span><span class="s2">&quot;N)</span>
+<span class="n">Lower</span> <span class="n">Left</span>  <span class="p">(</span><span class="o">-</span><span class="mf">3757031.250</span><span class="p">,</span> <span class="mf">8766406.250</span><span class="p">)</span> <span class="p">(</span> <span class="mi">33</span><span class="n">d44</span><span class="s1">&#39;59.95&quot;W, 61d36&#39;</span><span class="mf">22.97</span><span class="s2">&quot;N)</span>
+<span class="n">Upper</span> <span class="n">Right</span> <span class="p">(</span><span class="o">-</span><span class="mf">1252343.750</span><span class="p">,</span><span class="mf">11271093.750</span><span class="p">)</span> <span class="p">(</span> <span class="mi">11</span><span class="n">d14</span><span class="s1">&#39;59.98&quot;W, 70d36&#39;</span><span class="mf">45.36</span><span class="s2">&quot;N)</span>
+<span class="n">Lower</span> <span class="n">Right</span> <span class="p">(</span><span class="o">-</span><span class="mf">1252343.750</span><span class="p">,</span> <span class="mf">8766406.250</span><span class="p">)</span> <span class="p">(</span> <span class="mi">11</span><span class="n">d14</span><span class="s1">&#39;59.98&quot;W, 61d36&#39;</span><span class="mf">22.97</span><span class="s2">&quot;N)</span>
+<span class="n">Center</span>      <span class="p">(</span><span class="o">-</span><span class="mf">2504687.500</span><span class="p">,</span><span class="mf">10018750.000</span><span class="p">)</span> <span class="p">(</span> <span class="mi">22</span><span class="n">d29</span><span class="s1">&#39;59.97&quot;W, 66d30&#39;</span><span class="mf">47.68</span><span class="s2">&quot;N)</span>
+<span class="n">Band</span> <span class="mi">1</span> <span class="n">Block</span><span class="o">=</span><span class="mi">256</span><span class="n">x256</span> <span class="n">Type</span><span class="o">=</span><span class="n">Byte</span><span class="p">,</span> <span class="n">ColorInterp</span><span class="o">=</span><span class="n">Red</span>
+  <span class="n">Overviews</span><span class="p">:</span> <span class="mi">8192</span><span class="n">x8192</span><span class="p">,</span> <span class="mi">4096</span><span class="n">x4096</span><span class="p">,</span> <span class="mi">2048</span><span class="n">x2048</span><span class="p">,</span> <span class="mi">1024</span><span class="n">x1024</span><span class="p">,</span> <span class="mi">512</span><span class="n">x512</span>
+  <span class="n">Mask</span> <span class="n">Flags</span><span class="p">:</span> <span class="n">PER_DATASET</span> <span class="n">ALPHA</span>
+  <span class="n">Overviews</span> <span class="n">of</span> <span class="n">mask</span> <span class="n">band</span><span class="p">:</span> <span class="mi">8192</span><span class="n">x8192</span><span class="p">,</span> <span class="mi">4096</span><span class="n">x4096</span><span class="p">,</span> <span class="mi">2048</span><span class="n">x2048</span><span class="p">,</span> <span class="mi">1024</span><span class="n">x1024</span><span class="p">,</span> <span class="mi">512</span><span class="n">x512</span>
+<span class="n">Band</span> <span class="mi">2</span> <span class="n">Block</span><span class="o">=</span><span class="mi">256</span><span class="n">x256</span> <span class="n">Type</span><span class="o">=</span><span class="n">Byte</span><span class="p">,</span> <span class="n">ColorInterp</span><span class="o">=</span><span class="n">Green</span>
+  <span class="n">Overviews</span><span class="p">:</span> <span class="mi">8192</span><span class="n">x8192</span><span class="p">,</span> <span class="mi">4096</span><span class="n">x4096</span><span class="p">,</span> <span class="mi">2048</span><span class="n">x2048</span><span class="p">,</span> <span class="mi">1024</span><span class="n">x1024</span><span class="p">,</span> <span class="mi">512</span><span class="n">x512</span>
+  <span class="n">Mask</span> <span class="n">Flags</span><span class="p">:</span> <span class="n">PER_DATASET</span> <span class="n">ALPHA</span>
+  <span class="n">Overviews</span> <span class="n">of</span> <span class="n">mask</span> <span class="n">band</span><span class="p">:</span> <span class="mi">8192</span><span class="n">x8192</span><span class="p">,</span> <span class="mi">4096</span><span class="n">x4096</span><span class="p">,</span> <span class="mi">2048</span><span class="n">x2048</span><span class="p">,</span> <span class="mi">1024</span><span class="n">x1024</span><span class="p">,</span> <span class="mi">512</span><span class="n">x512</span>
+<span class="n">Band</span> <span class="mi">3</span> <span class="n">Block</span><span class="o">=</span><span class="mi">256</span><span class="n">x256</span> <span class="n">Type</span><span class="o">=</span><span class="n">Byte</span><span class="p">,</span> <span class="n">ColorInterp</span><span class="o">=</span><span class="n">Blue</span>
+  <span class="n">Overviews</span><span class="p">:</span> <span class="mi">8192</span><span class="n">x8192</span><span class="p">,</span> <span class="mi">4096</span><span class="n">x4096</span><span class="p">,</span> <span class="mi">2048</span><span class="n">x2048</span><span class="p">,</span> <span class="mi">1024</span><span class="n">x1024</span><span class="p">,</span> <span class="mi">512</span><span class="n">x512</span>
+  <span class="n">Mask</span> <span class="n">Flags</span><span class="p">:</span> <span class="n">PER_DATASET</span> <span class="n">ALPHA</span>
+  <span class="n">Overviews</span> <span class="n">of</span> <span class="n">mask</span> <span class="n">band</span><span class="p">:</span> <span class="mi">8192</span><span class="n">x8192</span><span class="p">,</span> <span class="mi">4096</span><span class="n">x4096</span><span class="p">,</span> <span class="mi">2048</span><span class="n">x2048</span><span class="p">,</span> <span class="mi">1024</span><span class="n">x1024</span><span class="p">,</span> <span class="mi">512</span><span class="n">x512</span>
+<span class="n">Band</span> <span class="mi">4</span> <span class="n">Block</span><span class="o">=</span><span class="mi">256</span><span class="n">x256</span> <span class="n">Type</span><span class="o">=</span><span class="n">Byte</span><span class="p">,</span> <span class="n">ColorInterp</span><span class="o">=</span><span class="n">Alpha</span>
+  <span class="n">Overviews</span><span class="p">:</span> <span class="mi">8192</span><span class="n">x8192</span><span class="p">,</span> <span class="mi">4096</span><span class="n">x4096</span><span class="p">,</span> <span class="mi">2048</span><span class="n">x2048</span><span class="p">,</span> <span class="mi">1024</span><span class="n">x1024</span><span class="p">,</span> <span class="mi">512</span><span class="n">x512</span>
+</pre></div>
+</div>
+</li>
+<li><p>Reading pixel attributes encoded according to the UTFGrid
+specification :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gdallocationinfo /vsicurl/http://a.tiles.mapbox.com/v3/mapbox.geography-class.mbtiles -wgs84 2 49 -b 1 -xml
+</pre></div>
+</div>
+<p>Output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">Report</span> <span class="n">pixel</span><span class="o">=</span><span class="s2">&quot;33132&quot;</span> <span class="n">line</span><span class="o">=</span><span class="s2">&quot;22506&quot;</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">BandReport</span> <span class="n">band</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">LocationInfo</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="n">Key</span><span class="o">&gt;</span><span class="mi">74</span><span class="o">&lt;/</span><span class="n">Key</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="n">JSon</span><span class="o">&gt;</span><span class="p">{</span><span class="s2">&quot;admin&quot;</span><span class="p">:</span><span class="s2">&quot;France&quot;</span><span class="p">,</span><span class="s2">&quot;flag_png&quot;</span><span class="p">:</span><span class="s2">&quot;iVBORw0KGgoAAAANSUhEUgAAAGQAAABDEAIAAAC1uevOAAAACXBIWXMAAABIAAAASABGyWs+AAAABmJLR0T///////8JWPfcAAABPklEQVR42u3cMRLBQBSA4Zc9CgqcALXC4bThBA5gNFyFM+wBVNFqjYTszpfi1Sm++bOv2ETEdNK2pc/T9ny977rCn+fx8rjtc7dMmybnxXy9KncGWGCBBRZYYIEFFlhggQUWWGCBBRZYYIE1/GzSLB0CLLAUCyywwAILLLDAAgsssGyFlcAqnJRiKRZYYIEFFlhggQUWWGDZCsFSLLDAAgsssP4DazQowVIssMACy1ZYG6wP30qxwFIssMACCyywwOr/HAYWWIplKwQLLLDAAgssZyywwAILLLDAqh6We4VgKZatECywFAsssMACCyywwAILLLBshWCBpVhggQUWWGCBBRZYYIFlKwQLLMUCCyywwAILLLBG+T8ZsMBSLFshWIoFFlhg/fp8BhZYigUWWGB9C+t9ggUWWGD5FA44XxBz7mcwZM9VAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDExLTA5LTAyVDIzOjI5OjIxLTA0OjAwcQbBWgAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxMS0wMi0yOFQyMTo0ODozMS0wNTowMJkeu+wAAABSdEVYdHN2ZzpiYXNlLXVyaQBmaWxlOi8vL2hvbWUvYWovQ29kZS90bS1tYXN0ZXIvZXhhbXBsZXMvZ2VvZ3JhcGh5LWNsYXNzL2ZsYWdzL0ZSQS5zdmen2JoeAAAAAElFTkSuQmCC&quot;</span><span class="p">}</span><span class="o">&lt;/</span><span class="n">JSon</span><span class="o">&gt;</span>
+    <span class="o">&lt;/</span><span class="n">LocationInfo</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="mi">238</span><span class="o">&lt;/</span><span class="n">Value</span><span class="o">&gt;</span>
+  <span class="o">&lt;/</span><span class="n">BandReport</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">Report</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Converting a dataset to MBTiles and adding overviews :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gdal_translate my_dataset.tif my_dataset.mbtiles -of MBTILES
+$ gdaladdo -r average my_dataset.mbtiles 2 4 8 16
+</pre></div>
+</div>
+</li>
+<li><p>Opening a vector MBTiles:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ogrinfo /home/even/gdal/data/mvt/out.mbtiles
+INFO: Open of `/home/even/gdal/data/mvt/out.mbtiles&#39;
+      using driver `MBTiles&#39; successful.
+Metadata:
+  ZOOM_LEVEL=5
+  name=out.mbtiles
+  description=out.mbtiles
+  version=2
+  minzoom=0
+  maxzoom=5
+  center=16.875000,44.951199,5
+  bounds=-180.000000,-85.051129,180.000000,83.634101
+  type=overlay
+  format=pbf
+1: ne_10m_admin_1_states_provinces_shpgeojson (Multi Polygon)
+</pre></div>
+</div>
+</li>
+<li><p>Converting a GeoPackage to a Vector tile MBTILES:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ogr2ogr -f MBTILES target.mbtiles source.gpkg -dsco MAXZOOM=10
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="see-also">
+<h2>See Also<a class="headerlink" href="#see-also" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/mapbox/mbtiles-spec">MBTiles specification</a></p></li>
+<li><p><a class="reference external" href="https://github.com/mapbox/utfgrid-spec/blob/master/1.0/utfgrid.md">UTFGrid
+specification</a></p></li>
+<li><p><a class="reference internal" href="../vector/mvt.html#vector-mvt"><span class="std std-ref">Mapbox Vector tiles driver</span></a></p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="mem.html" class="btn btn-neutral float-right" title="MEM – In Memory Raster" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="marfa.html" class="btn btn-neutral float-left" title="MRF – Meta Raster Format" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

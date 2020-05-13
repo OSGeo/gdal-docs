@@ -1,0 +1,663 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RFC 61 : Support for measured geometries &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdevelopment/rfc/rfc61_support_for_measured_geometries.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="RFC 62 : Raster algebra" href="rfc62_raster_algebra.html" />
+    <link rel="prev" title="RFC 60 : Improved round-tripping in OGR" href="rfc60_improved_roundtripping_in_ogr.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 61 : Support for measured geometries</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rationale">Rationale</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#changes">Changes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#swig-bindings-python-java-c-perl-changes">SWIG bindings (Python / Java / C# / Perl) changes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#drivers">Drivers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#utilities">Utilities</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#test-suite">Test Suite</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#compatibility-issues">Compatibility Issues</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#related-tickets">Related tickets</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voting-history">Voting history</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 61 : Support for measured geometries</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/development/rfc/rfc61_support_for_measured_geometries.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="rfc62_raster_algebra.html" class="btn btn-neutral float-right" title="RFC 62 : Raster algebra" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc60_improved_roundtripping_in_ogr.html" class="btn btn-neutral float-left" title="RFC 60 : Improved round-tripping in OGR" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rfc-61-support-for-measured-geometries">
+<span id="rfc-61"></span><h1>RFC 61 : Support for measured geometries<a class="headerlink" href="#rfc-61-support-for-measured-geometries" title="Permalink to this headline">¶</a></h1>
+<p>Author: Ari Jolma</p>
+<p>Contact: ari.jolma at gmail.com</p>
+<p>Status: Adopted</p>
+<p>Implementation in version: 2.1</p>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>This RFC defines how to implement measured geometries (geometries, where
+the points have M coordinate, i.e., they are XYM or XYZM).</p>
+</div>
+<div class="section" id="rationale">
+<h2>Rationale<a class="headerlink" href="#rationale" title="Permalink to this headline">¶</a></h2>
+<p>An M coordinate, which is also known as “measure”, is an additional
+value that can be stored for each point of a geometry (IBM Technical
+Note,
+<a class="reference external" href="https://www-304.ibm.com/support/docview.wss?uid=swg21054384">https://www-304.ibm.com/support/docview.wss?uid=swg21054384</a>).</p>
+<p>M coordinate is in the OGC simple feature model and it is used in many
+vector data formats.</p>
+</div>
+<div class="section" id="changes">
+<h2>Changes<a class="headerlink" href="#changes" title="Permalink to this headline">¶</a></h2>
+<p>Changes are required into the C++ API and the C API needs to be
+enhanced. Several drivers need to be changed to take advantage of this
+enhancement but also due to the changes in the C++ API.</p>
+<div class="section" id="common-api">
+<h3>Common API<a class="headerlink" href="#common-api" title="Permalink to this headline">¶</a></h3>
+<p>New OGRwkbGeometryType values are needed. SFSQL 1.2 and ISO SQL/MM Part
+3 will be used, i.e., 2D type + 2000 for M and 2D type + 3000 for ZM.
+(Also types such as Tin, PolyhedralSurface and Triangle types can be
+added for completeness, even if unimplemented currently). wkbCurve and
+wkbSurface have been moved from #define to the OGRwkbGeometryType
+enumerations, and their Z/M/ZM variants have been added as well (per
+#6401)</p>
+<p>On a more general note, there could (should?) be a path to using a clean
+set of values and have legacy support as an exception.</p>
+<p>Abstract types are defined and not part of the enum.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">//</span> <span class="n">additions</span> <span class="n">to</span> <span class="n">enum</span> <span class="n">OGRwkbGeometryType</span>
+    <span class="n">wkbCurve</span> <span class="o">=</span> <span class="mi">13</span><span class="p">,</span>          <span class="o">/**&lt;</span> <span class="n">Curve</span> <span class="p">(</span><span class="n">abstract</span> <span class="nb">type</span><span class="p">)</span><span class="o">.</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbSurface</span> <span class="o">=</span> <span class="mi">14</span><span class="p">,</span>        <span class="o">/**&lt;</span> <span class="n">Surface</span> <span class="p">(</span><span class="n">abstract</span> <span class="nb">type</span><span class="p">)</span><span class="o">.</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbPolyhedralSurface</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span><span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbTIN</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>              <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbTriangle</span> <span class="o">=</span> <span class="mi">17</span><span class="p">,</span>         <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+
+    <span class="n">wkbCurveZ</span> <span class="o">=</span> <span class="mi">1013</span><span class="p">,</span>           <span class="o">/**&lt;</span> <span class="n">wkbCurve</span> <span class="k">with</span> <span class="n">Z</span> <span class="n">component</span><span class="o">.</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbSurfaceZ</span> <span class="o">=</span> <span class="mi">1014</span><span class="p">,</span>         <span class="o">/**&lt;</span> <span class="n">wkbSurface</span> <span class="k">with</span> <span class="n">Z</span> <span class="n">component</span><span class="o">.</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbPolyhedralSurfaceZ</span> <span class="o">=</span> <span class="mi">1015</span><span class="p">,</span>  <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbTINZ</span> <span class="o">=</span> <span class="mi">1016</span><span class="p">,</span>                <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbTriangleZ</span> <span class="o">=</span> <span class="mi">1017</span><span class="p">,</span>           <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+
+    <span class="n">wkbPointM</span> <span class="o">=</span> <span class="mi">2001</span><span class="p">,</span>              <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbLineStringM</span> <span class="o">=</span> <span class="mi">2002</span><span class="p">,</span>         <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbPolygonM</span> <span class="o">=</span> <span class="mi">2003</span><span class="p">,</span>            <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbMultiPointM</span> <span class="o">=</span> <span class="mi">2004</span><span class="p">,</span>         <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbMultiLineStringM</span> <span class="o">=</span> <span class="mi">2005</span><span class="p">,</span>    <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbMultiPolygonM</span> <span class="o">=</span> <span class="mi">2006</span><span class="p">,</span>       <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbGeometryCollectionM</span> <span class="o">=</span> <span class="mi">2007</span><span class="p">,</span> <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbCircularStringM</span> <span class="o">=</span> <span class="mi">2008</span><span class="p">,</span>     <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbCompoundCurveM</span> <span class="o">=</span> <span class="mi">2009</span><span class="p">,</span>      <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbCurvePolygonM</span> <span class="o">=</span> <span class="mi">2010</span><span class="p">,</span>       <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbMultiCurveM</span> <span class="o">=</span> <span class="mi">2011</span><span class="p">,</span>         <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbMultiSurfaceM</span> <span class="o">=</span> <span class="mi">2012</span><span class="p">,</span>       <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbCurveM</span> <span class="o">=</span> <span class="mi">2013</span><span class="p">,</span>              <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbSurfaceM</span> <span class="o">=</span> <span class="mi">2014</span><span class="p">,</span>            <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbPolyhedralSurfaceM</span> <span class="o">=</span> <span class="mi">2015</span><span class="p">,</span>  <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbTINM</span> <span class="o">=</span> <span class="mi">2016</span><span class="p">,</span>                <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbTriangleM</span> <span class="o">=</span> <span class="mi">2017</span><span class="p">,</span>           <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+
+    <span class="n">wkbPointZM</span> <span class="o">=</span> <span class="mi">3001</span><span class="p">,</span>              <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbLineStringZM</span> <span class="o">=</span> <span class="mi">3002</span><span class="p">,</span>         <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbPolygonZM</span> <span class="o">=</span> <span class="mi">3003</span><span class="p">,</span>            <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbMultiPointZM</span> <span class="o">=</span> <span class="mi">3004</span><span class="p">,</span>         <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbMultiLineStringZM</span> <span class="o">=</span> <span class="mi">3005</span><span class="p">,</span>    <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbMultiPolygonZM</span> <span class="o">=</span> <span class="mi">3006</span><span class="p">,</span>       <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbGeometryCollectionZM</span> <span class="o">=</span> <span class="mi">3007</span><span class="p">,</span> <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbCircularStringZM</span> <span class="o">=</span> <span class="mi">3008</span><span class="p">,</span>     <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbCompoundCurveZM</span> <span class="o">=</span> <span class="mi">3009</span><span class="p">,</span>      <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbCurvePolygonZM</span> <span class="o">=</span> <span class="mi">3010</span><span class="p">,</span>       <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbMultiCurveZM</span> <span class="o">=</span> <span class="mi">3011</span><span class="p">,</span>         <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbMultiSurfaceZM</span> <span class="o">=</span> <span class="mi">3012</span><span class="p">,</span>       <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbCurveZM</span> <span class="o">=</span> <span class="mi">3013</span><span class="p">,</span>              <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbSurfaceZM</span> <span class="o">=</span> <span class="mi">3014</span><span class="p">,</span>            <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbPolyhedralSurfaceZM</span> <span class="o">=</span> <span class="mi">3015</span><span class="p">,</span>  <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbTINZM</span> <span class="o">=</span> <span class="mi">3016</span><span class="p">,</span>                <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+    <span class="n">wkbTriangleZM</span> <span class="o">=</span> <span class="mi">3017</span><span class="p">,</span>           <span class="o">/**&lt;</span> <span class="n">ISO</span> <span class="n">SQL</span><span class="o">/</span><span class="n">MM</span> <span class="n">Part</span> <span class="mf">3.</span> <span class="n">GDAL</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">=</span> <span class="mf">2.1</span> <span class="o">*/</span>
+
+<span class="o">//</span> <span class="n">add</span> <span class="n">tests</span> <span class="k">for</span> <span class="n">M</span>
+<span class="c1">#define wkbHasM(x)     OGR_GT_HasM(x)</span>
+<span class="c1">#define wkbSetM(x)     OGR_GT_SetM(x)</span>
+
+<span class="n">OGRwkbGeometryType</span> <span class="n">CPL_DLL</span> <span class="n">OGR_GT_SetM</span><span class="p">(</span> <span class="n">OGRwkbGeometryType</span> <span class="n">eType</span> <span class="p">);</span>
+<span class="nb">int</span>                <span class="n">CPL_DLL</span> <span class="n">OGR_GT_HasM</span><span class="p">(</span> <span class="n">OGRwkbGeometryType</span> <span class="n">eType</span> <span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="c-api">
+<h3>C++ API<a class="headerlink" href="#c-api" title="Permalink to this headline">¶</a></h3>
+<p>The property int nCoordinateDimension in class OGRGeometry will be
+replaced by int flags. It may have the following flags:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#define OGR_G_NOT_EMPTY_POINT 0x1</span>
+<span class="c1">#define OGR_G_3D 0x2</span>
+<span class="c1">#define OGR_G_MEASURED 0x4</span>
+<span class="c1">#define OGR_G_IGNORE_MEASURED 0x8</span>
+</pre></div>
+</div>
+<p>The “ignore” flag is needed internally for backwards compatibility. The
+flag OGR_G_NOT_EMPTY_POINT is used only to denote the emptiness of an
+OGRPoint object.</p>
+<p>Currently a hack to set nCoordDimension negative is used to denote an
+empty point.</p>
+<p>The removal of nCoordinateDimension may imply changes to drivers etc.
+which get or set it.</p>
+<p>The tests are</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Is3D</span> <span class="o">=</span> <span class="n">flags</span> <span class="o">&amp;</span> <span class="n">OGR_G_3D</span>
+<span class="n">IsMeasured</span> <span class="o">=</span> <span class="n">flags</span> <span class="o">&amp;</span> <span class="n">OGR_G_MEASURED</span>
+</pre></div>
+</div>
+<p>The setters and getters are implemented with |= and &amp;=.</p>
+<p>When any of these flags is set or unset, the corresponding data becomes
+invalid and may be discarded.</p>
+<p>Keep the following methods with original semantics, i.e., coordinate
+dimension is 2 or 3, but deprecate. There is some discrepancy in
+documentation. Their documentation says that they may return zero for
+empty points while in ogrpoint.cpp it says that negative nCoordDimension
+values are used for empty points and the getCoordinateDimension method
+of point returns absolute value of nCoordDimension - thus not zero. A
+fix to the doc is probably enough.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">int</span> <span class="n">getCoordinateDimension</span><span class="p">();</span>
+<span class="n">void</span> <span class="n">setCoordinateDimension</span><span class="p">(</span><span class="nb">int</span> <span class="n">nDimension</span><span class="p">);</span>
+<span class="n">void</span> <span class="n">flattenTo2D</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>It is proposed to possibly add a new method to replace
+getCoordinateDimension. set3D and setMeasured would replace
+setCoordinateDimension and flattenTo2D. See below.</p>
+<p>class OGRGeometry:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">//</span><span class="n">Possibly</span> <span class="n">add</span> <span class="n">methods</span> <span class="p">(</span><span class="n">SF</span> <span class="n">Common</span> <span class="n">Architecture</span><span class="p">):</span>
+<span class="nb">int</span> <span class="n">Dimension</span><span class="p">();</span> <span class="o">//</span> <span class="o">-</span><span class="mi">1</span> <span class="k">for</span> <span class="n">empty</span> <span class="n">geometries</span> <span class="p">(</span><span class="n">to</span> <span class="n">denote</span> <span class="n">undefined</span><span class="p">),</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">points</span><span class="p">,</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">curves</span><span class="p">,</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">surfaces</span><span class="p">,</span> <span class="nb">max</span> <span class="n">of</span> <span class="n">components</span> <span class="k">for</span> <span class="n">collections</span>
+<span class="n">char</span> <span class="o">*</span><span class="n">GeometryType</span><span class="p">();</span> <span class="o">//</span> <span class="n">calls</span> <span class="n">OGRToOGCGeomType</span> <span class="p">(</span><span class="n">which</span> <span class="n">needs</span> <span class="n">to</span> <span class="n">be</span> <span class="n">enhanced</span><span class="p">)</span>
+
+<span class="o">//</span><span class="n">Add</span> <span class="n">methods</span> <span class="p">(</span><span class="n">SF</span> <span class="n">Common</span> <span class="n">Architecture</span><span class="p">)</span> <span class="n">see</span> <span class="n">above</span> <span class="k">for</span> <span class="n">implementation</span><span class="p">:</span>
+<span class="nb">int</span> <span class="n">CoordinateDimension</span><span class="p">();</span> <span class="o">//</span> <span class="mi">2</span> <span class="k">if</span> <span class="ow">not</span> <span class="mi">3</span><span class="n">D</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">measured</span><span class="p">,</span> <span class="mi">3</span> <span class="k">if</span> <span class="mi">3</span><span class="n">D</span> <span class="ow">or</span> <span class="n">measured</span><span class="p">,</span> <span class="mi">4</span> <span class="k">if</span> <span class="mi">3</span><span class="n">D</span> <span class="ow">and</span> <span class="n">measured</span>
+<span class="n">OGRBoolean</span> <span class="n">Is3D</span><span class="p">()</span> <span class="n">const</span><span class="p">;</span>
+<span class="n">OGRBoolean</span> <span class="n">IsMeasured</span><span class="p">()</span> <span class="n">const</span><span class="p">;</span>
+
+<span class="o">//</span><span class="n">Add</span> <span class="n">methods</span> <span class="p">(</span><span class="n">non</span><span class="o">-</span><span class="n">standard</span><span class="p">;</span> <span class="n">note</span> <span class="n">the</span> <span class="n">use</span> <span class="n">of</span> <span class="n">one</span> <span class="n">method</span> <span class="n">instead</span> <span class="n">of</span> <span class="n">second</span> <span class="n">unset</span><span class="o">*</span> <span class="n">method</span><span class="p">):</span>
+<span class="n">virtual</span> <span class="n">void</span> <span class="n">set3D</span><span class="p">(</span><span class="n">OGRBoolean</span> <span class="n">bIs3D</span><span class="p">);</span>
+<span class="n">virtual</span> <span class="n">void</span> <span class="n">setMeasured</span><span class="p">(</span><span class="n">OGRBoolean</span> <span class="n">bIsMeasured</span><span class="p">);</span>
+
+<span class="o">//</span><span class="n">Add</span> <span class="n">now</span> <span class="ow">or</span> <span class="n">later</span> <span class="n">methods</span><span class="p">:</span>
+<span class="n">virtual</span> <span class="n">OGRGeometry</span> <span class="o">*</span><span class="n">LocateAlong</span><span class="p">(</span><span class="n">double</span> <span class="n">mValue</span><span class="p">);</span>
+<span class="n">virtual</span> <span class="n">OGRGeometry</span> <span class="o">*</span><span class="n">LocateBetween</span><span class="p">(</span><span class="n">double</span> <span class="n">mStart</span><span class="p">,</span> <span class="n">double</span> <span class="n">mEnd</span><span class="p">);</span>
+
+<span class="o">//</span><span class="n">Remove</span> <span class="n">b3D</span> <span class="kn">from</span> <span class="nn">importPreambleFromWkb</span><span class="p">:</span> <span class="n">it</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">used</span><span class="p">,</span> <span class="n">the</span> <span class="n">flags</span> <span class="n">are</span> <span class="n">managed</span> <span class="n">within</span> <span class="n">the</span> <span class="n">method</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>int CoordinateDimension() should have the new semantics. The method name
+in simple features documents actually is without prefix get.</p>
+<p>Whether set3D and setMeasured should affect the children geometries in a
+collection is an issue. Currently doc for setCoordinateDimension says
+“Setting the dimension of a geometry collection will affect the children
+geometries.”, thus we have already committed to maintaining dimensions
+of children in collections. It is proposed that set3D and setMeasured
+either add or strip Z or M values to or from the geometry (including
+possible children). In general the strategy should be to follow the
+existing strategy regarding Z (i.e., to strip or add).</p>
+<p>Add property double m to class OGRPoint. Add constructor, getters, and
+setters for it.</p>
+<p>Add property double *padfM to class OGRSimpleCurve. Add constructor,
+getters, and setters for it. New setters with postfix M are needed for
+XYM data since the object may be upgraded to XYZ from XY in setters. Add
+also methods RemoveM() and AddM() with similar semantics as Make3D and
+Make2D.</p>
+<p>Override methods set3D and setMeasured in those classes where
+setCoordinateDimension is overridden.</p>
+<p>Change the semantics of methods whose name begins with _ and have a
+parameter “int b3D”. The parameter will be “int coordinates”, i.e., a
+flags like int, which tells about Z and M.</p>
+</div>
+<div class="section" id="id1">
+<h3>C API<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>ogr_core.h:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">OGRwkbGeometryType</span> <span class="n">CPL_DLL</span> <span class="n">OGR_GT_SetM</span><span class="p">(</span> <span class="n">OGRwkbGeometryType</span> <span class="n">eType</span> <span class="p">);</span>
+<span class="nb">int</span>                <span class="n">CPL_DLL</span> <span class="n">OGR_GT_HasM</span><span class="p">(</span> <span class="n">OGRwkbGeometryType</span> <span class="n">eType</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>The current behavior is that calling SetPoint on a geometry with
+coordinate dimension 2 upgrades the coordinate dimension 3. To keep 2D
+points 2D SetPoint_2D must be used. Thus we need separate functions for
+M and ZM geometries. The proposal is to use postfixes M and ZM, i.e.,
+SetPointM, SetPointZM. Similarly for AddPoint.</p>
+<p>Currently there is no SetPoints_2D function. The doc at pabyZ param at
+SetPoints comments that “defaults to NULL for 2D objects” but that does
+not seem to be the case. See #6344. If that is fixed as written there,
+then only SetPointsZM is needed.</p>
+<p>GetPoint and GetPoints do not have a 2D version, so only *ZM version is
+needed.</p>
+<p>ogr_api.h:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">void</span>   <span class="n">CPL_DLL</span> <span class="n">OGR_G_Is3D</span><span class="p">(</span> <span class="n">OGRGeometryH</span> <span class="p">);</span>
+<span class="n">void</span>   <span class="n">CPL_DLL</span> <span class="n">OGR_G_IsMeasured</span><span class="p">(</span> <span class="n">OGRGeometryH</span> <span class="p">);</span>
+
+<span class="n">void</span>   <span class="n">CPL_DLL</span> <span class="n">OGR_G_Set3D</span><span class="p">(</span> <span class="n">OGRGeometryH</span><span class="p">,</span> <span class="nb">int</span> <span class="p">);</span>
+<span class="n">void</span>   <span class="n">CPL_DLL</span> <span class="n">OGR_G_SetMeasured</span><span class="p">(</span> <span class="n">OGRGeometryH</span><span class="p">,</span> <span class="nb">int</span> <span class="p">);</span>
+
+<span class="n">double</span> <span class="n">CPL_DLL</span> <span class="n">OGR_G_GetM</span><span class="p">(</span> <span class="n">OGRGeometryH</span><span class="p">,</span> <span class="nb">int</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>ogr_p.h (This is public header, so new functions are needed)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">const</span> <span class="n">char</span> <span class="n">CPL_DLL</span> <span class="o">*</span> <span class="n">OGRWktReadPointsM</span><span class="p">(</span> <span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">pszInput</span><span class="p">,</span>
+                                       <span class="n">OGRRawPoint</span> <span class="o">**</span><span class="n">ppaoPoints</span><span class="p">,</span>
+                                       <span class="n">double</span> <span class="o">**</span><span class="n">ppadfZ</span><span class="p">,</span>
+                                        <span class="n">double</span> <span class="o">**</span><span class="n">ppadfM</span><span class="p">,</span>
+                                       <span class="nb">int</span> <span class="o">*</span> <span class="n">pnMaxPoints</span><span class="p">,</span>
+                                       <span class="nb">int</span> <span class="o">*</span> <span class="n">pnReadPoints</span> <span class="p">);</span>
+<span class="n">void</span> <span class="n">CPL_DLL</span> <span class="n">OGRMakeWktCoordinateM</span><span class="p">(</span> <span class="n">char</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="nb">int</span> <span class="p">);</span> <span class="o">//</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">flags</span> <span class="n">OGR_G_3D</span> <span class="n">OGR_G_MEASURED</span>
+<span class="o">//</span> <span class="n">Change</span> <span class="n">the</span> <span class="n">semantics</span> <span class="n">of</span> <span class="n">OGRReadWKBGeometryType</span><span class="p">:</span> <span class="n">b3D</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">used</span> <span class="ow">and</span> <span class="n">the</span> <span class="n">returned</span> <span class="n">eGeometryType</span> <span class="n">may</span> <span class="n">may</span> <span class="nb">any</span> <span class="n">valid</span> <span class="nb">type</span>
+</pre></div>
+</div>
+<p>pggeometry.h is internal, so we can change the function prototype</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">OGRCreateFromMultiPatchPart</span><span class="p">(</span><span class="n">OGRMultiPolygon</span> <span class="o">*</span><span class="n">poMP</span><span class="p">,</span>
+                                 <span class="n">OGRPolygon</span><span class="o">*&amp;</span> <span class="n">poLastPoly</span><span class="p">,</span>
+                                 <span class="nb">int</span> <span class="n">nPartType</span><span class="p">,</span>
+                                 <span class="nb">int</span> <span class="n">nPartPoints</span><span class="p">,</span>
+                                 <span class="n">double</span><span class="o">*</span> <span class="n">padfX</span><span class="p">,</span>
+                                 <span class="n">double</span><span class="o">*</span> <span class="n">padfY</span><span class="p">,</span>
+                                 <span class="n">double</span><span class="o">*</span> <span class="n">padfZ</span><span class="p">,</span>
+                                 <span class="n">double</span><span class="o">*</span> <span class="n">padfM</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Use of padfM requires changes to openfilegdb driver.</p>
+</div>
+<div class="section" id="geos-filters-and-other-issues">
+<h3>GEOS, filters, and other issues<a class="headerlink" href="#geos-filters-and-other-issues" title="Permalink to this headline">¶</a></h3>
+<p>When a geometry with measures is sent to GEOS or used as a filter the M
+coordinate is ignored.</p>
+<p>LocateAlong and LocateBetween are the only standard methods, which use M
+but there could be others, which for example get the extent of M. Such
+are not intended to be added now but they can be added later.</p>
+</div>
+</div>
+<div class="section" id="swig-bindings-python-java-c-perl-changes">
+<h2>SWIG bindings (Python / Java / C# / Perl) changes<a class="headerlink" href="#swig-bindings-python-java-c-perl-changes" title="Permalink to this headline">¶</a></h2>
+<p>The new C API functions need to be exposed through swig. Further changes
+depend on whether the language bindings are aware of coordinates. At
+least Python and Perl are.</p>
+<p>The new geometry types will be included into the i files.</p>
+<p>Some new setters and getters are needed for M. Is3D, IsMeasured, Set3D
+and SetMeasured methods should be added. Also OGR_GT_HasM.</p>
+</div>
+<div class="section" id="drivers">
+<h2>Drivers<a class="headerlink" href="#drivers" title="Permalink to this headline">¶</a></h2>
+<p>Drivers that are probably affected by the C++ changes are at least
+(these use the CoordinateDimension API) pg, mssqlspatial, sqlite, db2,
+mysql, gml, pgdump, geojson, libkml, gpkg, wasp, gpx, filegdb, vfk, bna,
+dxf.</p>
+<p>The now deprecated CoordinateDimension API is proposed to be replaced
+with calls to *3D and *Measured.</p>
+<p>Once the support for M coordinates is in place the driver will advertise
+the support.</p>
+<p>Within the work of this RFC the support is built into memory, shape and
+pg drivers. Support for other drivers are left for further work.</p>
+</div>
+<div class="section" id="utilities">
+<h2>Utilities<a class="headerlink" href="#utilities" title="Permalink to this headline">¶</a></h2>
+<p>There is a minimum requirement and new possibilities.</p>
+<p>ogrinfo: report measured geom type, report measures</p>
+<p>ogr2ogr: support measured geom types</p>
+<p>ogrlineref: seems to deal specifically with measures, needs more thought</p>
+<p>gdal_rasterize: measure could be used for the burn-in value</p>
+<p>gdal_contour: measure could be used as the “elevation” value</p>
+<p>gdal_grid: measure could be used as the “Z” value</p>
+</div>
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<p>All new methods/functions are documented.</p>
+</div>
+<div class="section" id="test-suite">
+<h2>Test Suite<a class="headerlink" href="#test-suite" title="Permalink to this headline">¶</a></h2>
+<p>At least the initial tests will be done with Perl unit tests
+(swi/perl/t/measures-*.t). Later autotest suite will be extended.
+Existing tests should not fail.</p>
+</div>
+<div class="section" id="compatibility-issues">
+<h2>Compatibility Issues<a class="headerlink" href="#compatibility-issues" title="Permalink to this headline">¶</a></h2>
+<p>Many drivers (actually datasets and layers) which support measures need
+to have the support added. Support should be advertised using</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#define ODsCMeasuredGeometries   &quot;MeasuredGeometries&quot;</span>
+<span class="c1">#define OLCMeasuredGeometries    &quot;MeasuredGeometries&quot;</span>
+</pre></div>
+</div>
+<p>The entry point for a creating a layer is CreateLayer method in
+GDALDataset. If the dataset does not support measured geometries it will
+strip the measured flag from the geometry type it gets as a parameter.
+This is in line with current behavior non linear geometry types and
+datasets not supporting them.</p>
+<p>ICreateLayer, which all drivers that have create layer capability
+implement, have geometry type as an argument. The method should call
+CPLError() with CPLE_NotSupported and return NULL if the driver does not
+support measures. Similarly for ICreateFeature and ISetFeature.</p>
+<p>The user-oriented API functions (CreateLayer, CreateFeature, and
+SetFeature) should (silently) strip out the measures before continuing
+to the I* methods in drivers that do not support measures. This (side
+effect) may not be what is wanted in some usage scenarios but it would
+follow the pattern of what is already done with nonlinear geometries.
+This should be documented.</p>
+<p>An alternative would be to store M value(s) (or WKT or WKB) as attribute
+(scalar or vector, depending on the geometry type).</p>
+<p>Needs a decision.</p>
+<p>Some incompatibilities will necessarily be introduced. For example when
+the current XYM-as-XYZ hack in shape will be replaced by proper XYM.</p>
+</div>
+<div class="section" id="related-tickets">
+<h2>Related tickets<a class="headerlink" href="#related-tickets" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://trac.osgeo.org/gdal/ticket/6063">https://trac.osgeo.org/gdal/ticket/6063</a>
+<a class="reference external" href="https://trac.osgeo.org/gdal/ticket/6331">https://trac.osgeo.org/gdal/ticket/6331</a></p>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>The implementation will be done by Ari Jolma.</p>
+<p>The proposed implementation will be in
+<a class="reference external" href="https://github.com/ajolma/GDAL-XYZM">https://github.com/ajolma/GDAL-XYZM</a></p>
+</div>
+<div class="section" id="voting-history">
+<h2>Voting history<a class="headerlink" href="#voting-history" title="Permalink to this headline">¶</a></h2>
+<p>+1 from Even, Tamas, Jukka and Daniel</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rfc62_raster_algebra.html" class="btn btn-neutral float-right" title="RFC 62 : Raster algebra" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc60_improved_roundtripping_in_ogr.html" class="btn btn-neutral float-left" title="RFC 60 : Improved round-tripping in OGR" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

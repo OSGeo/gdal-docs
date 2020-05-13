@@ -1,0 +1,937 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>SENTINEL2 – Sentinel-2 Products &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdrivers/raster/sentinel2.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="SGI – SGI Image Format" href="sgi.html" />
+    <link rel="prev" title="ESRI ArcSDE Raster" href="sde.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Raster drivers</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="aaigrid.html">AAIGrid – Arc/Info ASCII Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ace2.html">ACE2 – ACE2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adrg.html">ADRG – ADRG/ARC Digitized Raster Graphics (.gen/.thf)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aig.html">AIG – Arc/Info Binary Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="airsar.html">AIRSAR – AIRSAR Polarimetric Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arg.html">ARG – Azavea Raster Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bag.html">BAG – Bathymetry Attributed Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blx.html">BLX – Magellan BLX Topo File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bmp.html">BMP – Microsoft Windows Device Independent Bitmap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bpg.html">BPG – Better Portable Graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bsb.html">BSB – Maptech/NOAA BSB Nautical Chart Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bt.html">BT – VTP .bt Binary Terrain Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="byn.html">BYN - Natural Resources Canada’s Geoid file format (.byn)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cad.html">CAD – AutoCAD DWG raster layer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cals.html">CALS – CALS Type 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ceos.html">CEOS – CEOS Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coasp.html">COASP –  DRDC COASP SAR Processor Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cog.html">COG – Cloud Optimized GeoTIFF generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cosar.html">COSAR – TerraSAR-X Complex SAR Data Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpg.html">CPG – Convair PolGASP data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctable2.html">CTable2 – CTable2 Datum Grid Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctg.html">CTG – USGS LULC Composite Theme Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="daas.html">DAAS (Airbus DS Intelligence Data As A Service driver)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="db2.html">DB2 raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dds.html">DDS – DirectDraw Surface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="derived.html">DERIVED – Derived subdatasets driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dimap.html">DIMAP – Spot DIMAP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dipex.html">DIPEx – ELAS DIPEx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dods.html">DODS – OPeNDAP Grid Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doq1.html">DOQ1 – First Generation USGS DOQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doq2.html">DOQ2 – New Labelled USGS DOQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dted.html">DTED – Military Elevation Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="e00grid.html">E00GRID – Arc/Info Export E00 GRID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ecrgtoc.html">ECRGTOC – ECRG Table Of Contents (TOC.xml)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ecw.html">ECW – Enhanced Compressed Wavelets (.ecw)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eedai.html">EEDAI - Google Earth Engine Data API Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ehdr.html">EHdr – ESRI .hdr Labelled</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eir.html">EIR – Erdas Imagine Raw</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elas.html">ELAS - Earth Resources Laboratory Applications Software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="envi.html">ENVI – ENVI .hdr Labelled Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="epsilon.html">Epsilon - Wavelet compressed images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="esat.html">ESAT – Envisat Image Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ers.html">ERS – ERMapper .ERS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exr.html">EXR – Extended Dynamic Range Image File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fast.html">FAST – EOSAT FAST Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fit.html">FIT – FIT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fits.html">FITS – Flexible Image Transport System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fujibas.html">FujiBAS – Fuji BAS Scanner Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="genbin.html">GenBin – Generic Binary (.hdr labelled)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="georaster.html">Oracle Spatial GeoRaster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gff.html">GFF – Sandia National Laboratories GSAT File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gif.html">GIF – Graphics Interchange Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gmt.html">GMT – GMT Compatible netCDF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpkg.html">GPKG – GeoPackage raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grass.html">GRASS Raster Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grassasciigrid.html">GRASSASCIIGrid – GRASS ASCII Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grib.html">GRIB – WMO General Regularly-distributed Information in Binary form</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gs7bg.html">GS7BG – Golden Software Surfer 7 Binary Grid File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gsag.html">GSAG – Golden Software ASCII Grid File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gsbg.html">GSBG – Golden Software Binary Grid File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gsc.html">GSC – GSC Geogrid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gta.html">GTA - Generic Tagged Arrays</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gtiff.html">GTiff – GeoTIFF File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gxf.html">GXF – Grid eXchange File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hdf4.html">HDF4 – Hierarchical Data Format Release 4 (HDF4)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hdf5.html">HDF5 – Hierarchical Data Format Release 5 (HDF5)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hf2.html">HF2 – HF2/HFZ heightfield raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hfa.html">HFA – Erdas Imagine .img</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ida.html">IDA – Image Display and Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Idrisi.html">RST – Idrisi Raster Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ignfheightasciigrid.html">IGNFHeightASCIIGrid – IGN-France height correction ASCII grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ilwis.html">ILWIS – Raster Map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intergraphraster.html">INGR – Intergraph Raster Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iris.html">IRIS – Vaisala’s weather radar software format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="isce.html">ISCE – ISCE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="isg.html">ISG – International Service for the Geoid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="isis2.html">ISIS2 – USGS Astrogeology ISIS Cube (Version 2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="isis3.html">ISIS3 – USGS Astrogeology ISIS Cube (Version 3)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jdem.html">JDEM – Japanese DEM (.mem)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2ecw.html">JP2ECW – ERDAS JPEG2000 (.jp2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2kak.html">JP2KAK – JPEG-2000 (based on Kakadu)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2lura.html">JP2Lura – JPEG2000 driver based on Lurawave library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2mrsid.html">JP2MrSID – JPEG2000 via MrSID SDK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2openjpeg.html">JP2OpenJPEG – JPEG2000 driver based on OpenJPEG library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jpeg2000.html">JPEG2000 – Implementation of the JPEG-2000 part 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jpegls.html">JPEGLS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jpeg.html">JPEG – JPEG JFIF File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jpipkak.html">JPIPKAK - JPIP Streaming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kea.html">KEA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kmlsuperoverlay.html">KMLSuperoverlay – KMLSuperoverlay</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kro.html">KRO – KOLOR Raw format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lan.html">LAN – Erdas 7.x .LAN and .GIS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="l1b.html">L1B – NOAA Polar Orbiter Level 1b Data Set (AVHRR)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lcp.html">LCP – FARSITE v.4 LCP Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="leveller.html">Leveller – Daylon Leveller Heightfield</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loslas.html">LOSLAS – NADCON .los/.las Datum Grid Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="map.html">MAP – OziExplorer .MAP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="marfa.html">MRF – Meta Raster Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mbtiles.html">MBTiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mem.html">MEM – In Memory Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mff.html">MFF – Vexcel MFF Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mff2.html">MFF2 – Vexcel MFF2 Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mg4lidar.html">MG4Lidar – MrSID/MG4 LiDAR Compression / Point Cloud View files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mrsid.html">MrSID – Multi-resolution Seamless Image Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="msg.html">MSG – Meteosat Second Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="msgn.html">MSGN – Meteosat Second Generation (MSG) Native Archive Format (.nat)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ndf.html">NDF – NLAPS Data Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="netcdf.html">NetCDF: Network Common Data Form</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ngsgeoid.html">NGSGEOID - NOAA NGS Geoid Height Grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ngw.html">NGW – NextGIS Web</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nitf.html">NITF – National Imagery Transmission Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ntv1.html">NTv1 – NTv1 Datum Grid Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ntv2.html">NTv2 – NTv2 Datum Grid Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nwtgrd.html">NWT_GRD/NWT_GRC – Northwood/Vertical Mapper File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ozi.html">OZI – OZF2/OZFX3 raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="palsar.html">JAXA PALSAR Processed Products</a></li>
+<li class="toctree-l2"><a class="reference internal" href="paux.html">PAux – PCI .aux Labelled Raw Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pcidsk.html">PCIDSK – PCI Geomatics Database File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pcraster.html">PCRaster – PCRaster raster file format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pdf.html">PDF – Geospatial PDF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pds.html">PDS – Planetary Data System v3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pds4.html">PDS4 – NASA Planetary Data System (Version 4)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plmosaic.html">PLMosaic (Planet Labs Mosaics API)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="png.html">PNG – Portable Network Graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pnm.html">PNM – Netpbm (.pgm, .ppm)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="postgisraster.html">PostGISRaster – PostGIS Raster driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prf.html">PHOTOMOD Raster File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasdaman.html">Rasdaman GDAL driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasterlite.html">Rasterlite - Rasters in SQLite DB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasterlite2.html">RasterLite2 - Rasters in SQLite DB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="r.html">R – R Object Data Store</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rda.html">RDA (DigitalGlobe Raster Data Access)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rdb.html">RDB - <em>RIEGL</em> Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rik.html">RIK – Swedish Grid Maps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rmf.html">RMF – Raster Matrix Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="roi_pac.html">ROI_PAC – ROI_PAC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpftoc.html">RPFTOC – Raster Product Format/RPF (a.toc)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rraster.html">RRASTER – R Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rs2.html">RS2 – RadarSat 2 XML Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="safe.html">SAFE – Sentinel-1 SAFE XML Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sar_ceos.html">SAR_CEOS – CEOS SAR Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sdat.html">SAGA – SAGA GIS Binary Grid File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sdts.html">SDTS – USGS SDTS DEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sde.html">ESRI ArcSDE Raster</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">SENTINEL2 – Sentinel-2 Products</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#driver-capabilities">Driver capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#level-1b">Level-1B</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#level-1c">Level-1C</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#level-2a">Level-2A</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#metadata">Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#performance-issues-for-l1c-and-l2a">Performance issues for L1C and L2A</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#open-options">Open options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#see-also">See Also</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#credits">Credits</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sgi.html">SGI – SGI Image Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sigdem.html">SIGDEM – Scaled Integer Gridded DEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="snodas.html">SNODAS – Snow Data Assimilation System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="srp.html">SRP – Standard Product Format (ASRP/USRP) (.gen)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="srtmhgt.html">SRTMHGT – SRTM HGT Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="terragen.html">Terragen – Terragen™ Terrain File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="til.html">TIL – EarthWatch/DigitalGlobe .TIL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.html">TileDB - TileDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tsx.html">TSX –  TerraSAR-X Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usgsdem.html">USGSDEM – USGS ASCII DEM (and CDED)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vicar.html">VICAR – VICAR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vrt.html">VRT – GDAL Virtual Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wcs.html">WCS – OGC Web Coverage Service</a></li>
+<li class="toctree-l2"><a class="reference internal" href="webp.html">WEBP - WEBP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wms.html">WMS – Web Map Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wmts.html">WMTS – OGC Web Map Tile Service</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xpm.html">XPM – X11 Pixmap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xyz.html">XYZ – ASCII Gridded XYZ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="zmap.html">ZMap – ZMap Plus Grid</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Raster drivers</a> &raquo;</li>
+      
+      <li>SENTINEL2 – Sentinel-2 Products</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/drivers/raster/sentinel2.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="sgi.html" class="btn btn-neutral float-right" title="SGI – SGI Image Format" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="sde.html" class="btn btn-neutral float-left" title="ESRI ArcSDE Raster" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="sentinel2-sentinel-2-products">
+<span id="raster-sentinel2"></span><h1>SENTINEL2 – Sentinel-2 Products<a class="headerlink" href="#sentinel2-sentinel-2-products" title="Permalink to this headline">¶</a></h1>
+<div class="admonition shortname" id="shortname-0">
+<p class="admonition-title">Driver short name</p>
+<p>SENTINEL2</p>
+</div>
+<div class="admonition built_in_by_default" id="built_in_by_default-0">
+<p class="admonition-title">Driver built-in by default</p>
+<p>This driver is built-in by default</p>
+</div>
+<p>Driver for Sentinel-2 Level-1B, Level-1C and Level-2A products.
+Starting with GDAL 2.1.3, Level-1C with “Safe Compact” encoding
+are also supported.</p>
+<p>The SENTINEL2 driver will be used if the main metadata .xml file at the
+root of a SENTINEL2 data product is opened (whose name is typically
+S2A_OPER_MTD_SAFL1C_….xml). It can also accept directly .zip files
+downloaded from the <a class="reference external" href="https://scihub.copernicus.eu/">Sentinels Scientific Data
+Hub</a></p>
+<p>To be able to read the imagery, GDAL must be configured with at least
+one of the JPEG2000 capable drivers.</p>
+<p>SENTINEL-2 data are acquired on 13 spectral bands in the visible and
+near-infrared (VNIR) and Short-wavelength infrared (SWIR) spectrum, as
+show in the below table:</p>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 15%" />
+<col style="width: 24%" />
+<col style="width: 16%" />
+<col style="width: 35%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Band name</p></th>
+<th class="head"><p>Resolution (m)</p></th>
+<th class="head"><p>Central wavelength (nm)</p></th>
+<th class="head"><p>Band width (nm)</p></th>
+<th class="head"><p>Purpose</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>B01</p></td>
+<td><p>60</p></td>
+<td><p>443</p></td>
+<td><p>20</p></td>
+<td><p>Aerosol detection</p></td>
+</tr>
+<tr class="row-odd"><td><p>B02</p></td>
+<td><p>10</p></td>
+<td><p>490</p></td>
+<td><p>65</p></td>
+<td><p>Blue</p></td>
+</tr>
+<tr class="row-even"><td><p>B03</p></td>
+<td><p>10</p></td>
+<td><p>560</p></td>
+<td><p>35</p></td>
+<td><p>Green</p></td>
+</tr>
+<tr class="row-odd"><td><p>B04</p></td>
+<td><p>10</p></td>
+<td><p>665</p></td>
+<td><p>30</p></td>
+<td><p>Red</p></td>
+</tr>
+<tr class="row-even"><td><p>B05</p></td>
+<td><p>20</p></td>
+<td><p>705</p></td>
+<td><p>15</p></td>
+<td><p>Vegetation classification</p></td>
+</tr>
+<tr class="row-odd"><td><p>B06</p></td>
+<td><p>20</p></td>
+<td><p>740</p></td>
+<td><p>15</p></td>
+<td><p>Vegetation classification</p></td>
+</tr>
+<tr class="row-even"><td><p>B07</p></td>
+<td><p>20</p></td>
+<td><p>783</p></td>
+<td><p>20</p></td>
+<td><p>Vegetation classification</p></td>
+</tr>
+<tr class="row-odd"><td><p>B08</p></td>
+<td><p>10</p></td>
+<td><p>842</p></td>
+<td><p>115</p></td>
+<td><p>Near infrared</p></td>
+</tr>
+<tr class="row-even"><td><p>B08A</p></td>
+<td><p>20</p></td>
+<td><p>865</p></td>
+<td><p>20</p></td>
+<td><p>Vegetation classification</p></td>
+</tr>
+<tr class="row-odd"><td><p>B09</p></td>
+<td><p>60</p></td>
+<td><p>945</p></td>
+<td><p>20</p></td>
+<td><p>Water vapour</p></td>
+</tr>
+<tr class="row-even"><td><p>B10</p></td>
+<td><p>60</p></td>
+<td><p>1375</p></td>
+<td><p>30</p></td>
+<td><p>Cirrus</p></td>
+</tr>
+<tr class="row-odd"><td><p>B11</p></td>
+<td><p>20</p></td>
+<td><p>1610</p></td>
+<td><p>90</p></td>
+<td><p>Snow / ice / cloud discrimination</p></td>
+</tr>
+<tr class="row-even"><td><p>B12</p></td>
+<td><p>20</p></td>
+<td><p>2190</p></td>
+<td><p>180</p></td>
+<td><p>Snow / ice / cloud discrimination</p></td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="driver-capabilities">
+<h2>Driver capabilities<a class="headerlink" href="#driver-capabilities" title="Permalink to this headline">¶</a></h2>
+<div class="admonition supports_georeferencing" id="supports_georeferencing-0">
+<p class="admonition-title">Supports Georeferencing</p>
+<p>This driver supports georeferencing</p>
+</div>
+<div class="admonition supports_virtualio" id="supports_virtualio-0">
+<p class="admonition-title">Supports VirtualIO</p>
+<p>This driver supports <a class="reference internal" href="../../user/virtual_file_systems.html#virtual-file-systems"><span class="std std-ref">virtual I/O operations (/vsimem/, etc.)</span></a></p>
+</div>
+</div>
+<div class="section" id="level-1b">
+<h2>Level-1B<a class="headerlink" href="#level-1b" title="Permalink to this headline">¶</a></h2>
+<p>Level-1B products are composed of several “granules” of ~ 25 km
+across-track x ~ 23km along-track, in sensor geometry (i.e. non
+ortho-rectified). Each granule correspond to the imagery captured by one
+of the 12 detectors accros-track (for a total 290 km swath width). The
+imagery of each band is put in a separate JPEG2000 file.</p>
+<p>Level-1B products are aimed at advanced users.</p>
+<p>When opening the main metadata .xml file, the driver will typically
+expose N * 3 sub-datasets, where N is the number of granules composing
+the user product, and 3 corresponds to the number of spatial
+resolutions. There’s one for the 4 10m bands, one for the 6 20m bands
+and one for the 3 60m bands. Caution: the number of such subdatasets can
+be typically of several hundreds or more.</p>
+<p>It is also possible to open the metadata .xml of a given granule, in
+which case 3 subdatasets will be reported for each of the 3 spatial
+resolutions.</p>
+<p>When opening a subdataset, the georeferencing is made of 5 ground
+control points for the 4 corner of the images and the center of image.</p>
+</div>
+<div class="section" id="level-1c">
+<h2>Level-1C<a class="headerlink" href="#level-1c" title="Permalink to this headline">¶</a></h2>
+<p>Level-1C products are organized in ortho-rectified tiles of 100 km x 100
+km in UTM WGS84 projections. The imagery of each band is put in a
+separate JPEG2000 file.</p>
+<p>When opening the main metadata .xml file, the driver will typically
+expose 4 sub-datasets:</p>
+<ul class="simple">
+<li><p>one for the 4 10m bands,</p></li>
+<li><p>one for the 6 20m bands,</p></li>
+<li><p>one for the 3 60m bands and,</p></li>
+<li><p>one for a preview of the R,G,B bands at a 320m resolution</p></li>
+</ul>
+<p>All tiles of same resolution and projection are mosaiced together. If a
+product spans over several UTM zones, they will be exposed as separate
+subdatasets.</p>
+<p>It is also possible to open the metadata .xml file of each tile (only
+for original L1C encoding, not supported on “Safe Compact” encoding), in
+which case the driver will typically expose the 4 above mentioned types
+of sub-datasets.</p>
+</div>
+<div class="section" id="level-2a">
+<h2>Level-2A<a class="headerlink" href="#level-2a" title="Permalink to this headline">¶</a></h2>
+<p>Similarly to Level-1C, Level-2A products are organized in
+ortho-rectified tiles of 100 km x 100 km in UTM WGS84 projections. The
+imagery of each band is put in a separate JPEG2000 file. The values are
+Bottom-Of-Atmosphere (BOA) reflectances. L2A specific bands are also
+computed:</p>
+<ul class="simple">
+<li><p>AOT: Aerosol Optical Thickness map (at 550nm)</p></li>
+<li><p>CLD: Raster mask values range from 0 for high confidence clear sky to
+100 for high confidence cloudy</p></li>
+<li><p>SCL: Scene Classification. The meaning of the values is indicated in
+the Category Names of the band.</p></li>
+<li><p>SNW: Raster mask values range from 0 for high confidence NO snow/ice
+to 100 for high confidence snow/ice</p></li>
+<li><p>WVP: Scene-average Water Vapour map</p></li>
+</ul>
+<p>When opening the main metadata .xml file, the driver will typically
+expose 4 sub-datasets:</p>
+<ul class="simple">
+<li><p>one for the 4 native 10m bands, and L2A specific bands (AOT and WVP)</p></li>
+<li><p>one for the 6 native 20m bands, plus the 10m bands, except B8,
+resampled to 20m, and L2A specific bands (AOT, WVP, SCL, CLD and
+SNW),</p></li>
+<li><p>one for the 3 native 60m bands, plus the 10m&amp;20m bands, except B8,
+resampled to 60m, and L2A specific bands (AOT, WVP, SCL, CLD and
+SNW),</p></li>
+<li><p>one for a preview of the R,G,B bands at a 320m resolution</p></li>
+</ul>
+<p>All tiles of same resolution and projection are mosaiced together. If a
+product spans over several UTM zones, they will be exposed as separate
+subdatasets.</p>
+</div>
+<div class="section" id="metadata">
+<h2>Metadata<a class="headerlink" href="#metadata" title="Permalink to this headline">¶</a></h2>
+<p>Metadata of the main metadata .xml file is available in the general
+metadata domain. The whole XML file is also accessible through the
+xml:SENTINEL2 metadata domain.</p>
+<p>Subdatasets are based on the VRT format, so the definition of this VRT
+can be obtained by querying the xml:VRT metadata domain.</p>
+</div>
+<div class="section" id="performance-issues-for-l1c-and-l2a">
+<h2>Performance issues for L1C and L2A<a class="headerlink" href="#performance-issues-for-l1c-and-l2a" title="Permalink to this headline">¶</a></h2>
+<p>Due to the way Sentinel-2 products are structured, in particular because
+of the number of JPEG2000 files involved, zoom-out operations can be
+very slow for products made of many tiles. For interactive display, it
+can be useful to generate overviews (can be a slow operation by itself).
+This can be done with the gdaladdo utility on the subdataset name. The
+overview file is created next to the main metadata .xml file, with the
+same name, but prefixed with _XX_EPSG_YYYYY.tif.ovr where
+XX=10m,20m,60m or PREVIEW and YYYYY is the EPSG code.</p>
+<p>Trick: if the content of the zoom-out preview is not important for the
+use case, blank overviews can be created instantaneously by using the
+NONE resampling method (‘-r none’ as gdaladdo switch).</p>
+<p>When converting a subdataset to another format like tiled GeoTIFF, if
+using the JP2OpenJPEG driver, the recommended minimum value for the
+GDAL_CACHEMAX configuration option is (subdataset_width * 2048 * 2 ) /
+10000000 if generating a INTERLEAVE=BAND GeoTIFF, or that value
+multiplied by the number of bands for the default INTERLEAVE=PIXEL
+configuration. The current versions of the OpenJPEG libraries can also
+consume a lot of memory to decode a JPEG2000 tile (up to 600MB), so you
+might want to specify the GDAL_NUM_THREADS configuration option to a
+reasonable number of threads if you are short of memory (the default
+value is the total number of virtual CPUs).</p>
+</div>
+<div class="section" id="open-options">
+<h2>Open options<a class="headerlink" href="#open-options" title="Permalink to this headline">¶</a></h2>
+<p>The driver can be passed the following open options:</p>
+<ul class="simple">
+<li><p><strong>ALPHA</strong>=YES/NO: whether to expose an alpha band. Defaults to NO.
+If set, an extra band is added after the Sentinel2 bands with an
+alpha channel. Its value are:</p>
+<ul>
+<li><p>0 on areas with no tiles, or when the tile data is set to the
+NODATA or SATURATED special values,</p></li>
+<li><p>4095 on areas with valid data.</p></li>
+</ul>
+</li>
+</ul>
+<p>Note: above open options can also be specified as configuration options,
+by prefixing the open option name with SENTINEL2_ (e.g.
+SENTINEL2_ALPHA).</p>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p>Opening the main metadata file of a Sentinel2 product:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gdalinfo S2A_OPER_MTD_SAFL1C_PDMC_20150818T101440_R022_V20150813T102406_20150813T102406.xml
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Driver: SENTINEL2/Sentinel 2
+Files: S2A_OPER_MTD_SAFL1C_PDMC_20150818T101440_R022_V20150813T102406_20150813T102406.xml
+Size is 512, 512
+Coordinate System is `&#39;
+Metadata:
+  CLOUD_COVERAGE_ASSESSMENT=0.0
+  DATATAKE_1_DATATAKE_SENSING_START=2015-08-13T10:10:26.027Z
+  DATATAKE_1_DATATAKE_TYPE=INS-NOBS
+  DATATAKE_1_ID=GS2A_20150813T101026_000734_N01.03
+  DATATAKE_1_SENSING_ORBIT_DIRECTION=DESCENDING
+  DATATAKE_1_SENSING_ORBIT_NUMBER=22
+  DATATAKE_1_SPACECRAFT_NAME=Sentinel-2A
+  DEGRADED_ANC_DATA_PERCENTAGE=0
+  DEGRADED_MSI_DATA_PERCENTAGE=0
+  FOOTPRINT=POLYGON((11.583573986577191 46.02490454425771, 11.538730738326866 45.03757398414644, 12.93007028286133 44.99812645604949, 12.999359413660665 45.98408391203724, 11.583573986577191 46.02490454425771, 11.583573986577191 46.02490454425771))
+  FORMAT_CORRECTNESS_FLAG=PASSED
+  GENERAL_QUALITY_FLAG=PASSED
+  GENERATION_TIME=2015-08-18T10:14:40.000283Z
+  GEOMETRIC_QUALITY_FLAG=PASSED
+  PREVIEW_GEO_INFO=BrowseImageFootprint
+  PREVIEW_IMAGE_URL=https://pdmcdam2.sentinel2.eo.esa.int/s2pdgs_geoserver/geo_service.php?service=WMS&amp;version=1.1.0&amp;request=GetMap&amp;layers=S2A_A000022_N0103:S2A_A000022_N0103&amp;styles=&amp;bbox=11.538730738326866,44.99812645604949,12.999359413660665,46.02490454425771&amp;width=1579&amp;height=330&amp;srs=EPSG:4326&amp;format=image/png&amp;time=2015-08-13T10:24:06.0Z/2015-08-13T10:24:06.0Z
+  PROCESSING_BASELINE=01.03
+  PROCESSING_LEVEL=Level-1C
+  PRODUCT_START_TIME=2015-08-13T10:24:06.637Z
+  PRODUCT_STOP_TIME=2015-08-13T10:24:06.637Z
+  PRODUCT_TYPE=S2MSI1C
+  QUANTIFICATION_VALUE=1000
+  RADIOMETRIC_QUALITY_FLAG=PASSED
+  REFERENCE_BAND=B1
+  REFLECTANCE_CONVERSION_U=0.973195961910065
+  SENSOR_QUALITY_FLAG=PASSED
+  SPECIAL_VALUE_NODATA=1
+  SPECIAL_VALUE_SATURATED=0
+Subdatasets:
+  SUBDATASET_1_NAME=SENTINEL2_L1C:S2A_OPER_MTD_SAFL1C_PDMC_20150818T101440_R022_V20150813T102406_20150813T102406.xml:10m:EPSG_32632
+  SUBDATASET_1_DESC=Bands B2, B3, B4, B8 with 10m resolution, UTM 32N
+  SUBDATASET_2_NAME=SENTINEL2_L1C:S2A_OPER_MTD_SAFL1C_PDMC_20150818T101440_R022_V20150813T102406_20150813T102406.xml:20m:EPSG_32632
+  SUBDATASET_2_DESC=Bands B5, B6, B7, B8A, B11, B12 with 20m resolution, UTM 32N
+  SUBDATASET_3_NAME=SENTINEL2_L1C:S2A_OPER_MTD_SAFL1C_PDMC_20150818T101440_R022_V20150813T102406_20150813T102406.xml:60m:EPSG_32632
+  SUBDATASET_3_DESC=Bands B1, B9, B10 with 60m resolution, UTM 32N
+  SUBDATASET_4_NAME=SENTINEL2_L1C:S2A_OPER_MTD_SAFL1C_PDMC_20150818T101440_R022_V20150813T102406_20150813T102406.xml:PREVIEW:EPSG_32632
+  SUBDATASET_4_DESC=RGB preview, UTM 32N
+Corner Coordinates:
+Upper Left  (    0.0,    0.0)
+Lower Left  (    0.0,  512.0)
+Upper Right (  512.0,    0.0)
+Lower Right (  512.0,  512.0)
+Center      (  256.0,  256.0)
+</pre></div>
+</div>
+</li>
+<li><p>Opening the .zip file directly:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gdalinfo S2A_OPER_PRD_MSIL1C_PDMC_20150818T101440_R022_V20150813T102406_20150813T102406.zip
+</pre></div>
+</div>
+</li>
+<li><p>Opening the 10 meters resolution bands of a L1C subdataset:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gdalinfo SENTINEL2_L1C:S2A_OPER_MTD_SAFL1C_PDMC_20150818T101440_R022_V20150813T102406_20150813T102406.xml:10m:EPSG_32632
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Driver</span><span class="p">:</span> <span class="n">SENTINEL2</span><span class="o">/</span><span class="n">Sentinel</span> <span class="mi">2</span>
+<span class="n">Files</span><span class="p">:</span> <span class="n">S2A_OPER_MTD_SAFL1C_PDMC_20150818T101440_R022_V20150813T102406_20150813T102406</span><span class="o">.</span><span class="n">xml</span>
+       <span class="o">./</span><span class="n">GRANULE</span><span class="o">/</span><span class="n">S2A_OPER_MSI_L1C_TL_MTI__20150813T201603_A000734_T32TQR_N01</span><span class="o">.</span><span class="mi">03</span><span class="o">/</span><span class="n">S2A_OPER_MTD_L1C_TL_MTI__20150813T201603_A000734_T32TQR</span><span class="o">.</span><span class="n">xml</span>
+       <span class="o">./</span><span class="n">GRANULE</span><span class="o">/</span><span class="n">S2A_OPER_MSI_L1C_TL_MTI__20150813T201603_A000734_T32TQR_N01</span><span class="o">.</span><span class="mi">03</span><span class="o">/</span><span class="n">IMG_DATA</span><span class="o">/</span><span class="n">S2A_OPER_MSI_L1C_TL_MTI__20150813T201603_A000734_T32TQR_B04</span><span class="o">.</span><span class="n">jp2</span>
+       <span class="o">./</span><span class="n">GRANULE</span><span class="o">/</span><span class="n">S2A_OPER_MSI_L1C_TL_MTI__20150813T201603_A000734_T32TQR_N01</span><span class="o">.</span><span class="mi">03</span><span class="o">/</span><span class="n">IMG_DATA</span><span class="o">/</span><span class="n">S2A_OPER_MSI_L1C_TL_MTI__20150813T201603_A000734_T32TQR_B03</span><span class="o">.</span><span class="n">jp2</span>
+       <span class="o">./</span><span class="n">GRANULE</span><span class="o">/</span><span class="n">S2A_OPER_MSI_L1C_TL_MTI__20150813T201603_A000734_T32TQR_N01</span><span class="o">.</span><span class="mi">03</span><span class="o">/</span><span class="n">IMG_DATA</span><span class="o">/</span><span class="n">S2A_OPER_MSI_L1C_TL_MTI__20150813T201603_A000734_T32TQR_B02</span><span class="o">.</span><span class="n">jp2</span>
+       <span class="o">./</span><span class="n">GRANULE</span><span class="o">/</span><span class="n">S2A_OPER_MSI_L1C_TL_MTI__20150813T201603_A000734_T32TQR_N01</span><span class="o">.</span><span class="mi">03</span><span class="o">/</span><span class="n">IMG_DATA</span><span class="o">/</span><span class="n">S2A_OPER_MSI_L1C_TL_MTI__20150813T201603_A000734_T32TQR_B08</span><span class="o">.</span><span class="n">jp2</span>
+<span class="n">Size</span> <span class="ow">is</span> <span class="mi">10980</span><span class="p">,</span> <span class="mi">10980</span>
+<span class="n">Coordinate</span> <span class="n">System</span> <span class="ow">is</span><span class="p">:</span>
+<span class="n">PROJCS</span><span class="p">[</span><span class="s2">&quot;WGS 84 / UTM zone 32N&quot;</span><span class="p">,</span>
+    <span class="n">GEOGCS</span><span class="p">[</span><span class="s2">&quot;WGS 84&quot;</span><span class="p">,</span>
+        <span class="n">DATUM</span><span class="p">[</span><span class="s2">&quot;WGS_1984&quot;</span><span class="p">,</span>
+            <span class="n">SPHEROID</span><span class="p">[</span><span class="s2">&quot;WGS 84&quot;</span><span class="p">,</span><span class="mi">6378137</span><span class="p">,</span><span class="mf">298.257223563</span><span class="p">,</span>
+                <span class="n">AUTHORITY</span><span class="p">[</span><span class="s2">&quot;EPSG&quot;</span><span class="p">,</span><span class="s2">&quot;7030&quot;</span><span class="p">]],</span>
+            <span class="n">AUTHORITY</span><span class="p">[</span><span class="s2">&quot;EPSG&quot;</span><span class="p">,</span><span class="s2">&quot;6326&quot;</span><span class="p">]],</span>
+        <span class="n">PRIMEM</span><span class="p">[</span><span class="s2">&quot;Greenwich&quot;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">AUTHORITY</span><span class="p">[</span><span class="s2">&quot;EPSG&quot;</span><span class="p">,</span><span class="s2">&quot;8901&quot;</span><span class="p">]],</span>
+        <span class="n">UNIT</span><span class="p">[</span><span class="s2">&quot;degree&quot;</span><span class="p">,</span><span class="mf">0.0174532925199433</span><span class="p">,</span>
+            <span class="n">AUTHORITY</span><span class="p">[</span><span class="s2">&quot;EPSG&quot;</span><span class="p">,</span><span class="s2">&quot;9122&quot;</span><span class="p">]],</span>
+        <span class="n">AUTHORITY</span><span class="p">[</span><span class="s2">&quot;EPSG&quot;</span><span class="p">,</span><span class="s2">&quot;4326&quot;</span><span class="p">]],</span>
+    <span class="n">PROJECTION</span><span class="p">[</span><span class="s2">&quot;Transverse_Mercator&quot;</span><span class="p">],</span>
+    <span class="n">PARAMETER</span><span class="p">[</span><span class="s2">&quot;latitude_of_origin&quot;</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+    <span class="n">PARAMETER</span><span class="p">[</span><span class="s2">&quot;central_meridian&quot;</span><span class="p">,</span><span class="mi">9</span><span class="p">],</span>
+    <span class="n">PARAMETER</span><span class="p">[</span><span class="s2">&quot;scale_factor&quot;</span><span class="p">,</span><span class="mf">0.9996</span><span class="p">],</span>
+    <span class="n">PARAMETER</span><span class="p">[</span><span class="s2">&quot;false_easting&quot;</span><span class="p">,</span><span class="mi">500000</span><span class="p">],</span>
+    <span class="n">PARAMETER</span><span class="p">[</span><span class="s2">&quot;false_northing&quot;</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+    <span class="n">UNIT</span><span class="p">[</span><span class="s2">&quot;metre&quot;</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">AUTHORITY</span><span class="p">[</span><span class="s2">&quot;EPSG&quot;</span><span class="p">,</span><span class="s2">&quot;9001&quot;</span><span class="p">]],</span>
+    <span class="n">AXIS</span><span class="p">[</span><span class="s2">&quot;Easting&quot;</span><span class="p">,</span><span class="n">EAST</span><span class="p">],</span>
+    <span class="n">AXIS</span><span class="p">[</span><span class="s2">&quot;Northing&quot;</span><span class="p">,</span><span class="n">NORTH</span><span class="p">],</span>
+    <span class="n">AUTHORITY</span><span class="p">[</span><span class="s2">&quot;EPSG&quot;</span><span class="p">,</span><span class="s2">&quot;32632&quot;</span><span class="p">]]</span>
+<span class="n">Origin</span> <span class="o">=</span> <span class="p">(</span><span class="mf">699960.000000000000000</span><span class="p">,</span><span class="mf">5100060.000000000000000</span><span class="p">)</span>
+<span class="n">Pixel</span> <span class="n">Size</span> <span class="o">=</span> <span class="p">(</span><span class="mf">10.000000000000000</span><span class="p">,</span><span class="o">-</span><span class="mf">10.000000000000000</span><span class="p">)</span>
+<span class="n">Metadata</span><span class="p">:</span>
+<span class="p">[</span><span class="o">...</span> <span class="n">same</span> <span class="k">as</span> <span class="n">above</span> <span class="o">...</span><span class="p">]</span>
+<span class="n">Image</span> <span class="n">Structure</span> <span class="n">Metadata</span><span class="p">:</span>
+  <span class="n">COMPRESSION</span><span class="o">=</span><span class="n">JPEG2000</span>
+<span class="n">Corner</span> <span class="n">Coordinates</span><span class="p">:</span>
+<span class="n">Upper</span> <span class="n">Left</span>  <span class="p">(</span>  <span class="mf">699960.000</span><span class="p">,</span> <span class="mf">5100060.000</span><span class="p">)</span> <span class="p">(</span> <span class="mi">11</span><span class="n">d35</span><span class="s1">&#39; 0.87&quot;E, 46d 1&#39;</span><span class="mf">29.66</span><span class="s2">&quot;N)</span>
+<span class="n">Lower</span> <span class="n">Left</span>  <span class="p">(</span>  <span class="mf">699960.000</span><span class="p">,</span> <span class="mf">4990260.000</span><span class="p">)</span> <span class="p">(</span> <span class="mi">11</span><span class="n">d32</span><span class="s1">&#39;19.43&quot;E, 45d 2&#39;</span><span class="mf">15.27</span><span class="s2">&quot;N)</span>
+<span class="n">Upper</span> <span class="n">Right</span> <span class="p">(</span>  <span class="mf">809760.000</span><span class="p">,</span> <span class="mf">5100060.000</span><span class="p">)</span> <span class="p">(</span> <span class="mi">12</span><span class="n">d59</span><span class="s1">&#39;57.69&quot;E, 45d59&#39;</span> <span class="mf">2.70</span><span class="s2">&quot;N)</span>
+<span class="n">Lower</span> <span class="n">Right</span> <span class="p">(</span>  <span class="mf">809760.000</span><span class="p">,</span> <span class="mf">4990260.000</span><span class="p">)</span> <span class="p">(</span> <span class="mi">12</span><span class="n">d55</span><span class="s1">&#39;48.25&quot;E, 44d59&#39;</span><span class="mf">53.26</span><span class="s2">&quot;N)</span>
+<span class="n">Center</span>      <span class="p">(</span>  <span class="mf">754860.000</span><span class="p">,</span> <span class="mf">5045160.000</span><span class="p">)</span> <span class="p">(</span> <span class="mi">12</span><span class="n">d15</span><span class="s1">&#39;46.56&quot;E, 45d30&#39;</span><span class="mf">48.07</span><span class="s2">&quot;N)</span>
+<span class="n">Band</span> <span class="mi">1</span> <span class="n">Block</span><span class="o">=</span><span class="mi">128</span><span class="n">x128</span> <span class="n">Type</span><span class="o">=</span><span class="n">UInt16</span><span class="p">,</span> <span class="n">ColorInterp</span><span class="o">=</span><span class="n">Red</span>
+  <span class="n">Description</span> <span class="o">=</span> <span class="n">B4</span><span class="p">,</span> <span class="n">central</span> <span class="n">wavelength</span> <span class="mi">665</span> <span class="n">nm</span>
+  <span class="n">Overviews</span><span class="p">:</span> <span class="mi">5490</span><span class="n">x5490</span><span class="p">,</span> <span class="mi">2745</span><span class="n">x2745</span><span class="p">,</span> <span class="mi">1373</span><span class="n">x1373</span><span class="p">,</span> <span class="mi">687</span><span class="n">x687</span><span class="p">,</span> <span class="mi">344</span><span class="n">x344</span>
+  <span class="n">Metadata</span><span class="p">:</span>
+    <span class="n">BANDNAME</span><span class="o">=</span><span class="n">B4</span>
+    <span class="n">BANDWIDTH</span><span class="o">=</span><span class="mi">30</span>
+    <span class="n">BANDWIDTH_UNIT</span><span class="o">=</span><span class="n">nm</span>
+    <span class="n">SOLAR_IRRADIANCE</span><span class="o">=</span><span class="mf">1512.79</span>
+    <span class="n">SOLAR_IRRADIANCE_UNIT</span><span class="o">=</span><span class="n">W</span><span class="o">/</span><span class="n">m2</span><span class="o">/</span><span class="n">um</span>
+    <span class="n">WAVELENGTH</span><span class="o">=</span><span class="mi">665</span>
+    <span class="n">WAVELENGTH_UNIT</span><span class="o">=</span><span class="n">nm</span>
+  <span class="n">Image</span> <span class="n">Structure</span> <span class="n">Metadata</span><span class="p">:</span>
+    <span class="n">NBITS</span><span class="o">=</span><span class="mi">12</span>
+<span class="n">Band</span> <span class="mi">2</span> <span class="n">Block</span><span class="o">=</span><span class="mi">128</span><span class="n">x128</span> <span class="n">Type</span><span class="o">=</span><span class="n">UInt16</span><span class="p">,</span> <span class="n">ColorInterp</span><span class="o">=</span><span class="n">Green</span>
+  <span class="n">Description</span> <span class="o">=</span> <span class="n">B3</span><span class="p">,</span> <span class="n">central</span> <span class="n">wavelength</span> <span class="mi">560</span> <span class="n">nm</span>
+<span class="p">[</span><span class="o">...</span><span class="p">]</span>
+<span class="n">Band</span> <span class="mi">3</span> <span class="n">Block</span><span class="o">=</span><span class="mi">128</span><span class="n">x128</span> <span class="n">Type</span><span class="o">=</span><span class="n">UInt16</span><span class="p">,</span> <span class="n">ColorInterp</span><span class="o">=</span><span class="n">Blue</span>
+  <span class="n">Description</span> <span class="o">=</span> <span class="n">B2</span><span class="p">,</span> <span class="n">central</span> <span class="n">wavelength</span> <span class="mi">490</span> <span class="n">nm</span>
+<span class="p">[</span><span class="o">...</span><span class="p">]</span>
+<span class="n">Band</span> <span class="mi">4</span> <span class="n">Block</span><span class="o">=</span><span class="mi">128</span><span class="n">x128</span> <span class="n">Type</span><span class="o">=</span><span class="n">UInt16</span><span class="p">,</span> <span class="n">ColorInterp</span><span class="o">=</span><span class="n">Undefined</span>
+  <span class="n">Description</span> <span class="o">=</span> <span class="n">B8</span><span class="p">,</span> <span class="n">central</span> <span class="n">wavelength</span> <span class="mi">842</span> <span class="n">nm</span>
+<span class="p">[</span><span class="o">...</span><span class="p">]</span>
+</pre></div>
+</div>
+</li>
+<li><p>Conversion of a L1C subdataset to tiled GeoTIFF</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gdal_translate SENTINEL2_L1C:S2A_OPER_MTD_SAFL1C_PDMC_20150818T101440_R022_V20150813T102406_20150813T102406.xml:10m:EPSG_32632 \
+                 10m.tif \
+                 -co TILED=YES --config GDAL_CACHEMAX 1000 --config GDAL_NUM_THREADS 2
+</pre></div>
+</div>
+</li>
+<li><p>Generating blank overviews for a L1C subdataset:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gdaladdo -r NONE SENTINEL2_L1C:S2A_OPER_MTD_SAFL1C_PDMC_20150818T101440_R022_V20150813T102406_20150813T102406.xml:10m:EPSG_32632 4
+</pre></div>
+</div>
+</li>
+<li><p>Creating a VRT file from the subdataset (can be convenient to have
+the subdatasets as files):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python -c &quot;import sys; from osgeo import gdal; ds = gdal.Open(sys.argv[1]); open(sys.argv[2], &#39;wb&#39;).write(ds.GetMetadata(&#39;xml:VRT&#39;)[0].encode(&#39;utf-8&#39;))&quot; \
+         SENTINEL2_L1C:S2A_OPER_MTD_SAFL1C_PDMC_20150818T101440_R022_V20150813T102406_20150813T102406.xml:10m:EPSG_32632 10m.vrt
+</pre></div>
+</div>
+</li>
+<li><p>Opening the 10 meters resolution bands of a L1B subdataset:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gdalinfo SENTINEL2_L1B:S2A_OPER_MTD_L1B_GR_SGS__20151024T023555_S20151024T011315_D02.xml:10m
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Driver: SENTINEL2/Sentinel 2
+Files: S2A_OPER_MTD_L1B_GR_SGS__20151024T023555_S20151024T011315_D02.xml
+       IMG_DATA/S2A_OPER_MSI_L1B_GR_SGS__20151024T023555_S20151024T011315_D02_B04.jp2
+       IMG_DATA/S2A_OPER_MSI_L1B_GR_SGS__20151024T023555_S20151024T011315_D02_B03.jp2
+       IMG_DATA/S2A_OPER_MSI_L1B_GR_SGS__20151024T023555_S20151024T011315_D02_B02.jp2
+       IMG_DATA/S2A_OPER_MSI_L1B_GR_SGS__20151024T023555_S20151024T011315_D02_B08.jp2
+Size is 2552, 2304
+Coordinate System is `&#39;
+GCP Projection =
+GEOGCS[&quot;WGS 84&quot;,
+    DATUM[&quot;WGS_1984&quot;,
+        SPHEROID[&quot;WGS 84&quot;,6378137,298.257223563,
+            AUTHORITY[&quot;EPSG&quot;,&quot;7030&quot;]],
+        AUTHORITY[&quot;EPSG&quot;,&quot;6326&quot;]],
+    PRIMEM[&quot;Greenwich&quot;,0,
+        AUTHORITY[&quot;EPSG&quot;,&quot;8901&quot;]],
+    UNIT[&quot;degree&quot;,0.0174532925199433,
+        AUTHORITY[&quot;EPSG&quot;,&quot;9122&quot;]],
+    AUTHORITY[&quot;EPSG&quot;,&quot;4326&quot;]]
+GCP[  0]: Id=, Info=
+          (0,0) -&gt; (134.635194391036,-21.4282083310724,0)
+GCP[  1]: Id=, Info=
+          (0,2304) -&gt; (134.581480136827,-21.6408640426055,0)
+GCP[  2]: Id=, Info=
+          (2552,2304) -&gt; (134.833308274251,-21.686125031254,0)
+GCP[  3]: Id=, Info=
+          (2552,0) -&gt; (134.886750925145,-21.4734274382519,0)
+GCP[  4]: Id=, Info=
+          (1276,1152) -&gt; (134.734115530986,-21.5571457404287,0)
+Metadata:
+  CLOUDY_PIXEL_PERCENTAGE=0
+  DATASTRIP_ID=S2A_OPER_MSI_L1B_DS_SGS__20151024T023555_S20151024T011312_N01.04
+  DATATAKE_1_DATATAKE_SENSING_START=2015-10-24T01:13:12.027Z
+  DATATAKE_1_DATATAKE_TYPE=INS-NOBS
+  DATATAKE_1_ID=GS2A_20151024T011312_001758_N01.04
+  DATATAKE_1_SENSING_ORBIT_DIRECTION=DESCENDING
+  DATATAKE_1_SENSING_ORBIT_NUMBER=45
+  DATATAKE_1_SPACECRAFT_NAME=Sentinel-2A
+  DEGRADED_ANC_DATA_PERCENTAGE=0
+  DEGRADED_MSI_DATA_PERCENTAGE=0
+  DETECTOR_ID=02
+  DOWNLINK_PRIORITY=NOMINAL
+  FOOTPRINT=POLYGON((134.635194391036 -21.4282083310724, 134.581480136827 -21.6408640426055, 134.833308274251 -21.686125031254, 134.886750925145 -21.4734274382519, 134.635194391036 -21.4282083310724))
+  FORMAT_CORRECTNESS_FLAG=PASSED
+  GENERAL_QUALITY_FLAG=PASSED
+  GENERATION_TIME=2015-11-12T10:55:12.000947Z
+  GEOMETRIC_QUALITY_FLAG=PASSED
+  GRANULE_ID=S2A_OPER_MSI_L1B_GR_SGS__20151024T023555_S20151024T011315_D02_N01.04
+  PREVIEW_GEO_INFO=BrowseImageFootprint
+  PREVIEW_IMAGE_URL=https://pdmcdam2.sentinel2.eo.esa.int/s2pdgs_geoserver/geo_service.php?service=WMS&amp;version=1.1.0&amp;request=GetMap&amp;layers=S2A_A000045_N0104:S2A_A000045_N0104&amp;styles=&amp;bbox=133.512786023161,-25.3930035889714,137.184847290108,-21.385906922696&amp;width=1579&amp;height=330&amp;srs=EPSG:4326&amp;format=image/png&amp;time=2015-10-24T01:13:15.0Z/2015-10-24T01:14:13.0Z
+  PROCESSING_BASELINE=01.04
+  PROCESSING_LEVEL=Level-1B
+  PRODUCT_START_TIME=2015-10-24T01:13:15.497656Z
+  PRODUCT_STOP_TIME=2015-10-24T01:14:13.70431Z
+  PRODUCT_TYPE=S2MSI1B
+  RADIOMETRIC_QUALITY_FLAG=PASSED
+  SENSING_TIME=2015-10-24T01:13:15.497656Z
+  SENSOR_QUALITY_FLAG=PASSED
+  SPECIAL_VALUE_NODATA=1
+  SPECIAL_VALUE_SATURATED=0
+Corner Coordinates:
+Upper Left  (    0.0,    0.0)
+Lower Left  (    0.0, 2304.0)
+Upper Right ( 2552.0,    0.0)
+Lower Right ( 2552.0, 2304.0)
+Center      ( 1276.0, 1152.0)
+Band 1 Block=128x128 Type=UInt16, ColorInterp=Red
+  Description = B4, central wavelength 665 nm
+  Overviews: 1276x1152, 638x576, 319x288, 160x144
+  Metadata:
+    BANDNAME=B4
+    BANDWIDTH=30
+    BANDWIDTH_UNIT=nm
+    WAVELENGTH=665
+    WAVELENGTH_UNIT=nm
+  Image Structure Metadata:
+    NBITS=12
+Band 2 Block=128x128 Type=UInt16, ColorInterp=Green
+  Description = B3, central wavelength 560 nm
+[...]
+Band 3 Block=128x128 Type=UInt16, ColorInterp=Blue
+  Description = B2, central wavelength 490 nm
+[...]
+Band 4 Block=128x128 Type=UInt16, ColorInterp=Undefined
+  Description = B8, central wavelength 842 nm
+[...]
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="see-also">
+<h2>See Also<a class="headerlink" href="#see-also" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://scihub.esa.int/">Sentinels Scientific Data Hub</a></p></li>
+<li><p><a class="reference external" href="https://sentinels.copernicus.eu/web/sentinel/user-guides/sentinel-2-msi">Sentinel 2 User
+guide</a></p></li>
+<li><p><a class="reference external" href="https://sentinels.copernicus.eu/web/sentinel/user-guides/document-library/-/asset_publisher/xlslt4309D5h/content/sentinel-2-user-handbook">Sentinel 2 User
+Handbook</a></p></li>
+</ul>
+</div>
+<div class="section" id="credits">
+<h2>Credits<a class="headerlink" href="#credits" title="Permalink to this headline">¶</a></h2>
+<p>This driver has been developed by <a class="reference external" href="http://spatialys.com">Spatialys</a>
+with funding from <a class="reference external" href="https://cnes.fr">Centre National d’Etudes Spatiales
+(CNES)</a></p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="sgi.html" class="btn btn-neutral float-right" title="SGI – SGI Image Format" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="sde.html" class="btn btn-neutral float-left" title="ESRI ArcSDE Raster" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

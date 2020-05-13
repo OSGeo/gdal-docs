@@ -1,0 +1,795 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RFC 53: OGR not-null constraints and default values &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdevelopment/rfc/rfc53_ogr_notnull_default.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="RFC 54: Dataset transactions" href="rfc54_dataset_transactions.html" />
+    <link rel="prev" title="RFC 52: Strict OGR SQL quoting" href="rfc52_strict_sql_quoting.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 53: OGR not-null constraints and default values</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#not-null-constraint">NOT NULL constraint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#default-field-values">Default field values</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#swig-bindings-python-java-c-perl-changes">SWIG bindings (Python / Java / C# / Perl) changes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#utilities">Utilities</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#file-formats">File Formats</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#test-suite">Test Suite</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#compatibility-issues">Compatibility Issues</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#related-topics-out-of-scope-of-this-rfc">Related topics out of scope of this RFC</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voting-history">Voting history</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 53: OGR not-null constraints and default values</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/development/rfc/rfc53_ogr_notnull_default.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="rfc54_dataset_transactions.html" class="btn btn-neutral float-right" title="RFC 54: Dataset transactions" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc52_strict_sql_quoting.html" class="btn btn-neutral float-left" title="RFC 52: Strict OGR SQL quoting" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rfc-53-ogr-not-null-constraints-and-default-values">
+<span id="rfc-53"></span><h1>RFC 53: OGR not-null constraints and default values<a class="headerlink" href="#rfc-53-ogr-not-null-constraints-and-default-values" title="Permalink to this headline">¶</a></h1>
+<p>Authors: Even Rouault</p>
+<p>Contact: even dot rouault at spatialys.com</p>
+<p>Status: Adopted, implemented in GDAL 2.0</p>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>This RFC addresses handling of NOT NULL constraints and DEFAULT values
+for OGR fields. NOT NULL constraints are useful to maintain basic data
+integrity and are handled by most (all?) drivers that have SQL
+capabilities. Default fields values may be used complementary or
+independently of NOT NULL constraints to specify the value a field must
+be assigned to if it is not provided when inserting a feature into the
+layer.</p>
+</div>
+<div class="section" id="not-null-constraint">
+<h2>NOT NULL constraint<a class="headerlink" href="#not-null-constraint" title="Permalink to this headline">¶</a></h2>
+<p>Up to now, OGR fields did not have NOT NULL constraints, i.e. fields in
+layers/tables were created with the possibility for a field of a
+feature/record to be unset (i.e. having a NULL value). This will still
+be the default, i.e. fields are assumed to be nullable. The OGRFieldDefn
+class is extended with a boolean attribute bNullable that defaults to
+TRUE and can be set to FALSE to express a NOT NULL constraint (bNullable
+has been preferred over bNotNullable to avoid confusion with double
+negation). Drivers that can translate NOT NULL constraints in their
+storage will use that attribute to determine if the field definition
+must include a NOT NULL constraint. When opening a datasource, their
+metadata will be inspected to set the nullable attribute properly, so
+that round-tripping works.</p>
+<p>The following methods are added to the OGRFieldDefn class</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="nb">int</span>                 <span class="n">IsNullable</span><span class="p">()</span> <span class="n">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">bNullable</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="o">/**</span>
+ <span class="o">*</span> \<span class="n">brief</span> <span class="n">Return</span> <span class="n">whether</span> <span class="n">this</span> <span class="n">field</span> <span class="n">can</span> <span class="n">receive</span> <span class="n">null</span> <span class="n">values</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">By</span> <span class="n">default</span><span class="p">,</span> <span class="n">fields</span> <span class="n">are</span> <span class="n">nullable</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">Even</span> <span class="k">if</span> <span class="n">this</span> <span class="n">method</span> <span class="n">returns</span> <span class="n">FALSE</span> <span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">e</span> <span class="ow">not</span><span class="o">-</span><span class="n">nullable</span> <span class="n">field</span><span class="p">),</span> <span class="n">it</span> <span class="n">doesn</span><span class="s1">&#39;t mean</span>
+ <span class="o">*</span> <span class="n">that</span> <span class="n">OGRFeature</span><span class="p">::</span><span class="n">IsFieldSet</span><span class="p">()</span> <span class="n">will</span> <span class="n">necessary</span> <span class="k">return</span> <span class="n">TRUE</span><span class="p">,</span> <span class="k">as</span> <span class="n">fields</span> <span class="n">can</span> <span class="n">be</span>
+ <span class="o">*</span> <span class="n">temporary</span> <span class="n">unset</span> <span class="ow">and</span> <span class="n">null</span><span class="o">/</span><span class="ow">not</span><span class="o">-</span><span class="n">null</span> <span class="n">validation</span> <span class="ow">is</span> <span class="n">usually</span> <span class="n">done</span> <span class="n">when</span>
+ <span class="o">*</span> <span class="n">OGRLayer</span><span class="p">::</span><span class="n">CreateFeature</span><span class="p">()</span><span class="o">/</span><span class="n">SetFeature</span><span class="p">()</span> <span class="ow">is</span> <span class="n">called</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">This</span> <span class="n">method</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">same</span> <span class="k">as</span> <span class="n">the</span> <span class="n">C</span> <span class="n">function</span> <span class="n">OGR_Fld_IsNullable</span><span class="p">()</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="nd">@return</span> <span class="n">TRUE</span> <span class="k">if</span> <span class="n">the</span> <span class="n">field</span> <span class="ow">is</span> <span class="n">authorized</span> <span class="n">to</span> <span class="n">be</span> <span class="n">null</span><span class="o">.</span>
+ <span class="o">*</span> <span class="nd">@since</span> <span class="n">GDAL</span> <span class="mf">2.0</span>
+ <span class="o">*/</span>
+
+    <span class="n">void</span>                <span class="n">SetNullable</span><span class="p">(</span> <span class="nb">int</span> <span class="n">bNullableIn</span> <span class="p">)</span> <span class="p">{</span> <span class="n">bNullable</span> <span class="o">=</span> <span class="n">bNullableIn</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="o">/**</span>
+ <span class="o">*</span> \<span class="n">brief</span> <span class="n">Set</span> <span class="n">whether</span> <span class="n">this</span> <span class="n">field</span> <span class="n">can</span> <span class="n">receive</span> <span class="n">null</span> <span class="n">values</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">By</span> <span class="n">default</span><span class="p">,</span> <span class="n">fields</span> <span class="n">are</span> <span class="n">nullable</span><span class="p">,</span> <span class="n">so</span> <span class="n">this</span> <span class="n">method</span> <span class="ow">is</span> <span class="n">generally</span> <span class="n">called</span> <span class="k">with</span> <span class="n">FALSE</span>
+ <span class="o">*</span> <span class="n">to</span> <span class="nb">set</span> <span class="n">a</span> <span class="ow">not</span><span class="o">-</span><span class="n">null</span> <span class="n">constraint</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">Drivers</span> <span class="n">that</span> <span class="n">support</span> <span class="n">writing</span> <span class="ow">not</span><span class="o">-</span><span class="n">null</span> <span class="n">constraint</span> <span class="n">will</span> <span class="n">advertise</span> <span class="n">the</span>
+ <span class="o">*</span> <span class="n">GDAL_DCAP_NOTNULL_FIELDS</span> <span class="n">driver</span> <span class="n">metadata</span> <span class="n">item</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">This</span> <span class="n">method</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">same</span> <span class="k">as</span> <span class="n">the</span> <span class="n">C</span> <span class="n">function</span> <span class="n">OGR_Fld_SetNullable</span><span class="p">()</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="nd">@param</span> <span class="n">bNullableIn</span> <span class="n">FALSE</span> <span class="k">if</span> <span class="n">the</span> <span class="n">field</span> <span class="n">must</span> <span class="n">have</span> <span class="n">a</span> <span class="ow">not</span><span class="o">-</span><span class="n">null</span> <span class="n">constraint</span><span class="o">.</span>
+ <span class="o">*</span> <span class="nd">@since</span> <span class="n">GDAL</span> <span class="mf">2.0</span>
+ <span class="o">*/</span>
+</pre></div>
+</div>
+<p>As this holds true for geometry fields, those 2 methods are also add to
+the OGRGeometryFieldDefn class.</p>
+<p>Note that adding a field with a NOT NULL constraint on a non-empty layer
+is generally impossible, unless a DEFAULT value is associated with it.</p>
+<p>The following method is added to the OGRFeature class :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="nb">int</span>                 <span class="n">Validate</span><span class="p">(</span> <span class="nb">int</span> <span class="n">nValidateFlags</span><span class="p">,</span> <span class="nb">int</span> <span class="n">bEmitError</span> <span class="p">);</span>
+
+<span class="o">/**</span>
+ <span class="o">*</span> \<span class="n">brief</span> <span class="n">Validate</span> <span class="n">that</span> <span class="n">a</span> <span class="n">feature</span> <span class="n">meets</span> <span class="n">constraints</span> <span class="n">of</span> <span class="n">its</span> <span class="n">schema</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">The</span> <span class="n">scope</span> <span class="n">of</span> <span class="n">test</span> <span class="ow">is</span> <span class="n">specified</span> <span class="k">with</span> <span class="n">the</span> <span class="n">nValidateFlags</span> <span class="n">parameter</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">Regarding</span> <span class="n">OGR_F_VAL_WIDTH</span><span class="p">,</span> <span class="n">the</span> <span class="n">test</span> <span class="ow">is</span> <span class="n">done</span> <span class="n">assuming</span> <span class="n">the</span> <span class="n">string</span> <span class="n">width</span> <span class="n">must</span>
+ <span class="o">*</span> <span class="n">be</span> <span class="n">interpreted</span> <span class="k">as</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">UTF</span><span class="o">-</span><span class="mi">8</span> <span class="n">characters</span><span class="o">.</span> <span class="n">Some</span> <span class="n">drivers</span> <span class="n">might</span> <span class="n">interpret</span>
+ <span class="o">*</span> <span class="n">the</span> <span class="n">width</span> <span class="k">as</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="nb">bytes</span> <span class="n">instead</span><span class="o">.</span> <span class="n">So</span> <span class="n">this</span> <span class="n">test</span> <span class="ow">is</span> <span class="n">rather</span> <span class="n">conservative</span>
+ <span class="o">*</span> <span class="p">(</span><span class="k">if</span> <span class="n">it</span> <span class="n">fails</span><span class="p">,</span> <span class="n">then</span> <span class="n">it</span> <span class="n">will</span> <span class="n">fail</span> <span class="k">for</span> <span class="nb">all</span> <span class="n">interpretations</span><span class="p">)</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">This</span> <span class="n">method</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">same</span> <span class="k">as</span> <span class="n">the</span> <span class="n">C</span> <span class="n">function</span> <span class="n">OGR_F_Validate</span><span class="p">()</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="nd">@param</span> <span class="n">nValidateFlags</span> <span class="n">OGR_F_VAL_ALL</span> <span class="ow">or</span> <span class="n">combination</span> <span class="n">of</span> <span class="n">OGR_F_VAL_NULL</span><span class="p">,</span>
+ <span class="o">*</span>                       <span class="n">OGR_F_VAL_GEOM_TYPE</span><span class="p">,</span> <span class="n">OGR_F_VAL_WIDTH</span> <span class="ow">and</span> <span class="n">OGR_F_VAL_ALLOW_NULL_WHEN_DEFAULT</span>
+ <span class="o">*</span>                       <span class="k">with</span> <span class="s1">&#39;|&#39;</span> <span class="n">operator</span>
+ <span class="o">*</span> <span class="nd">@param</span> <span class="n">bEmitError</span> <span class="n">TRUE</span> <span class="k">if</span> <span class="n">a</span> <span class="n">CPLError</span><span class="p">()</span> <span class="n">must</span> <span class="n">be</span> <span class="n">emitted</span> <span class="n">when</span> <span class="n">a</span> <span class="n">check</span> <span class="n">fails</span>
+ <span class="o">*</span> <span class="nd">@return</span> <span class="n">TRUE</span> <span class="k">if</span> <span class="nb">all</span> <span class="n">enabled</span> <span class="n">validation</span> <span class="n">tests</span> <span class="k">pass</span><span class="o">.</span>
+ <span class="o">*</span> <span class="nd">@since</span> <span class="n">GDAL</span> <span class="mf">2.0</span>
+ <span class="o">*/</span>
+</pre></div>
+</div>
+<p>where nValidateFlags is a combination of :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/**</span> <span class="n">Validate</span> <span class="n">that</span> <span class="n">fields</span> <span class="n">respect</span> <span class="ow">not</span><span class="o">-</span><span class="n">null</span> <span class="n">constraints</span><span class="o">.</span>
+ <span class="o">*</span> <span class="n">Used</span> <span class="n">by</span> <span class="n">OGR_F_Validate</span><span class="p">()</span><span class="o">.</span>
+ <span class="o">*</span> <span class="nd">@since</span> <span class="n">GDAL</span> <span class="mf">2.0</span>
+ <span class="o">*/</span>
+<span class="c1">#define OGR_F_VAL_NULL           0x00000001</span>
+
+<span class="o">/**</span> <span class="n">Validate</span> <span class="n">that</span> <span class="n">geometries</span> <span class="n">respect</span> <span class="n">geometry</span> <span class="n">column</span> <span class="nb">type</span><span class="o">.</span>
+ <span class="o">*</span> <span class="n">Used</span> <span class="n">by</span> <span class="n">OGR_F_Validate</span><span class="p">()</span><span class="o">.</span>
+ <span class="o">*</span> <span class="nd">@since</span> <span class="n">GDAL</span> <span class="mf">2.0</span>
+ <span class="o">*/</span>
+<span class="c1">#define OGR_F_VAL_GEOM_TYPE      0x00000002</span>
+
+<span class="o">/**</span> <span class="n">Validate</span> <span class="n">that</span> <span class="p">(</span><span class="n">string</span><span class="p">)</span> <span class="n">fields</span> <span class="n">respect</span> <span class="n">field</span> <span class="n">width</span><span class="o">.</span>
+ <span class="o">*</span> <span class="n">Used</span> <span class="n">by</span> <span class="n">OGR_F_Validate</span><span class="p">()</span><span class="o">.</span>
+ <span class="o">*</span> <span class="nd">@since</span> <span class="n">GDAL</span> <span class="mf">2.0</span>
+ <span class="o">*/</span>
+<span class="c1">#define OGR_F_VAL_WIDTH          0x00000004</span>
+
+<span class="o">/**</span> <span class="n">Allow</span> <span class="n">fields</span> <span class="n">that</span> <span class="n">are</span> <span class="n">null</span> <span class="n">when</span> <span class="n">there</span><span class="s1">&#39;s an associated default value.</span>
+ <span class="o">*</span> <span class="n">This</span> <span class="n">can</span> <span class="n">be</span> <span class="n">used</span> <span class="k">for</span> <span class="n">drivers</span> <span class="n">where</span> <span class="n">the</span> <span class="n">low</span><span class="o">-</span><span class="n">level</span> <span class="n">layers</span> <span class="n">will</span> <span class="n">automatically</span> <span class="nb">set</span> <span class="n">the</span>
+ <span class="o">*</span> <span class="n">field</span> <span class="n">value</span> <span class="n">to</span> <span class="n">the</span> <span class="n">associated</span> <span class="n">default</span> <span class="n">value</span><span class="o">.</span>
+ <span class="o">*</span> <span class="n">This</span> <span class="n">flag</span> <span class="n">only</span> <span class="n">makes</span> <span class="n">sense</span> <span class="k">if</span> <span class="n">OGR_F_VAL_NULL</span> <span class="ow">is</span> <span class="nb">set</span> <span class="n">too</span><span class="o">.</span>
+ <span class="o">*</span> <span class="n">Used</span> <span class="n">by</span> <span class="n">OGR_F_Validate</span><span class="p">()</span><span class="o">.</span>
+ <span class="o">*</span> <span class="nd">@since</span> <span class="n">GDAL</span> <span class="mf">2.0</span>
+ <span class="o">*/</span>
+<span class="c1">#define OGR_F_VAL_ALLOW_NULL_WHEN_DEFAULT       0x00000008</span>
+
+<span class="o">/**</span> <span class="n">Enable</span> <span class="nb">all</span> <span class="n">validation</span> <span class="n">tests</span><span class="o">.</span>
+ <span class="o">*</span> <span class="n">Used</span> <span class="n">by</span> <span class="n">OGR_F_Validate</span><span class="p">()</span><span class="o">.</span>
+ <span class="o">*</span> <span class="nd">@since</span> <span class="n">GDAL</span> <span class="mf">2.0</span>
+ <span class="o">*/</span>
+<span class="c1">#define OGR_F_VAL_ALL            0xFFFFFFFF</span>
+</pre></div>
+</div>
+<p>Validation of NOT NULL constraints is generally let to the driver
+low-level layer, so OGRFeature::Validate() is only useful on a few cases
+(one of such case is the GML driver)</p>
+<p>A new flag ALTER_NULLABLE_FLAG = 0x8 is added to be passed to
+OGRLayer::AlterFieldDefn() so as to set or drop NULL / NOT-NULL
+constraints (for drivers that implement it).</p>
+<p>Drivers that handle NOT NULL constraint for regular attribute fields
+should advertise the new GDAL_DCAP_NOTNULL_FIELDS and/or
+GDAL_DCAP_NOTNULL_GEOMFIELDS driver metadata items.</p>
+<p>Drivers that do not implement the OGRLayer::CreateGeomField() interface
+(i.e. the ones that support single geometry field), but can create a
+layer with a NOT NULL constraint on the geometry field can expose a
+GEOMETRY_NULLABLE=YES/NO layer creation option.</p>
+<p>Note: due to the way they are commonly written, the CreateField()
+implementations of drivers that do not support NOT NULL constraint will
+generally copy the value of the nullable flag, which may be a bit
+misleading if querying the field definition just after having adding it
+(the same holds true for width/precision as well).</p>
+<p>All above methods are mapped into the C API :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>  <span class="nb">int</span>    <span class="n">CPL_DLL</span> <span class="n">OGR_Fld_IsNullable</span><span class="p">(</span> <span class="n">OGRFieldDefnH</span> <span class="n">hDefn</span> <span class="p">);</span>
+  <span class="n">void</span>   <span class="n">CPL_DLL</span> <span class="n">OGR_Fld_SetNullable</span><span class="p">(</span> <span class="n">OGRFieldDefnH</span> <span class="n">hDefn</span><span class="p">,</span> <span class="nb">int</span> <span class="p">);</span>
+
+<span class="nb">int</span>                  <span class="n">CPL_DLL</span> <span class="n">OGR_GFld_IsNullable</span><span class="p">(</span> <span class="n">OGRGeomFieldDefnH</span> <span class="n">hDefn</span> <span class="p">);</span>
+<span class="n">void</span>                 <span class="n">CPL_DLL</span> <span class="n">OGR_GFld_SetNullable</span><span class="p">(</span> <span class="n">OGRGeomFieldDefnH</span> <span class="n">hDefn</span><span class="p">,</span> <span class="nb">int</span> <span class="p">);</span>
+
+<span class="nb">int</span>    <span class="n">CPL_DLL</span> <span class="n">OGR_F_Validate</span><span class="p">(</span> <span class="n">OGRFeatureH</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nValidateFlags</span><span class="p">,</span> <span class="nb">int</span> <span class="n">bEmitError</span> <span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="default-field-values">
+<h2>Default field values<a class="headerlink" href="#default-field-values" title="Permalink to this headline">¶</a></h2>
+<p>Fields with NOT NULL constraints are sometimes accompanied with a
+DEFAULT clause so as to be able to create a new feature without filling
+all fields, while maintaining integrity. DEFAULT values can also be set
+on nullable fields but for reasons exposed later it is recommended to
+avoid that.</p>
+<p>Drivers that can translate DEFAULT values in their storage will use that
+attribute to determine if the field definition must include a DEFAULT
+value. When opening a datasource, their metadata will be inspected to
+set the default value attribute properly, so that round-tripping works.</p>
+<p>There was an embryonic support for default values in GDAL 1.X but that
+never got implemented beyond the getter/setter methods on OGRFieldDefn.
+It relied on a “OGRField uDefault” member. The choice of OGRField
+restricts the default values to be expressed with the type of the field,
+but in some situations we want to be able to assign expressions or
+special keywords for non-string fields. For example the SQL standard
+defines CURRENT_TIMESTAMP for DateTime fields. So as to be general, we
+have remove this uDefault member and replaced it with a “char*
+pszDefault” string.</p>
+<p>The values that can be set as default values are :</p>
+<ul class="simple">
+<li><p>literal string values enclosed in single-quote characters and
+properly escaped like: <code class="docutils literal notranslate"><span class="pre">'Nice</span> <span class="pre">weather.</span> <span class="pre">Isn''t</span> <span class="pre">it</span> <span class="pre">?'</span></code></p></li>
+<li><p>numeric values (unquoted)</p></li>
+<li><p>reserved keywords (unquoted): CURRENT_TIMESTAMP, CURRENT_DATE,
+CURRENT_TIME, NULL</p></li>
+<li><p>datetime literal values enclosed in single-quote characters with the
+following defined format: ‘YYYY/MM/DD HH:MM:SS[.sss]’</p></li>
+<li><p>any other driver specific expression. e.g. for SQLite:
+(strftime(‘%Y-%m-%dT%H:%M:%fZ’,’now’))</p></li>
+</ul>
+<p>The following methods are added/modified to the OGRFieldDefn class</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="n">void</span>                <span class="n">SetDefault</span><span class="p">(</span> <span class="n">const</span> <span class="n">char</span><span class="o">*</span> <span class="p">);</span>
+
+<span class="o">/**</span>
+ <span class="o">*</span> \<span class="n">brief</span> <span class="n">Set</span> <span class="n">default</span> <span class="n">field</span> <span class="n">value</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">The</span> <span class="n">default</span> <span class="n">field</span> <span class="n">value</span> <span class="ow">is</span> <span class="n">taken</span> <span class="n">into</span> <span class="n">account</span> <span class="n">by</span> <span class="n">drivers</span> <span class="p">(</span><span class="n">generally</span> <span class="n">those</span> <span class="k">with</span>
+ <span class="o">*</span> <span class="n">a</span> <span class="n">SQL</span> <span class="n">interface</span><span class="p">)</span> <span class="n">that</span> <span class="n">support</span> <span class="n">it</span> <span class="n">at</span> <span class="n">field</span> <span class="n">creation</span> <span class="n">time</span><span class="o">.</span> <span class="n">OGR</span> <span class="n">will</span> <span class="n">generally</span> <span class="ow">not</span>
+ <span class="o">*</span> <span class="n">automatically</span> <span class="nb">set</span> <span class="n">the</span> <span class="n">default</span> <span class="n">field</span> <span class="n">value</span> <span class="n">to</span> <span class="n">null</span> <span class="n">fields</span> <span class="n">by</span> <span class="n">itself</span> <span class="n">when</span> <span class="n">calling</span>
+ <span class="o">*</span> <span class="n">OGRFeature</span><span class="p">::</span><span class="n">CreateFeature</span><span class="p">()</span> <span class="o">/</span> <span class="n">OGRFeature</span><span class="p">::</span><span class="n">SetFeature</span><span class="p">(),</span> <span class="n">but</span> <span class="n">will</span> <span class="n">let</span> <span class="n">the</span>
+ <span class="o">*</span> <span class="n">low</span><span class="o">-</span><span class="n">level</span> <span class="n">layers</span> <span class="n">to</span> <span class="n">do</span> <span class="n">the</span> <span class="n">job</span><span class="o">.</span> <span class="n">So</span> <span class="n">retrieving</span> <span class="n">the</span> <span class="n">feature</span> <span class="kn">from</span> <span class="nn">the</span> <span class="n">layer</span> <span class="ow">is</span>
+ <span class="o">*</span> <span class="n">recommended</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">The</span> <span class="n">accepted</span> <span class="n">values</span> <span class="n">are</span> <span class="n">NULL</span><span class="p">,</span> <span class="n">a</span> <span class="n">numeric</span> <span class="n">value</span><span class="p">,</span> <span class="n">a</span> <span class="n">litteral</span> <span class="n">value</span> <span class="n">enclosed</span>
+ <span class="o">*</span> <span class="n">between</span> <span class="n">single</span> <span class="n">quote</span> <span class="n">characters</span> <span class="p">(</span><span class="ow">and</span> <span class="n">inner</span> <span class="n">single</span> <span class="n">quote</span> <span class="n">characters</span> <span class="n">escaped</span> <span class="n">by</span>
+ <span class="o">*</span> <span class="n">repetition</span> <span class="n">of</span> <span class="n">the</span> <span class="n">single</span> <span class="n">quote</span> <span class="n">character</span><span class="p">),</span>
+ <span class="o">*</span> <span class="n">CURRENT_TIMESTAMP</span><span class="p">,</span> <span class="n">CURRENT_TIME</span><span class="p">,</span> <span class="n">CURRENT_DATE</span> <span class="ow">or</span>
+ <span class="o">*</span> <span class="n">a</span> <span class="n">driver</span> <span class="n">specific</span> <span class="n">expression</span> <span class="p">(</span><span class="n">that</span> <span class="n">might</span> <span class="n">be</span> <span class="n">ignored</span> <span class="n">by</span> <span class="n">other</span> <span class="n">drivers</span><span class="p">)</span><span class="o">.</span>
+ <span class="o">*</span> <span class="n">For</span> <span class="n">a</span> <span class="n">datetime</span> <span class="n">literal</span> <span class="n">value</span><span class="p">,</span> <span class="nb">format</span> <span class="n">should</span> <span class="n">be</span> <span class="s1">&#39;YYYY/MM/DD HH:MM:SS[.sss]&#39;</span>
+ <span class="o">*</span> <span class="p">(</span><span class="n">considered</span> <span class="k">as</span> <span class="n">UTC</span> <span class="n">time</span><span class="p">)</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">Drivers</span> <span class="n">that</span> <span class="n">support</span> <span class="n">writing</span> <span class="n">DEFAULT</span> <span class="n">clauses</span> <span class="n">will</span> <span class="n">advertise</span> <span class="n">the</span>
+ <span class="o">*</span> <span class="n">GDAL_DCAP_DEFAULT_FIELDS</span> <span class="n">driver</span> <span class="n">metadata</span> <span class="n">item</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">same</span> <span class="k">as</span> <span class="n">the</span> <span class="n">C</span> <span class="n">function</span> <span class="n">OGR_Fld_SetDefault</span><span class="p">()</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="nd">@param</span> <span class="n">pszDefault</span> <span class="n">new</span> <span class="n">default</span> <span class="n">field</span> <span class="n">value</span> <span class="ow">or</span> <span class="n">NULL</span> <span class="n">pointer</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="nd">@since</span> <span class="n">GDAL</span> <span class="mf">2.0</span>
+ <span class="o">*/</span>
+
+
+    <span class="n">const</span> <span class="n">char</span>         <span class="o">*</span><span class="n">GetDefault</span><span class="p">()</span> <span class="n">const</span><span class="p">;</span>
+
+<span class="o">/**</span>
+ <span class="o">*</span> \<span class="n">brief</span> <span class="n">Get</span> <span class="n">default</span> <span class="n">field</span> <span class="n">value</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">same</span> <span class="k">as</span> <span class="n">the</span> <span class="n">C</span> <span class="n">function</span> <span class="n">OGR_Fld_GetDefault</span><span class="p">()</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="nd">@return</span> <span class="n">default</span> <span class="n">field</span> <span class="n">value</span> <span class="ow">or</span> <span class="n">NULL</span><span class="o">.</span>
+ <span class="o">*</span> <span class="nd">@since</span> <span class="n">GDAL</span> <span class="mf">2.0</span>
+ <span class="o">*/</span>
+
+
+    <span class="nb">int</span>                 <span class="n">IsDefaultDriverSpecific</span><span class="p">()</span> <span class="n">const</span><span class="p">;</span>
+
+<span class="o">/**</span>
+ <span class="o">*</span> \<span class="n">brief</span> <span class="n">Returns</span> <span class="n">whether</span> <span class="n">the</span> <span class="n">default</span> <span class="n">value</span> <span class="ow">is</span> <span class="n">driver</span> <span class="n">specific</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">Driver</span> <span class="n">specific</span> <span class="n">default</span> <span class="n">values</span> <span class="n">are</span> <span class="n">those</span> <span class="n">that</span> <span class="n">are</span> <span class="o">*</span><span class="ow">not</span><span class="o">*</span> <span class="n">NULL</span><span class="p">,</span> <span class="n">a</span> <span class="n">numeric</span> <span class="n">value</span><span class="p">,</span>
+ <span class="o">*</span> <span class="n">a</span> <span class="n">litteral</span> <span class="n">value</span> <span class="n">enclosed</span> <span class="n">between</span> <span class="n">single</span> <span class="n">quote</span> <span class="n">characters</span><span class="p">,</span> <span class="n">CURRENT_TIMESTAMP</span><span class="p">,</span>
+ <span class="o">*</span> <span class="n">CURRENT_TIME</span><span class="p">,</span> <span class="n">CURRENT_DATE</span> <span class="ow">or</span> <span class="n">datetime</span> <span class="n">literal</span> <span class="n">value</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">This</span> <span class="n">method</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">same</span> <span class="k">as</span> <span class="n">the</span> <span class="n">C</span> <span class="n">function</span> <span class="n">OGR_Fld_IsDefaultDriverSpecific</span><span class="p">()</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="nd">@return</span> <span class="n">TRUE</span> <span class="k">if</span> <span class="n">the</span> <span class="n">default</span> <span class="n">value</span> <span class="ow">is</span> <span class="n">driver</span> <span class="n">specific</span><span class="o">.</span>
+ <span class="o">*</span> <span class="nd">@since</span> <span class="n">GDAL</span> <span class="mf">2.0</span>
+ <span class="o">*/</span>
+</pre></div>
+</div>
+<p>SetDefault() validates that a string litteral beginning with ‘ is
+properly escaped.</p>
+<p>IsDefaultDriverSpecific() returns TRUE if the value set does not belong
+to one of the 4 bullets in the above enumeration. This is used by
+drivers to determine if they can handle or not a default value.</p>
+<p>Drivers should do some effort to interpret and reformat default values
+in the above 4 standard formats so as to be able to propagate default
+values from one driver to another one.</p>
+<p>The following method is added to the OGRFeature class :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="n">void</span>                <span class="n">FillUnsetWithDefault</span><span class="p">(</span><span class="nb">int</span> <span class="n">bNotNullableOnly</span><span class="p">,</span>
+                                             <span class="n">char</span><span class="o">**</span> <span class="n">papszOptions</span> <span class="p">);</span>
+<span class="o">/**</span>
+ <span class="o">*</span> \<span class="n">brief</span> <span class="n">Fill</span> <span class="n">unset</span> <span class="n">fields</span> <span class="k">with</span> <span class="n">default</span> <span class="n">values</span> <span class="n">that</span> <span class="n">might</span> <span class="n">be</span> <span class="n">defined</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="n">This</span> <span class="n">method</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">same</span> <span class="k">as</span> <span class="n">the</span> <span class="n">C</span> <span class="n">function</span> <span class="n">OGR_F_FillUnsetWithDefault</span><span class="p">()</span><span class="o">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span> <span class="nd">@param</span> <span class="n">bNotNullableOnly</span> <span class="k">if</span> <span class="n">we</span> <span class="n">should</span> <span class="n">fill</span> <span class="n">only</span> <span class="n">unset</span> <span class="n">fields</span> <span class="k">with</span> <span class="n">a</span> <span class="ow">not</span><span class="o">-</span><span class="n">null</span>
+ <span class="o">*</span>                     <span class="n">constraint</span><span class="o">.</span>
+ <span class="o">*</span> <span class="nd">@param</span> <span class="n">papszOptions</span> <span class="n">unused</span> <span class="n">currently</span><span class="o">.</span> <span class="n">Must</span> <span class="n">be</span> <span class="nb">set</span> <span class="n">to</span> <span class="n">NULL</span><span class="o">.</span>
+ <span class="o">*</span> <span class="nd">@since</span> <span class="n">GDAL</span> <span class="mf">2.0</span>
+ <span class="o">*/</span>
+</pre></div>
+</div>
+<p>It will replace unset fields of a feature with their default values, but
+should rarely be used as most drivers will do that substitution
+automatically in their low-level layer. CreateFeature() cannot be
+trusted to automatically modify the passed OGRFeature object to set
+unset fields to their default values. For that, an explicit GetFeature()
+call should be issued to retrieve the record as stored in the database.</p>
+<p>A new flag ALTER_DEFAULT_FLAG = 0x8 is added to be passed to
+OGRLayer::AlterFieldDefn() so as to set, drop or modify default values
+(for drivers that implement it)</p>
+<p>Drivers that handle default values should advertise the new
+GDAL_DCAP_DEFAULT_FIELDS driver metadata items.</p>
+<p>Note: due to the way they are commonly written, the CreateField()
+implementations of drivers that do not support default values will
+generally copy the value of the default value string, which may be a bit
+misleading if querying the field definition just after having adding it.</p>
+<p>All above methods are mapped into the C API :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">const</span> <span class="n">char</span> <span class="n">CPL_DLL</span> <span class="o">*</span><span class="n">OGR_Fld_GetDefault</span><span class="p">(</span> <span class="n">OGRFieldDefnH</span> <span class="n">hDefn</span> <span class="p">);</span>
+<span class="n">void</span>   <span class="n">CPL_DLL</span> <span class="n">OGR_Fld_SetDefault</span><span class="p">(</span> <span class="n">OGRFieldDefnH</span> <span class="n">hDefn</span><span class="p">,</span> <span class="n">const</span> <span class="n">char</span><span class="o">*</span> <span class="p">);</span>
+<span class="nb">int</span>    <span class="n">CPL_DLL</span> <span class="n">OGR_Fld_IsDefaultDriverSpecific</span><span class="p">(</span> <span class="n">OGRFieldDefnH</span> <span class="n">hDefn</span> <span class="p">);</span>
+
+<span class="n">void</span>   <span class="n">CPL_DLL</span> <span class="n">OGR_F_FillUnsetWithDefault</span><span class="p">(</span> <span class="n">OGRFeatureH</span> <span class="n">hFeat</span><span class="p">,</span>
+                                           <span class="nb">int</span> <span class="n">bNotNullableOnly</span><span class="p">,</span>
+                                           <span class="n">char</span><span class="o">**</span> <span class="n">papszOptions</span> <span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="swig-bindings-python-java-c-perl-changes">
+<h2>SWIG bindings (Python / Java / C# / Perl) changes<a class="headerlink" href="#swig-bindings-python-java-c-perl-changes" title="Permalink to this headline">¶</a></h2>
+<p>The following additions have been done :</p>
+<ul class="simple">
+<li><p>SetNullable(), IsNullable() added on FieldDefn class</p></li>
+<li><p>SetNullable(), IsNullable() added on GeomFieldDefn class</p></li>
+<li><p>Validate() added on Feature class</p></li>
+<li><p>SetDefault(), GetDefault(), IsDefaultDriverSpecific() available on
+FieldDefn class</p></li>
+<li><p>FillUnsetWithDefault() added on Feature class</p></li>
+</ul>
+</div>
+<div class="section" id="utilities">
+<h2>Utilities<a class="headerlink" href="#utilities" title="Permalink to this headline">¶</a></h2>
+<p>ogrinfo has been updated to expose NOT NULL constraints and DEFAULT
+values. e.g.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Geometry</span> <span class="n">Column</span> <span class="mi">1</span> <span class="n">NOT</span> <span class="n">NULL</span> <span class="o">=</span> <span class="n">WKT</span>
+<span class="n">Geometry</span> <span class="n">Column</span> <span class="mi">2</span> <span class="n">NOT</span> <span class="n">NULL</span> <span class="o">=</span> <span class="n">geom2</span>
+<span class="nb">id</span><span class="p">:</span> <span class="n">Integer</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">)</span> <span class="n">NOT</span> <span class="n">NULL</span> <span class="n">DEFAULT</span> <span class="mi">1234567</span>
+<span class="n">dbl</span><span class="p">:</span> <span class="n">Real</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">)</span> <span class="n">NOT</span> <span class="n">NULL</span> <span class="n">DEFAULT</span> <span class="mf">1.456</span>
+<span class="nb">str</span><span class="p">:</span> <span class="n">String</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">)</span> <span class="n">NOT</span> <span class="n">NULL</span> <span class="n">DEFAULT</span> <span class="s1">&#39;a&#39;</span>
+<span class="n">d</span><span class="p">:</span> <span class="n">Date</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">)</span> <span class="n">NOT</span> <span class="n">NULL</span> <span class="n">DEFAULT</span> <span class="n">CURRENT_DATE</span>
+<span class="n">t</span><span class="p">:</span> <span class="n">Time</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">)</span> <span class="n">NOT</span> <span class="n">NULL</span> <span class="n">DEFAULT</span> <span class="n">CURRENT_TIME</span>
+<span class="n">dt</span><span class="p">:</span> <span class="n">DateTime</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">)</span> <span class="n">NOT</span> <span class="n">NULL</span> <span class="n">DEFAULT</span> <span class="n">CURRENT_TIMESTAMP</span>
+<span class="n">dt2</span><span class="p">:</span> <span class="n">DateTime</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">)</span> <span class="n">NOT</span> <span class="n">NULL</span> <span class="n">DEFAULT</span> <span class="s1">&#39;2013/12/11 01:23:45&#39;</span>
+</pre></div>
+</div>
+<p>2 news options have been added to ogr2ogr :</p>
+<ul class="simple">
+<li><p>-forceNullable to remove NOT NULL constraint (NOT NULL constraints
+are propagated by default from source to target layer)</p></li>
+<li><p>-unsetDefault to remove DEFAULT values (DEFAULT values are propagated
+by default from source to target layer)</p></li>
+</ul>
+<p>Unless it is explicitly specified, ogr2ogr will also automatically set
+the GEOMETRY_NULLABLE=NO creation option to target layers that support
+it, if the source layer has its first geometry field with a NOT NULL
+constraint.</p>
+</div>
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<p>New/modified API are documented.</p>
+</div>
+<div class="section" id="file-formats">
+<h2>File Formats<a class="headerlink" href="#file-formats" title="Permalink to this headline">¶</a></h2>
+<p>The following OGR drivers have been updated to support the new
+interfaces.</p>
+<ul class="simple">
+<li><p>PG: supports NOT NULL (for attribute and multiple geometry fields)
+and DEFAULT on creation/read. AlterFieldDefn() implementation
+modified to support ALTER_NULLABLE_FLAG and ALTER_DEFAULT_FLAG.</p></li>
+<li><p>PGDump: supports NOT NULL (for attribute and multiple geometry
+fields) and DEFAULT on creation.</p></li>
+<li><p>CartoDB: supports NOT NULL (for attribute and single geometry fields)
+and DEFAULT on creation. Supported also on read with authenticated
+login only (relies on queries on PostgreSQL system tables)</p></li>
+<li><p>GPKG: supports NOT NULL (for attribute and its single geometry field)
+and DEFAULT on creation/read. GEOMETRY_NULLABLE layer creation added.</p></li>
+<li><p>SQLite: supports NOT NULL (for attribute and multiple geometry
+fields. Support for multiple geometry fields has been added recently
+per #5494) and DEFAULT on creation/read. AlterFieldDefn()
+implementation modified to support ALTER_NULLABLE_FLAG and
+ALTER_DEFAULT_FLAG.</p></li>
+<li><p>MySQL: supports NOT NULL (for attribute fields only) and DEFAULT on
+creation/read.</p></li>
+<li><p>OCI: supports NOT NULL (for attribute and its single geometry field)
+and DEFAULT on creation/read. GEOMETRY_NULLABLE layer creation added.</p></li>
+<li><p>VRT: supports NOT NULL (for attribute and multiple geometry fields)
+and DEFAULT on read, through new attributes “nullable” and “default”
+(driver documentation and data/ogrvrt.xsd updated)</p></li>
+<li><p>GML: supports NOT NULL (for attribute and multiple geometry field) on
+creation/read. DEFAULT not trully supported (no way to express it in
+.xsd AFAIK), but on creation, unset fields with a NOT NULL constraint
+and DEFAULT values will be filled by using FillUnsetWithDefault() so
+as to generate valid XML.</p></li>
+<li><p>WFS: supports NOT NULL (for attribute fields only) on read</p></li>
+<li><p>FileGDB: supports NOT NULL (for attribute and its single geometry
+field) on read/write. GEOMETRY_NULLABLE layer creation added. DEFAULT
+supported for String,Integer and Real fieds on creation/read (with
+some bugs/weird behavior seen in FileGDB SDK and E$RI tools,
+workarounded by using the OpenFileGDB driver in problematic
+cases…). DEFAULT supported for DateTime on read, but unsupported on
+creation to bug in FileGDB SDK.</p></li>
+<li><p>OpenFileGDB: supports NOT NULL (for attribute and its single geometry
+field) and DEFAULT on read</p></li>
+</ul>
+<p>MSSQLSpatial could probably support NOT NULL / DEFAULT, but has not been
+updated as part of this work.</p>
+</div>
+<div class="section" id="test-suite">
+<h2>Test Suite<a class="headerlink" href="#test-suite" title="Permalink to this headline">¶</a></h2>
+<p>The test suite is extended to test:</p>
+<ul class="simple">
+<li><p>all new methods of OGRFieldDefn, OGRGeomFieldDefn and OGRFeature in
+ogr_feature.py</p></li>
+<li><p>updated drivers: PG, PGDump, CartoDB, GPKG, SQLite, MySQL, OCI, VRT,
+GML, FileGDB, OpenFileGDB</p></li>
+<li><p>new options of ogr2ogr, and default behavior with NOT NULL / DEFAULT
+propagation</p></li>
+</ul>
+</div>
+<div class="section" id="compatibility-issues">
+<h2>Compatibility Issues<a class="headerlink" href="#compatibility-issues" title="Permalink to this headline">¶</a></h2>
+<p>This RFC should cause few compatibility issues.</p>
+<p>Regarding API, the existing OGRFieldDefn::SetDefault() has been changed
+and GetDefaultRef() has been removed. Impact should be low as this
+wasn’t used in any drivers, was documented as being prone to be removed
+in the future, and so was unlikely to be used in applications either
+(there was no C binding)</p>
+<p>When not using the new API, behavior should remain unchanged w.r.t GDAL
+1.X when operating on layers created by GDAL. If reading layers created
+by other tools, then NOT NULL and/or DEFAULT can be read, and
+propagated. We cannot exclude that propagation of NOT NULL / DEFAULT can
+cause problems in some situations. In which case the new options of
+ogr2ogr will revert to a behavior that was the one of the GDAL 1.X era.</p>
+</div>
+<div class="section" id="related-topics-out-of-scope-of-this-rfc">
+<h2>Related topics out of scope of this RFC<a class="headerlink" href="#related-topics-out-of-scope-of-this-rfc" title="Permalink to this headline">¶</a></h2>
+<p>There might be an ambiguity between a field that has not been set and a
+field that is set to NULL. Both concepts are not distinguished in OGR
+currently, but most RDBMS are able to make such a distinction.</p>
+<p>Consider the 2 following statements :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">mytable</span> <span class="p">(</span><span class="n">COL1</span><span class="p">)</span> <span class="n">VALUES</span> <span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">INSERT</span> <span class="n">INTO</span> <span class="n">mytable</span> <span class="p">(</span><span class="n">COL1</span><span class="p">,</span> <span class="n">COL2</span><span class="p">)</span> <span class="n">VALUES</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">NULL</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>They are not equivalent when COL2 has a default value.</p>
+<p>The behavior of the modified drivers by this RFC is to <em>NOT</em> emit NULL
+at CreateFeature() time when a field is unset, so that the low-level
+layer of the driver can replace it with its default value if it exists.
+This is generally the wished behavior.</p>
+<p>If explicit NULL insertion is wanted, then using SetFeature() afterwards
+might be needed, if supported by the drivers (some drivers will likely
+not force unset OGR fields to be NULL when composing an UPDATE
+statement), otherwise with a direct SQL UPDATE statement.</p>
+<p>In fact, this confusion between unset or NULL hurts only in the case of
+fields that are nullable and have a DEFAULT value. If making sure to
+always associate DEFAULT with NOT NULL, then it becomes a non-issue as
+the database would refuse explicit NULL values.</p>
+<p>Solving the confusion would require to add a new state to an
+instantiated field within a feature to distinguish explicit NULL from
+unset, but this would have deep impact in drivers and application code.</p>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>Implementation will be done by Even Rouault
+(<a class="reference external" href="http://spatialys.com">Spatialys</a>), and sponsored by <a class="reference external" href="http://www.linz.govt.nz/">LINZ (Land
+Information New Zealand)</a>.</p>
+<p>The proposed implementation lies in the “rfc53_ogr_notnull_default”
+branch of the
+<a class="reference external" href="https://github.com/rouault/gdal2/tree/rfc53_ogr_notnull_default">https://github.com/rouault/gdal2/tree/rfc53_ogr_notnull_default</a>
+repository.</p>
+<p>The list of changes :
+<a class="reference external" href="https://github.com/rouault/gdal2/compare/rfc53_ogr_notnull_default">https://github.com/rouault/gdal2/compare/rfc53_ogr_notnull_default</a></p>
+</div>
+<div class="section" id="voting-history">
+<h2>Voting history<a class="headerlink" href="#voting-history" title="Permalink to this headline">¶</a></h2>
+<p>+1 from JukkaR, DanielM and EvenR</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rfc54_dataset_transactions.html" class="btn btn-neutral float-right" title="RFC 54: Dataset transactions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc52_strict_sql_quoting.html" class="btn btn-neutral float-left" title="RFC 52: Strict OGR SQL quoting" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

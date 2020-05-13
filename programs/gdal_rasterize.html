@@ -1,0 +1,563 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gdal_rasterize &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgprograms/gdal_rasterize.html"/>
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="gdaltransform" href="gdaltransform.html" />
+    <link rel="prev" title="gdal2tiles" href="gdal2tiles.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Programs</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#raster-programs">Raster programs</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="raster_common_options.html">Common options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalinfo.html">gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_translate.html">gdal_translate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaladdo.html">gdaladdo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalwarp.html">gdalwarp</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaltindex.html">gdaltindex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalbuildvrt.html">gdalbuildvrt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_contour.html">gdal_contour</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaldem.html">gdaldem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rgb2pct.html">rgb2pct</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pct2rgb.html">pct2rgb</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_merge.html">gdal_merge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal2tiles.html">gdal2tiles</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">gdal_rasterize</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#synopsis">Synopsis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#description">Description</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#c-api">C API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#example">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="gdaltransform.html">gdaltransform</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nearblack.html">nearblack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_retile.html">gdal_retile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_grid.html">gdal_grid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_proximity.html">gdal_proximity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_polygonize.html">gdal_polygonize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_sieve.html">gdal_sieve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_fillnodata.html">gdal_fillnodata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdallocationinfo.html">gdallocationinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalsrsinfo.html">gdalsrsinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalmove.html">gdalmove</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_edit.html">gdal_edit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_calc.html">gdal_calc.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_pansharpen.html">gdal_pansharpen.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal-config.html">gdal-config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalmanage.html">gdalmanage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalcompare.html">gdalcompare</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_viewshed.html">gdal_viewshed</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#multidimensional-raster-programs">Multidimensional Raster programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#vector-programs">Vector programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#geographic-network-programs">Geographic network programs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Programs</a> &raquo;</li>
+      
+      <li>gdal_rasterize</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/programs/gdal_rasterize.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="gdaltransform.html" class="btn btn-neutral float-right" title="gdaltransform" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gdal2tiles.html" class="btn btn-neutral float-left" title="gdal2tiles" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="gdal-rasterize">
+<span id="id1"></span><h1>gdal_rasterize<a class="headerlink" href="#gdal-rasterize" title="Permalink to this headline">¶</a></h1>
+<p>Burns vector geometries into a raster.</p>
+<div class="section" id="synopsis">
+<span id="index-0"></span><h2>Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdal_rasterize</span> <span class="p">[</span><span class="o">-</span><span class="n">b</span> <span class="n">band</span><span class="p">]</span><span class="o">*</span> <span class="p">[</span><span class="o">-</span><span class="n">i</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">at</span><span class="p">]</span>
+    <span class="p">{[</span><span class="o">-</span><span class="n">burn</span> <span class="n">value</span><span class="p">]</span><span class="o">*</span> <span class="o">|</span> <span class="p">[</span><span class="o">-</span><span class="n">a</span> <span class="n">attribute_name</span><span class="p">]</span> <span class="o">|</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="n">d</span><span class="p">]}</span> <span class="p">[</span><span class="o">-</span><span class="n">add</span><span class="p">]</span>
+    <span class="p">[</span><span class="o">-</span><span class="n">l</span> <span class="n">layername</span><span class="p">]</span><span class="o">*</span> <span class="p">[</span><span class="o">-</span><span class="n">where</span> <span class="n">expression</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">sql</span> <span class="n">select_statement</span><span class="p">]</span>
+    <span class="p">[</span><span class="o">-</span><span class="n">dialect</span> <span class="n">dialect</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">of</span> <span class="nb">format</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">a_srs</span> <span class="n">srs_def</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">to</span> <span class="n">NAME</span><span class="o">=</span><span class="n">VALUE</span><span class="p">]</span><span class="o">*</span>
+    <span class="p">[</span><span class="o">-</span><span class="n">co</span> <span class="s2">&quot;NAME=VALUE&quot;</span><span class="p">]</span><span class="o">*</span> <span class="p">[</span><span class="o">-</span><span class="n">a_nodata</span> <span class="n">value</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">init</span> <span class="n">value</span><span class="p">]</span><span class="o">*</span>
+    <span class="p">[</span><span class="o">-</span><span class="n">te</span> <span class="n">xmin</span> <span class="n">ymin</span> <span class="n">xmax</span> <span class="n">ymax</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">tr</span> <span class="n">xres</span> <span class="n">yres</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">tap</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">ts</span> <span class="n">width</span> <span class="n">height</span><span class="p">]</span>
+    <span class="p">[</span><span class="o">-</span><span class="n">ot</span> <span class="p">{</span><span class="n">Byte</span><span class="o">/</span><span class="n">Int16</span><span class="o">/</span><span class="n">UInt16</span><span class="o">/</span><span class="n">UInt32</span><span class="o">/</span><span class="n">Int32</span><span class="o">/</span><span class="n">Float32</span><span class="o">/</span><span class="n">Float64</span><span class="o">/</span>
+            <span class="n">CInt16</span><span class="o">/</span><span class="n">CInt32</span><span class="o">/</span><span class="n">CFloat32</span><span class="o">/</span><span class="n">CFloat64</span><span class="p">}]</span>
+    <span class="p">[</span><span class="o">-</span><span class="n">optim</span> <span class="p">{[</span><span class="n">AUTO</span><span class="p">]</span><span class="o">/</span><span class="n">VECTOR</span><span class="o">/</span><span class="n">RASTER</span><span class="p">}]</span> <span class="p">[</span><span class="o">-</span><span class="n">q</span><span class="p">]</span>
+    <span class="o">&lt;</span><span class="n">src_datasource</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">dst_filename</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>This program burns vector geometries (points, lines, and polygons) into the
+raster band(s) of a raster image.  Vectors are read from OGR supported vector
+formats.</p>
+<p>Note that on the fly reprojection of vector data to the coordinate system of the
+raster data is only supported since GDAL 2.1.0.</p>
+<dl class="option">
+<dt id="cmdoption-gdal-translate-b">
+<code class="descname">-b</code><code class="descclassname"> &lt;band&gt;</code><a class="headerlink" href="#cmdoption-gdal-translate-b" title="Permalink to this definition">¶</a></dt>
+<dd><p>The band(s) to burn values into.  Multiple -b arguments may be used to burn
+into a list of bands.  The default is to burn into band 1.  Not used when
+creating a new raster.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-i">
+<code class="descname">-i</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gdal-translate-i" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invert rasterization.  Burn the fixed burn value, or the burn value associated
+with the first feature into all parts of the image <em>not</em> inside the
+provided polygon.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-at">
+<code class="descname">-at</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gdal-translate-at" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enables the ALL_TOUCHED rasterization option so that all pixels touched
+by lines or polygons will be updated, not just those on the line render path,
+or whose center point is within the polygon.  Defaults to disabled for normal
+rendering rules.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-burn">
+<code class="descname">-burn</code><code class="descclassname"> &lt;value&gt;</code><a class="headerlink" href="#cmdoption-gdal-translate-burn" title="Permalink to this definition">¶</a></dt>
+<dd><p>A fixed value to burn into a band for all objects.  A list of <a class="reference internal" href="#cmdoption-gdal-translate-burn"><code class="xref std std-option docutils literal notranslate"><span class="pre">-burn</span></code></a> options
+can be supplied, one per band being written to.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-a">
+<code class="descname">-a</code><code class="descclassname"> &lt;attribute_name&gt;</code><a class="headerlink" href="#cmdoption-gdal-translate-a" title="Permalink to this definition">¶</a></dt>
+<dd><p>Identifies an attribute field on the features to be used for a burn-in value.
+The value will be burned into all output bands.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-3d">
+<code class="descname">-3d</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gdal-translate-3d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates that a burn value should be extracted from the “Z” values of the
+feature. Works with points and lines (linear interpolation along each segment).
+For polygons, works properly only if the are flat (same Z value for all
+vertices).</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-add">
+<code class="descname">-add</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gdal-translate-add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Instead of burning a new value, this adds the new value to the existing raster.
+Suitable for heatmaps for instance.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-l">
+<code class="descname">-l</code><code class="descclassname"> &lt;layername&gt;</code><a class="headerlink" href="#cmdoption-gdal-translate-l" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates the layer(s) from the datasource that will be used for input
+features.  May be specified multiple times, but at least one layer name or a
+<a class="reference internal" href="#cmdoption-gdal-translate-sql"><code class="xref std std-option docutils literal notranslate"><span class="pre">-sql</span></code></a> option must be specified.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-where">
+<code class="descname">-where</code><code class="descclassname"> &lt;expression&gt;</code><a class="headerlink" href="#cmdoption-gdal-translate-where" title="Permalink to this definition">¶</a></dt>
+<dd><p>An optional SQL WHERE style query expression to be applied to select features
+to burn in from the input layer(s).</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-sql">
+<code class="descname">-sql</code><code class="descclassname"> &lt;select_statement&gt;</code><a class="headerlink" href="#cmdoption-gdal-translate-sql" title="Permalink to this definition">¶</a></dt>
+<dd><p>An SQL statement to be evaluated against the datasource to produce a
+virtual layer of features to be burned in.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-dialect">
+<code class="descname">-dialect</code><code class="descclassname"> &lt;dialect&gt;</code><a class="headerlink" href="#cmdoption-gdal-translate-dialect" title="Permalink to this definition">¶</a></dt>
+<dd><p>SQL dialect. In some cases can be used to use (unoptimized) OGR SQL instead of
+the native SQL of an RDBMS by passing OGRSQL. The
+“SQLITE” dialect can also be used with any datasource.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-of">
+<code class="descname">-of</code><code class="descclassname"> &lt;format&gt;</code><a class="headerlink" href="#cmdoption-gdal-translate-of" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select the output format. Starting with GDAL 2.3, if not specified, the
+format is guessed from the extension (previously was GTiff). Use the short
+format name.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-a-nodata">
+<code class="descname">-a_nodata</code><code class="descclassname"> &lt;value&gt;</code><a class="headerlink" href="#cmdoption-gdal-translate-a-nodata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assign a specified nodata value to output bands.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-init">
+<code class="descname">-init</code><code class="descclassname"> &lt;value&gt;</code><a class="headerlink" href="#cmdoption-gdal-translate-init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pre-initialize the output image bands with these values.  However, it is not
+marked as the nodata value in the output file.  If only one value is given, the
+same value is used in all the bands.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-a-srs">
+<code class="descname">-a_srs</code><code class="descclassname"> &lt;srs_def&gt;</code><a class="headerlink" href="#cmdoption-gdal-translate-a-srs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override the projection for the output file. If not specified, the projection of
+the input vector file will be used if available. When using this option, no reprojection
+of features from the SRS of the input vector to the specified SRS of the output raster,
+so use only this option to correct an invalid source SRS.
+The &lt;srs_def&gt; may be any of the usual GDAL/OGR forms, complete WKT, PROJ.4,
+EPSG:n or a file containing the WKT.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-to">
+<code class="descname">-to</code><code class="descclassname"> NAME=VALUE</code><a class="headerlink" href="#cmdoption-gdal-translate-to" title="Permalink to this definition">¶</a></dt>
+<dd><p>set a transformer
+option suitable to pass to <a class="reference internal" href="../api/gdal_alg.html#_CPPv432GDALCreateGenImgProjTransformer212GDALDatasetH12GDALDatasetHPPc" title="GDALCreateGenImgProjTransformer2"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALCreateGenImgProjTransformer2()</span></code></a>. This is
+used when converting geometries coordinates to target raster pixel space. For
+example this can be used to specify RPC related transformer options.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.3.</span></p>
+</div>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-co">
+<code class="descname">-co</code><code class="descclassname"> &lt;NAME=VALUE&gt;</code><a class="headerlink" href="#cmdoption-gdal-translate-co" title="Permalink to this definition">¶</a></dt>
+<dd><p>Many formats have one or more optional creation options that can be
+used to control particulars about the file created. For instance,
+the GeoTIFF driver supports creation options to control compression,
+and whether the file should be tiled.</p>
+<p>The creation options available vary by format driver, and some
+simple formats have no creation options at all. A list of options
+supported for a format can be listed with the
+<a class="reference internal" href="raster_common_options.html#raster-common-options-formats"><span class="std std-ref">–formats</span></a>
+command line option but the documentation for the format is the
+definitive source of information on driver creation options.
+See <a class="reference internal" href="../drivers/raster/index.html#raster-drivers"><span class="std std-ref">Raster drivers</span></a> format
+specific documentation for legal creation options for each format.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-te">
+<code class="descname">-te</code><code class="descclassname"> &lt;xmin&gt; &lt;ymin&gt; &lt;xmax&gt; &lt;ymax&gt;</code><a class="headerlink" href="#cmdoption-gdal-translate-te" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set georeferenced extents. The values must be expressed in georeferenced units.
+If not specified, the extent of the output file will be the extent of the vector
+layers.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-tr">
+<code class="descname">-tr</code><code class="descclassname"> &lt;xres&gt; &lt;yres&gt;</code><a class="headerlink" href="#cmdoption-gdal-translate-tr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set target resolution. The values must be expressed in georeferenced units.
+Both must be positive values.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-tap">
+<code class="descname">-tap</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gdal-translate-tap" title="Permalink to this definition">¶</a></dt>
+<dd><p>(target aligned pixels) Align
+the coordinates of the extent of the output file to the values of the <a class="reference internal" href="gdal_translate.html#cmdoption-gdal-translate-tr"><code class="xref std std-option docutils literal notranslate"><span class="pre">-tr</span></code></a>,
+such that the aligned extent includes the minimum extent.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-ts">
+<code class="descname">-ts</code><code class="descclassname"> &lt;width&gt; &lt;height&gt;</code><a class="headerlink" href="#cmdoption-gdal-translate-ts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set output file size in pixels and lines. Note that <a class="reference internal" href="#cmdoption-gdal-translate-ts"><code class="xref std std-option docutils literal notranslate"><span class="pre">-ts</span></code></a> cannot be used with
+<a class="reference internal" href="gdal_translate.html#cmdoption-gdal-translate-tr"><code class="xref std std-option docutils literal notranslate"><span class="pre">-tr</span></code></a></p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-ot">
+<code class="descname">-ot</code><code class="descclassname"> &lt;type&gt;</code><a class="headerlink" href="#cmdoption-gdal-translate-ot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Force the output bands to be of the indicated data type. Defaults to <code class="docutils literal notranslate"><span class="pre">Float64</span></code></p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-optim">
+<code class="descname">-optim</code><code class="descclassname"> {[AUTO]/VECTOR/RASTER}}</code><a class="headerlink" href="#cmdoption-gdal-translate-optim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Force the algorithm used (results are identical). The raster mode is used in most cases and
+optimise read/write operations. The vector mode is useful with a decent amount of input
+features and optimise the CPU use. That mode have to be used with tiled images to be
+efficient. The auto mode (the default) will chose the algorithm based on input and output
+properties.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.3.</span></p>
+</div>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-q">
+<code class="descname">-q</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gdal-translate-q" title="Permalink to this definition">¶</a></dt>
+<dd><p>Suppress progress monitor and other non-error output.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-arg-src-datasource">
+<code class="descname">&lt;src_datasource&gt;</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gdal-translate-arg-src-datasource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Any OGR supported readable datasource.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdal-translate-arg-dst-filename">
+<code class="descname">&lt;dst_filename&gt;</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gdal-translate-arg-dst-filename" title="Permalink to this definition">¶</a></dt>
+<dd><p>The GDAL supported output file.  Must support update mode access.
+This file will be created (or overwritten if it already exists):option:<cite>-of</cite>,
+<a class="reference internal" href="gdal_translate.html#cmdoption-gdal-translate-a-nodata"><code class="xref std std-option docutils literal notranslate"><span class="pre">-a_nodata</span></code></a>, <a class="reference internal" href="#cmdoption-gdal-translate-init"><code class="xref std std-option docutils literal notranslate"><span class="pre">-init</span></code></a>, <a class="reference internal" href="gdal_translate.html#cmdoption-gdal-translate-a-srs"><code class="xref std std-option docutils literal notranslate"><span class="pre">-a_srs</span></code></a>, <a class="reference internal" href="gdal_translate.html#cmdoption-gdal-translate-co"><code class="xref std std-option docutils literal notranslate"><span class="pre">-co</span></code></a>, <a class="reference internal" href="#cmdoption-gdal-translate-te"><code class="xref std std-option docutils literal notranslate"><span class="pre">-te</span></code></a>,
+<a class="reference internal" href="gdal_translate.html#cmdoption-gdal-translate-tr"><code class="xref std std-option docutils literal notranslate"><span class="pre">-tr</span></code></a>, <a class="reference internal" href="#cmdoption-gdal-translate-tap"><code class="xref std std-option docutils literal notranslate"><span class="pre">-tap</span></code></a>, <a class="reference internal" href="#cmdoption-gdal-translate-ts"><code class="xref std std-option docutils literal notranslate"><span class="pre">-ts</span></code></a>, or <a class="reference internal" href="gdal_translate.html#cmdoption-gdal-translate-ot"><code class="xref std std-option docutils literal notranslate"><span class="pre">-ot</span></code></a> options are used.</p>
+</dd></dl>
+
+<p>The program create a new target raster image when any of the <a class="reference internal" href="gdal_translate.html#cmdoption-gdal-translate-of"><code class="xref std std-option docutils literal notranslate"><span class="pre">-of</span></code></a>,
+<a class="reference internal" href="gdal_translate.html#cmdoption-gdal-translate-a-nodata"><code class="xref std std-option docutils literal notranslate"><span class="pre">-a_nodata</span></code></a>, <a class="reference internal" href="#cmdoption-gdal-translate-init"><code class="xref std std-option docutils literal notranslate"><span class="pre">-init</span></code></a>, <a class="reference internal" href="gdal_translate.html#cmdoption-gdal-translate-a-srs"><code class="xref std std-option docutils literal notranslate"><span class="pre">-a_srs</span></code></a>, <a class="reference internal" href="gdal_translate.html#cmdoption-gdal-translate-co"><code class="xref std std-option docutils literal notranslate"><span class="pre">-co</span></code></a>, <a class="reference internal" href="#cmdoption-gdal-translate-te"><code class="xref std std-option docutils literal notranslate"><span class="pre">-te</span></code></a>,
+<a class="reference internal" href="gdal_translate.html#cmdoption-gdal-translate-tr"><code class="xref std std-option docutils literal notranslate"><span class="pre">-tr</span></code></a>, <a class="reference internal" href="#cmdoption-gdal-translate-tap"><code class="xref std std-option docutils literal notranslate"><span class="pre">-tap</span></code></a>, <a class="reference internal" href="#cmdoption-gdal-translate-ts"><code class="xref std std-option docutils literal notranslate"><span class="pre">-ts</span></code></a>, or <a class="reference internal" href="gdal_translate.html#cmdoption-gdal-translate-ot"><code class="xref std std-option docutils literal notranslate"><span class="pre">-ot</span></code></a> options are used.
+The resolution or size must be specified using the <a class="reference internal" href="gdal_translate.html#cmdoption-gdal-translate-tr"><code class="xref std std-option docutils literal notranslate"><span class="pre">-tr</span></code></a> or <a class="reference internal" href="#cmdoption-gdal-translate-ts"><code class="xref std std-option docutils literal notranslate"><span class="pre">-ts</span></code></a> option for all new
+rasters.  The target raster will be overwritten if it already exists and any of
+these creation-related options are used.</p>
+</div>
+<div class="section" id="c-api">
+<h2>C API<a class="headerlink" href="#c-api" title="Permalink to this headline">¶</a></h2>
+<p>This utility is also callable from C with <a class="reference internal" href="../api/gdal_utils.html#_CPPv413GDALRasterizePKc12GDALDatasetH12GDALDatasetHPK20GDALRasterizeOptionsPi" title="GDALRasterize"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALRasterize()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.1.</span></p>
+</div>
+</div>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<p>The following would burn all polygons from mask.shp into the RGB TIFF
+file work.tif with the color red (RGB = 255,0,0).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdal_rasterize</span> <span class="o">-</span><span class="n">b</span> <span class="mi">1</span> <span class="o">-</span><span class="n">b</span> <span class="mi">2</span> <span class="o">-</span><span class="n">b</span> <span class="mi">3</span> <span class="o">-</span><span class="n">burn</span> <span class="mi">255</span> <span class="o">-</span><span class="n">burn</span> <span class="mi">0</span> <span class="o">-</span><span class="n">burn</span> <span class="mi">0</span> <span class="o">-</span><span class="n">l</span> <span class="n">mask</span> <span class="n">mask</span><span class="o">.</span><span class="n">shp</span> <span class="n">work</span><span class="o">.</span><span class="n">tif</span>
+</pre></div>
+</div>
+<p>The following would burn all “class A” buildings into the output elevation
+file, pulling the top elevation from the ROOF_H attribute.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdal_rasterize</span> <span class="o">-</span><span class="n">a</span> <span class="n">ROOF_H</span> <span class="o">-</span><span class="n">where</span> <span class="s1">&#39;class=&quot;A&quot;&#39;</span> <span class="o">-</span><span class="n">l</span> <span class="n">footprints</span> <span class="n">footprints</span><span class="o">.</span><span class="n">shp</span> <span class="n">city_dem</span><span class="o">.</span><span class="n">tif</span>
+</pre></div>
+</div>
+<p>The following would burn all polygons from footprint.shp into a new 1000x1000
+rgb TIFF as the color red.  Note that <a class="reference internal" href="gdal_translate.html#cmdoption-gdal-translate-b"><code class="xref std std-option docutils literal notranslate"><span class="pre">-b</span></code></a> is not used; the order of the <a class="reference internal" href="#cmdoption-gdal-translate-burn"><code class="xref std std-option docutils literal notranslate"><span class="pre">-burn</span></code></a>
+options determines the bands of the output raster.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdal_rasterize</span> <span class="o">-</span><span class="n">burn</span> <span class="mi">255</span> <span class="o">-</span><span class="n">burn</span> <span class="mi">0</span> <span class="o">-</span><span class="n">burn</span> <span class="mi">0</span> <span class="o">-</span><span class="n">ot</span> <span class="n">Byte</span> <span class="o">-</span><span class="n">ts</span> <span class="mi">1000</span> <span class="mi">1000</span> <span class="o">-</span><span class="n">l</span> <span class="n">footprints</span> <span class="n">footprints</span><span class="o">.</span><span class="n">shp</span> <span class="n">mask</span><span class="o">.</span><span class="n">tif</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="gdaltransform.html" class="btn btn-neutral float-right" title="gdaltransform" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gdal2tiles.html" class="btn btn-neutral float-left" title="gdal2tiles" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

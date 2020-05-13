@@ -1,0 +1,571 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ogrinfo &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgprograms/ogrinfo.html"/>
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ogr2ogr" href="ogr2ogr.html" />
+    <link rel="prev" title="Common options for vector programs" href="vector_common_options.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Programs</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#raster-programs">Raster programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#multidimensional-raster-programs">Multidimensional Raster programs</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#vector-programs">Vector programs</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="vector_common_options.html">Common options</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ogrinfo</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#synopsis">Synopsis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#description">Description</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#example">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ogr2ogr.html">ogr2ogr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ogrtindex.html">ogrtindex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ogrlineref.html">ogrlineref</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ogrmerge.html">ogrmerge</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#geographic-network-programs">Geographic network programs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Programs</a> &raquo;</li>
+      
+      <li>ogrinfo</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/programs/ogrinfo.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="ogr2ogr.html" class="btn btn-neutral float-right" title="ogr2ogr" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="vector_common_options.html" class="btn btn-neutral float-left" title="Common options for vector programs" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="ogrinfo">
+<span id="id1"></span><h1>ogrinfo<a class="headerlink" href="#ogrinfo" title="Permalink to this headline">¶</a></h1>
+<p>Lists information about an OGR-supported data source.</p>
+<div class="section" id="synopsis">
+<span id="index-0"></span><h2>Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>ogrinfo [--help-general] [-ro] [-q] [-where restricted_where|\@filename]
+        [-spat xmin ymin xmax ymax] [-geomfield field] [-fid fid]
+        [-sql statement|\@filename] [-dialect dialect] [-al] [-rl] [-so] [-fields={YES/NO}]
+        [-geom={YES/NO/SUMMARY/WKT/ISO_WKT}] [--formats] [[-oo NAME=VALUE] ...]
+        [-nomd] [-listmdd] [-mdd domain|`all`]*
+        [-nocount] [-noextent] [-nogeomtype] [-wkt_format WKT1|WKT2|...]
+        &lt;datasource_name&gt; [&lt;layer&gt; [&lt;layer&gt; ...]]
+</pre></div>
+</div>
+</div>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>The <strong class="program">ogrinfo</strong> program lists various information about an OGR-supported data
+source to stdout (the terminal).</p>
+<dl class="option">
+<dt id="cmdoption-ogrinfo-ro">
+<code class="descname">-ro</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogrinfo-ro" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open the data source in read-only mode.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrinfo-al">
+<code class="descname">-al</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogrinfo-al" title="Permalink to this definition">¶</a></dt>
+<dd><p>List all features of all layers (used instead of having to give layer names
+as arguments).</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrinfo-rl">
+<code class="descname">-rl</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogrinfo-rl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable random layer reading mode, i.e. iterate over features in the order
+they are found in the dataset, and not layer per layer. This can be
+significantly faster for some formats (for example OSM, GMLAS).</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.2.</span></p>
+</div>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrinfo-so">
+<code class="descname">-so</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogrinfo-so" title="Permalink to this definition">¶</a></dt>
+<dd><p>Summary Only: suppress listing of individual features and show only
+summary information like projection, schema, feature count and extents.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrinfo-q">
+<code class="descname">-q</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogrinfo-q" title="Permalink to this definition">¶</a></dt>
+<dd><p>Quiet verbose reporting of various information, including coordinate
+system, layer schema, extents, and feature count.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrinfo-where">
+<code class="descname">-where</code><code class="descclassname"> &lt;restricted_where&gt;</code><a class="headerlink" href="#cmdoption-ogrinfo-where" title="Permalink to this definition">¶</a></dt>
+<dd><p>An attribute query in a restricted form of the queries used in the SQL
+<cite>WHERE</cite> statement. Only features matching the attribute query will be
+reported. Starting with GDAL 2.1, the <code class="docutils literal notranslate"><span class="pre">\filename</span></code> syntax can be used to
+indicate that the content is in the pointed filename.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrinfo-sql">
+<code class="descname">-sql</code><code class="descclassname"> &lt;statement&gt;</code><a class="headerlink" href="#cmdoption-ogrinfo-sql" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute the indicated SQL statement and return the result. Starting with
+GDAL 2.1, the <code class="docutils literal notranslate"><span class="pre">&#64;filename</span></code> syntax can be used to indicate that the content is
+in the pointed filename.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrinfo-dialect">
+<code class="descname">-dialect</code><code class="descclassname"> &lt;dialect&gt;</code><a class="headerlink" href="#cmdoption-ogrinfo-dialect" title="Permalink to this definition">¶</a></dt>
+<dd><p>SQL dialect. In some cases can be used to use (unoptimized) OGR SQL instead
+of the native SQL of an RDBMS by passing OGRSQL. The “SQLITE” dialect can
+also be used with any datasource.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrinfo-spat">
+<code class="descname">-spat</code><code class="descclassname"> &lt;xmin&gt; &lt;ymin&gt; &lt;xmax&gt; &lt;ymax&gt;</code><a class="headerlink" href="#cmdoption-ogrinfo-spat" title="Permalink to this definition">¶</a></dt>
+<dd><p>The area of interest. Only features within the rectangle will be reported.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrinfo-geomfield">
+<code class="descname">-geomfield</code><code class="descclassname"> &lt;field&gt;</code><a class="headerlink" href="#cmdoption-ogrinfo-geomfield" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of the geometry field on which the spatial filter operates.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrinfo-fid">
+<code class="descname">-fid</code><code class="descclassname"> &lt;fid&gt;</code><a class="headerlink" href="#cmdoption-ogrinfo-fid" title="Permalink to this definition">¶</a></dt>
+<dd><p>If provided, only the feature with this feature id will be reported.
+Operates exclusive of the spatial or attribute queries. Note: if you want
+to select several features based on their feature id, you can also use the
+fact the ‘fid’ is a special field recognized by OGR SQL. So, <cite>-where “fid in (1,3,5)”</cite>
+would select features 1, 3 and 5.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrinfo-fields">
+<code class="descname">-fields</code><code class="descclassname"> YES|NO:</code><a class="headerlink" href="#cmdoption-ogrinfo-fields" title="Permalink to this definition">¶</a></dt>
+<dd><p>If set to <code class="docutils literal notranslate"><span class="pre">NO</span></code>, the feature dump will not display field values. Default value
+is <code class="docutils literal notranslate"><span class="pre">YES</span></code>.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrinfo-geom">
+<code class="descname">-geom</code><code class="descclassname"> YES|NO|SUMMARY|WKT|ISO_WKT</code><a class="headerlink" href="#cmdoption-ogrinfo-geom" title="Permalink to this definition">¶</a></dt>
+<dd><p>If set to <code class="docutils literal notranslate"><span class="pre">NO</span></code>, the feature dump will not display the geometry. If set to
+<code class="docutils literal notranslate"><span class="pre">SUMMARY</span></code>, only a summary of the geometry will be displayed. If set to
+<code class="docutils literal notranslate"><span class="pre">YES</span></code> or <code class="docutils literal notranslate"><span class="pre">ISO_WKT</span></code>, the geometry will be reported in full OGC WKT format.
+If set to <code class="docutils literal notranslate"><span class="pre">WKT</span></code> the geometry will be reported in legacy <code class="docutils literal notranslate"><span class="pre">WKT</span></code>. Default
+value is <code class="docutils literal notranslate"><span class="pre">YES</span></code>. (WKT and <code class="docutils literal notranslate"><span class="pre">ISO_WKT</span></code> are available starting with GDAL 2.1,
+which also changes the default to ISO_WKT)</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrinfo-oo">
+<code class="descname">-oo</code><code class="descclassname"> NAME=VALUE</code><a class="headerlink" href="#cmdoption-ogrinfo-oo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dataset open option (format-specific)</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrinfo-nomd">
+<code class="descname">-nomd</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogrinfo-nomd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Suppress metadata printing. Some datasets may contain a lot of metadata
+strings.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrinfo-listmdd">
+<code class="descname">-listmdd</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogrinfo-listmdd" title="Permalink to this definition">¶</a></dt>
+<dd><p>List all metadata domains available for the dataset.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrinfo-mdd">
+<code class="descname">-mdd</code><code class="descclassname"> &lt;domain&gt;</code><a class="headerlink" href="#cmdoption-ogrinfo-mdd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Report metadata for the specified domain. <code class="docutils literal notranslate"><span class="pre">all</span></code> can be used to report
+metadata in all domains.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrinfo-nocount">
+<code class="descname">-nocount</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogrinfo-nocount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Suppress feature count printing.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrinfo-noextent">
+<code class="descname">-noextent</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogrinfo-noextent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Suppress spatial extent printing.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrinfo-nogeomtype">
+<code class="descname">-nogeomtype</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogrinfo-nogeomtype" title="Permalink to this definition">¶</a></dt>
+<dd><p>Suppress layer geometry type printing.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 3.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrinfo-formats">
+<code class="descname">--formats</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogrinfo-formats" title="Permalink to this definition">¶</a></dt>
+<dd><p>List the format drivers that are enabled.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrinfo-wkt-format">
+<code class="descname">-wkt_format</code><code class="descclassname"> &lt;format&gt;</code><a class="headerlink" href="#cmdoption-ogrinfo-wkt-format" title="Permalink to this definition">¶</a></dt>
+<dd><p>The WKT format used to display the SRS.
+Currently supported values for the <code class="docutils literal notranslate"><span class="pre">format</span></code> are:</p>
+<p><code class="docutils literal notranslate"><span class="pre">WKT1</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">WKT2</span></code> (latest WKT version, currently <em>WKT2_2018</em>)</p>
+<p><code class="docutils literal notranslate"><span class="pre">WKT2_2015</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">WKT2_2018</span></code></p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 3.0.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrinfo-arg-datasource-name">
+<code class="descname">&lt;datasource_name&gt;</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogrinfo-arg-datasource-name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The data source to open. May be a filename, directory or other virtual
+name. See the OGR Vector Formats list for supported datasources.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogrinfo-arg-layer">
+<code class="descname">&lt;layer&gt;</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogrinfo-arg-layer" title="Permalink to this definition">¶</a></dt>
+<dd><p>One or more layer names may be reported.  If no layer names are passed then
+ogrinfo will report a list of available layers (and their layer wide
+geometry type). If layer name(s) are given then their extents, coordinate
+system, feature count, geometry type, schema and all features matching
+query parameters will be reported to the terminal. If no query parameters
+are provided, all features are reported.</p>
+</dd></dl>
+
+<p>Geometries are reported in OGC WKT format.</p>
+</div>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<p>Example reporting all layers in an NTF file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogrinfo</span> <span class="n">wrk</span><span class="o">/</span><span class="n">SHETLAND_ISLANDS</span><span class="o">.</span><span class="n">NTF</span>
+
+<span class="c1"># INFO: Open of `wrk/SHETLAND_ISLANDS.NTF&#39;</span>
+<span class="c1"># using driver `UK .NTF&#39; successful.</span>
+<span class="c1"># 1: BL2000_LINK (Line String)</span>
+<span class="c1"># 2: BL2000_POLY (None)</span>
+<span class="c1"># 3: BL2000_COLLECTIONS (None)</span>
+<span class="c1"># 4: FEATURE_CLASSES (None)</span>
+</pre></div>
+</div>
+<p>Example of retrieving a summary (<code class="docutils literal notranslate"><span class="pre">-so</span></code>) of a layer without showing details about every single feature.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogrinfo</span> \
+  <span class="o">-</span><span class="n">so</span> \
+  <span class="n">natural_earth_vector</span><span class="o">.</span><span class="n">gpkg</span> \
+  <span class="n">ne_10m_admin_0_antarctic_claim_limit_lines</span>
+
+  <span class="c1"># INFO: Open of `natural_earth_vector.gpkg&#39;</span>
+  <span class="c1">#      using driver `GPKG&#39; successful.</span>
+
+  <span class="c1"># Layer name: ne_10m_admin_0_antarctic_claim_limit_lines</span>
+  <span class="c1"># Geometry: Line String</span>
+  <span class="c1"># Feature Count: 23</span>
+  <span class="c1"># Extent: (-150.000000, -90.000000) - (160.100000, -60.000000)</span>
+  <span class="c1"># Layer SRS WKT:</span>
+  <span class="c1"># GEOGCS[&quot;WGS 84&quot;,</span>
+  <span class="c1">#     DATUM[&quot;WGS_1984&quot;,</span>
+  <span class="c1">#         SPHEROID[&quot;WGS 84&quot;,6378137,298.257223563,</span>
+  <span class="c1">#             AUTHORITY[&quot;EPSG&quot;,&quot;7030&quot;]],</span>
+  <span class="c1">#         AUTHORITY[&quot;EPSG&quot;,&quot;6326&quot;]],</span>
+  <span class="c1">#     PRIMEM[&quot;Greenwich&quot;,0,</span>
+  <span class="c1">#         AUTHORITY[&quot;EPSG&quot;,&quot;8901&quot;]],</span>
+  <span class="c1">#     UNIT[&quot;degree&quot;,0.0174532925199433,</span>
+  <span class="c1">#         AUTHORITY[&quot;EPSG&quot;,&quot;9122&quot;]],</span>
+  <span class="c1">#     AUTHORITY[&quot;EPSG&quot;,&quot;4326&quot;]]</span>
+  <span class="c1"># FID Column = fid</span>
+  <span class="c1"># Geometry Column = geom</span>
+  <span class="c1"># type: String (15.0)</span>
+  <span class="c1"># scalerank: Integer (0.0)</span>
+  <span class="c1"># featurecla: String (50.0)</span>
+</pre></div>
+</div>
+<p>Example using an attribute query is used to restrict the output of the features
+in a layer:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogrinfo</span> <span class="o">-</span><span class="n">ro</span> \
+    <span class="o">-</span><span class="n">where</span> <span class="s1">&#39;GLOBAL_LINK_ID=185878&#39;</span> \
+    <span class="n">wrk</span><span class="o">/</span><span class="n">SHETLAND_ISLANDS</span><span class="o">.</span><span class="n">NTF</span> <span class="n">BL2000_LINK</span>
+
+<span class="c1"># INFO: Open of `wrk/SHETLAND_ISLANDS.NTF&#39;</span>
+<span class="c1"># using driver `UK .NTF&#39; successful.</span>
+<span class="c1">#</span>
+<span class="c1"># Layer name: BL2000_LINK</span>
+<span class="c1"># Geometry: Line String</span>
+<span class="c1"># Feature Count: 1</span>
+<span class="c1"># Extent: (419794.100000, 1069031.000000) - (419927.900000, 1069153.500000)</span>
+<span class="c1"># Layer SRS WKT:</span>
+<span class="c1"># PROJCS[&quot;OSGB 1936 / British National Grid&quot;,</span>
+<span class="c1"># GEOGCS[&quot;OSGB 1936&quot;,</span>
+<span class="c1"># DATUM[&quot;OSGB_1936&quot;,</span>
+<span class="c1"># SPHEROID[&quot;Airy 1830&quot;,6377563.396,299.3249646]],</span>
+<span class="c1"># PRIMEM[&quot;Greenwich&quot;,0],</span>
+<span class="c1"># UNIT[&quot;degree&quot;,0.0174532925199433]],</span>
+<span class="c1"># PROJECTION[&quot;Transverse_Mercator&quot;],</span>
+<span class="c1"># PARAMETER[&quot;latitude_of_origin&quot;,49],</span>
+<span class="c1"># PARAMETER[&quot;central_meridian&quot;,-2],</span>
+<span class="c1"># PARAMETER[&quot;scale_factor&quot;,0.999601272],</span>
+<span class="c1"># PARAMETER[&quot;false_easting&quot;,400000],</span>
+<span class="c1"># PARAMETER[&quot;false_northing&quot;,-100000],</span>
+<span class="c1"># UNIT[&quot;metre&quot;,1]]</span>
+<span class="c1"># LINE_ID: Integer (6.0)</span>
+<span class="c1"># GEOM_ID: Integer (6.0)</span>
+<span class="c1"># FEAT_CODE: String (4.0)</span>
+<span class="c1"># GLOBAL_LINK_ID: Integer (10.0)</span>
+<span class="c1"># TILE_REF: String (10.0)</span>
+<span class="c1"># OGRFeature(BL2000_LINK):2</span>
+<span class="c1"># LINE_ID (Integer) = 2</span>
+<span class="c1"># GEOM_ID (Integer) = 2</span>
+<span class="c1"># FEAT_CODE (String) = (null)</span>
+<span class="c1"># GLOBAL_LINK_ID (Integer) = 185878</span>
+<span class="c1"># TILE_REF (String) = SHETLAND I</span>
+<span class="c1"># LINESTRING (419832.100 1069046.300,419820.100 1069043.800,419808.300</span>
+<span class="c1"># 1069048.800,419805.100 1069046.000,419805.000 1069040.600,419809.400</span>
+<span class="c1"># 1069037.400,419827.400 1069035.600,419842 1069031,419859.000</span>
+<span class="c1"># 1069032.800,419879.500 1069049.500,419886.700 1069061.400,419890.100</span>
+<span class="c1"># 1069070.500,419890.900 1069081.800,419896.500 1069086.800,419898.400</span>
+<span class="c1"># 1069092.900,419896.700 1069094.800,419892.500 1069094.300,419878.100</span>
+<span class="c1"># 1069085.600,419875.400 1069087.300,419875.100 1069091.100,419872.200</span>
+<span class="c1"># 1069094.600,419890.400 1069106.400,419907.600 1069112.800,419924.600</span>
+<span class="c1"># 1069133.800,419927.900 1069146.300,419927.600 1069152.400,419922.600</span>
+<span class="c1"># 1069153.500,419917.100 1069153.500,419911.500 1069153.000,419908.700</span>
+<span class="c1"># 1069152.500,419903.400 1069150.800,419898.800 1069149.400,419894.800</span>
+<span class="c1"># 1069149.300,419890.700 1069149.400,419890.600 1069149.400,419880.800</span>
+<span class="c1"># 1069149.800,419876.900 1069148.900,419873.100 1069147.500,419870.200</span>
+<span class="c1"># 1069146.400,419862.100 1069143.000,419860 1069142,419854.900</span>
+<span class="c1"># 1069138.600,419850 1069135,419848.800 1069134.100,419843</span>
+<span class="c1"># 1069130,419836.200 1069127.600,419824.600 1069123.800,419820.200</span>
+<span class="c1"># 1069126.900,419815.500 1069126.900,419808.200 1069116.500,419798.700</span>
+<span class="c1"># 1069117.600,419794.100 1069115.100,419796.300 1069109.100,419801.800</span>
+<span class="c1"># 1069106.800,419805.000  1069107.300)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ogr2ogr.html" class="btn btn-neutral float-right" title="ogr2ogr" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="vector_common_options.html" class="btn btn-neutral float-left" title="Common options for vector programs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,771 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gdalwarp &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgprograms/gdalwarp.html"/>
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="gdaltindex" href="gdaltindex.html" />
+    <link rel="prev" title="gdaladdo" href="gdaladdo.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Programs</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#raster-programs">Raster programs</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="raster_common_options.html">Common options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalinfo.html">gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_translate.html">gdal_translate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaladdo.html">gdaladdo</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">gdalwarp</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#synopsis">Synopsis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#description">Description</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#see-also">See also</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="gdaltindex.html">gdaltindex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalbuildvrt.html">gdalbuildvrt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_contour.html">gdal_contour</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaldem.html">gdaldem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rgb2pct.html">rgb2pct</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pct2rgb.html">pct2rgb</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_merge.html">gdal_merge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal2tiles.html">gdal2tiles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_rasterize.html">gdal_rasterize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaltransform.html">gdaltransform</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nearblack.html">nearblack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_retile.html">gdal_retile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_grid.html">gdal_grid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_proximity.html">gdal_proximity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_polygonize.html">gdal_polygonize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_sieve.html">gdal_sieve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_fillnodata.html">gdal_fillnodata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdallocationinfo.html">gdallocationinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalsrsinfo.html">gdalsrsinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalmove.html">gdalmove</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_edit.html">gdal_edit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_calc.html">gdal_calc.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_pansharpen.html">gdal_pansharpen.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal-config.html">gdal-config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalmanage.html">gdalmanage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalcompare.html">gdalcompare</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_viewshed.html">gdal_viewshed</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#multidimensional-raster-programs">Multidimensional Raster programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#vector-programs">Vector programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#geographic-network-programs">Geographic network programs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Programs</a> &raquo;</li>
+      
+      <li>gdalwarp</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/programs/gdalwarp.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="gdaltindex.html" class="btn btn-neutral float-right" title="gdaltindex" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gdaladdo.html" class="btn btn-neutral float-left" title="gdaladdo" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="gdalwarp">
+<span id="id1"></span><h1>gdalwarp<a class="headerlink" href="#gdalwarp" title="Permalink to this headline">¶</a></h1>
+<p>Image reprojection and warping utility</p>
+<div class="section" id="synopsis">
+<span id="index-0"></span><h2>Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdalwarp</span> <span class="p">[</span><span class="o">--</span><span class="n">help</span><span class="o">-</span><span class="n">general</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">formats</span><span class="p">]</span>
+    <span class="p">[</span><span class="o">-</span><span class="n">s_srs</span> <span class="n">srs_def</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">t_srs</span> <span class="n">srs_def</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">ct</span> <span class="n">string</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">to</span> <span class="s2">&quot;NAME=VALUE&quot;</span><span class="p">]</span><span class="o">*</span> <span class="p">[</span><span class="o">-</span><span class="n">novshiftgrid</span><span class="p">]</span>
+    <span class="p">[</span><span class="o">-</span><span class="n">order</span> <span class="n">n</span> <span class="o">|</span> <span class="o">-</span><span class="n">tps</span> <span class="o">|</span> <span class="o">-</span><span class="n">rpc</span> <span class="o">|</span> <span class="o">-</span><span class="n">geoloc</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">et</span> <span class="n">err_threshold</span><span class="p">]</span>
+    <span class="p">[</span><span class="o">-</span><span class="n">refine_gcps</span> <span class="n">tolerance</span> <span class="p">[</span><span class="n">minimum_gcps</span><span class="p">]]</span>
+    <span class="p">[</span><span class="o">-</span><span class="n">te</span> <span class="n">xmin</span> <span class="n">ymin</span> <span class="n">xmax</span> <span class="n">ymax</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">te_srs</span> <span class="n">srs_def</span><span class="p">]</span>
+    <span class="p">[</span><span class="o">-</span><span class="n">tr</span> <span class="n">xres</span> <span class="n">yres</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">tap</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">ts</span> <span class="n">width</span> <span class="n">height</span><span class="p">]</span>
+    <span class="p">[</span><span class="o">-</span><span class="n">ovr</span> <span class="n">level</span><span class="o">|</span><span class="n">AUTO</span><span class="o">|</span><span class="n">AUTO</span><span class="o">-</span><span class="n">n</span><span class="o">|</span><span class="n">NONE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">wo</span> <span class="s2">&quot;NAME=VALUE&quot;</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">ot</span> <span class="n">Byte</span><span class="o">/</span><span class="n">Int16</span><span class="o">/...</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">wt</span> <span class="n">Byte</span><span class="o">/</span><span class="n">Int16</span><span class="p">]</span>
+    <span class="p">[</span><span class="o">-</span><span class="n">srcnodata</span> <span class="s2">&quot;value [value...]&quot;</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">dstnodata</span> <span class="s2">&quot;value [value...]&quot;</span><span class="p">]</span>
+    <span class="p">[</span><span class="o">-</span><span class="n">srcalpha</span><span class="o">|-</span><span class="n">nosrcalpha</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">dstalpha</span><span class="p">]</span>
+    <span class="p">[</span><span class="o">-</span><span class="n">r</span> <span class="n">resampling_method</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">wm</span> <span class="n">memory_in_mb</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">multi</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">q</span><span class="p">]</span>
+    <span class="p">[</span><span class="o">-</span><span class="n">cutline</span> <span class="n">datasource</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">cl</span> <span class="n">layer</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">cwhere</span> <span class="n">expression</span><span class="p">]</span>
+    <span class="p">[</span><span class="o">-</span><span class="n">csql</span> <span class="n">statement</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">cblend</span> <span class="n">dist_in_pixels</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">crop_to_cutline</span><span class="p">]</span>
+    <span class="p">[</span><span class="o">-</span><span class="n">of</span> <span class="nb">format</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">co</span> <span class="s2">&quot;NAME=VALUE&quot;</span><span class="p">]</span><span class="o">*</span> <span class="p">[</span><span class="o">-</span><span class="n">overwrite</span><span class="p">]</span>
+    <span class="p">[</span><span class="o">-</span><span class="n">nomd</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">cvmd</span> <span class="n">meta_conflict_value</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">setci</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">oo</span> <span class="n">NAME</span><span class="o">=</span><span class="n">VALUE</span><span class="p">]</span><span class="o">*</span>
+    <span class="p">[</span><span class="o">-</span><span class="n">doo</span> <span class="n">NAME</span><span class="o">=</span><span class="n">VALUE</span><span class="p">]</span><span class="o">*</span>
+    <span class="n">srcfile</span><span class="o">*</span> <span class="n">dstfile</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>The <strong class="program">gdalwarp</strong> utility is an image mosaicing, reprojection and warping
+utility. The program can reproject to any supported projection,
+and can also apply GCPs stored with the image if the image is “raw”
+with control information.</p>
+<dl class="option">
+<dt id="cmdoption-gdalwarp-s-srs">
+<code class="descname">-s_srs</code><code class="descclassname"> &lt;srs def&gt;</code><a class="headerlink" href="#cmdoption-gdalwarp-s-srs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set source spatial reference.</p>
+<p>The coordinate systems that can be passed are anything supported by the
+OGRSpatialReference.SetFromUserInput() call, which includes EPSG PCS and GCSes
+(i.e. EPSG:4296), PROJ.4 declarations (as above), or the name of a .prj file
+containing well known text. Starting with GDAL 2.2, if the SRS has an explicit
+vertical datum that points to a PROJ.4 geoidgrids, and the input dataset is a
+single band dataset, a vertical correction will be applied to the values of the
+dataset.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-t-srs">
+<code class="descname">-t_srs</code><code class="descclassname"> &lt;srs_def&gt;</code><a class="headerlink" href="#cmdoption-gdalwarp-t-srs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set target spatial reference.</p>
+<p>The coordinate systems that can be passed are anything supported by the
+OGRSpatialReference.SetFromUserInput() call, which includes EPSG PCS and GCSes
+(i.e. EPSG:4296), PROJ.4 declarations (as above), or the name of a .prj file
+containing well known text. Starting with GDAL 2.2, if the SRS has an explicit
+vertical datum that points to a PROJ.4 geoidgrids, and the input dataset is a
+single band dataset, a vertical correction will be applied to the values of the
+dataset.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-ct">
+<code class="descname">-ct</code><code class="descclassname"> &lt;string&gt;</code><a class="headerlink" href="#cmdoption-gdalwarp-ct" title="Permalink to this definition">¶</a></dt>
+<dd><p>A PROJ string (single step operation or multiple step string
+starting with +proj=pipeline), a WKT2 string describing a CoordinateOperation,
+or a <a class="reference external" href="urn:ogc:def:coordinateOperation:EPSG::XXXX">urn:ogc:def:coordinateOperation:EPSG::XXXX</a> URN overriding the default
+transformation from the source to the target CRS. It must take into account the
+axis order of the source and target CRS.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 3.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-to">
+<code class="descname">-to</code><code class="descclassname"> &lt;NAME=VALUE&gt;</code><a class="headerlink" href="#cmdoption-gdalwarp-to" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a transformer option suitable to pass to <a class="reference internal" href="../api/gdal_alg.html#_CPPv432GDALCreateGenImgProjTransformer212GDALDatasetH12GDALDatasetHPPc" title="GDALCreateGenImgProjTransformer2"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALCreateGenImgProjTransformer2()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-novshiftgrid">
+<code class="descname">-novshiftgrid</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gdalwarp-novshiftgrid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disable the use of vertical
+datum shift grids when one of the source or target SRS has an explicit vertical
+datum, and the input dataset is a single band dataset.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.2.</span></p>
+</div>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-order">
+<code class="descname">-order</code><code class="descclassname"> &lt;n&gt;</code><a class="headerlink" href="#cmdoption-gdalwarp-order" title="Permalink to this definition">¶</a></dt>
+<dd><p>order of polynomial used for warping (1 to 3). The default is to select
+a polynomial order based on the number of GCPs.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-tps">
+<code class="descname">-tps</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gdalwarp-tps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Force use of thin plate spline transformer based on available GCPs.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-rpc">
+<code class="descname">-rpc</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gdalwarp-rpc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Force use of RPCs.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-geoloc">
+<code class="descname">-geoloc</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gdalwarp-geoloc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Force use of Geolocation Arrays.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-et">
+<code class="descname">-et</code><code class="descclassname"> &lt;err_threshold&gt;</code><a class="headerlink" href="#cmdoption-gdalwarp-et" title="Permalink to this definition">¶</a></dt>
+<dd><p>Error threshold for transformation approximation (in pixel units -
+defaults to 0.125, unless, starting with GDAL 2.1, the RPC_DEM warping
+option is specified, in which case, an exact transformer, i.e.
+err_threshold=0, will be used).</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-refine-gcps">
+<code class="descname">-refine_gcps</code><code class="descclassname"> &lt;tolerance minimum_gcps&gt;</code><a class="headerlink" href="#cmdoption-gdalwarp-refine-gcps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Refines the GCPs by automatically eliminating outliers.
+Outliers will be eliminated until minimum_gcps are left or when no outliers can be detected.
+The tolerance is passed to adjust when a GCP will be eliminated.
+Not that GCP refinement only works with polynomial interpolation.
+The tolerance is in pixel units if no projection is available, otherwise it is in SRS units.
+If minimum_gcps is not provided, the minimum GCPs according to the polynomial model is used.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-te">
+<code class="descname">-te</code><code class="descclassname"> &lt;xmin ymin xmax ymax&gt;</code><a class="headerlink" href="#cmdoption-gdalwarp-te" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set georeferenced extents of output file to be created (in target SRS by
+default, or in the SRS specified with <a class="reference internal" href="#cmdoption-gdalwarp-te-srs"><code class="xref std std-option docutils literal notranslate"><span class="pre">-te_srs</span></code></a>)</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-te-srs">
+<code class="descname">-te_srs</code><code class="descclassname"> &lt;srs_def&gt;</code><a class="headerlink" href="#cmdoption-gdalwarp-te-srs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specifies the SRS in
+which to interpret the coordinates given with -te. The &lt;srs_def&gt; may
+be any of the usual GDAL/OGR forms, complete WKT, PROJ.4, EPSG:n or a file
+containing the WKT.
+This must not be confused with -t_srs which is the target SRS of the output
+dataset. <a class="reference internal" href="#cmdoption-gdalwarp-te-srs"><code class="xref std std-option docutils literal notranslate"><span class="pre">-te_srs</span></code></a> is a convenience e.g. when knowing the output coordinates in a
+geodetic long/lat SRS, but still wanting a result in a projected coordinate system.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-tr">
+<code class="descname">-tr</code><code class="descclassname"> &lt;xres&gt; &lt;yres&gt;</code><a class="headerlink" href="#cmdoption-gdalwarp-tr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set output file resolution (in target georeferenced units)</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-tap">
+<code class="descname">-tap</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gdalwarp-tap" title="Permalink to this definition">¶</a></dt>
+<dd><p>(target aligned pixels) align the coordinates of the extent of the output
+file to the values of the <a class="reference internal" href="#cmdoption-gdalwarp-tr"><code class="xref std std-option docutils literal notranslate"><span class="pre">-tr</span></code></a>, such that the aligned extent
+includes the minimum extent.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-ts">
+<code class="descname">-ts</code><code class="descclassname"> &lt;width&gt; &lt;height&gt;</code><a class="headerlink" href="#cmdoption-gdalwarp-ts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set output file size in pixels and lines. If width or height is set to 0,
+the other dimension will be guessed from the computed resolution. Note that
+<a class="reference internal" href="#cmdoption-gdalwarp-ts"><code class="xref std std-option docutils literal notranslate"><span class="pre">-ts</span></code></a> cannot be used with <a class="reference internal" href="#cmdoption-gdalwarp-tr"><code class="xref std std-option docutils literal notranslate"><span class="pre">-tr</span></code></a></p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-ovr">
+<code class="descname">-ovr</code><code class="descclassname"> &lt;level|AUTO|AUTO-n|NONE&gt;</code><a class="headerlink" href="#cmdoption-gdalwarp-ovr" title="Permalink to this definition">¶</a></dt>
+<dd><p>To specify which overview level of source files must be used. The default choice,
+AUTO, will select the overview level whose resolution is the closest to the
+target resolution. Specify an integer value (0-based, i.e. 0=1st overview level)
+to select a particular level. Specify AUTO-n where n is an integer greater or
+equal to 1, to select an overview level below the AUTO one. Or specify NONE to
+force the base resolution to be used (can be useful if overviews have been
+generated with a low quality resampling method, and the warping is done using a
+higher quality resampling method).</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-wo">
+<code class="descname">-wo</code><code class="descclassname"> `&quot;NAME=VALUE&quot;`</code><a class="headerlink" href="#cmdoption-gdalwarp-wo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a warp option.  The <a class="reference internal" href="../api/gdalwarp_cpp.html#_CPPv4N15GDALWarpOptions16papszWarpOptionsE" title="GDALWarpOptions::papszWarpOptions"><code class="xref cpp cpp-member docutils literal notranslate"><span class="pre">GDALWarpOptions::papszWarpOptions</span></code></a> docs show all options.
+Multiple <a class="reference internal" href="#cmdoption-gdalwarp-wo"><code class="xref std std-option docutils literal notranslate"><span class="pre">-wo</span></code></a> options may be listed.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-ot">
+<code class="descname">-ot</code><code class="descclassname"> &lt;type&gt;</code><a class="headerlink" href="#cmdoption-gdalwarp-ot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Force the output image bands to have a specific type. Use type names
+(i.e. <code class="docutils literal notranslate"><span class="pre">Byte</span></code>, <code class="docutils literal notranslate"><span class="pre">Int16</span></code>,…)</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-wt">
+<code class="descname">-wt</code><code class="descclassname"> &lt;type&gt;</code><a class="headerlink" href="#cmdoption-gdalwarp-wt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Working pixel data type. The data type of pixels in the source image and
+destination image buffers.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-r">
+<code class="descname">-r</code><code class="descclassname"> &lt;resampling_method&gt;</code><a class="headerlink" href="#cmdoption-gdalwarp-r" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resampling method to use. Available methods are:</p>
+<p><code class="docutils literal notranslate"><span class="pre">near</span></code>: nearest neighbour resampling (default, fastest algorithm, worst interpolation quality).</p>
+<p><code class="docutils literal notranslate"><span class="pre">bilinear</span></code>: bilinear resampling.</p>
+<p><code class="docutils literal notranslate"><span class="pre">cubic</span></code>: cubic resampling.</p>
+<p><code class="docutils literal notranslate"><span class="pre">cubicspline</span></code>: cubic spline resampling.</p>
+<p><code class="docutils literal notranslate"><span class="pre">lanczos</span></code>: Lanczos windowed sinc resampling.</p>
+<p><code class="docutils literal notranslate"><span class="pre">average</span></code>: average resampling, computes the weighted average of all non-NODATA contributing pixels.</p>
+<p><code class="docutils literal notranslate"><span class="pre">mode</span></code>: mode resampling, selects the value which appears most often of all the sampled points.</p>
+<p><code class="docutils literal notranslate"><span class="pre">max</span></code>: maximum resampling, selects the maximum value from all non-NODATA contributing pixels.</p>
+<p><code class="docutils literal notranslate"><span class="pre">min</span></code>: minimum resampling, selects the minimum value from all non-NODATA contributing pixels.</p>
+<p><code class="docutils literal notranslate"><span class="pre">med</span></code>: median resampling, selects the median value of all non-NODATA contributing pixels.</p>
+<p><code class="docutils literal notranslate"><span class="pre">q1</span></code>: first quartile resampling, selects the first quartile value of all non-NODATA contributing pixels.</p>
+<p><code class="docutils literal notranslate"><span class="pre">q3</span></code>: third quartile resampling, selects the third quartile value of all non-NODATA contributing pixels.</p>
+<p><code class="docutils literal notranslate"><span class="pre">sum</span></code>: compute the weighted sum of all non-NODATA contributing pixels (since GDAL 3.1)</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-srcnodata">
+<code class="descname">-srcnodata</code><code class="descclassname"> &lt;value [value...]&gt;</code><a class="headerlink" href="#cmdoption-gdalwarp-srcnodata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set nodata masking
+values for input bands (different values can be supplied for each band).  If
+more than one value is supplied all values should be quoted to keep them
+together as a single operating system argument.  Masked values will not be
+used in interpolation.  Use a value of <code class="docutils literal notranslate"><span class="pre">None</span></code> to ignore intrinsic nodata settings on the source dataset.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-dstnodata">
+<code class="descname">-dstnodata</code><code class="descclassname"> &lt;value [value...]&gt;</code><a class="headerlink" href="#cmdoption-gdalwarp-dstnodata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set nodata values
+for output bands (different values can be supplied for each band).  If more
+than one value is supplied all values should be quoted to keep them together
+as a single operating system argument.  New files will be initialized to this
+value and if possible the nodata value will be recorded in the output
+file. Use a value of <code class="docutils literal notranslate"><span class="pre">None</span></code> to ensure that nodata is not defined.
+If this argument is not used then nodata values will be copied from the source dataset.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-srcalpha">
+<code class="descname">-srcalpha</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gdalwarp-srcalpha" title="Permalink to this definition">¶</a></dt>
+<dd><p>Force the last band of a source image to be
+considered as a source alpha band.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-nosrcalpha">
+<code class="descname">-nosrcalpha</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gdalwarp-nosrcalpha" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prevent the alpha band of a source image to be
+considered as such (it will be warped as a regular band)</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.2.</span></p>
+</div>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-dstalpha">
+<code class="descname">-dstalpha</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gdalwarp-dstalpha" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an output alpha band to identify nodata (unset/transparent) pixels.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-wm">
+<code class="descname">-wm</code><code class="descclassname"> &lt;memory_in_mb&gt;</code><a class="headerlink" href="#cmdoption-gdalwarp-wm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the amount of memory that the
+warp API is allowed to use for caching. The value is interpreted as being
+in megabytes if the value is less than 10000. For values &gt;=10000, this is
+interpreted as bytes.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-multi">
+<code class="descname">-multi</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gdalwarp-multi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use multithreaded warping implementation.
+Two threads will be used to process chunks of image and perform
+input/output operation simultaneously. Note that computation is not
+multithreaded itself. To do that, you can use the <a class="reference internal" href="#cmdoption-gdalwarp-wo"><code class="xref std std-option docutils literal notranslate"><span class="pre">-wo</span></code></a> NUM_THREADS=val/ALL_CPUS
+option, which can be combined with <a class="reference internal" href="#cmdoption-gdalwarp-multi"><code class="xref std std-option docutils literal notranslate"><span class="pre">-multi</span></code></a></p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-q">
+<code class="descname">-q</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gdalwarp-q" title="Permalink to this definition">¶</a></dt>
+<dd><p>Be quiet.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-of">
+<code class="descname">-of</code><code class="descclassname"> &lt;format&gt;</code><a class="headerlink" href="#cmdoption-gdalwarp-of" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select the output format. Starting with GDAL 2.3, if not specified, the
+format is guessed from the extension (previously was GTiff). Use the short
+format name.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-co">
+<code class="descname">-co</code><code class="descclassname"> &lt;NAME=VALUE&gt;</code><a class="headerlink" href="#cmdoption-gdalwarp-co" title="Permalink to this definition">¶</a></dt>
+<dd><p>Many formats have one or more optional creation options that can be
+used to control particulars about the file created. For instance,
+the GeoTIFF driver supports creation options to control compression,
+and whether the file should be tiled.</p>
+<p>The creation options available vary by format driver, and some
+simple formats have no creation options at all. A list of options
+supported for a format can be listed with the
+<a class="reference internal" href="raster_common_options.html#raster-common-options-formats"><span class="std std-ref">–formats</span></a>
+command line option but the documentation for the format is the
+definitive source of information on driver creation options.
+See <a class="reference internal" href="../drivers/raster/index.html#raster-drivers"><span class="std std-ref">Raster drivers</span></a> format
+specific documentation for legal creation options for each format.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-cutline">
+<code class="descname">-cutline</code><code class="descclassname"> &lt;datasource&gt;</code><a class="headerlink" href="#cmdoption-gdalwarp-cutline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable use of a blend cutline from the name OGR support datasource.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-cl">
+<code class="descname">-cl</code><code class="descclassname"> &lt;layername&gt;</code><a class="headerlink" href="#cmdoption-gdalwarp-cl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select the named layer from the cutline datasource.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-cwhere">
+<code class="descname">-cwhere</code><code class="descclassname"> &lt;expression&gt;</code><a class="headerlink" href="#cmdoption-gdalwarp-cwhere" title="Permalink to this definition">¶</a></dt>
+<dd><p>Restrict desired cutline features based on attribute query.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-csql">
+<code class="descname">-csql</code><code class="descclassname"> &lt;query&gt;</code><a class="headerlink" href="#cmdoption-gdalwarp-csql" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select cutline features using an SQL query instead of from a layer with <a class="reference internal" href="#cmdoption-gdalwarp-cl"><code class="xref std std-option docutils literal notranslate"><span class="pre">-cl</span></code></a>.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-cblend">
+<code class="descname">-cblend</code><code class="descclassname"> &lt;distance&gt;</code><a class="headerlink" href="#cmdoption-gdalwarp-cblend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a blend distance to use to blend over cutlines (in pixels).</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-crop-to-cutline">
+<code class="descname">-crop_to_cutline</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gdalwarp-crop-to-cutline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Crop the extent of the target dataset to the extent of the cutline.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-overwrite">
+<code class="descname">-overwrite</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gdalwarp-overwrite" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overwrite the target dataset if it already exists.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-nomd">
+<code class="descname">-nomd</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gdalwarp-nomd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do not copy metadata. Without this option, dataset and band metadata
+(as well as some band information) will be copied from the first source dataset.
+Items that differ between source datasets will be set to * (see <a class="reference internal" href="#cmdoption-gdalwarp-cvmd"><code class="xref std std-option docutils literal notranslate"><span class="pre">-cvmd</span></code></a> option).</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-cvmd">
+<code class="descname">-cvmd</code><code class="descclassname"> &lt;meta_conflict_value&gt;</code><a class="headerlink" href="#cmdoption-gdalwarp-cvmd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Value to set metadata items that conflict between source datasets
+(default is “*”). Use “” to remove conflicting items.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-setci">
+<code class="descname">-setci</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gdalwarp-setci" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the color interpretation of the bands of the target dataset from
+the source dataset.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-oo">
+<code class="descname">-oo</code><code class="descclassname"> &lt;NAME=VALUE&gt;</code><a class="headerlink" href="#cmdoption-gdalwarp-oo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dataset open option (format specific)</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-doo">
+<code class="descname">-doo</code><code class="descclassname"> &lt;NAME=VALUE&gt;</code><a class="headerlink" href="#cmdoption-gdalwarp-doo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output dataset open option (format specific)</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-arg-srcfile">
+<code class="descname">&lt;srcfile&gt;</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gdalwarp-arg-srcfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>The source file name(s).</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-gdalwarp-arg-dstfile">
+<code class="descname">&lt;dstfile&gt;</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-gdalwarp-arg-dstfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>The destination file name.</p>
+</dd></dl>
+
+<p>Mosaicing into an existing output file is supported if the output file
+already exists. The spatial extent of the existing file will not
+be modified to accommodate new data, so you may have to remove it in that case, or
+use the -overwrite option.</p>
+<p>Polygon cutlines may be used as a mask to restrict the area of the
+destination file that may be updated, including blending.  If the OGR
+layer containing the cutline features has no explicit SRS, the cutline
+features must be in the SRS of the destination file. When writing to a
+not yet existing target dataset, its extent will be the one of the
+original raster unless -te or -crop_to_cutline are specified.</p>
+<p>When doing vertical shift adjustments, the transformer option -to ERROR_ON_MISSING_VERT_SHIFT=YES
+can be used to error out as soon as a vertical shift value is missing (instead of
+0 being used).</p>
+<p>Starting with GDAL 3.1, it is possible to use as output format a driver that
+only supports the CreateCopy operation. This may internally imply creation of
+a temporary file.</p>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Basic transformation:</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdalwarp</span> <span class="o">-</span><span class="n">t_srs</span> <span class="n">EPSG</span><span class="p">:</span><span class="mi">4326</span> <span class="nb">input</span><span class="o">.</span><span class="n">tif</span> <span class="n">output</span><span class="o">.</span><span class="n">tif</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>For instance, an eight bit spot scene stored in GeoTIFF with
+control points mapping the corners to lat/long could be warped to a UTM
+projection with a command like this:</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdalwarp</span> <span class="o">-</span><span class="n">t_srs</span> <span class="s1">&#39;+proj=utm +zone=11 +datum=WGS84&#39;</span> <span class="o">-</span><span class="n">overwrite</span> <span class="n">raw_spot</span><span class="o">.</span><span class="n">tif</span> <span class="n">utm11</span><span class="o">.</span><span class="n">tif</span>
+</pre></div>
+</div>
+<ul>
+<li><p>For instance, the second channel of an ASTER image stored in HDF with
+control points mapping the corners to lat/long could be warped to a UTM
+projection with a command like this:</p>
+<blockquote>
+<div><div class="versionadded">
+<p><span class="versionmodified added">New in version 2.2.</span></p>
+</div>
+</div></blockquote>
+</li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdalwarp</span> <span class="o">-</span><span class="n">overwrite</span> <span class="n">HDF4_SDS</span><span class="p">:</span><span class="n">ASTER_L1B</span><span class="p">:</span><span class="s2">&quot;pg-PR1B0000-2002031402_100_001&quot;</span><span class="p">:</span><span class="mi">2</span> <span class="n">pg</span><span class="o">-</span><span class="n">PR1B0000</span><span class="o">-</span><span class="mf">2002031402_100_001_2.</span><span class="n">tif</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>To apply a cutline on a un-georeferenced image and clip from pixel (220,60) to pixel (1160,690):</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdalwarp</span> <span class="o">-</span><span class="n">overwrite</span> <span class="o">-</span><span class="n">to</span> <span class="n">SRC_METHOD</span><span class="o">=</span><span class="n">NO_GEOTRANSFORM</span> <span class="o">-</span><span class="n">to</span> <span class="n">DST_METHOD</span><span class="o">=</span><span class="n">NO_GEOTRANSFORM</span> <span class="o">-</span><span class="n">te</span> <span class="mi">220</span> <span class="mi">60</span> <span class="mi">1160</span> <span class="mi">690</span> <span class="o">-</span><span class="n">cutline</span> <span class="n">cutline</span><span class="o">.</span><span class="n">csv</span> <span class="ow">in</span><span class="o">.</span><span class="n">png</span> <span class="n">out</span><span class="o">.</span><span class="n">tif</span>
+</pre></div>
+</div>
+<p>where cutline.csv content is like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">id</span><span class="p">,</span><span class="n">WKT</span>
+<span class="mi">1</span><span class="p">,</span><span class="s2">&quot;POLYGON((....))&quot;</span>
+</pre></div>
+</div>
+<ul>
+<li><p>To transform a DEM from geoid elevations (using EGM96) to WGS84 ellipsoidal heights:</p>
+<blockquote>
+<div><div class="versionadded">
+<p><span class="versionmodified added">New in version 2.2.</span></p>
+</div>
+</div></blockquote>
+</li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdalwarp</span> <span class="o">-</span><span class="n">overwrite</span> <span class="n">in_dem</span><span class="o">.</span><span class="n">tif</span> <span class="n">out_dem</span><span class="o">.</span><span class="n">tif</span> <span class="o">-</span><span class="n">s_srs</span> <span class="n">EPSG</span><span class="p">:</span><span class="mi">4326</span><span class="o">+</span><span class="mi">5773</span> <span class="o">-</span><span class="n">t_srs</span> <span class="n">EPSG</span><span class="p">:</span><span class="mi">4979</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="see-also">
+<h2>See also<a class="headerlink" href="#see-also" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="http://trac.osgeo.org/gdal/wiki/UserDocs/GdalWarp">Wiki page discussing options and behaviours of gdalwarp</a></p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="gdaltindex.html" class="btn btn-neutral float-right" title="gdaltindex" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gdaladdo.html" class="btn btn-neutral float-left" title="gdaladdo" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

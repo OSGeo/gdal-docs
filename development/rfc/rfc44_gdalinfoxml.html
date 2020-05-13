@@ -1,0 +1,673 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdevelopment/rfc/rfc44_gdalinfoxml.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="RFC 45: GDAL datasets and raster bands as virtual memory mappings" href="rfc45_virtualmem.html" />
+    <link rel="prev" title="RFC 43: GDALMajorObject::GetMetadataDomainList" href="rfc43_getmetadatadomainlist.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#background">Background</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#proposed-json-format-for-gdalinfo">Proposed json format for gdalinfo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#impacted-drivers">Impacted drivers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#impacted-utilities">Impacted utilities</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#backward-compatibility">Backward Compatibility</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#testing">Testing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ticket">Ticket</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voting-history">Voting history</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/development/rfc/rfc44_gdalinfoxml.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="rfc45_virtualmem.html" class="btn btn-neutral float-right" title="RFC 45: GDAL datasets and raster bands as virtual memory mappings" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc43_getmetadatadomainlist.html" class="btn btn-neutral float-left" title="RFC 43: GDALMajorObject::GetMetadataDomainList" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rfc-44-add-parseable-output-formats-for-ogrinfo-and-gdalinfo">
+<span id="rfc-44"></span><h1>RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo<a class="headerlink" href="#rfc-44-add-parseable-output-formats-for-ogrinfo-and-gdalinfo" title="Permalink to this headline">¶</a></h1>
+<p>Authors: Dan “Ducky” Little, Faza Mahamood</p>
+<p>Contacts: danlittle at yahoo dot com, fazamhd at live dot com</p>
+<p>Status: Development. gdalinfo -json implemented in GDAL 2.0</p>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>Add XML and JSON output to the ogrinfo and gdalinfo utilities.</p>
+</div>
+<div class="section" id="background">
+<h2>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h2>
+<p>ogrinfo and gdalinfo are incredibly useful metadata gathering tools.
+Their native text-based output formats, however, are not easily
+parseable by common external tools. Both XML and JSON are easily parsed
+and adding those output formats would substantially increase the utility
+for those looking to add the ogrinfo and gdalinfo utilities to a
+scripting stack.</p>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>An example implementation can be seen at the following github fork
+<a class="reference external" href="https://github.com/theduckylittle/gdal/blob/trunk/gdal/apps/ogrinfo.cpp">https://github.com/theduckylittle/gdal/blob/trunk/gdal/apps/ogrinfo.cpp</a></p>
+<p>To add the XML output to each utility will require “breaking up” the
+main loop into contingent chunks. All diagnostic messages will also need
+to be moved to STDERR to ensure that output on STDOUT is always
+parseable. The XML representation will be constructed using the MiniXML
+library built into GDAL.</p>
+</div>
+<div class="section" id="proposed-json-format-for-gdalinfo">
+<h2>Proposed json format for gdalinfo<a class="headerlink" href="#proposed-json-format-for-gdalinfo" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;driverShortName&quot;</span><span class="p">:</span> <span class="s2">&quot;GTiff&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;driverLongName&quot;</span><span class="p">:</span> <span class="s2">&quot;GeoTIFF&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;files&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="p">(</span><span class="k">if</span> <span class="o">-</span><span class="n">nofl</span> <span class="ow">not</span> <span class="n">specified</span><span class="p">)</span>
+        <span class="s2">&quot;../gcore/data/byte.tif&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;../gcore/data/byte.tif.aux.xml&quot;</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="mi">20</span><span class="p">,</span>
+        <span class="mi">20</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;coordinateSystem&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;proj&quot;</span><span class="p">:</span> <span class="s2">&quot;+proj=.......&quot;</span><span class="p">,</span> <span class="p">(</span><span class="k">if</span> <span class="o">-</span><span class="n">proj4</span> <span class="n">specified</span><span class="p">)</span>
+        <span class="s2">&quot;wkt&quot;</span><span class="p">:</span> <span class="s2">&quot;PROJCS[....]&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;gcps&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="p">(</span><span class="k">if</span> <span class="o">-</span><span class="n">nogcp</span> <span class="ow">not</span> <span class="n">specified</span><span class="p">)</span>
+        <span class="s2">&quot;coordinateSystem&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;proj&quot;</span><span class="p">:</span> <span class="s2">&quot;+proj=.......&quot;</span><span class="p">,</span> <span class="p">(</span><span class="k">if</span> <span class="o">-</span><span class="n">proj4</span> <span class="n">specified</span><span class="p">)</span>
+            <span class="s2">&quot;wkt&quot;</span><span class="p">:</span> <span class="s2">&quot;PROJCS[....]&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;gcpList&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;info&quot;</span><span class="p">:</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;pixel&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+                <span class="s2">&quot;line&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+                <span class="s2">&quot;X&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+                <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+                <span class="s2">&quot;Z&quot;</span><span class="p">:</span> <span class="mf">0.0</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;2&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;info&quot;</span><span class="p">:</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span>
+                <span class="o">.</span>
+                <span class="o">.</span>
+                <span class="o">.</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;geoTransform&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="mf">440720.000000000000000</span><span class="p">,</span>
+        <span class="mf">60.000000000000000</span><span class="p">,</span>
+        <span class="mf">0.0</span><span class="p">,</span>
+        <span class="mf">3751320.000000000000000</span><span class="p">,</span>
+        <span class="mf">0.0</span><span class="p">,</span>
+        <span class="o">-</span><span class="mf">60.000000000000000</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;cornerCoordinates&quot;</span><span class="p">:{</span>
+      <span class="s2">&quot;upperLeft&quot;</span><span class="p">:[</span>
+        <span class="mf">440720.0</span><span class="p">,</span>
+        <span class="mf">3751320.0</span>
+      <span class="p">],</span>
+      <span class="s2">&quot;lowerLeft&quot;</span><span class="p">:[</span>
+        <span class="mf">440720.0</span><span class="p">,</span>
+        <span class="mf">3750120.0</span>
+      <span class="p">],</span>
+      <span class="s2">&quot;upperRight&quot;</span><span class="p">:[</span>
+        <span class="mf">441920.0</span><span class="p">,</span>
+        <span class="mf">3751320.0</span>
+      <span class="p">],</span>
+      <span class="s2">&quot;lowerRight&quot;</span><span class="p">:[</span>
+        <span class="mf">441920.0</span><span class="p">,</span>
+        <span class="mf">3750120.0</span>
+      <span class="p">],</span>
+      <span class="s2">&quot;center&quot;</span><span class="p">:[</span>
+        <span class="mf">441320.0</span><span class="p">,</span>
+        <span class="mf">3750720.0</span>
+      <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;wgs84Extent&quot;</span><span class="p">:{</span>
+      <span class="s2">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;Polygon&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;coordinates&quot;</span><span class="p">:[</span>
+      <span class="p">[</span>
+        <span class="p">[</span>
+          <span class="o">-</span><span class="mf">117.642054</span><span class="p">,</span>
+          <span class="mf">33.9023677</span>
+        <span class="p">],</span>
+        <span class="p">[</span>
+          <span class="o">-</span><span class="mf">117.6419729</span><span class="p">,</span>
+          <span class="mf">33.8915454</span>
+        <span class="p">],</span>
+        <span class="p">[</span>
+          <span class="o">-</span><span class="mf">117.6290752</span><span class="p">,</span>
+          <span class="mf">33.9024346</span>
+        <span class="p">],</span>
+        <span class="p">[</span>
+          <span class="o">-</span><span class="mf">117.6289957</span><span class="p">,</span>
+          <span class="mf">33.8916123</span>
+        <span class="p">],</span>
+        <span class="p">[</span>
+          <span class="o">-</span><span class="mf">117.642054</span><span class="p">,</span>
+          <span class="mf">33.9023677</span>
+        <span class="p">]</span>
+       <span class="p">]</span>
+      <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;rat&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="p">(</span><span class="k">if</span> <span class="o">-</span><span class="n">norat</span> <span class="ow">not</span> <span class="n">specified</span><span class="p">)</span>
+        <span class="s2">&quot;row0Min&quot;</span><span class="p">:</span> <span class="mi">40918</span><span class="p">,</span>
+        <span class="s2">&quot;binSize&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;fieldDefn&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Histogram&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;integer&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;usage&quot;</span><span class="p">:</span> <span class="s2">&quot;PixelCount&quot;</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;fieldName2&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="s2">&quot;usage&quot;</span><span class="p">:</span> <span class="mi">2</span>
+            <span class="p">},</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;rows&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="mi">1</span><span class="p">,</span>
+                    <span class="mi">4</span>
+                <span class="p">]</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="mi">5</span><span class="p">,</span>
+                    <span class="mi">4</span>
+                <span class="p">]</span>
+            <span class="p">},</span>
+            <span class="o">.</span>
+            <span class="o">.</span>
+            <span class="o">.</span>
+        <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="p">(</span><span class="k">if</span> <span class="o">-</span><span class="n">nomd</span> <span class="ow">not</span> <span class="n">specified</span><span class="p">)</span>
+        <span class="s2">&quot;&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;key1&quot;</span><span class="p">:</span> <span class="s2">&quot;value1&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;IMAGE_STRUCTURE&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;key1&quot;</span><span class="p">:</span> <span class="s2">&quot;value1&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;OTHER_DOMAIN&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;key1&quot;</span><span class="p">:</span> <span class="s2">&quot;value1&quot;</span>
+        <span class="p">},</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;cornerCoordinates&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;upperLeft&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="mf">440720.000</span><span class="p">,</span>
+            <span class="mf">3751320.000</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;lowerLeft&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="mf">440720.000</span><span class="p">,</span>
+            <span class="mf">3750120.000</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;upperRight&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="mf">441920.000</span><span class="p">,</span>
+            <span class="mf">3751320.000</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;lowerRight&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="mf">441920.000</span><span class="p">,</span>
+            <span class="mf">3750120.000</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;center&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="mf">441320.000</span><span class="p">,</span>
+            <span class="mf">3750720.000</span>
+        <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;bands&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;band&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;block&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="mi">20</span><span class="p">,</span>
+                <span class="mi">20</span>
+            <span class="p">],</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Byte&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;colorInterp&quot;</span><span class="p">:</span> <span class="s2">&quot;Gray&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mf">74.000</span><span class="p">,</span>
+            <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mf">255.000</span><span class="p">,</span>
+
+            <span class="s2">&quot;computedMin&quot;</span><span class="p">:</span> <span class="mf">74.000</span><span class="p">,</span> <span class="p">(</span><span class="k">if</span> <span class="o">-</span><span class="n">mm</span> <span class="n">specified</span><span class="p">)</span>
+            <span class="s2">&quot;computedMax&quot;</span><span class="p">:</span> <span class="mf">255.000</span><span class="p">,</span>
+
+            <span class="s2">&quot;minimum&quot;</span><span class="p">:</span> <span class="mf">74.000</span><span class="p">,</span> <span class="p">(</span><span class="k">if</span> <span class="o">-</span><span class="n">stats</span> <span class="n">specified</span><span class="p">)</span>
+            <span class="s2">&quot;maximum&quot;</span><span class="p">:</span> <span class="mf">255.000</span><span class="p">,</span>
+            <span class="s2">&quot;mean&quot;</span><span class="p">:</span> <span class="mf">126.765</span><span class="p">,</span>
+            <span class="s2">&quot;stdDev&quot;</span><span class="p">:</span> <span class="mf">22.928</span><span class="p">,</span>
+
+            <span class="s2">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;....&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;offset&quot;</span><span class="p">:</span> <span class="n">X</span><span class="p">,</span>
+            <span class="s2">&quot;scale&quot;</span><span class="p">:</span> <span class="n">X</span><span class="p">,</span>
+            <span class="s2">&quot;noDataValue&quot;</span><span class="p">:</span> <span class="n">X</span><span class="p">,</span>
+            <span class="s2">&quot;overviews&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="mi">400</span><span class="p">,</span>
+                        <span class="mi">400</span> <span class="p">],</span>
+                    <span class="s2">&quot;checksum&quot;</span><span class="p">:</span> <span class="n">X</span> <span class="p">(</span><span class="k">if</span> <span class="o">-</span><span class="n">checksum</span> <span class="n">specified</span><span class="p">)</span>
+                <span class="p">},</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="mi">200</span><span class="p">,</span>
+                        <span class="mi">200</span> <span class="p">],</span>
+                    <span class="s2">&quot;checksum&quot;</span><span class="p">:</span> <span class="n">X</span> <span class="p">(</span><span class="k">if</span> <span class="o">-</span><span class="n">checksum</span> <span class="n">specified</span><span class="p">)</span>
+                <span class="p">}</span>
+            <span class="p">],</span>
+            <span class="s2">&quot;mask&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;flags&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="s2">&quot;PER_DATASET&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;ALPHA&quot;</span>
+                <span class="p">],</span>
+                <span class="s2">&quot;overviews&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="p">[</span>
+                            <span class="mi">400</span><span class="p">,</span>
+                            <span class="mi">400</span> <span class="p">]</span>
+                    <span class="p">},</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="p">[</span>
+                            <span class="mi">200</span><span class="p">,</span>
+                            <span class="mi">200</span> <span class="p">],</span>
+                    <span class="p">}</span>
+                <span class="p">]</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="p">(</span><span class="k">if</span> <span class="o">-</span><span class="n">nomd</span> <span class="ow">not</span> <span class="n">specified</span><span class="p">)</span>
+                <span class="s2">&quot;__default__&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;key1&quot;</span><span class="p">:</span> <span class="s2">&quot;value1&quot;</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;IMAGE_STRUCTURE&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;key1&quot;</span><span class="p">:</span> <span class="s2">&quot;value1&quot;</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;OTHER_DOMAIN&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;key1&quot;</span><span class="p">:</span> <span class="s2">&quot;value1&quot;</span>
+                <span class="p">},</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;histogram&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="p">(</span><span class="k">if</span> <span class="o">-</span><span class="n">hist</span> <span class="n">specified</span><span class="p">)</span>
+                <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span>
+                <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span>
+                <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mf">255.5</span><span class="p">,</span>
+                <span class="s2">&quot;buckets&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;checksum&quot;</span><span class="p">:</span> <span class="mi">4672</span><span class="p">,</span> <span class="p">(</span><span class="k">if</span> <span class="o">-</span><span class="n">checksum</span> <span class="n">specified</span><span class="p">)</span>
+            <span class="s2">&quot;colorTable&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="p">(</span><span class="k">if</span> <span class="o">-</span><span class="n">noct</span> <span class="ow">not</span> <span class="n">specified</span><span class="p">)</span>
+                <span class="s2">&quot;palette&quot;</span><span class="p">:</span> <span class="s2">&quot;RGB&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+                <span class="s2">&quot;entries&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">[</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">208</span><span class="p">,</span><span class="mi">255</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">204</span><span class="p">,</span><span class="mi">255</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mi">153</span><span class="p">,</span><span class="mi">204</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">153</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">],</span>
+                    <span class="p">[</span><span class="mi">102</span><span class="p">,</span><span class="mi">102</span><span class="p">,</span><span class="mi">102</span><span class="p">,</span><span class="mi">255</span><span class="p">]</span>
+                <span class="p">]</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;band&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s2">&quot;block&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="mi">20</span><span class="p">,</span>
+                <span class="mi">20</span>
+            <span class="p">],</span>
+            <span class="o">.</span>
+            <span class="o">.</span>
+            <span class="o">.</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="impacted-drivers">
+<h2>Impacted drivers<a class="headerlink" href="#impacted-drivers" title="Permalink to this headline">¶</a></h2>
+<p>None.</p>
+</div>
+<div class="section" id="impacted-utilities">
+<h2>Impacted utilities<a class="headerlink" href="#impacted-utilities" title="Permalink to this headline">¶</a></h2>
+<p>gdalinfo</p>
+<ul class="simple">
+<li><p>Adds a “-xml” output option.</p></li>
+<li><p>Adds a “-json” output option.</p></li>
+</ul>
+<p>ogrinfo</p>
+<ul class="simple">
+<li><p>Adds a “-xml” output option.</p></li>
+<li><p>Adds a “-json” output option.</p></li>
+</ul>
+</div>
+<div class="section" id="backward-compatibility">
+<h2>Backward Compatibility<a class="headerlink" href="#backward-compatibility" title="Permalink to this headline">¶</a></h2>
+<p>This change has no impact on backward compatibility at the C API/ABI and
+C++ API/ABI levels. Default output will remain the same. The new XML
+output will only effect users who specify “-xml” or “-json” on the
+command line.</p>
+</div>
+<div class="section" id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
+<p>The Python autotest suite will be extended to test the new XML/JSON
+outputs and existing tests will be modified to check STDERR for
+diagnostic messages.</p>
+</div>
+<div class="section" id="ticket">
+<h2>Ticket<a class="headerlink" href="#ticket" title="Permalink to this headline">¶</a></h2>
+<p>No tickets.</p>
+</div>
+<div class="section" id="voting-history">
+<h2>Voting history<a class="headerlink" href="#voting-history" title="Permalink to this headline">¶</a></h2>
+<p>Proposed.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rfc45_virtualmem.html" class="btn btn-neutral float-right" title="RFC 45: GDAL datasets and raster bands as virtual memory mappings" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc43_getmetadatadomainlist.html" class="btn btn-neutral float-left" title="RFC 43: GDALMajorObject::GetMetadataDomainList" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

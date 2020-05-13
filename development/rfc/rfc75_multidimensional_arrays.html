@@ -1,0 +1,562 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RFC 75: Multidimensional arrays &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdevelopment/rfc/rfc75_multidimensional_arrays.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="RFC 76: OGR Python drivers" href="rfc76_ogrpythondrivers.html" />
+    <link rel="prev" title="RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure" href="rfc74_sphinx.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 75: Multidimensional arrays</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motivation">Motivation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#proposed-changes">Proposed changes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#limitations">Limitations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#backward-compatibility">Backward compatibility</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#testing">Testing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voting-history">Voting history</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 75: Multidimensional arrays</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/development/rfc/rfc75_multidimensional_arrays.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="rfc76_ogrpythondrivers.html" class="btn btn-neutral float-right" title="RFC 76: OGR Python drivers" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc74_sphinx.html" class="btn btn-neutral float-left" title="RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rfc-75-multidimensional-arrays">
+<span id="rfc-75"></span><h1>RFC 75: Multidimensional arrays<a class="headerlink" href="#rfc-75-multidimensional-arrays" title="Permalink to this headline">¶</a></h1>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 67%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Author:</p></td>
+<td><p>Even Rouault</p></td>
+</tr>
+<tr class="row-even"><td><p>Contact:</p></td>
+<td><p>even.rouault &#64; spatialys.com</p></td>
+</tr>
+<tr class="row-odd"><td><p>Started:</p></td>
+<td><p>2019-May-24</p></td>
+</tr>
+<tr class="row-even"><td><p>Last updated:</p></td>
+<td><p>2019-Jul-22</p></td>
+</tr>
+<tr class="row-odd"><td><p>Status:</p></td>
+<td><p>Implemented in GDAL 3.1</p></td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>This document describes the addition of read/write support for multidimensional
+arrays, in particular of dimension 3 or above, in GDAL core and a few select drivers.</p>
+</div>
+<div class="section" id="motivation">
+<h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">¶</a></h2>
+<p>Multidimensional arrays (also known as hypercubes) are a way of mоdelling
+spatio-temporal (time series of
+2D raster) or spatio-vertical-temporal (2D + Z dimension + time dimension) data which
+are becoming increasingly more available. GDAL current raster model is however strongly
+2D oriented. A number of drivers, such as netCDF, HDF4, HDF5, work around that
+limitation by using raster bands or subdatasets to expose muliple 2D slices of what
+is intrinsically a N&gt;2 Multidimensional dataset. It is desirable to have a
+proper API, and driver support, to be able to expose those multidimensional
+arrays as such, and be able to perform slice and trim operations on them.</p>
+<p>That topic had already been discussed in the past, in particular in this
+<a class="reference external" href="https://lists.osgeo.org/pipermail/gdal-dev/2017-October/047472.html">mailing list thread</a></p>
+</div>
+<div class="section" id="proposed-changes">
+<h2>Proposed changes<a class="headerlink" href="#proposed-changes" title="Permalink to this headline">¶</a></h2>
+<p>A lot of existing GDAL raster API are strongly 2D oriented. Rather than upgrading
+all those API, and driver code, to be ready for N arbitrary dimensions, which would
+be a enormous effort for the benefit of only a small fraction of drivers, we propose
+to add a new dedicated API to support multidimensional arrays. We also want
+to support hierarchical structure of data as found in the
+<a class="reference external" href="https://portal.opengeospatial.org/files/81716">HDF5 format and data model</a>.
+This model can encompass the needs of other formats/drivers that have multidimensional
+capabilities such as HDF4, netCDF, GRIB, WCS.
+Therefore the proposed API will be strongly inspired by the API of the HDF5 library itself.</p>
+<div class="section" id="data-model">
+<h3>Data model<a class="headerlink" href="#data-model" title="Permalink to this headline">¶</a></h3>
+<p>The data model is described in:
+<a class="reference external" href="https://github.com/rouault/gdal/blob/rfc75/gdal/doc/source/user/multidim_raster_data_model.rst">https://github.com/rouault/gdal/blob/rfc75/gdal/doc/source/user/multidim_raster_data_model.rst</a></p>
+</div>
+<div class="section" id="c-api">
+<h3>C++ API<a class="headerlink" href="#c-api" title="Permalink to this headline">¶</a></h3>
+<p>New classes and methods will be added.
+See <a class="reference external" href="https://github.com/rouault/gdal/blob/rfc75/gdal/gcore/gdal_priv.h#L1715">https://github.com/rouault/gdal/blob/rfc75/gdal/gcore/gdal_priv.h#L1715</a></p>
+<p>A new driver capability will be added for drivers supporting multidimensional
+rasters:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#define GDAL_DCAP_MULTIDIM_RASTER     &quot;DCAP_MULTIDIM_RASTER&quot;</span>
+</pre></div>
+</div>
+<p>A new open flag, <code class="docutils literal notranslate"><span class="pre">GDAL_OF_MULTIDIM_RASTER</span></code>, for <a class="reference internal" href="../../api/raster_c_api.html#_CPPv410GDALOpenExPKcjPPCKcPPCKcPPCKc" title="GDALOpenEx"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALOpenEx()</span></code></a>
+will be added. When this is specified, drivers supporting multidimensional
+raster will return a root GDALGroup. Otherwise their current traditional 2D
+mode will still be used.</p>
+<p>New creation options metadata items are added to documents multidimensional dataset,
+group, dimension, array and attribute creation options.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cm">/** XML snippet with multidimensional dataset creation options.</span>
+<span class="cm">* @since GDAL 3.1</span>
+<span class="cm">*/</span>
+<span class="cp">#define GDAL_DMD_MULTIDIM_DATASET_CREATIONOPTIONLIST &quot;DMD_MULTIDIM_DATASET_CREATIONOPTIONLIST&quot;</span>
+
+<span class="cm">/** XML snippet with multidimensional group creation options.</span>
+<span class="cm">* @since GDAL 3.1</span>
+<span class="cm">*/</span>
+<span class="cp">#define GDAL_DMD_MULTIDIM_GROUP_CREATIONOPTIONLIST &quot;DMD_MULTIDIM_GROUP_CREATIONOPTIONLIST&quot;</span>
+
+<span class="cm">/** XML snippet with multidimensional dimension creation options.</span>
+<span class="cm">* @since GDAL 3.1</span>
+<span class="cm">*/</span>
+<span class="cp">#define GDAL_DMD_MULTIDIM_DIMENSION_CREATIONOPTIONLIST &quot;DMD_MULTIDIM_DIMENSION_CREATIONOPTIONLIST&quot;</span>
+
+<span class="cm">/** XML snippet with multidimensional array creation options.</span>
+<span class="cm">* @since GDAL 3.1</span>
+<span class="cm">*/</span>
+<span class="cp">#define GDAL_DMD_MULTIDIM_ARRAY_CREATIONOPTIONLIST &quot;DMD_MULTIDIM_ARRAY_CREATIONOPTIONLIST&quot;</span>
+
+<span class="cm">/** XML snippet with multidimensional attribute creation options.</span>
+<span class="cm">* @since GDAL 3.1</span>
+<span class="cm">*/</span>
+<span class="cp">#define GDAL_DMD_MULTIDIM_ATTRIBUTE_CREATIONOPTIONLIST &quot;DMD_MULTIDIM_ATTRIBUTE_CREATIONOPTIONLIST&quot;</span>
+</pre></div>
+</div>
+<p>Examples with the netCDF driver:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;MultiDimDatasetCreationOptionList&gt;</span>
+<span class="nt">&lt;Option</span> <span class="na">name=</span><span class="s">&quot;FORMAT&quot;</span> <span class="na">type=</span><span class="s">&quot;string-select&quot;</span> <span class="na">default=</span><span class="s">&quot;NC4&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;Value&gt;</span>NC<span class="nt">&lt;/Value&gt;</span>
+    <span class="nt">&lt;Value&gt;</span>NC2<span class="nt">&lt;/Value&gt;</span>
+    <span class="nt">&lt;Value&gt;</span>NC4<span class="nt">&lt;/Value&gt;</span>
+    <span class="nt">&lt;Value&gt;</span>NC4C<span class="nt">&lt;/Value&gt;</span>
+<span class="nt">&lt;/Option&gt;</span>
+<span class="nt">&lt;Option</span> <span class="na">name=</span><span class="s">&quot;CONVENTIONS&quot;</span> <span class="na">type=</span><span class="s">&quot;string&quot;</span> <span class="na">default=</span><span class="s">&quot;CF-1.6&quot;</span> <span class="na">description=</span><span class="s">&quot;Value of the Conventions attribute&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/MultiDimDatasetCreationOptionList&gt;</span>
+
+
+<span class="nt">&lt;MultiDimDimensionCreationOptionList&gt;</span>
+<span class="nt">&lt;Option</span> <span class="na">name=</span><span class="s">&quot;UNLIMITED&quot;</span> <span class="na">type=</span><span class="s">&quot;boolean&quot;</span> <span class="na">description=</span><span class="s">&quot;Whether the dimension should be unlimited&quot;</span> <span class="na">default=</span><span class="s">&quot;false&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/MultiDimDimensionCreationOptionList&gt;</span>
+
+
+<span class="nt">&lt;MultiDimArrayCreationOptionList&gt;</span>
+<span class="nt">&lt;Option</span> <span class="na">name=</span><span class="s">&quot;BLOCKSIZE&quot;</span> <span class="na">type=</span><span class="s">&quot;int&quot;</span> <span class="na">description=</span><span class="s">&quot;Block size in pixels&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;Option</span> <span class="na">name=</span><span class="s">&quot;COMPRESS&quot;</span> <span class="na">type=</span><span class="s">&quot;string-select&quot;</span> <span class="na">default=</span><span class="s">&quot;NONE&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;Value&gt;</span>NONE<span class="nt">&lt;/Value&gt;</span>
+    <span class="nt">&lt;Value&gt;</span>DEFLATE<span class="nt">&lt;/Value&gt;</span>
+<span class="nt">&lt;/Option&gt;</span>
+<span class="nt">&lt;Option</span> <span class="na">name=</span><span class="s">&quot;ZLEVEL&quot;</span> <span class="na">type=</span><span class="s">&quot;int&quot;</span> <span class="na">description=</span><span class="s">&quot;DEFLATE compression level 1-9&quot;</span> <span class="na">default=</span><span class="s">&quot;1&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;Option</span> <span class="na">name=</span><span class="s">&quot;NC_TYPE&quot;</span> <span class="na">type=</span><span class="s">&quot;string-select&quot;</span> <span class="na">default=</span><span class="s">&quot;netCDF data type&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;Value&gt;</span>AUTO<span class="nt">&lt;/Value&gt;</span>
+    <span class="nt">&lt;Value&gt;</span>NC_BYTE<span class="nt">&lt;/Value&gt;</span>
+    <span class="nt">&lt;Value&gt;</span>NC_INT64<span class="nt">&lt;/Value&gt;</span>
+    <span class="nt">&lt;Value&gt;</span>NC_UINT64<span class="nt">&lt;/Value&gt;</span>
+<span class="nt">&lt;/Option&gt;</span>
+<span class="nt">&lt;/MultiDimArrayCreationOptionList&gt;</span>
+
+
+<span class="nt">&lt;MultiDimAttributeCreationOptionList&gt;</span>
+<span class="nt">&lt;Option</span> <span class="na">name=</span><span class="s">&quot;NC_TYPE&quot;</span> <span class="na">type=</span><span class="s">&quot;string-select&quot;</span> <span class="na">default=</span><span class="s">&quot;netCDF data type&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;Value&gt;</span>AUTO<span class="nt">&lt;/Value&gt;</span>
+    <span class="nt">&lt;Value&gt;</span>NC_BYTE<span class="nt">&lt;/Value&gt;</span>
+    <span class="nt">&lt;Value&gt;</span>NC_CHAR<span class="nt">&lt;/Value&gt;</span>
+    <span class="nt">&lt;Value&gt;</span>NC_INT64<span class="nt">&lt;/Value&gt;</span>
+    <span class="nt">&lt;Value&gt;</span>NC_UINT64<span class="nt">&lt;/Value&gt;</span>
+<span class="nt">&lt;/Option&gt;</span>
+<span class="nt">&lt;/MultiDimAttributeCreationOptionList&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id1">
+<h3>C API<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>All C++ methods are mapped to the C API.
+See <a class="reference external" href="https://github.com/rouault/gdal/blob/rfc75/gdal/gcore/gdal.h#L1397">https://github.com/rouault/gdal/blob/rfc75/gdal/gcore/gdal.h#L1397</a></p>
+</div>
+<div class="section" id="driver-changes">
+<h3>Driver changes<a class="headerlink" href="#driver-changes" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>The MEM driver will implement read and write support.</p></li>
+<li><p>The VRT driver will allow extraction of 2D slices from multidimensional
+drivers to 2D/classic drivers, as well as multidimensional-&gt;multidimensional
+slicing/trimming</p></li>
+<li><p>The netCDF driver will implement read and write support.</p></li>
+<li><p>The HDF4 and HDF5 drivers will implement read support.</p></li>
+<li><p>The GRIB driver will implement read support (exposing X,Y,Time arrays for GRIB
+messages only differing by timestamp)</p></li>
+</ul>
+</div>
+<div class="section" id="new-utilities">
+<h3>New Utilities<a class="headerlink" href="#new-utilities" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>A new gdalmdiminfo utility is added to report the hierarchical structure and content.
+Its output format is JSON. See <a class="reference external" href="https://github.com/rouault/gdal/blob/rfc75/gdal/doc/source/programs/gdalmdiminfo.rst">https://github.com/rouault/gdal/blob/rfc75/gdal/doc/source/programs/gdalmdiminfo.rst</a>
+for its documentation.</p></li>
+<li><p>A new gdalmdimtranslate utility is added to convert multidimensional raster between
+different formats, and/or can perform selective conversion of specific arrays
+and groups, and/or subsetting operations. It can also do extraction of 2D slices
+from multidimensional drivers to 2D/classic drivers.
+See <a class="reference external" href="https://github.com/rouault/gdal/blob/rfc75/gdal/doc/source/programs/gdalmdimtranslate.rst">https://github.com/rouault/gdal/blob/rfc75/gdal/doc/source/programs/gdalmdimtranslate.rst</a>
+for its documentation.</p></li>
+</ul>
+</div>
+<div class="section" id="swig-binding-changes">
+<h3>SWIG binding changes<a class="headerlink" href="#swig-binding-changes" title="Permalink to this headline">¶</a></h3>
+<p>The C API is mapped to the SWIG bindings. The scope is complete for the
+Python bindings. Other languages would need to add missing typemaps, but this
+is not in the scope of the work of this RFC.
+For Python bindings, NumPy integration is done.</p>
+</div>
+</div>
+<div class="section" id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h2>
+<p>This is intended to be a preliminary work on that topic. While the aim is for it
+to be be usable for the defined scope, it will probably require future
+enhancements to fill functional and/or performance gaps.</p>
+<ul class="simple">
+<li><p>No block cache mechanism (not sure this is needed)</p></li>
+<li><p>No sub-pixel requests, or non-nearest subsampling</p></li>
+<li><p>Upgrade of WCS driver or other drivers with potential multidimensional
+capabilities are not part of this RFC.</p></li>
+<li><p>SWIG bindings: full scope only for Python bindings.</p></li>
+</ul>
+</div>
+<div class="section" id="backward-compatibility">
+<h2>Backward compatibility<a class="headerlink" href="#backward-compatibility" title="Permalink to this headline">¶</a></h2>
+<p>No backward incompatibility. Only API and utility additions.</p>
+</div>
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Data model: <a class="reference external" href="https://github.com/rouault/gdal/blob/rfc75/gdal/doc/source/user/multidim_raster_data_model.rst">https://github.com/rouault/gdal/blob/rfc75/gdal/doc/source/user/multidim_raster_data_model.rst</a></p></li>
+<li><p>API tutorial: <a class="reference external" href="https://github.com/rouault/gdal/blob/rfc75/gdal/doc/source/tutorials/multidimensional_api_tut.rst">https://github.com/rouault/gdal/blob/rfc75/gdal/doc/source/tutorials/multidimensional_api_tut.rst</a></p></li>
+<li><p>gdalmdiminfo: <a class="reference external" href="https://github.com/rouault/gdal/blob/rfc75/gdal/doc/source/programs/gdalmdiminfo.rst">https://github.com/rouault/gdal/blob/rfc75/gdal/doc/source/programs/gdalmdiminfo.rst</a></p></li>
+<li><p>gdalmdimtranslate: <a class="reference external" href="https://github.com/rouault/gdal/blob/rfc75/gdal/doc/source/programs/gdalmdimtranslate.rst">https://github.com/rouault/gdal/blob/rfc75/gdal/doc/source/programs/gdalmdimtranslate.rst</a></p></li>
+<li><p>VRT driver: <a class="reference external" href="https://github.com/rouault/gdal/blob/rfc75/gdal/doc/source/drivers/raster/vrt_multidimensional.rst">https://github.com/rouault/gdal/blob/rfc75/gdal/doc/source/drivers/raster/vrt_multidimensional.rst</a></p></li>
+</ul>
+</div>
+<div class="section" id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
+<p>The gdalautotest suite is extended to test the modified drivers and the new
+utilities.</p>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>The implementation will be done by Even Rouault.
+A preliminary implementation is available at
+<a class="reference external" href="https://github.com/OSGeo/gdal/pull/1704">https://github.com/OSGeo/gdal/pull/1704</a></p>
+</div>
+<div class="section" id="voting-history">
+<h2>Voting history<a class="headerlink" href="#voting-history" title="Permalink to this headline">¶</a></h2>
+<p>+1 from HowardB, NormanB and EvenR</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rfc76_ogrpythondrivers.html" class="btn btn-neutral float-right" title="RFC 76: OGR Python drivers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc74_sphinx.html" class="btn btn-neutral float-left" title="RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

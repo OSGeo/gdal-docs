@@ -1,0 +1,794 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RFC 76: OGR Python drivers &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdevelopment/rfc/rfc76_ogrpythondrivers.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Community" href="../../community.html" />
+    <link rel="prev" title="RFC 75: Multidimensional arrays" href="rfc75_multidimensional_arrays.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 76: OGR Python drivers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motivation">Motivation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#how-does-that-work">How does that work ?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#impacts-on-gdal-core">Impacts on GDAL core</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#example-of-such-a-driver">Example of such a driver</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#limitations-and-scope">Limitations and scope</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#swig-binding-changes">SWIG binding changes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#security-implications">Security implications</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#performance-impact">Performance impact</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#backward-compatibility">Backward compatibility</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#testing">Testing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#previous-discussions">Previous discussions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voting-history">Voting history</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#credits">Credits</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 76: OGR Python drivers</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/development/rfc/rfc76_ogrpythondrivers.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="../../community.html" class="btn btn-neutral float-right" title="Community" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc75_multidimensional_arrays.html" class="btn btn-neutral float-left" title="RFC 75: Multidimensional arrays" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rfc-76-ogr-python-drivers">
+<span id="rfc-76"></span><h1>RFC 76: OGR Python drivers<a class="headerlink" href="#rfc-76-ogr-python-drivers" title="Permalink to this headline">¶</a></h1>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Author:</p></td>
+<td><p>Even Rouault</p></td>
+</tr>
+<tr class="row-even"><td><p>Contact:</p></td>
+<td><p>even.rouault &#64; spatialys.com</p></td>
+</tr>
+<tr class="row-odd"><td><p>Started:</p></td>
+<td><p>2019-Nov-5</p></td>
+</tr>
+<tr class="row-even"><td><p>Last updated:</p></td>
+<td><p>2019-Nov-15</p></td>
+</tr>
+<tr class="row-odd"><td><p>Status:</p></td>
+<td><p>Adopted, implemented in GDAL 3.1</p></td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>This RFC adds the capability to write OGR/vector drivers in Python.</p>
+</div>
+<div class="section" id="motivation">
+<h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">¶</a></h2>
+<p>For some use cases that do not require lighting speed, or to deal with very
+niche formats (possibly in house format), it might be faster and more efficient
+to write a vector driver in Python rather than a GDAL C++ driver as currently required,
+or an ad-hoc converter.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>QGIS has now a way to create Python-based providers such as
+in <a class="reference external" href="https://github.com/qgis/QGIS/blob/master/tests/src/python/provider_python.py">https://github.com/qgis/QGIS/blob/master/tests/src/python/provider_python.py</a>
+Having a way to do in GDAL itself also allows the rest of GDAL/OGR based
+tools to use the OGR Python driver.</p>
+</div>
+</div>
+<div class="section" id="how-does-that-work">
+<h2>How does that work ?<a class="headerlink" href="#how-does-that-work" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="driver-registration">
+<h3>Driver registration<a class="headerlink" href="#driver-registration" title="Permalink to this headline">¶</a></h3>
+<p>The driver registration mechanism is extended to look for .py scripts in a
+dedicated directory:</p>
+<ul class="simple">
+<li><p>the directory pointed by the <code class="docutils literal notranslate"><span class="pre">GDAL_PYTHON_DRIVER_PATH</span></code> configuration option
+(there may be several paths separated by <cite>:</cite> on Unix or <cite>;</cite> on Windows)</p></li>
+<li><p>if not defined, the directory pointed by the <code class="docutils literal notranslate"><span class="pre">GDAL_DRIVER_PATH</span></code> configuration
+option.</p></li>
+<li><p>if not defined, in the directory (hardcoded at compilation time on Unix builds)
+where native plugins are located.</p></li>
+</ul>
+<p>Those Python script must set in their first lines at least 2 directives:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">gdal:</span> <span class="pre">DRIVER_NAME</span> <span class="pre">=</span> <span class="pre">&quot;short_name&quot;</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">gdal:</span> <span class="pre">DRIVER_SUPPORTED_API_VERSION</span> <span class="pre">=</span> <span class="pre">1</span></code> . Currently only 1 supported. If the
+interface changed in a backward incompatible way, we would increment internally
+the supported API version number. This item enables us to check if we are able
+to “safely” load a Python driver. If a Python driver would support several API
+versions (not clear if that’s really possible at that point), it might use an
+array syntax to indicate that, like <code class="docutils literal notranslate"><span class="pre">[1,2]</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">gdal:</span> <span class="pre">DRIVER_DCAP_VECTOR</span> <span class="pre">=</span> <span class="pre">&quot;YES&quot;</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">gdal:</span> <span class="pre">DRIVER_DMD_LONGNAME</span> <span class="pre">=</span> <span class="pre">&quot;my</span> <span class="pre">super</span> <span class="pre">plugin&quot;</span></code></p></li>
+</ul>
+<p>Optional metadata such as <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">gdal:</span> <span class="pre">DRIVER_DMD_EXTENSIONS</span></code> or
+<code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">gdal:</span> <span class="pre">DRIVER_DMD_HELPTOPIC</span></code> can be defined (basically, any driver metadata key string prefixed by
+<code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">gdal:</span> <span class="pre">DRIVER_</span></code></p>
+<p>These directives will be parsed in a pure textual way, without invocation of the Python
+interpreter, both for efficiency consideration and also because we want to
+delay the research or launch of the Python interpreter as much as possible
+(the typical use case if GDAL used by QGIS: we want to make sure that QGIS
+has itself started Python, to reuse that Python interpreter)</p>
+<p>From the short metadata, the driver registration code can instantiate GDALDriver
+C++ objects. When the Identify() or Open() method is invoked on that object,
+the C++ code will:</p>
+<ul class="simple">
+<li><p>if not already done, find Python symbols, or start Python (see below paragraph
+for more details)</p></li>
+<li><p>if not already done, load the .py file as a Python module</p></li>
+<li><p>if not already done, instantiate an instance of the Python class of the module
+deriving from <code class="docutils literal notranslate"><span class="pre">gdal_python_driver.BaseDriver</span></code></p></li>
+<li><p>call the  <code class="docutils literal notranslate"><span class="pre">identify</span></code> and <code class="docutils literal notranslate"><span class="pre">open</span></code> method depending on the originated API call.</p></li>
+</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">open</span></code> method will return a Python <code class="docutils literal notranslate"><span class="pre">BaseDataset</span></code> object with required and
+optional methods that will be invoked by the corresponding GDAL API calls. And
+likewise for the <code class="docutils literal notranslate"><span class="pre">BaseLayer</span></code> object. See the <a class="reference internal" href="#example">example</a>.</p>
+</div>
+<div class="section" id="connection-with-the-python-interpreter">
+<h3>Connection with the Python interpreter<a class="headerlink" href="#connection-with-the-python-interpreter" title="Permalink to this headline">¶</a></h3>
+<p>The logic will be shared with the VRT pixel functions written in Python functionality
+It relies on runtime linking to the Python symbols already available in the process (for
+example the python executable or a binary embedding Python and using GDAL, such
+as QGIS), or loading of the Python library in case no Python symbols are found,
+rather than compile time linking.
+The reason is that we do not know in advance with which Python version GDAL can
+potentially be linked, and we do not want gdal.so/gdal.dll to be explicitly linked
+with a particular Python library.</p>
+<p>This is both embedding and extending Python.</p>
+<p>The steps are:</p>
+<ol class="arabic simple">
+<li><p>through dlopen() + dlsym() on Unix and EnumProcessModules()+GetProcAddress()
+on Windows, look for Python symbols. If found, use it. This is for example
+the case if GDAL is used from a Python module (GDAL Python bindings, rasterio, etc.)
+or an application like QGIS that starts a Python interpreter.</p></li>
+<li><p>otherwise, look for the PYTHONSO environment variable that should point to
+a pythonX.Y[…].so/.dll</p></li>
+<li><p>otherwise, look for the python binary in the path and try to identify the
+correspond Python .so/.dll</p></li>
+<li><p>otherwise, try to load with dlopen()/LoadLibrary() well-known names of
+Python .so/.dll</p></li>
+</ol>
+</div>
+</div>
+<div class="section" id="impacts-on-gdal-core">
+<h2>Impacts on GDAL core<a class="headerlink" href="#impacts-on-gdal-core" title="Permalink to this headline">¶</a></h2>
+<p>They are minimal. The GDALAllRegister() method has an added call to
+GDALDriverManager::AutoLoadPythonDrivers() that implements the above mentioned
+logic. The GDALDriver class has been extended to support a new function
+pointer, IdentifyEx(), which is used by the C++ shim that loads the Python code.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span>                 <span class="p">(</span><span class="o">*</span><span class="n">pfnIdentifyEx</span><span class="p">)(</span> <span class="n">GDALDriver</span><span class="o">*</span><span class="p">,</span> <span class="n">GDALOpenInfo</span> <span class="o">*</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>This extended IdentifyEx() function pointer, which adds the GDALDriver* argument,
+is used in priority by GDALIdentify() and GDALOpen() methods. The need for that
+is purely boring. For normal C++ drivers, there is no need to pass the driver,
+as there is a one-to-one correspondence between a driver and the function that
+implements the driver. But for the Python driver, there is a single C++ method
+that does the interface with the Python Identify() method of several Python drivers,
+hence the need of a GDALDriver* argument to forward the call to the appropriate
+driver.</p>
+</div>
+<div class="section" id="example-of-such-a-driver">
+<span id="example"></span><h2>Example of such a driver<a class="headerlink" href="#example-of-such-a-driver" title="Permalink to this headline">¶</a></h2>
+<p>Note that the prefixing by the driver name in the connection string is absolutely
+not a requirement, but something specific to this particular driver which is a
+bit artificial. The CityJSON driver mentioned below does not need it.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1"># This code is in the public domain, so as to serve as a template for</span>
+<span class="c1"># real-world plugins.</span>
+<span class="c1"># or, at the choice of the licensee,</span>
+<span class="c1"># Copyright 2019 Even Rouault</span>
+<span class="c1"># SPDX-License-Identifier: MIT</span>
+
+<span class="c1"># Metadata parsed by GDAL C++ code at driver pre-loading, starting with &#39;# gdal: &#39;</span>
+<span class="c1"># Required and with that exact syntax since it is parsed by non-Python</span>
+<span class="c1"># aware code. So just literal values, no expressions, etc.</span>
+<span class="c1"># gdal: DRIVER_NAME = &quot;DUMMY&quot;</span>
+<span class="c1"># API version(s) supported. Must include 1 currently</span>
+<span class="c1"># gdal: DRIVER_SUPPORTED_API_VERSION = [1]</span>
+<span class="c1"># gdal: DRIVER_DCAP_VECTOR = &quot;YES&quot;</span>
+<span class="c1"># gdal: DRIVER_DMD_LONGNAME = &quot;my super plugin&quot;</span>
+
+<span class="c1"># Optional driver metadata items.</span>
+<span class="c1"># # gdal: DRIVER_DMD_EXTENSIONS = &quot;ext1 est2&quot;</span>
+<span class="c1"># # gdal: DRIVER_DMD_HELPTOPIC = &quot;http://example.com/my_help.html&quot;</span>
+
+<span class="c1"># The gdal_python_driver module is defined by the GDAL library at runtime</span>
+<span class="kn">from</span> <span class="nn">gdal_python_driver</span> <span class="kn">import</span> <span class="n">BaseDriver</span><span class="p">,</span> <span class="n">BaseDataset</span><span class="p">,</span> <span class="n">BaseLayer</span>
+
+<span class="k">class</span> <span class="nc">Layer</span><span class="p">(</span><span class="n">BaseLayer</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="c1"># Reserved attribute names. Either those or the corresponding method</span>
+        <span class="c1"># must be defined</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;my_layer&#39;</span>  <span class="c1"># Required, or name() method</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fid_name</span> <span class="o">=</span> <span class="s1">&#39;my_fid&#39;</span>  <span class="c1"># Optional</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;boolField&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;Boolean&#39;</span><span class="p">},</span>
+                    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;int16Field&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;Integer16&#39;</span><span class="p">},</span>
+                    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;int32Field&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;Integer&#39;</span><span class="p">},</span>
+                    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;int64Field&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;Integer64&#39;</span><span class="p">},</span>
+                    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;realField&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;Real&#39;</span><span class="p">},</span>
+                    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;floatField&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;Float&#39;</span><span class="p">},</span>
+                    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;strField&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;String&#39;</span><span class="p">},</span>
+                    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;strNullField&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;String&#39;</span><span class="p">},</span>
+                    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;strUnsetField&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;String&#39;</span><span class="p">},</span>
+                    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;binaryField&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;Binary&#39;</span><span class="p">},</span>
+                    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;timeField&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;Time&#39;</span><span class="p">},</span>
+                    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;dateField&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;Date&#39;</span><span class="p">},</span>
+                    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;datetimeField&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;DateTime&#39;</span><span class="p">}]</span>  <span class="c1"># Required, or fields() method</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">geometry_fields</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;geomField&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;Point&#39;</span><span class="p">,</span>  <span class="c1"># optional</span>
+                                <span class="s1">&#39;srs&#39;</span><span class="p">:</span> <span class="s1">&#39;EPSG:4326&#39;</span>  <span class="c1"># optional</span>
+                                <span class="p">}]</span>  <span class="c1"># Required, or geometry_fields() method</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;foo&#39;</span><span class="p">:</span> <span class="s1">&#39;bar&#39;</span><span class="p">}</span>  <span class="c1"># optional</span>
+
+        <span class="c1"># uncomment if __iter__() honour self.attribute_filter</span>
+        <span class="c1">#self.iterator_honour_attribute_filter = True</span>
+
+        <span class="c1"># uncomment if __iter__() honour self.spatial_filter</span>
+        <span class="c1">#self.iterator_honour_spatial_filter = True</span>
+
+        <span class="c1"># uncomment if feature_count() honour self.attribute_filter</span>
+        <span class="c1">#self.feature_count_honour_attribute_filter = True</span>
+
+        <span class="c1"># uncomment if feature_count() honour self.spatial_filter</span>
+        <span class="c1">#self.feature_count_honour_spatial_filter = True</span>
+
+        <span class="c1"># End of reserved attribute names</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="mi">5</span>
+
+    <span class="c1"># Required, unless self.name attribute is defined</span>
+    <span class="c1"># def name(self):</span>
+    <span class="c1">#    return &#39;my_layer&#39;</span>
+
+    <span class="c1"># Optional. If not defined, fid name is &#39;fid&#39;</span>
+    <span class="c1"># def fid_name(self):</span>
+    <span class="c1">#    return &#39;my_fid&#39;</span>
+
+    <span class="c1"># Required, unless self.geometry_fields attribute is defined</span>
+    <span class="c1"># def geometry_fields(self):</span>
+    <span class="c1">#    return [...]</span>
+
+    <span class="c1"># Required, unless self.required attribute is defined</span>
+    <span class="c1"># def fields(self):</span>
+    <span class="c1">#    return [...]</span>
+
+    <span class="c1"># Optional. Only to be usd if self.metadata field is not defined</span>
+    <span class="c1"># def metadata(self, domain):</span>
+    <span class="c1">#    if domain is None:</span>
+    <span class="c1">#        return {&#39;foo&#39;: &#39;bar&#39;}</span>
+    <span class="c1">#    return None</span>
+
+    <span class="c1"># Optional. Called when self.attribute_filter is changed by GDAL</span>
+    <span class="c1"># def attribute_filter_changed(self):</span>
+    <span class="c1">#     # You may change self.iterator_honour_attribute_filter</span>
+    <span class="c1">#     # or feature_count_honour_attribute_filter</span>
+    <span class="c1">#     pass</span>
+
+    <span class="c1"># Optional. Called when self.spatial_filter is changed by GDAL</span>
+    <span class="c1"># def spatial_filter_changed(self):</span>
+    <span class="c1">#     # You may change self.iterator_honour_spatial_filter</span>
+    <span class="c1">#     # or feature_count_honour_spatial_filter</span>
+    <span class="c1">#     pass</span>
+
+    <span class="c1"># Optional</span>
+    <span class="k">def</span> <span class="nf">test_capability</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cap</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">cap</span> <span class="o">==</span> <span class="n">BaseLayer</span><span class="o">.</span><span class="n">FastGetExtent</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">True</span>
+        <span class="k">if</span> <span class="n">cap</span> <span class="o">==</span> <span class="n">BaseLayer</span><span class="o">.</span><span class="n">StringsAsUTF8</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">True</span>
+        <span class="c1"># if cap == BaseLayer.FastSpatialFilter:</span>
+        <span class="c1">#    return False</span>
+        <span class="c1"># if cap == BaseLayer.RandomRead:</span>
+        <span class="c1">#    return False</span>
+        <span class="k">if</span> <span class="n">cap</span> <span class="o">==</span> <span class="n">BaseLayer</span><span class="o">.</span><span class="n">FastFeatureCount</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">attribute_filter</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_filter</span> <span class="ow">is</span> <span class="bp">None</span>
+        <span class="k">return</span> <span class="bp">False</span>
+
+    <span class="c1"># Optional</span>
+    <span class="k">def</span> <span class="nf">extent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force_computation</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="mf">2.1</span><span class="p">,</span> <span class="mi">49</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">50</span><span class="p">]</span>  <span class="c1"># minx, miny, maxx, maxy</span>
+
+    <span class="c1"># Optional.</span>
+    <span class="k">def</span> <span class="nf">feature_count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force_computation</span><span class="p">):</span>
+        <span class="c1"># As we did not declare feature_count_honour_attribute_filter and</span>
+        <span class="c1"># feature_count_honour_spatial_filter, the below case cannot happen</span>
+        <span class="c1"># But this is to illustrate that you can callback the default implementation</span>
+        <span class="c1"># if needed</span>
+        <span class="c1"># if self.attribute_filter is not None or \</span>
+        <span class="c1">#   self.spatial_filter is not None:</span>
+        <span class="c1">#    return super(Layer, self).feature_count(force_computation)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span>
+
+    <span class="c1"># Required. You do not need to handle the case of simultaneous iterators on</span>
+    <span class="c1"># the same Layer object.</span>
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="p">):</span>
+            <span class="n">properties</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;boolField&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+                <span class="s1">&#39;int16Field&#39;</span><span class="p">:</span> <span class="mi">32767</span><span class="p">,</span>
+                <span class="s1">&#39;int32Field&#39;</span><span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="s1">&#39;int64Field&#39;</span><span class="p">:</span> <span class="mi">1234567890123</span><span class="p">,</span>
+                <span class="s1">&#39;realField&#39;</span><span class="p">:</span> <span class="mf">1.23</span><span class="p">,</span>
+                <span class="s1">&#39;floatField&#39;</span><span class="p">:</span> <span class="mf">1.2</span><span class="p">,</span>
+                <span class="s1">&#39;strField&#39;</span><span class="p">:</span> <span class="s1">&#39;foo&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;strNullField&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+                <span class="s1">&#39;binaryField&#39;</span><span class="p">:</span> <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x01\x00\x02</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;timeField&#39;</span><span class="p">:</span> <span class="s1">&#39;12:34:56.789&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;dateField&#39;</span><span class="p">:</span> <span class="s1">&#39;2017-04-26&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;datetimeField&#39;</span><span class="p">:</span> <span class="s1">&#39;2017-04-26T12:34:56.789Z&#39;</span><span class="p">}</span>
+
+            <span class="k">yield</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;OGRFeature&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;fields&quot;</span><span class="p">:</span> <span class="n">properties</span><span class="p">,</span>
+                <span class="s2">&quot;geometry_fields&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;geomField&quot;</span><span class="p">:</span> <span class="s2">&quot;POINT(2 49)&quot;</span><span class="p">},</span>
+                <span class="s2">&quot;style&quot;</span><span class="p">:</span> <span class="s2">&quot;SYMBOL(a:0)&quot;</span> <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="bp">None</span><span class="p">,</span>
+                <span class="p">}</span>
+
+    <span class="c1"># Optional</span>
+    <span class="c1"># def feature_by_id(self, fid):</span>
+    <span class="c1">#    return {}</span>
+
+
+<span class="k">class</span> <span class="nc">Dataset</span><span class="p">(</span><span class="n">BaseDataset</span><span class="p">):</span>
+
+    <span class="c1"># Optional, but implementations will generally need it</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="c1"># If the layers member is set, layer_count() and layer() will not be used</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layers</span> <span class="o">=</span> <span class="p">[</span><span class="n">Layer</span><span class="p">()]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;foo&#39;</span><span class="p">:</span> <span class="s1">&#39;bar&#39;</span><span class="p">}</span>
+
+    <span class="c1"># Optional, called on native object destruction</span>
+    <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="c1"># Optional. Only to be usd if self.metadata field is not defined</span>
+    <span class="c1"># def metadata(self, domain):</span>
+    <span class="c1">#    if domain is None:</span>
+    <span class="c1">#        return {&#39;foo&#39;: &#39;bar&#39;}</span>
+    <span class="c1">#    return None</span>
+
+    <span class="c1"># Required, unless a layers attribute is set in __init__</span>
+    <span class="c1"># def layer_count(self):</span>
+    <span class="c1">#    return len(self.layers)</span>
+
+    <span class="c1"># Required, unless a layers attribute is set in __init__</span>
+    <span class="c1"># def layer(self, idx):</span>
+    <span class="c1">#    return self.layers[idx]</span>
+
+
+<span class="c1"># Required: class deriving from BaseDriver</span>
+<span class="k">class</span> <span class="nc">Driver</span><span class="p">(</span><span class="n">BaseDriver</span><span class="p">):</span>
+
+    <span class="c1"># Optional. Called the first time the driver is loaded</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="c1"># Required</span>
+    <span class="k">def</span> <span class="nf">identify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">first_bytes</span><span class="p">,</span> <span class="n">open_flags</span><span class="p">,</span> <span class="n">open_options</span><span class="o">=</span><span class="p">{}):</span>
+        <span class="k">return</span> <span class="n">filename</span> <span class="o">==</span> <span class="s1">&#39;DUMMY:&#39;</span>
+
+    <span class="c1"># Required</span>
+    <span class="k">def</span> <span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">first_bytes</span><span class="p">,</span> <span class="n">open_flags</span><span class="p">,</span> <span class="n">open_options</span><span class="o">=</span><span class="p">{}):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">identify</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">first_bytes</span><span class="p">,</span> <span class="n">open_flags</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">None</span>
+        <span class="k">return</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Other examples:</p>
+<ul class="simple">
+<li><p>a PASSTHROUGH driver that forwards calls to the GDAL SWIG Python API:
+<a class="reference external" href="https://github.com/OSGeo/gdal/blob/master/gdal/examples/pydrivers/ogr_PASSTHROUGH.py">https://github.com/OSGeo/gdal/blob/master/gdal/examples/pydrivers/ogr_PASSTHROUGH.py</a></p></li>
+<li><p>a driver implemented a simple parsing of <a class="reference external" href="https://www.cityjson.org/">CityJSON</a>:
+<a class="reference external" href="https://github.com/OSGeo/gdal/blob/master/gdal/examples/pydrivers/ogr_CityJSON.py">https://github.com/OSGeo/gdal/blob/master/gdal/examples/pydrivers/ogr_CityJSON.py</a></p></li>
+</ul>
+</div>
+<div class="section" id="limitations-and-scope">
+<h2>Limitations and scope<a class="headerlink" href="#limitations-and-scope" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Vector and read-only for now. This could later be extended of course.</p></li>
+<li><p>No connection between the Python code of the plugin and the OGR Python API
+that is built on top of SWIG. This does not appear to be doable in a
+reasonable way. Nothing prevents people from using the GDAL/OGR/OSR Python
+API but the objects exchanged between the OGR core and the Python code will
+not be OGR Python SWIG objects. A
+typical example is that a plugin will return its CRS as a string (WKT, PROJSON,
+or deprecated PROJ.4 string), but not as a osgeo.osr.SpatialReference object.
+But it is possible to use the osgeo.osr.SpatialReference API to generate this
+WKT string.</p></li>
+<li><p>This RFC does not try to cover the management of Python dependencies. It is
+up to the user to do the needed “pip install” or whatever Python package
+management solution it uses.</p></li>
+<li><p>The Python “Global Interpreter Lock” is held in the Python drivers, as required
+for safe use of Python. Consequently scaling of such drivers is limited.</p></li>
+<li><p>Given the above restrictions, this will remain an “experimental” feature
+and the GDAL project will not accept such Python drivers to be included in
+the GDAL repository. This is similar to the situation of the QGIS project
+that allows Python plugins outside of the main QGIS repository. If a QGIS plugin
+want to be moved into the main repository, it has to be converted to C++.
+The rationale for this is that the correctness of the Python code can mostly be
+checked at runtime, whereas C++ benefits from static analysis (at compile time,
+and other checkers). In the context of GDAL, this rationale also applies. GDAL
+drivers are also stress-tested by the OSS Fuzz infrastructure, and that requires
+them to be written in C++.</p></li>
+<li><p>The interface between the C++ and Python code might break between GDAL feature
+releases. In that case we will increment the expected API version number to
+avoid loading incompatible Python drivers. We will likely not make any effort
+to be able to deal with plugins of incompatible (previous) API version.</p></li>
+</ul>
+</div>
+<div class="section" id="swig-binding-changes">
+<h2>SWIG binding changes<a class="headerlink" href="#swig-binding-changes" title="Permalink to this headline">¶</a></h2>
+<p>None</p>
+</div>
+<div class="section" id="security-implications">
+<h2>Security implications<a class="headerlink" href="#security-implications" title="Permalink to this headline">¶</a></h2>
+<p>Similar to the existing native code plugin mechanism of GDAL. If the user
+defines the GDAL_PYTHON_DRIVER_PATH environment variable or GDAL_DRIVER_PATH,
+annd put .py scripts in them (or in {prefix}/lib/gdalplugins/python as a fallback),
+they will be executed.</p>
+<p>However, opening a .py file with GDALOpen() or similar mechanisms will not
+lead to its execution, so this is safe for normal GDAL usage.</p>
+<p>The GDAL_NO_AUTOLOAD compile time #define, already used to disable loading
+of native plugins, is also honoured to disable the loading of Python plugins.</p>
+</div>
+<div class="section" id="performance-impact">
+<h2>Performance impact<a class="headerlink" href="#performance-impact" title="Permalink to this headline">¶</a></h2>
+<p>If no .py script exists in the researched location, the performance impact on
+GDALAllRegister() should be within the noise.</p>
+</div>
+<div class="section" id="backward-compatibility">
+<h2>Backward compatibility<a class="headerlink" href="#backward-compatibility" title="Permalink to this headline">¶</a></h2>
+<p>No backward incompatibility. Only functionality addition.</p>
+</div>
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<p>A tutorial will be added to explain how to write such a Python driver:
+<a class="reference external" href="https://github.com/rouault/gdal/blob/pythondrivers/gdal/doc/source/tutorials/vector_python_driver.rst">https://github.com/rouault/gdal/blob/pythondrivers/gdal/doc/source/tutorials/vector_python_driver.rst</a></p>
+</div>
+<div class="section" id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
+<p>The gdalautotest suite will be extended with the above test Python driver, and
+a few error cases:
+<a class="reference external" href="https://github.com/rouault/gdal/blob/pythondrivers/autotest/ogr/ogr_pythondrivers.py">https://github.com/rouault/gdal/blob/pythondrivers/autotest/ogr/ogr_pythondrivers.py</a></p>
+</div>
+<div class="section" id="previous-discussions">
+<h2>Previous discussions<a class="headerlink" href="#previous-discussions" title="Permalink to this headline">¶</a></h2>
+<p>This topic has been discussed in the past in :</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://lists.osgeo.org/pipermail/gdal-dev/2017-April/thread.html#46526">https://lists.osgeo.org/pipermail/gdal-dev/2017-April/thread.html#46526</a></p></li>
+<li><p><a class="reference external" href="https://lists.osgeo.org/pipermail/gdal-dev/2018-November/thread.html#49294">https://lists.osgeo.org/pipermail/gdal-dev/2018-November/thread.html#49294</a></p></li>
+</ul>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>A candidate implementation is available at in
+<a class="reference external" href="https://github.com/rouault/gdal/tree/pythondrivers">https://github.com/rouault/gdal/tree/pythondrivers</a></p>
+<p><a class="reference external" href="https://github.com/OSGeo/gdal/compare/master...rouault:pythondrivers">https://github.com/OSGeo/gdal/compare/master…rouault:pythondrivers</a></p>
+</div>
+<div class="section" id="voting-history">
+<h2>Voting history<a class="headerlink" href="#voting-history" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>+1 from EvenR, JukkaR, MateuzL, DanielM</p></li>
+<li><p>-0 from SeanG</p></li>
+<li><p>+0 from HowardB</p></li>
+</ul>
+</div>
+<div class="section" id="credits">
+<h2>Credits<a class="headerlink" href="#credits" title="Permalink to this headline">¶</a></h2>
+<p>Sponsored by OpenGeoGroep</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../../community.html" class="btn btn-neutral float-right" title="Community" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc75_multidimensional_arrays.html" class="btn btn-neutral float-left" title="RFC 75: Multidimensional arrays" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

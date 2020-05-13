@@ -1,0 +1,521 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RFC 59 : GDAL/OGR utilities as a library &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdevelopment/rfc/rfc59_utilities_as_a_library.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="RFC 60 : Improved round-tripping in OGR" href="rfc60_improved_roundtripping_in_ogr.html" />
+    <link rel="prev" title="RFC 59.1 : GDAL/OGR utilities as a library" href="rfc59.1_utilities_as_a_library.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 59 : GDAL/OGR utilities as a library</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rationale">Rationale</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#changes">Changes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#swig-bindings-python-java-c-perl-changes">SWIG bindings (Python / Java / C# / Perl) changes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#utilities">Utilities</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#test-suite">Test Suite</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#compatibility-issues">Compatibility Issues</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#open-question">Open question</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#related-ticket">Related ticket</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voting-history">Voting history</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 59 : GDAL/OGR utilities as a library</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/development/rfc/rfc59_utilities_as_a_library.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="rfc60_improved_roundtripping_in_ogr.html" class="btn btn-neutral float-right" title="RFC 60 : Improved round-tripping in OGR" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc59.1_utilities_as_a_library.html" class="btn btn-neutral float-left" title="RFC 59.1 : GDAL/OGR utilities as a library" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rfc-59-gdal-ogr-utilities-as-a-library">
+<span id="rfc-59"></span><h1>RFC 59 : GDAL/OGR utilities as a library<a class="headerlink" href="#rfc-59-gdal-ogr-utilities-as-a-library" title="Permalink to this headline">¶</a></h1>
+<p>Authors: Faza Mahamood</p>
+<p>Contact: fazamhd at gmail dot com</p>
+<p>Status: Retracted in favor of <a class="reference internal" href="rfc59.1_utilities_as_a_library.html#rfc-59-1"><span class="std std-ref">RFC 59.1 : GDAL/OGR utilities as a library</span></a></p>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>This RFC defines new function for each GDAL utility. The new utility
+functions can be used to work on in-memory datasets. The utility code is
+modified to call the new function. This RFC gives a general frame and
+principles, demonstrated with gdalinfo, but aimed at being extended with
+other utilities.</p>
+</div>
+<div class="section" id="rationale">
+<h2>Rationale<a class="headerlink" href="#rationale" title="Permalink to this headline">¶</a></h2>
+<p>There is need for calling GDAL utilities from the code. But this
+involves using system calls and cannot work on in-memory datasets.</p>
+</div>
+<div class="section" id="changes">
+<h2>Changes<a class="headerlink" href="#changes" title="Permalink to this headline">¶</a></h2>
+<p>New library libgdalutils is created. Both Unix and Windows build have
+been modified to take into account the new lib. The GDAL utilities are
+modified to use the new functions. New header file gdal_utils.h is
+created which contains the public declarations of GDAL utilities. The
+current header(still in progress) can be found
+<a class="reference external" href="https://github.com/fazam/gdal/blob/gdalinfo/gdal/apps/gdal_utils.h">here</a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">char</span> <span class="n">CPL_DLL</span> <span class="o">*</span><span class="n">GDALInfo</span><span class="p">(</span> <span class="n">GDALDatasetH</span> <span class="n">hDataset</span><span class="p">,</span> <span class="n">GDALInfoOptions</span> <span class="o">*</span><span class="n">psOptions</span> <span class="p">);</span>
+
+<span class="n">GDALInfoOptions</span> <span class="n">CPL_DLL</span> <span class="o">*</span><span class="n">GDALInfoOptionsNew</span><span class="p">(</span> <span class="n">void</span> <span class="p">);</span>
+
+<span class="n">void</span> <span class="n">CPL_DLL</span> <span class="n">GDALInfoOptionsAddExtraMDDomains</span><span class="p">(</span> <span class="n">GDALInfoOptions</span> <span class="o">*</span><span class="n">psOptions</span><span class="p">,</span>
+                                               <span class="n">const</span> <span class="n">char</span> <span class="o">*</span><span class="n">pszDomain</span> <span class="p">);</span>
+
+<span class="n">void</span> <span class="n">CPL_DLL</span> <span class="n">GDALInfoOptionsSetExtraMDDomains</span><span class="p">(</span> <span class="n">GDALInfoOptions</span> <span class="o">*</span><span class="n">psOptions</span><span class="p">,</span>
+                                               <span class="n">char</span> <span class="o">**</span><span class="n">papszExtraMDDomains</span> <span class="p">);</span>
+
+<span class="n">void</span> <span class="n">CPL_DLL</span> <span class="n">GDALInfoOptionsFree</span><span class="p">(</span> <span class="n">GDALInfoOptions</span> <span class="o">*</span><span class="n">psOptions</span> <span class="p">);</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">GDALDatasetH</span> <span class="n">CPL_DLL</span> <span class="n">GDALTranslate</span><span class="p">(</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span><span class="n">pszDest</span><span class="p">,</span> <span class="n">GDALDatasetH</span> <span class="n">hSrcDataset</span><span class="p">,</span> <span class="n">GDALTranslateOptions</span> <span class="o">*</span><span class="n">psOptions</span><span class="p">,</span> <span class="nb">int</span> <span class="o">*</span><span class="n">pbUsageError</span><span class="p">)</span>
+
+<span class="n">GDALDatasetH</span> <span class="n">CPL_DLL</span> <span class="n">GDALWarp</span><span class="p">(</span> <span class="n">const</span> <span class="n">char</span> <span class="o">*</span><span class="n">pszDest</span><span class="p">,</span> <span class="n">GDALDatasetH</span> <span class="n">hDstDS</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nSrcCount</span><span class="p">,</span>
+                       <span class="n">GDALDatasetH</span> <span class="o">*</span><span class="n">pahSrcDS</span><span class="p">,</span> <span class="n">GDALWarpAppOptions</span> <span class="o">*</span><span class="n">psOptions</span><span class="p">,</span> <span class="nb">int</span> <span class="o">*</span><span class="n">pbUsageError</span> <span class="p">)</span>
+
+<span class="n">GDALDatasetH</span> <span class="n">CPL_DLL</span> <span class="n">OGR2OGR</span><span class="p">(</span> <span class="n">const</span> <span class="n">char</span> <span class="o">*</span><span class="n">pszDest</span><span class="p">,</span> <span class="n">GDALDatasetH</span> <span class="n">hDstDS</span><span class="p">,</span> <span class="n">GDALDatasetH</span> <span class="n">hSrcDS</span><span class="p">,</span>
+                              <span class="n">OGR2OGROptions</span> <span class="o">*</span><span class="n">psOptions</span><span class="p">,</span> <span class="nb">int</span> <span class="o">*</span><span class="n">pbUsageError</span> <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="swig-bindings-python-java-c-perl-changes">
+<h2>SWIG bindings (Python / Java / C# / Perl) changes<a class="headerlink" href="#swig-bindings-python-java-c-perl-changes" title="Permalink to this headline">¶</a></h2>
+<p>For Python bindings only, new functions Info(), Translate() and Warp()
+are added in the gdal module which uses the new GDALInfo(),
+GDALTranslate() and GDALWarp() function respectively. Translate() is
+added in the ogr module which uses the new OGR2OGR() function.</p>
+<p>gdal.Info() can be used either with setting the attributes of
+gdal.InfoOptions() or inlined arguments of gdal.Info().</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">options</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">InfoOptions</span><span class="p">()</span>
+
+<span class="n">options</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">INFO_FORMAT_TEXT</span>
+<span class="n">options</span><span class="o">.</span><span class="n">deserialize</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">options</span><span class="o">.</span><span class="n">computeMinMax</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">options</span><span class="o">.</span><span class="n">reportHistograms</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">options</span><span class="o">.</span><span class="n">reportProj4</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">options</span><span class="o">.</span><span class="n">stats</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">options</span><span class="o">.</span><span class="n">approxStats</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">options</span><span class="o">.</span><span class="n">sample</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">options</span><span class="o">.</span><span class="n">computeChecksum</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">options</span><span class="o">.</span><span class="n">showGCPs</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">options</span><span class="o">.</span><span class="n">showMetadata</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">options</span><span class="o">.</span><span class="n">showRAT</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">options</span><span class="o">.</span><span class="n">showColorTable</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">options</span><span class="o">.</span><span class="n">listMDD</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">options</span><span class="o">.</span><span class="n">showFileList</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">options</span><span class="o">.</span><span class="n">allMetadata</span> <span class="o">=</span> <span class="n">TRUE</span>
+<span class="n">options</span><span class="o">.</span><span class="n">extraMDDomains</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;TRE&#39;</span><span class="p">]</span>
+
+<span class="n">gdal</span><span class="o">.</span><span class="n">Info</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">deserialize</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdal</span><span class="o">.</span><span class="n">Info</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">format</span> <span class="o">=</span> <span class="n">_gdal</span><span class="o">.</span><span class="n">INFO_FORMAT_TEXT</span><span class="p">,</span> <span class="n">deserialize</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+         <span class="n">computeMinMax</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">reportHistograms</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">reportProj4</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+         <span class="n">stats</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">approxStats</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">sample</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">computeChecksum</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+         <span class="n">showGCPs</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">showMetadata</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">showRAT</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">showColorTable</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+         <span class="n">listMDD</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">showFileList</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">allMetadata</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+         <span class="n">extraMDDomains</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span>
+
+<span class="n">gdal</span><span class="o">.</span><span class="n">Translate</span><span class="p">(</span><span class="n">destName</span><span class="p">,</span> <span class="n">srcDS</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">format</span> <span class="o">=</span> <span class="s1">&#39;GTiff&#39;</span><span class="p">,</span> <span class="n">quiet</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+         <span class="n">outputType</span> <span class="o">=</span> <span class="n">GDT_Unknown</span><span class="p">,</span> <span class="n">maskMode</span> <span class="o">=</span> <span class="n">_gdal</span><span class="o">.</span><span class="n">MASK_AUTO</span><span class="p">,</span> <span class="n">bandList</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">oXSizePixel</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">oYSizePixel</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">oXSizePct</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">oYSizePct</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+         <span class="n">createOptions</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">srcWin</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">strict</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+         <span class="n">unscale</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">scaleParams</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">exponent</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">uLX</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">uLY</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">lRX</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">lRY</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">metadataOptions</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">outputSRS</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">GCPs</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ULLR</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">setNoData</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+         <span class="n">unsetNoData</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">noDataReal</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">rgbExpand</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">maskBand</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+         <span class="n">stats</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">approxStats</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">errorOnPartiallyOutside</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+         <span class="n">errorOnCompletelyOutside</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">noRAT</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">resampling</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">xRes</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">yRes</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">projSRS</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span>
+
+<span class="n">gdal</span><span class="o">.</span><span class="n">Warp</span><span class="p">(</span><span class="n">destNameOrDestDS</span><span class="p">,</span> <span class="n">srcDSOrSrcDSTab</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">minX</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">minY</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">maxX</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+         <span class="n">maxY</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">xRes</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">yRes</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">targetAlignedPixels</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">forcePixels</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+         <span class="n">forceLines</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">quiet</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">enableDstAlpha</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">enableSrcAlpha</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+         <span class="nb">format</span> <span class="o">=</span> <span class="s1">&#39;GTiff&#39;</span><span class="p">,</span> <span class="n">createOutput</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">warpOptions</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">errorThreshold</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+         <span class="n">warpMemoryLimit</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">createOptions</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">outputType</span> <span class="o">=</span> <span class="n">GDT_Unknown</span><span class="p">,</span>
+         <span class="n">workingType</span> <span class="o">=</span> <span class="n">GDT_Unknown</span><span class="p">,</span> <span class="n">resampleAlg</span> <span class="o">=</span> <span class="n">GRA_NearestNeighbour</span><span class="p">,</span>
+         <span class="n">srcNodata</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dstNodata</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">multi</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">TO</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">cutlineDSName</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">cLayer</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">cWHERE</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">cSQL</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">cropToCutline</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">overwrite</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+         <span class="n">copyMetadata</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">copyBandInfo</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">MDConflictValue</span> <span class="o">=</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span>
+         <span class="n">setColorInterpretation</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">destOpenOptions</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">OvLevel</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">ogr</span><span class="o">.</span><span class="n">Translate</span><span class="p">(</span><span class="n">destNameOrDestDS</span><span class="p">,</span> <span class="n">srcDS</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">accessMode</span> <span class="o">=</span> <span class="n">_ogr</span><span class="o">.</span><span class="n">ACCESS_CREATION</span><span class="p">,</span>
+         <span class="n">skipFailures</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">layerTransaction</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">forceTransaction</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+         <span class="n">groupTransactions</span> <span class="o">=</span> <span class="mi">20000</span><span class="p">,</span> <span class="n">FIDToFetch</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">quiet</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+         <span class="nb">format</span> <span class="o">=</span> <span class="s1">&#39;ESRI Shapefile&#39;</span><span class="p">,</span> <span class="n">layers</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">DSCO</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">LCO</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">transform</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+         <span class="n">addMissingFields</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">outputSRSDef</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">sourceSRSDef</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">nullifyOutputSRS</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">exactFieldNameMatch</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">newLayerName</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">WHERE</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">geomField</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">selFields</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">SQLStatement</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">dialect</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">gType</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">geomConversion</span> <span class="o">=</span> <span class="n">_ogr</span><span class="o">.</span><span class="n">GEOMTYPE_DEFAULT</span><span class="p">,</span> <span class="n">geomOp</span> <span class="o">=</span> <span class="n">_ogr</span><span class="o">.</span><span class="n">GEOMOP_NONE</span><span class="p">,</span>
+         <span class="n">geomOpParam</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">fieldTypesToString</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">mapFieldType</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">unsetFieldWidth</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+         <span class="n">displayProgress</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">wrapDateline</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">dateLineOffset</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">clipSrc</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">clipSrcDS</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">clipSrcSQL</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">clipSrcLayer</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">clipSrcWhere</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">clipDst</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">clipDstDS</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">clipDstSQL</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">clipDstLayer</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">clipDstWhere</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">splitListFields</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">maxSplitListSubFields</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">explodeCollections</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+         <span class="n">zField</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">fieldMap</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">coordDim</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">destOpenOptions</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">forceNullable</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">unsetDefault</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">unsetFid</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">preserveFID</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+         <span class="n">copyMD</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">metadataOptions</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">spatSRSDef</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">transformOrder</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+         <span class="n">spatialFilter</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="utilities">
+<h2>Utilities<a class="headerlink" href="#utilities" title="Permalink to this headline">¶</a></h2>
+<p>Utilities are modified to call the respective function.</p>
+</div>
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<p>All new methods/functions are documented.</p>
+</div>
+<div class="section" id="test-suite">
+<h2>Test Suite<a class="headerlink" href="#test-suite" title="Permalink to this headline">¶</a></h2>
+<p>gdal.Info method is tested in test_gdalinfo_lib.py. gdal.Translate
+method is tested in test_gdal_translate_lib.py. gdal.Warp method is
+tested in test_gdalwarp_lib.py. ogr.Translate method is tested in
+test_ogr2ogr_lib.py.</p>
+</div>
+<div class="section" id="compatibility-issues">
+<h2>Compatibility Issues<a class="headerlink" href="#compatibility-issues" title="Permalink to this headline">¶</a></h2>
+<p>None expected. Command line utilities will keep the same interface. It
+will be checked by ensuring their tests in autotest/utilities still
+pass.</p>
+</div>
+<div class="section" id="open-question">
+<h2>Open question<a class="headerlink" href="#open-question" title="Permalink to this headline">¶</a></h2>
+<p>What name should be given for librarified ogr2ogr? OGR2OGR() or
+OGRTranslate() ?</p>
+<p>The order of arguments in GDALTranslate(), GDALWarp() and OGR2OGR() is
+currently dest then source(s).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">GDALDatasetH</span> <span class="n">CPL_DLL</span> <span class="n">GDALTranslate</span><span class="p">(</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span><span class="n">pszDest</span><span class="p">,</span> <span class="n">GDALDatasetH</span> <span class="n">hSrcDataset</span><span class="p">,</span> <span class="n">GDALTranslateOptions</span> <span class="o">*</span><span class="n">psOptions</span><span class="p">,</span> <span class="nb">int</span> <span class="o">*</span><span class="n">pbUsageError</span><span class="p">)</span>
+
+<span class="n">GDALDatasetH</span> <span class="n">CPL_DLL</span> <span class="n">GDALWarp</span><span class="p">(</span> <span class="n">const</span> <span class="n">char</span> <span class="o">*</span><span class="n">pszDest</span><span class="p">,</span> <span class="n">GDALDatasetH</span> <span class="n">hDstDS</span><span class="p">,</span> <span class="nb">int</span> <span class="n">nSrcCount</span><span class="p">,</span>
+                       <span class="n">GDALDatasetH</span> <span class="o">*</span><span class="n">pahSrcDS</span><span class="p">,</span> <span class="n">GDALWarpAppOptions</span> <span class="o">*</span><span class="n">psOptions</span><span class="p">,</span> <span class="nb">int</span> <span class="o">*</span><span class="n">pbUsageError</span> <span class="p">)</span>
+
+<span class="n">GDALDatasetH</span> <span class="n">CPL_DLL</span> <span class="n">OGR2OGR</span><span class="p">(</span> <span class="n">const</span> <span class="n">char</span> <span class="o">*</span><span class="n">pszDest</span><span class="p">,</span> <span class="n">GDALDatasetH</span> <span class="n">hDstDS</span><span class="p">,</span> <span class="n">GDALDatasetH</span> <span class="n">hSrcDS</span><span class="p">,</span>
+                              <span class="n">OGR2OGROptions</span> <span class="o">*</span><span class="n">psOptions</span><span class="p">,</span> <span class="nb">int</span> <span class="o">*</span><span class="n">pbUsageError</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>It is similar to GDALCreateCopy(const char* pszDestFilename,
+GDALDatasetH hSrcDS, ….), so at least there’s a form of consistency at
+the API level. Any comments?</p>
+</div>
+<div class="section" id="related-ticket">
+<h2>Related ticket<a class="headerlink" href="#related-ticket" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>Implementation will be done by Faza Mahamood.</p>
+<p>The proposed implementation lies in the “gdalinfo” branch of the
+<a class="reference external" href="https://github.com/fazam/gdal/tree/gdalinfo">https://github.com/fazam/gdal/tree/gdalinfo</a>.</p>
+<p>The list of changes :
+<a class="reference external" href="https://github.com/fazam/gdal/compare/gdalinfo">https://github.com/fazam/gdal/compare/gdalinfo</a></p>
+</div>
+<div class="section" id="voting-history">
+<h2>Voting history<a class="headerlink" href="#voting-history" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rfc60_improved_roundtripping_in_ogr.html" class="btn btn-neutral float-right" title="RFC 60 : Improved round-tripping in OGR" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc59.1_utilities_as_a_library.html" class="btn btn-neutral float-left" title="RFC 59.1 : GDAL/OGR utilities as a library" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

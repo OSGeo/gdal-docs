@@ -1,0 +1,591 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RFC 66 : OGR random layer read/write capabilities &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdevelopment/rfc/rfc66_randomlayerreadwrite.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="RFC 67 : Null values in OGR" href="rfc67_nullfieldvalues.html" />
+    <link rel="prev" title="RFC 65: RFC 7946 GeoJSON" href="rfc65_rfc7946_geojson.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 66 : OGR random layer read/write capabilities</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rationale">Rationale</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#changes">Changes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#discussion-about-a-few-design-choices-of-the-new-api">Discussion about a few design choices of the new API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#swig-bindings-python-java-c-perl-changes">SWIG bindings (Python / Java / C# / Perl) changes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#drivers">Drivers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#utilities">Utilities</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#test-suite">Test Suite</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#compatibility-issues">Compatibility Issues</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voting-history">Voting history</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 66 : OGR random layer read/write capabilities</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/development/rfc/rfc66_randomlayerreadwrite.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="rfc67_nullfieldvalues.html" class="btn btn-neutral float-right" title="RFC 67 : Null values in OGR" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc65_rfc7946_geojson.html" class="btn btn-neutral float-left" title="RFC 65: RFC 7946 GeoJSON" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rfc-66-ogr-random-layer-read-write-capabilities">
+<span id="rfc-66"></span><h1>RFC 66 : OGR random layer read/write capabilities<a class="headerlink" href="#rfc-66-ogr-random-layer-read-write-capabilities" title="Permalink to this headline">¶</a></h1>
+<p>Author: Even Rouault</p>
+<p>Contact: even.rouault at spatialys.com</p>
+<p>Status: Implemented</p>
+<p>Implementing version: 2.2</p>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>This RFC introduces a new API to be able to iterate over vector features
+at dataset level, in addition to the existing capability of doing it at
+the layer level. The existing capability of writing features in layers
+in random order, that is supported by most drivers with output
+capabilities, is formalized with a new dataset capability flag.</p>
+</div>
+<div class="section" id="rationale">
+<h2>Rationale<a class="headerlink" href="#rationale" title="Permalink to this headline">¶</a></h2>
+<p>Some vector formats mix features that belong to different layers in an
+interleaved way, which make the current feature iteration per layer
+rather inefficient (this requires for each layer to read the whole
+file). One example of such drivers is the OSM driver. For this driver, a
+hack had been developed in the past to be able to use the
+OGRLayer::GetNextFeature() method, but with a really particular
+semantics. See “Interleaved reading” paragraph of <a class="reference internal" href="../../drivers/vector/osm.html#vector-osm"><span class="std std-ref">OSM - OpenStreetMap XML and PBF</span></a> for more
+details. A similar need arises with the development of a new driver,
+GMLAS (for GML Application Schemas), that reads GML files with arbitrary
+element nesting, and thus can return them in a apparent random order,
+because it works in a streaming way. For example, let’s consider the
+following simplified XML content :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span>
+    <span class="o">...</span>
+    <span class="o">&lt;</span><span class="n">B</span><span class="o">&gt;</span>
+        <span class="o">...</span>
+    <span class="o">&lt;/</span><span class="n">B</span><span class="o">&gt;</span>
+    <span class="o">...</span>
+<span class="o">&lt;/</span><span class="n">A</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>The driver will be first able to complete the building of feature B
+before emitting feature A. So when reading sequences of this pattern,
+the driver will emit features in the order B,A,B,A,…</p>
+</div>
+<div class="section" id="changes">
+<h2>Changes<a class="headerlink" href="#changes" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="c-api">
+<h3>C++ API<a class="headerlink" href="#c-api" title="Permalink to this headline">¶</a></h3>
+<p>Two new methods are added at the GDALDataset level :</p>
+<p>GetNextFeature():</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/**</span>
+ \<span class="n">brief</span> <span class="n">Fetch</span> <span class="n">the</span> <span class="nb">next</span> <span class="n">available</span> <span class="n">feature</span> <span class="kn">from</span> <span class="nn">this</span> <span class="n">dataset</span><span class="o">.</span>
+
+ <span class="n">The</span> <span class="n">returned</span> <span class="n">feature</span> <span class="n">becomes</span> <span class="n">the</span> <span class="n">responsibility</span> <span class="n">of</span> <span class="n">the</span> <span class="n">caller</span> <span class="n">to</span>
+ <span class="n">delete</span> <span class="k">with</span> <span class="n">OGRFeature</span><span class="p">::</span><span class="n">DestroyFeature</span><span class="p">()</span><span class="o">.</span>
+
+ <span class="n">Depending</span> <span class="n">on</span> <span class="n">the</span> <span class="n">driver</span><span class="p">,</span> <span class="n">this</span> <span class="n">method</span> <span class="n">may</span> <span class="k">return</span> <span class="n">features</span> <span class="kn">from</span> <span class="nn">layers</span> <span class="ow">in</span> <span class="n">a</span>
+ <span class="n">non</span> <span class="n">sequential</span> <span class="n">way</span><span class="o">.</span> <span class="n">This</span> <span class="ow">is</span> <span class="n">what</span> <span class="n">may</span> <span class="n">happen</span> <span class="n">when</span> <span class="n">the</span>
+ <span class="n">ODsCRandomLayerRead</span> <span class="n">capability</span> <span class="ow">is</span> <span class="n">declared</span> <span class="p">(</span><span class="k">for</span> <span class="n">example</span> <span class="k">for</span> <span class="n">the</span>
+ <span class="n">OSM</span> <span class="ow">and</span> <span class="n">GMLAS</span> <span class="n">drivers</span><span class="p">)</span><span class="o">.</span> <span class="n">When</span> <span class="n">datasets</span> <span class="n">declare</span> <span class="n">this</span> <span class="n">capability</span><span class="p">,</span> <span class="n">it</span> <span class="ow">is</span> <span class="n">strongly</span>
+ <span class="n">advised</span> <span class="n">to</span> <span class="n">use</span> <span class="n">GDALDataset</span><span class="p">::</span><span class="n">GetNextFeature</span><span class="p">()</span> <span class="n">instead</span> <span class="n">of</span>
+ <span class="n">OGRLayer</span><span class="p">::</span><span class="n">GetNextFeature</span><span class="p">(),</span> <span class="k">as</span> <span class="n">the</span> <span class="n">later</span> <span class="n">might</span> <span class="n">have</span> <span class="n">a</span> <span class="n">slow</span><span class="p">,</span> <span class="n">incomplete</span> <span class="ow">or</span> <span class="n">stub</span>
+ <span class="n">implementation</span><span class="o">.</span>
+
+ <span class="n">The</span> <span class="n">default</span> <span class="n">implementation</span><span class="p">,</span> <span class="n">used</span> <span class="n">by</span> <span class="n">most</span> <span class="n">drivers</span><span class="p">,</span> <span class="n">will</span>
+ <span class="n">however</span> <span class="n">iterate</span> <span class="n">over</span> <span class="n">each</span> <span class="n">layer</span><span class="p">,</span> <span class="ow">and</span> <span class="n">then</span> <span class="n">over</span> <span class="n">each</span> <span class="n">feature</span> <span class="n">within</span> <span class="n">this</span>
+ <span class="n">layer</span><span class="o">.</span>
+
+ <span class="n">This</span> <span class="n">method</span> <span class="n">takes</span> <span class="n">into</span> <span class="n">account</span> <span class="n">spatial</span> <span class="ow">and</span> <span class="n">attribute</span> <span class="n">filters</span> <span class="nb">set</span> <span class="n">on</span> <span class="n">layers</span> <span class="n">that</span>
+ <span class="n">will</span> <span class="n">be</span> <span class="n">iterated</span> <span class="n">upon</span><span class="o">.</span>
+
+ <span class="n">The</span> <span class="n">ResetReading</span><span class="p">()</span> <span class="n">method</span> <span class="n">can</span> <span class="n">be</span> <span class="n">used</span> <span class="n">to</span> <span class="n">start</span> <span class="n">at</span> <span class="n">the</span> <span class="n">beginning</span> <span class="n">again</span><span class="o">.</span>
+
+ <span class="n">Depending</span> <span class="n">on</span> <span class="n">drivers</span><span class="p">,</span> <span class="n">this</span> <span class="n">may</span> <span class="n">also</span> <span class="n">have</span> <span class="n">the</span> <span class="n">side</span> <span class="n">effect</span> <span class="n">of</span> <span class="n">calling</span>
+ <span class="n">OGRLayer</span><span class="p">::</span><span class="n">GetNextFeature</span><span class="p">()</span> <span class="n">on</span> <span class="n">the</span> <span class="n">layers</span> <span class="n">of</span> <span class="n">this</span> <span class="n">dataset</span><span class="o">.</span>
+
+ <span class="n">This</span> <span class="n">method</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">same</span> <span class="k">as</span> <span class="n">the</span> <span class="n">C</span> <span class="n">function</span> <span class="n">GDALDatasetGetNextFeature</span><span class="p">()</span><span class="o">.</span>
+
+ <span class="nd">@param</span> <span class="n">ppoBelongingLayer</span> <span class="n">a</span> <span class="n">pointer</span> <span class="n">to</span> <span class="n">a</span> <span class="n">OGRLayer</span><span class="o">*</span> <span class="n">variable</span> <span class="n">to</span> <span class="n">receive</span> <span class="n">the</span>
+                          <span class="n">layer</span> <span class="n">to</span> <span class="n">which</span> <span class="n">the</span> <span class="nb">object</span> <span class="n">belongs</span> <span class="n">to</span><span class="p">,</span> <span class="ow">or</span> <span class="n">NULL</span><span class="o">.</span>
+                          <span class="n">It</span> <span class="ow">is</span> <span class="n">possible</span> <span class="n">that</span> <span class="n">the</span> <span class="n">output</span> <span class="n">of</span> <span class="o">*</span><span class="n">ppoBelongingLayer</span>
+                          <span class="n">to</span> <span class="n">be</span> <span class="n">NULL</span> <span class="n">despite</span> <span class="n">the</span> <span class="n">feature</span> <span class="ow">not</span> <span class="n">being</span> <span class="n">NULL</span><span class="o">.</span>
+ <span class="nd">@param</span> <span class="n">pdfProgressPct</span>    <span class="n">a</span> <span class="n">pointer</span> <span class="n">to</span> <span class="n">a</span> <span class="n">double</span> <span class="n">variable</span> <span class="n">to</span> <span class="n">receive</span> <span class="n">the</span>
+                          <span class="n">percentage</span> <span class="n">progress</span> <span class="p">(</span><span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="nb">range</span><span class="p">),</span> <span class="ow">or</span> <span class="n">NULL</span><span class="o">.</span>
+                          <span class="n">On</span> <span class="k">return</span><span class="p">,</span> <span class="n">the</span> <span class="n">pointed</span> <span class="n">value</span> <span class="n">might</span> <span class="n">be</span> <span class="n">negative</span> <span class="k">if</span>
+                          <span class="n">determining</span> <span class="n">the</span> <span class="n">progress</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">possible</span><span class="o">.</span>
+ <span class="nd">@param</span> <span class="n">pfnProgress</span>       <span class="n">a</span> <span class="n">progress</span> <span class="n">callback</span> <span class="n">to</span> <span class="n">report</span> <span class="n">progress</span> <span class="p">(</span><span class="k">for</span>
+                          <span class="n">GetNextFeature</span><span class="p">()</span> <span class="n">calls</span> <span class="n">that</span> <span class="n">might</span> <span class="n">have</span> <span class="n">a</span> <span class="n">long</span> <span class="n">duration</span><span class="p">)</span>
+                          <span class="ow">and</span> <span class="n">offer</span> <span class="n">cancellation</span> <span class="n">possibility</span><span class="p">,</span> <span class="ow">or</span> <span class="n">NULL</span>
+ <span class="nd">@param</span> <span class="n">pProgressData</span>     <span class="n">user</span> <span class="n">data</span> <span class="n">provided</span> <span class="n">to</span> <span class="n">pfnProgress</span><span class="p">,</span> <span class="ow">or</span> <span class="n">NULL</span>
+ <span class="nd">@return</span> <span class="n">a</span> <span class="n">feature</span><span class="p">,</span> <span class="ow">or</span> <span class="n">NULL</span> <span class="k">if</span> <span class="n">no</span> <span class="n">more</span> <span class="n">features</span> <span class="n">are</span> <span class="n">available</span><span class="o">.</span>
+ <span class="nd">@since</span> <span class="n">GDAL</span> <span class="mf">2.2</span>
+<span class="o">*/</span>
+
+<span class="n">OGRFeature</span><span class="o">*</span> <span class="n">GDALDataset</span><span class="p">::</span><span class="n">GetNextFeature</span><span class="p">(</span> <span class="n">OGRLayer</span><span class="o">**</span> <span class="n">ppoBelongingLayer</span><span class="p">,</span>
+                                         <span class="n">double</span><span class="o">*</span> <span class="n">pdfProgressPct</span><span class="p">,</span>
+                                         <span class="n">GDALProgressFunc</span> <span class="n">pfnProgress</span><span class="p">,</span>
+                                         <span class="n">void</span><span class="o">*</span> <span class="n">pProgressData</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>and ResetReading():</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/**</span>
+ \<span class="n">brief</span> <span class="n">Reset</span> <span class="n">feature</span> <span class="n">reading</span> <span class="n">to</span> <span class="n">start</span> <span class="n">on</span> <span class="n">the</span> <span class="n">first</span> <span class="n">feature</span><span class="o">.</span>
+
+ <span class="n">This</span> <span class="n">affects</span> <span class="n">GetNextFeature</span><span class="p">()</span><span class="o">.</span>
+
+ <span class="n">Depending</span> <span class="n">on</span> <span class="n">drivers</span><span class="p">,</span> <span class="n">this</span> <span class="n">may</span> <span class="n">also</span> <span class="n">have</span> <span class="n">the</span> <span class="n">side</span> <span class="n">effect</span> <span class="n">of</span> <span class="n">calling</span>
+ <span class="n">OGRLayer</span><span class="p">::</span><span class="n">ResetReading</span><span class="p">()</span> <span class="n">on</span> <span class="n">the</span> <span class="n">layers</span> <span class="n">of</span> <span class="n">this</span> <span class="n">dataset</span><span class="o">.</span>
+
+ <span class="n">This</span> <span class="n">method</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">same</span> <span class="k">as</span> <span class="n">the</span> <span class="n">C</span> <span class="n">function</span> <span class="n">GDALDatasetResetReading</span><span class="p">()</span><span class="o">.</span>
+
+ <span class="nd">@since</span> <span class="n">GDAL</span> <span class="mf">2.2</span>
+<span class="o">*/</span>
+<span class="n">void</span>        <span class="n">GDALDataset</span><span class="p">::</span><span class="n">ResetReading</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="new-capabilities">
+<h3>New capabilities<a class="headerlink" href="#new-capabilities" title="Permalink to this headline">¶</a></h3>
+<p>The following 2 new dataset capabilities are added :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#define ODsCRandomLayerRead     &quot;RandomLayerRead&quot;   /**&lt; Dataset capability for GetNextFeature() returning features from random layers */</span>
+<span class="c1">#define ODsCRandomLayerWrite    &quot;RandomLayerWrite &quot; /**&lt; Dataset capability for supporting CreateFeature on layer in random order */</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id1">
+<h3>C API<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>The above 2 new methods are available in the C API with :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">OGRFeatureH</span> <span class="n">CPL_DLL</span> <span class="n">GDALDatasetGetNextFeature</span><span class="p">(</span> <span class="n">GDALDatasetH</span> <span class="n">hDS</span><span class="p">,</span>
+                                               <span class="n">OGRLayerH</span><span class="o">*</span> <span class="n">phBelongingLayer</span><span class="p">,</span>
+                                               <span class="n">double</span><span class="o">*</span> <span class="n">pdfProgressPct</span><span class="p">,</span>
+                                               <span class="n">GDALProgressFunc</span> <span class="n">pfnProgress</span><span class="p">,</span>
+                                               <span class="n">void</span><span class="o">*</span> <span class="n">pProgressData</span> <span class="p">)</span>
+
+<span class="n">void</span> <span class="n">CPL_DLL</span> <span class="n">GDALDatasetResetReading</span><span class="p">(</span> <span class="n">GDALDatasetH</span> <span class="n">hDS</span> <span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="discussion-about-a-few-design-choices-of-the-new-api">
+<h2>Discussion about a few design choices of the new API<a class="headerlink" href="#discussion-about-a-few-design-choices-of-the-new-api" title="Permalink to this headline">¶</a></h2>
+<p>Compared to OGRLayer::GetNextFeature(), GDALDataset::GetNextFeature()
+has a few differences :</p>
+<ul class="simple">
+<li><p>it returns the layer which the feature belongs to. Indeed, there’s no
+easy way from a feature to know which layer it belongs too (since in
+the data model, features can exist outside of any layer). One
+possibility would be to correlate the OGRFeatureDefn* object of the
+feature with the one of the layer, but that is a bit inconvenient to
+do (and theoretically, one could imagine several layers sharing the
+same feature definition object, although this probably never happen
+in any in-tree driver).</p></li>
+<li><p>even if the feature returned is not NULL, the returned layer might be
+NULL. This is just a provision for now, since that cannot currently
+happen. This could be interesting to address schema-less datasources
+where basically each feature could have a different schema (GeoJSON
+for example) without really belonging to a clearly identified layer.</p></li>
+<li><p>it returns a progress percentage. When using OGRLayer API, one has to
+count the number of features returned with the total number returned
+by GetFeatureCount(). For the use cases we want to address knowing
+quickly the total number of features of the dataset is not doable.
+But knowing the position of the file pointer regarding the total size
+of the size is easy. Hence the decision to make GetNextFeature()
+return the progress percentage. Regarding the choice of the range
+[0,1], this is to be consistent with the range accepted by GDAL
+progress functions.</p></li>
+<li><p>it accepts a progress and cancellation callback. One could wonder why
+this is needed given that GetNextFeature() is an “elementary” method
+and that it can already returns the progress percentage. However, in
+some circumstances, it might take a rather long time to complete a
+GetNextFeature() call. For example in the case of the OSM driver, as
+an optimization you can ask the driver to return features of a subset
+of layers. For example all layers except nodes. But generally the
+nodes are at the beginning of the file, so before you get the first
+feature, you have typically to process 70% of the whole file. In the
+GMLAS driver, the first GetNextFeature() call is also the opportunity
+to do a preliminary quick scan of the file to determine the SRS of
+geometry columns, hence having progress feedback is welcome.</p></li>
+</ul>
+<p>The progress percentage output is redundant with the progress callback
+mechanism, and the latter could be used to get the former, however it
+may be a bit convoluted. It would require doing things like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">int</span> <span class="n">MyProgress</span><span class="p">(</span><span class="n">double</span> <span class="n">pct</span><span class="p">,</span> <span class="n">const</span> <span class="n">char</span><span class="o">*</span> <span class="n">msg</span><span class="p">,</span> <span class="n">void</span><span class="o">*</span> <span class="n">user_data</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="o">*</span><span class="p">(</span><span class="n">double</span><span class="o">*</span><span class="p">)</span><span class="n">user_data</span> <span class="o">=</span> <span class="n">pct</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">TRUE</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">myDS</span><span class="o">-&gt;</span><span class="n">GetNextFeature</span><span class="p">(</span><span class="o">&amp;</span><span class="n">poLayer</span><span class="p">,</span> <span class="n">MyProgress</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">pct</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="swig-bindings-python-java-c-perl-changes">
+<h2>SWIG bindings (Python / Java / C# / Perl) changes<a class="headerlink" href="#swig-bindings-python-java-c-perl-changes" title="Permalink to this headline">¶</a></h2>
+<p>GDALDatasetGetNextFeature is mapped as gdal::Dataset::GetNextFeature()
+and GDALDatasetResetReading as gdal::Dataset::ResetReading().</p>
+<p>Regarding gdal::Dataset::GetNextFeature(), currently only Python has
+been modified to return both the feature and its belonging layer. Other
+bindings just return the feature for now (would need specialized
+typemaps)</p>
+</div>
+<div class="section" id="drivers">
+<h2>Drivers<a class="headerlink" href="#drivers" title="Permalink to this headline">¶</a></h2>
+<p>The OSM and GMLAS driver are updated to implement the new API.</p>
+<p>Existing drivers that support ODsCRandomLayerWrite are updated to
+advertise it (that is most drivers that have layer creation
+capabilities, with the exceptions of KML, JML and GeoJSON).</p>
+</div>
+<div class="section" id="utilities">
+<h2>Utilities<a class="headerlink" href="#utilities" title="Permalink to this headline">¶</a></h2>
+<p>ogr2ogr / GDALVectorTranslate() is changed internally to remove the hack
+that was used for the OSM driver to use the new API, when
+ODsCRandomLayerRead is advertized. It checks if the output driver
+advertizes ODsCRandomLayerWrite, and if it does not, emit a warning, but
+still goes on proceeding with the conversion using random layer
+reading/writing.</p>
+<p>ogrinfo is extended to accept a -rl (for random layer) flag that
+instructs it to use the GDALDataset::GetNextFeature() API. It was
+considered to use it automatically when ODsCRandomLayerRead was
+advertized, but the output can be quite… random and thus not very
+practical for the user.</p>
+</div>
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<p>All new methods/functions are documented.</p>
+</div>
+<div class="section" id="test-suite">
+<h2>Test Suite<a class="headerlink" href="#test-suite" title="Permalink to this headline">¶</a></h2>
+<p>The specialized GetNextFeature() implementation of the OSM and GMLAS
+driver is tested in their respective tests. The default implementation
+of GDALDataset::GetNextFeature() is tested in the MEM driver tests.</p>
+</div>
+<div class="section" id="compatibility-issues">
+<h2>Compatibility Issues<a class="headerlink" href="#compatibility-issues" title="Permalink to this headline">¶</a></h2>
+<p>None for existing users of the C/C++ API.</p>
+<p>Since there is a default implementation, the new functions/methods can
+be safely used on drivers that don’t have a specialized implementation.</p>
+<p>The addition of the new virtual methods GDALDataset::ResetReading() and
+GDALDataset::GetNextFeature() may cause issues for out-of-tree drivers
+that would already use internally such method names, but with different
+semantics, or signatures. We have encountered such issues with a few
+in-tree drivers, and fixed them.</p>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>The implementation will be done by Even Rouault, and is mostly triggered
+by the needs of the new GMLAS driver (initial development funded by the
+European Earth observation programme Copernicus).</p>
+<p>The proposed implementation is in
+<a class="reference external" href="https://github.com/rouault/gdal2/tree/gmlas_randomreadwrite">https://github.com/rouault/gdal2/tree/gmlas_randomreadwrite</a>
+(commit:
+<a class="reference external" href="https://github.com/rouault/gdal2/commit/8447606d68b9fac571aa4d381181ecfffed6d72c">https://github.com/rouault/gdal2/commit/8447606d68b9fac571aa4d381181ecfffed6d72c</a>)</p>
+</div>
+<div class="section" id="voting-history">
+<h2>Voting history<a class="headerlink" href="#voting-history" title="Permalink to this headline">¶</a></h2>
+<p>+1 from TamasS, HowardB, JukkaR, DanielM and EvenR.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rfc67_nullfieldvalues.html" class="btn btn-neutral float-right" title="RFC 67 : Null values in OGR" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc65_rfc7946_geojson.html" class="btn btn-neutral float-left" title="RFC 65: RFC 7946 GeoJSON" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

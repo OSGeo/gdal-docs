@@ -1,0 +1,864 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ogr2ogr &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgprograms/ogr2ogr.html"/>
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ogrtindex" href="ogrtindex.html" />
+    <link rel="prev" title="ogrinfo" href="ogrinfo.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Programs</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#raster-programs">Raster programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#multidimensional-raster-programs">Multidimensional Raster programs</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#vector-programs">Vector programs</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="vector_common_options.html">Common options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ogrinfo.html">ogrinfo</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ogr2ogr</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#synopsis">Synopsis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#description">Description</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#performance-hints">Performance Hints</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#c-api">C API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ogrtindex.html">ogrtindex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ogrlineref.html">ogrlineref</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ogrmerge.html">ogrmerge</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#geographic-network-programs">Geographic network programs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Programs</a> &raquo;</li>
+      
+      <li>ogr2ogr</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/programs/ogr2ogr.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="ogrtindex.html" class="btn btn-neutral float-right" title="ogrtindex" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ogrinfo.html" class="btn btn-neutral float-left" title="ogrinfo" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="ogr2ogr">
+<span id="id1"></span><h1>ogr2ogr<a class="headerlink" href="#ogr2ogr" title="Permalink to this headline">¶</a></h1>
+<p>Converts simple features data between file formats.</p>
+<div class="section" id="synopsis">
+<span id="index-0"></span><h2>Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogr2ogr</span> <span class="p">[</span><span class="o">--</span><span class="n">help</span><span class="o">-</span><span class="n">general</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">skipfailures</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">append</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">update</span><span class="p">]</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">select</span> <span class="n">field_list</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">where</span> <span class="n">restricted_where</span><span class="o">|</span>\<span class="nd">@filename</span><span class="p">]</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">progress</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">sql</span> <span class="o">&lt;</span><span class="n">sql</span> <span class="n">statement</span><span class="o">&gt;|</span>\<span class="nd">@filename</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">dialect</span> <span class="n">dialect</span><span class="p">]</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">preserve_fid</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">fid</span> <span class="n">FID</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">limit</span> <span class="n">nb_features</span><span class="p">]</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">spat</span> <span class="n">xmin</span> <span class="n">ymin</span> <span class="n">xmax</span> <span class="n">ymax</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">spat_srs</span> <span class="n">srs_def</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">geomfield</span> <span class="n">field</span><span class="p">]</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">a_srs</span> <span class="n">srs_def</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">t_srs</span> <span class="n">srs_def</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">s_srs</span> <span class="n">srs_def</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">ct</span> <span class="n">string</span><span class="p">]</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">f</span> <span class="n">format_name</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">overwrite</span><span class="p">]</span> <span class="p">[[</span><span class="o">-</span><span class="n">dsco</span> <span class="n">NAME</span><span class="o">=</span><span class="n">VALUE</span><span class="p">]</span> <span class="o">...</span><span class="p">]</span>
+        <span class="n">dst_datasource_name</span> <span class="n">src_datasource_name</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">lco</span> <span class="n">NAME</span><span class="o">=</span><span class="n">VALUE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">nln</span> <span class="n">name</span><span class="p">]</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">nlt</span> <span class="nb">type</span><span class="o">|</span><span class="n">PROMOTE_TO_MULTI</span><span class="o">|</span><span class="n">CONVERT_TO_LINEAR</span><span class="o">|</span><span class="n">CONVERT_TO_CURVE</span><span class="p">]</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">dim</span> <span class="n">XY</span><span class="o">|</span><span class="n">XYZ</span><span class="o">|</span><span class="n">XYM</span><span class="o">|</span><span class="n">XYZM</span><span class="o">|</span><span class="mi">2</span><span class="o">|</span><span class="mi">3</span><span class="o">|</span><span class="n">layer_dim</span><span class="p">]</span> <span class="p">[</span><span class="n">layer</span> <span class="p">[</span><span class="n">layer</span> <span class="o">...</span><span class="p">]]</span>
+
+        <span class="c1"># Advanced options</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">gt</span> <span class="n">n</span><span class="p">]</span>
+        <span class="p">[[</span><span class="o">-</span><span class="n">oo</span> <span class="n">NAME</span><span class="o">=</span><span class="n">VALUE</span><span class="p">]</span> <span class="o">...</span><span class="p">]</span> <span class="p">[[</span><span class="o">-</span><span class="n">doo</span> <span class="n">NAME</span><span class="o">=</span><span class="n">VALUE</span><span class="p">]</span> <span class="o">...</span><span class="p">]</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">clipsrc</span> <span class="p">[</span><span class="n">xmin</span> <span class="n">ymin</span> <span class="n">xmax</span> <span class="n">ymax</span><span class="p">]</span><span class="o">|</span><span class="n">WKT</span><span class="o">|</span><span class="n">datasource</span><span class="o">|</span><span class="n">spat_extent</span><span class="p">]</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">clipsrcsql</span> <span class="n">sql_statement</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">clipsrclayer</span> <span class="n">layer</span><span class="p">]</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">clipsrcwhere</span> <span class="n">expression</span><span class="p">]</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">clipdst</span> <span class="p">[</span><span class="n">xmin</span> <span class="n">ymin</span> <span class="n">xmax</span> <span class="n">ymax</span><span class="p">]</span><span class="o">|</span><span class="n">WKT</span><span class="o">|</span><span class="n">datasource</span><span class="p">]</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">clipdstsql</span> <span class="n">sql_statement</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">clipdstlayer</span> <span class="n">layer</span><span class="p">]</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">clipdstwhere</span> <span class="n">expression</span><span class="p">]</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">wrapdateline</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">datelineoffset</span> <span class="n">val</span><span class="p">]</span>
+        <span class="p">[[</span><span class="o">-</span><span class="n">simplify</span> <span class="n">tolerance</span><span class="p">]</span> <span class="o">|</span> <span class="p">[</span><span class="o">-</span><span class="n">segmentize</span> <span class="n">max_dist</span><span class="p">]]</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">makevalid</span><span class="p">]</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">addfields</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">unsetFid</span><span class="p">]</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">relaxedFieldNameMatch</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">forceNullable</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">unsetDefault</span><span class="p">]</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">fieldTypeToString</span> <span class="n">All</span><span class="o">|</span><span class="p">(</span><span class="n">type1</span><span class="p">[,</span><span class="n">type2</span><span class="p">]</span><span class="o">*</span><span class="p">)]</span> <span class="p">[</span><span class="o">-</span><span class="n">unsetFieldWidth</span><span class="p">]</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">mapFieldType</span> <span class="n">type1</span><span class="o">|</span><span class="n">All</span><span class="o">=</span><span class="n">type2</span><span class="p">[,</span><span class="n">type3</span><span class="o">=</span><span class="n">type4</span><span class="p">]</span><span class="o">*</span><span class="p">]</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">fieldmap</span> <span class="n">identity</span> <span class="o">|</span> <span class="n">index1</span><span class="p">[,</span><span class="n">index2</span><span class="p">]</span><span class="o">*</span><span class="p">]</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">splitlistfields</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">maxsubfields</span> <span class="n">val</span><span class="p">]</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">explodecollections</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">zfield</span> <span class="n">field_name</span><span class="p">]</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">gcp</span> <span class="n">ungeoref_x</span> <span class="n">ungeoref_y</span> <span class="n">georef_x</span> <span class="n">georef_y</span> <span class="p">[</span><span class="n">elevation</span><span class="p">]]</span><span class="o">*</span> <span class="p">[</span><span class="o">-</span><span class="n">order</span> <span class="n">n</span> <span class="o">|</span> <span class="o">-</span><span class="n">tps</span><span class="p">]</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">nomd</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">mo</span> <span class="s2">&quot;META-TAG=VALUE&quot;</span><span class="p">]</span><span class="o">*</span> <span class="p">[</span><span class="o">-</span><span class="n">noNativeData</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p><strong class="program">ogr2ogr</strong> can be used to convert simple features data between file
+formats. It can also perform various operations during the process, such as
+spatial or attribute selection, reducing the set of attributes, setting the
+output coordinate system or even reprojecting the features during translation.</p>
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-f">
+<code class="descname">-f</code><code class="descclassname"> &lt;format_name&gt;</code><a class="headerlink" href="#cmdoption-ogr2ogr-f" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output file format name, e.g. <code class="docutils literal notranslate"><span class="pre">ESRI</span> <span class="pre">Shapefile</span></code>, <code class="docutils literal notranslate"><span class="pre">MapInfo</span> <span class="pre">File</span></code>,
+<code class="docutils literal notranslate"><span class="pre">PostgreSQL</span></code>.  Starting with GDAL 2.3, if not specified, the format is
+guessed from the extension (previously was ESRI Shapefile).</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-append">
+<code class="descname">-append</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogr2ogr-append" title="Permalink to this definition">¶</a></dt>
+<dd><p>Append to existing layer instead of creating new</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-overwrite">
+<code class="descname">-overwrite</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogr2ogr-overwrite" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete the output layer and recreate it empty</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-update">
+<code class="descname">-update</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogr2ogr-update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open existing output datasource in update mode rather than trying to create
+a new one</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-select">
+<code class="descname">-select</code><code class="descclassname"> &lt;field_list&gt;</code><a class="headerlink" href="#cmdoption-ogr2ogr-select" title="Permalink to this definition">¶</a></dt>
+<dd><p>Comma-delimited list of fields from input layer to copy to the new layer. A
+field is skipped if mentioned previously in the list even if the input
+layer has duplicate field names. (Defaults to <code class="docutils literal notranslate"><span class="pre">all</span></code>; any field is skipped
+if a subsequent field with same name is found.) Geometry fields can also be
+specified in the list.</p>
+<p>Note this setting cannot be used together with <code class="docutils literal notranslate"><span class="pre">-append</span></code>. To control the
+selection of fields when appending to a layer, use <code class="docutils literal notranslate"><span class="pre">-fieldmap</span></code> or <code class="docutils literal notranslate"><span class="pre">-sql</span></code>.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-progress">
+<code class="descname">-progress</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogr2ogr-progress" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display progress on terminal. Only works if input layers have the “fast
+feature count” capability.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-sql">
+<code class="descname">-sql</code><code class="descclassname"> &lt;sql_statement&gt;</code><a class="headerlink" href="#cmdoption-ogr2ogr-sql" title="Permalink to this definition">¶</a></dt>
+<dd><p>SQL statement to execute. The resulting table/layer will be saved to the
+output. Starting with GDAL 2.1, the <code class="docutils literal notranslate"><span class="pre">&#64;filename</span></code> syntax can be used to
+indicate that the content is in the pointed filename.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-dialect">
+<code class="descname">-dialect</code><code class="descclassname"> &lt;dialect&gt;</code><a class="headerlink" href="#cmdoption-ogr2ogr-dialect" title="Permalink to this definition">¶</a></dt>
+<dd><p>SQL dialect. In some cases can be used to use (unoptimized) OGR SQL instead
+of the native SQL of an RDBMS by passing OGRSQL. The “SQLITE” dialect can
+also be used with any datasource.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-where">
+<code class="descname">-where</code><code class="descclassname"> restricted_where</code><a class="headerlink" href="#cmdoption-ogr2ogr-where" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attribute query (like SQL WHERE). Starting with GDAL 2.1, the <code class="docutils literal notranslate"><span class="pre">&#64;filename</span></code>
+syntax can be used to indicate that the content is in the pointed filename.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-skipfailures">
+<code class="descname">-skipfailures</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogr2ogr-skipfailures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Continue after a failure, skipping the failed feature.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-spat">
+<code class="descname">-spat</code><code class="descclassname"> &lt;xmin&gt; &lt;ymin&gt; &lt;xmax&gt; &lt;ymax&gt;</code><a class="headerlink" href="#cmdoption-ogr2ogr-spat" title="Permalink to this definition">¶</a></dt>
+<dd><p>spatial query extents, in the SRS of the source layer(s) (or the one
+specified with <code class="docutils literal notranslate"><span class="pre">-spat_srs</span></code>). Only features whose geometry intersects the
+extents will be selected. The geometries will not be clipped unless
+<code class="docutils literal notranslate"><span class="pre">-clipsrc</span></code> is specified.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-spat-srs">
+<code class="descname">-spat_srs</code><code class="descclassname"> &lt;srs_def&gt;</code><a class="headerlink" href="#cmdoption-ogr2ogr-spat-srs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override spatial filter SRS.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-geomfield">
+<code class="descname">-geomfield</code><code class="descclassname"> &lt;field&gt;</code><a class="headerlink" href="#cmdoption-ogr2ogr-geomfield" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of the geometry field on which the spatial filter operates on.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-dsco">
+<code class="descname">-dsco</code><code class="descclassname"> NAME=VALUE</code><a class="headerlink" href="#cmdoption-ogr2ogr-dsco" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dataset creation option (format specific)</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-lco">
+<code class="descname">-lco</code><code class="descclassname"> NAME=VALUE</code><a class="headerlink" href="#cmdoption-ogr2ogr-lco" title="Permalink to this definition">¶</a></dt>
+<dd><p>Layer creation option (format specific)</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-nln">
+<code class="descname">-nln</code><code class="descclassname"> &lt;name&gt;</code><a class="headerlink" href="#cmdoption-ogr2ogr-nln" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assign an alternate name to the new layer</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-nlt">
+<code class="descname">-nlt</code><code class="descclassname"> &lt;type&gt;</code><a class="headerlink" href="#cmdoption-ogr2ogr-nlt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the geometry type for the created layer. One of <code class="docutils literal notranslate"><span class="pre">NONE</span></code>,
+<code class="docutils literal notranslate"><span class="pre">GEOMETRY</span></code>, <code class="docutils literal notranslate"><span class="pre">POINT</span></code>, <code class="docutils literal notranslate"><span class="pre">LINESTRING</span></code>, <code class="docutils literal notranslate"><span class="pre">POLYGON</span></code>,
+<code class="docutils literal notranslate"><span class="pre">GEOMETRYCOLLECTION</span></code>, <code class="docutils literal notranslate"><span class="pre">MULTIPOINT</span></code>, <code class="docutils literal notranslate"><span class="pre">MULTIPOLYGON</span></code>,
+<code class="docutils literal notranslate"><span class="pre">MULTILINESTRING</span></code>, <code class="docutils literal notranslate"><span class="pre">CIRCULARSTRING</span></code>, <code class="docutils literal notranslate"><span class="pre">COMPOUNDCURVE</span></code>,
+<code class="docutils literal notranslate"><span class="pre">CURVEPOLYGON</span></code>, <code class="docutils literal notranslate"><span class="pre">MULTICURVE</span></code>, and <code class="docutils literal notranslate"><span class="pre">MULTISURFACE</span></code> non-linear geometry
+types. Add <code class="docutils literal notranslate"><span class="pre">Z</span></code>, <code class="docutils literal notranslate"><span class="pre">M</span></code>, or <code class="docutils literal notranslate"><span class="pre">ZM</span></code> to the type name to specify coordinates
+with elevation, measure, or elevation and measure. <code class="docutils literal notranslate"><span class="pre">PROMOTE_TO_MULTI</span></code> can
+be used to automatically promote layers that mix polygon or multipolygons
+to multipolygons, and layers that mix linestrings or multilinestrings to
+multilinestrings. Can be useful when converting shapefiles to PostGIS and
+other target drivers that implement strict checks for geometry types.
+<code class="docutils literal notranslate"><span class="pre">CONVERT_TO_LINEAR</span></code> can be used to to convert non-linear geometry types
+into linear geometry types by approximating them, and <code class="docutils literal notranslate"><span class="pre">CONVERT_TO_CURVE</span></code> to
+promote a non-linear type to its generalized curve type (<code class="docutils literal notranslate"><span class="pre">POLYGON</span></code> to
+<code class="docutils literal notranslate"><span class="pre">CURVEPOLYGON</span></code>, <code class="docutils literal notranslate"><span class="pre">MULTIPOLYGON</span></code> to <code class="docutils literal notranslate"><span class="pre">MULTISURFACE</span></code>, <code class="docutils literal notranslate"><span class="pre">LINESTRING</span></code> to
+<code class="docutils literal notranslate"><span class="pre">COMPOUNDCURVE</span></code>, <code class="docutils literal notranslate"><span class="pre">MULTILINESTRING</span></code> to <code class="docutils literal notranslate"><span class="pre">MULTICURVE</span></code>). Starting with
+version 2.1 the type can be defined as measured (“25D” remains as an alias for
+single “Z”). Some forced geometry conversions may result in invalid
+geometries, for example when forcing conversion of multi-part multipolygons
+with <code class="docutils literal notranslate"><span class="pre">-nlt</span> <span class="pre">POLYGON</span></code>, the resulting polygon will break the Simple Features
+rules.</p>
+<p>Starting with GDAL 3.0.5, <code class="docutils literal notranslate"><span class="pre">-nlt</span> <span class="pre">CONVERT_TO_LINEAR</span></code> and <code class="docutils literal notranslate"><span class="pre">-nlt</span> <span class="pre">PROMOTE_TO_MULTI</span></code>
+can be used simultaneously.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-dim">
+<code class="descname">-dim</code><code class="descclassname"> &lt;val&gt;</code><a class="headerlink" href="#cmdoption-ogr2ogr-dim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Force the coordinate dimension to val (valid values are <code class="docutils literal notranslate"><span class="pre">XY</span></code>, <code class="docutils literal notranslate"><span class="pre">XYZ</span></code>,
+<code class="docutils literal notranslate"><span class="pre">XYM</span></code>, and <code class="docutils literal notranslate"><span class="pre">XYZM</span></code> - for backwards compatibility <code class="docutils literal notranslate"><span class="pre">2</span></code> is an alias for
+<code class="docutils literal notranslate"><span class="pre">XY</span></code> and <code class="docutils literal notranslate"><span class="pre">3</span></code> is an alias for <code class="docutils literal notranslate"><span class="pre">XYZ</span></code>). This affects both the layer
+geometry type, and feature geometries. The value can be set to <code class="docutils literal notranslate"><span class="pre">layer_dim</span></code>
+to instruct feature geometries to be promoted to the coordinate dimension
+declared by the layer. Support for M was added in GDAL 2.1.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-a-srs">
+<code class="descname">-a_srs</code><code class="descclassname"> &lt;srs_def&gt;</code><a class="headerlink" href="#cmdoption-ogr2ogr-a-srs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assign an output SRS. Srs_def can be a full WKT definition (hard to escape
+properly), or a well known definition (i.e. EPSG:4326) or a file with a WKT
+definition.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-t-srs">
+<code class="descname">-t_srs</code><code class="descclassname"> &lt;srs_def&gt;</code><a class="headerlink" href="#cmdoption-ogr2ogr-t-srs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reproject/transform to this SRS on output.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-s-srs">
+<code class="descname">-s_srs</code><code class="descclassname"> &lt;srs_def&gt;</code><a class="headerlink" href="#cmdoption-ogr2ogr-s-srs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override source SRS.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-ct">
+<code class="descname">-ct</code><code class="descclassname"> &lt;string&gt;</code><a class="headerlink" href="#cmdoption-ogr2ogr-ct" title="Permalink to this definition">¶</a></dt>
+<dd><p>A PROJ string (single step operation or multiple step string starting with
++proj=pipeline), a WKT2 string describing a CoordinateOperation, or a
+<a class="reference external" href="urn:ogc:def:coordinateOperation:EPSG::XXXX">urn:ogc:def:coordinateOperation:EPSG::XXXX</a> URN overriding the default
+transformation from the source to the target CRS. It must take into account
+the axis order of the source and target CRS.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 3.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-preserve-fid">
+<code class="descname">-preserve_fid</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogr2ogr-preserve-fid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use the FID of the source features instead of letting the output driver
+automatically assign a new one (for formats that require an FID).  If not
+in append mode, this behavior is the default if the output driver has
+a FID layer creation option, un which case the name of the source FID
+column will be used and source feature IDs will be attempted to be
+preserved. This behavior can be disabled by setting <code class="docutils literal notranslate"><span class="pre">-unsetFid</span></code>.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-fid">
+<code class="descname">-fid</code><code class="descclassname"> fid</code><a class="headerlink" href="#cmdoption-ogr2ogr-fid" title="Permalink to this definition">¶</a></dt>
+<dd><p>If provided, only the feature with the specified feature id will be
+processed.  Operates exclusive of the spatial or attribute queries. Note: if
+you want to select several features based on their feature id, you can also
+use the fact the ‘fid’ is a special field recognized by OGR SQL. So,
+<cite>-where “fid in (1,3,5)”</cite> would select features 1, 3 and 5.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-limit">
+<code class="descname">-limit</code><code class="descclassname"> nb_features</code><a class="headerlink" href="#cmdoption-ogr2ogr-limit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Limit the number of features per layer.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-oo">
+<code class="descname">-oo</code><code class="descclassname"> NAME=VALUE</code><a class="headerlink" href="#cmdoption-ogr2ogr-oo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Input dataset open option (format specific).</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-doo">
+<code class="descname">-doo</code><code class="descclassname"> NAME=VALUE</code><a class="headerlink" href="#cmdoption-ogr2ogr-doo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Destination dataset open option (format specific), only valid in -update mode.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-gt">
+<code class="descname">-gt</code><code class="descclassname"> n</code><a class="headerlink" href="#cmdoption-ogr2ogr-gt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Group n features per transaction (default 20000). Increase the value for
+better performance when writing into DBMS drivers that have transaction
+support. <code class="docutils literal notranslate"><span class="pre">n</span></code> can be set to unlimited to load the data into a single
+transaction.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-ds-transaction">
+<code class="descname">-ds_transaction</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogr2ogr-ds-transaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Force the use of a dataset level transaction (for drivers that support such
+mechanism), especially for drivers such as FileGDB that only support
+dataset level transaction in emulation mode.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-clipsrc">
+<code class="descname">-clipsrc</code><code class="descclassname"> [xmin ymin xmax ymax]|WKT|datasource|spat_extent</code><a class="headerlink" href="#cmdoption-ogr2ogr-clipsrc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clip geometries to the specified bounding box (expressed in source SRS),
+WKT geometry (POLYGON or MULTIPOLYGON), from a datasource or to the spatial
+extent of the -spa.. option if you use the spat_extent keyword. When
+specifying a datasource, you will generally want to use it in combination
+of the -clipsrclayer, -clipsrcwhere or -clipsrcsql options</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-clipsrcsql">
+<code class="descname">-clipsrcsql</code><code class="descclassname"> &lt;sql_statement&gt;</code><a class="headerlink" href="#cmdoption-ogr2ogr-clipsrcsql" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select desired geometries using an SQL query instead.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-clipsrclayer">
+<code class="descname">-clipsrclayer</code><code class="descclassname"> &lt;layername&gt;</code><a class="headerlink" href="#cmdoption-ogr2ogr-clipsrclayer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select the named layer from the source clip datasource.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-clipsrcwhere">
+<code class="descname">-clipsrcwhere</code><code class="descclassname"> &lt;expression&gt;</code><a class="headerlink" href="#cmdoption-ogr2ogr-clipsrcwhere" title="Permalink to this definition">¶</a></dt>
+<dd><p>Restrict desired geometries based on attribute query.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-clipdst">
+<code class="descname">-clipdst</code><code class="descclassname"> &lt;xmin&gt; &lt;ymin&gt; &lt;xmax&gt; &lt;ymax&gt;</code><a class="headerlink" href="#cmdoption-ogr2ogr-clipdst" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clip geometries after reprojection to the specified bounding box (expressed
+in dest SRS), WKT geometry (POLYGON or MULTIPOLYGON) or from a datasource.
+When specifying a datasource, you will generally want to use it in
+combination of the -clipdstlayer, -clipdstwhere or -clipdstsq.. options</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-clipdstsql">
+<code class="descname">-clipdstsql</code><code class="descclassname"> &lt;sql_statement&gt;</code><a class="headerlink" href="#cmdoption-ogr2ogr-clipdstsql" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select desired geometries using an SQL query instead.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-clipdstlayer">
+<code class="descname">-clipdstlayer</code><code class="descclassname"> &lt;layername&gt;</code><a class="headerlink" href="#cmdoption-ogr2ogr-clipdstlayer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select the named layer from the destination clip datasource.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-clipdstwhere">
+<code class="descname">-clipdstwhere</code><code class="descclassname"> &lt;expression&gt;</code><a class="headerlink" href="#cmdoption-ogr2ogr-clipdstwhere" title="Permalink to this definition">¶</a></dt>
+<dd><p>Restrict desired geometries based on attribute query.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-wrapdateline">
+<code class="descname">-wrapdateline</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogr2ogr-wrapdateline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split geometries crossing the dateline meridian (long. = +/- 180deg)</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-datelineoffset">
+<code class="descname">-datelineoffset</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogr2ogr-datelineoffset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Offset from dateline in degrees (default long. = +/- 10deg, geometries
+within 170deg to -170deg will be split)</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-simplify">
+<code class="descname">-simplify</code><code class="descclassname"> &lt;tolerance&gt;</code><a class="headerlink" href="#cmdoption-ogr2ogr-simplify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Distance tolerance for simplification. Note: the algorithm used preserves
+topology per feature, in particular for polygon geometries, but not for a
+whole layer.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-segmentize">
+<code class="descname">-segmentize</code><code class="descclassname"> &lt;max_dist&gt;</code><a class="headerlink" href="#cmdoption-ogr2ogr-segmentize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum distance between 2 nodes. Used to create intermediate points.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-makevalid">
+<code class="descname">-makevalid</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogr2ogr-makevalid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the <a class="reference internal" href="../api/ogrgeometry_cpp.html#_CPPv4NK11OGRGeometry9MakeValidEv" title="OGRGeometry::MakeValid"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRGeometry::MakeValid()</span></code></a> operation, followed by
+<a class="reference internal" href="../api/ogrgeometry_cpp.html#_CPPv4N18OGRGeometryFactory28removeLowerDimensionSubGeomsEPK11OGRGeometry" title="OGRGeometryFactory::removeLowerDimensionSubGeoms"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRGeometryFactory::removeLowerDimensionSubGeoms()</span></code></a>, on geometries
+to ensure they are valid regarding the rules of the Simple Features specification.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-fieldtypetostring">
+<code class="descname">-fieldTypeToString</code><code class="descclassname"> type1,...</code><a class="headerlink" href="#cmdoption-ogr2ogr-fieldtypetostring" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts any field of the specified type to a field of type string in the
+destination layer. Valid types are : Integer, Integer64, Real, String,
+Date, Time, DateTime, Binary, IntegerList, Integer64List, RealList,
+StringList. Special value All can be used to convert all fields to strings.
+This is an alternate way to using the CAST operator of OGR SQL, that may
+avoid typing a long SQL query. Note that this does not influence the field
+types used by the source driver, and is only an afterwards conversion.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-mapfieldtype">
+<code class="descname">-mapFieldType</code><code class="descclassname"> srctype|All=dsttype,...</code><a class="headerlink" href="#cmdoption-ogr2ogr-mapfieldtype" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts any field of the specified type to another type. Valid types are :
+Integer, Integer64, Real, String, Date, Time, DateTime, Binary,
+IntegerList, Integer64List, RealList, StringList. Types can also include
+subtype between parenthesis, such as Integer(Boolean), Real(Float32), …
+Special value All can be used to convert all fields to another type. This
+is an alternate way to using the CAST operator of OGR SQL, that may avoid
+typing a long SQL query. This is a generalization of -fieldTypeToString.
+Note that this does not influence the field types used by the source
+driver, and is only an afterwards conversion.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-unsetfieldwidth">
+<code class="descname">-unsetFieldWidth</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogr2ogr-unsetfieldwidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set field width and precision to 0.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-splitlistfields">
+<code class="descname">-splitlistfields</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogr2ogr-splitlistfields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split fields of type StringList, RealList or IntegerList into as many
+fields of type String, Real or Integer as necessary.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-maxsubfields">
+<code class="descname">-maxsubfields</code><code class="descclassname"> &lt;val&gt;</code><a class="headerlink" href="#cmdoption-ogr2ogr-maxsubfields" title="Permalink to this definition">¶</a></dt>
+<dd><p>To be combined with <code class="docutils literal notranslate"><span class="pre">-splitlistfields</span></code> to limit the number of subfields
+created for each split field.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-explodecollections">
+<code class="descname">-explodecollections</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogr2ogr-explodecollections" title="Permalink to this definition">¶</a></dt>
+<dd><p>Produce one feature for each geometry in any kind of geometry collection in
+the source file, applied after any <code class="docutils literal notranslate"><span class="pre">-sql</span></code> option.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-zfield">
+<code class="descname">-zfield</code><code class="descclassname"> &lt;field_name&gt;</code><a class="headerlink" href="#cmdoption-ogr2ogr-zfield" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses the specified field to fill the Z coordinate of geometries.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-gcp">
+<code class="descname">-gcp</code><code class="descclassname"> &lt;ungeoref_x&gt; &lt;ungeoref_y&gt; &lt;georef_x&gt; &lt;georef_y&gt; &lt;elevation&gt;</code><a class="headerlink" href="#cmdoption-ogr2ogr-gcp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add the indicated ground control point. This option may be provided
+multiple times to provide a set of GCPs.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-order">
+<code class="descname">-order</code><code class="descclassname"> &lt;n&gt;</code><a class="headerlink" href="#cmdoption-ogr2ogr-order" title="Permalink to this definition">¶</a></dt>
+<dd><p>Order of polynomial used for warping (1 to 3). The default is to select a
+polynomial order based on the number of GCPs.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-tps">
+<code class="descname">-tps</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogr2ogr-tps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Force use of thin plate spline transformer based on available GCPs.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-fieldmap">
+<code class="descname">-fieldmap</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogr2ogr-fieldmap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specifies the list of field indexes to be copied from the source to the
+destination. The (n)th value specified in the list is the index of the
+field in the target layer definition in which the n(th) field of the source
+layer must be copied. Index count starts at zero. To omit a field, specify
+a value of -1. There must be exactly as many values in the list as the
+count of the fields in the source layer. We can use the ‘identity’ setting
+to specify that the fields should be transferred by using the same order.
+This setting should be used along with the <code class="docutils literal notranslate"><span class="pre">-append</span></code> setting.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-addfields">
+<code class="descname">-addfields</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogr2ogr-addfields" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a specialized version of <code class="docutils literal notranslate"><span class="pre">-append</span></code>. Contrary to <code class="docutils literal notranslate"><span class="pre">-append</span></code>,
+<code class="docutils literal notranslate"><span class="pre">-addfields</span></code> has the effect of adding, to existing target layers, the new
+fields found in source layers. This option is useful when merging files
+that have non-strictly identical structures. This might not work for output
+formats that don’t support adding fields to existing non-empty layers. Note
+that if you plan to use -addfields, you may need to combine it with
+-forceNullable, including for the initial import.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-relaxedfieldnamematch">
+<code class="descname">-relaxedFieldNameMatch</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogr2ogr-relaxedfieldnamematch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do field name matching between source and existing target layer in a more
+relaxed way if the target driver has an implementation for it.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-forcenullable">
+<code class="descname">-forceNullable</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogr2ogr-forcenullable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do not propagate not-nullable constraints to target layer if they exist in
+source layer.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-unsetdefault">
+<code class="descname">-unsetDefault</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogr2ogr-unsetdefault" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do not propagate default field values to target layer if they exist in
+source layer.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-unsetfid">
+<code class="descname">-unsetFid</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogr2ogr-unsetfid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Can be specify to prevent the name of the source FID column and source
+feature IDs from being re-used for the target layer. This option can for
+example be useful if selecting source features with a ORDER BY clause.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-nomd">
+<code class="descname">-nomd</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogr2ogr-nomd" title="Permalink to this definition">¶</a></dt>
+<dd><p>To disable copying of metadata from source dataset and layers into target
+dataset and layers, when supported by output driver.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-mo">
+<code class="descname">-mo</code><code class="descclassname"> META-TAG=VALUE</code><a class="headerlink" href="#cmdoption-ogr2ogr-mo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Passes a metadata key and value to set on the output dataset, when
+supported by output driver.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-ogr2ogr-nonativedata">
+<code class="descname">-noNativeData</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-ogr2ogr-nonativedata" title="Permalink to this definition">¶</a></dt>
+<dd><p>To disable copying of native data, i.e. details of source format not
+captured by OGR abstraction, that are otherwise preserved by some drivers
+(like GeoJSON) when converting to same format.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.1.</span></p>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="performance-hints">
+<h2>Performance Hints<a class="headerlink" href="#performance-hints" title="Permalink to this headline">¶</a></h2>
+<p>When writing into transactional DBMS (SQLite/PostgreSQL,MySQL, etc…), it
+might be beneficial to increase the number of INSERT statements executed
+between BEGIN TRANSACTION and COMMIT TRANSACTION statements. This number is
+specified with the -gt option. For example, for SQLite, explicitly defining -gt
+65536 ensures optimal performance while populating some table containing many
+hundreds of thousands or millions of rows. However, note that -skipfailures
+overrides -gt and sets the size of transactions to 1.</p>
+<p>For PostgreSQL, the PG_USE_COPY config option can be set to YES for a
+significant insertion performance boost. See the PG driver documentation page.</p>
+<p>More generally, consult the documentation page of the input and output drivers
+for performance hints.</p>
+</div>
+<div class="section" id="c-api">
+<h2>C API<a class="headerlink" href="#c-api" title="Permalink to this headline">¶</a></h2>
+<p>This utility is also callable from C with <a class="reference internal" href="../api/gdal_utils.html#_CPPv419GDALVectorTranslatePKc12GDALDatasetHiP12GDALDatasetHPK26GDALVectorTranslateOptionsPi" title="GDALVectorTranslate"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALVectorTranslate()</span></code></a>.</p>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>Basic conversion from Shapefile to GeoPackage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogr2ogr</span> \
+  <span class="o">-</span><span class="n">f</span> <span class="n">GPKG</span> <span class="n">output</span><span class="o">.</span><span class="n">gpkg</span> \
+  <span class="nb">input</span><span class="o">.</span><span class="n">shp</span>
+</pre></div>
+</div>
+<p>Change the coordinate reference system from <code class="docutils literal notranslate"><span class="pre">EPSG:4326</span></code> to <code class="docutils literal notranslate"><span class="pre">EPSG:3857</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogr2ogr</span> \
+  <span class="o">-</span><span class="n">s_srs</span> <span class="n">EPSG</span><span class="p">:</span><span class="mi">4326</span> \
+  <span class="o">-</span><span class="n">t_srs</span> <span class="n">EPSG</span><span class="p">:</span><span class="mi">3857</span> \
+  <span class="o">-</span><span class="n">f</span> <span class="n">GPKG</span> <span class="n">output</span><span class="o">.</span><span class="n">gpkg</span> \
+  <span class="nb">input</span><span class="o">.</span><span class="n">gpkg</span>
+</pre></div>
+</div>
+<p>Example appending to an existing layer (both <code class="docutils literal notranslate"><span class="pre">-update</span></code> and <code class="docutils literal notranslate"><span class="pre">-append</span></code> flags need to be used):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogr2ogr</span> <span class="o">-</span><span class="n">update</span> <span class="o">-</span><span class="n">append</span> <span class="o">-</span><span class="n">f</span> <span class="n">PostgreSQL</span> <span class="n">PG</span><span class="p">:</span><span class="n">dbname</span><span class="o">=</span><span class="n">warmerda</span> <span class="n">abc</span><span class="o">.</span><span class="n">tab</span>
+</pre></div>
+</div>
+<p>Clip input layer with a bounding box (&lt;xmin&gt; &lt;ymin&gt; &lt;xmax&gt; &lt;ymax&gt;):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogr2ogr</span> \
+  <span class="o">-</span><span class="n">spat</span> <span class="o">-</span><span class="mf">13.931</span> <span class="mf">34.886</span> <span class="mf">46.23</span> <span class="mf">74.12</span> \
+  <span class="o">-</span><span class="n">f</span> <span class="n">GPKG</span> <span class="n">output</span><span class="o">.</span><span class="n">gpkg</span> \
+  <span class="n">natural_earth_vector</span><span class="o">.</span><span class="n">gpkg</span>
+</pre></div>
+</div>
+<p>Filter Features by a <code class="docutils literal notranslate"><span class="pre">-where</span></code> clause:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogr2ogr</span> \
+  <span class="o">-</span><span class="n">where</span> <span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">POP_EST</span><span class="se">\&quot;</span><span class="s2"> &lt; 1000000&quot;</span> \
+  <span class="o">-</span><span class="n">f</span> <span class="n">GPKG</span> <span class="n">output</span><span class="o">.</span><span class="n">gpkg</span> \
+  <span class="n">natural_earth_vector</span><span class="o">.</span><span class="n">gpkg</span> \
+  <span class="n">ne_10m_admin_0_countries</span>
+</pre></div>
+</div>
+<p>Example reprojecting from ETRS_1989_LAEA_52N_10E to EPSG:4326 and clipping to a bounding box:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogr2ogr</span> <span class="o">-</span><span class="n">wrapdateline</span> <span class="o">-</span><span class="n">t_srs</span> <span class="n">EPSG</span><span class="p">:</span><span class="mi">4326</span> <span class="o">-</span><span class="n">clipdst</span> <span class="o">-</span><span class="mi">5</span> <span class="mi">40</span> <span class="mi">15</span> <span class="mi">55</span> <span class="n">france_4326</span><span class="o">.</span><span class="n">shp</span> <span class="n">europe_laea</span><span class="o">.</span><span class="n">shp</span>
+</pre></div>
+</div>
+<p>Example for using the <code class="docutils literal notranslate"><span class="pre">-fieldmap</span></code> setting. The first field of the source layer is
+used to fill the third field (index 2 = third field) of the target layer, the
+second field of the source layer is ignored, the third field of the source
+layer used to fill the fifth field of the target layer.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogr2ogr</span> <span class="o">-</span><span class="n">append</span> <span class="o">-</span><span class="n">fieldmap</span> <span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span> <span class="n">dst</span><span class="o">.</span><span class="n">shp</span> <span class="n">src</span><span class="o">.</span><span class="n">shp</span>
+</pre></div>
+</div>
+<p>More examples are given in the individual format pages.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ogrtindex.html" class="btn btn-neutral float-right" title="ogrtindex" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ogrinfo.html" class="btn btn-neutral float-left" title="ogrinfo" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

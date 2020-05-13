@@ -1,0 +1,590 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Vector driver implementation tutorial &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgtutorials/vector_driver_tut.html"/>
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Vector driver in Python implementation tutorial" href="vector_python_driver.html" />
+    <link rel="prev" title="Vector API tutorial" href="vector_api_tut.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#raster">Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#multidimensional-raster">Multidimensional raster</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#vector">Vector</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="vector_api_tut.html">Vector API tutorial</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Vector driver implementation tutorial</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overall-approach">Overall Approach</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementing-gdaldriver">Implementing GDALDriver</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#basic-read-only-data-source">Basic Read Only Data Source</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#read-only-layer">Read Only Layer</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="vector_python_driver.html">Vector driver in Python implementation tutorial</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#geographic-network-model">Geographic Network Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#projections-and-spatial-reference-systems-tutorial-osr-ogrspatialreference">Projections and Spatial Reference Systems tutorial (OSR - OGRSpatialReference)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Tutorials</a> &raquo;</li>
+      
+      <li>Vector driver implementation tutorial</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/tutorials/vector_driver_tut.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="vector_python_driver.html" class="btn btn-neutral float-right" title="Vector driver in Python implementation tutorial" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="vector_api_tut.html" class="btn btn-neutral float-left" title="Vector API tutorial" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="vector-driver-implementation-tutorial">
+<span id="vector-driver-tut"></span><h1>Vector driver implementation tutorial<a class="headerlink" href="#vector-driver-implementation-tutorial" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="overall-approach">
+<h2>Overall Approach<a class="headerlink" href="#overall-approach" title="Permalink to this headline">¶</a></h2>
+<p>In general new formats are added to OGR by implementing format
+specific drivers with instantiating a <a class="reference internal" href="../api/gdaldriver_cpp.html#_CPPv410GDALDriver" title="GDALDriver"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDriver</span></code></a> and subclasses of
+<a class="reference internal" href="../api/gdaldataset_cpp.html#_CPPv411GDALDataset" title="GDALDataset"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDataset</span></code></a> and <a class="reference internal" href="../api/ogrlayer_cpp.html#_CPPv48OGRLayer" title="OGRLayer"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRLayer</span></code></a>.  The GDALDriver instance is registered with
+the <a class="reference internal" href="../api/gdaldriver_cpp.html#_CPPv417GDALDriverManager" title="GDALDriverManager"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDriverManager</span></code></a> at runtime.</p>
+<p>Before following this tutorial to implement an OGR driver, please review
+the <a class="reference internal" href="../user/vector_data_model.html#vector-data-model"><span class="std std-ref">Vector Data Model</span></a> document carefully.</p>
+<p>The tutorial will be based on implementing a simple ascii point format.</p>
+</div>
+<div class="section" id="implementing-gdaldriver">
+<h2>Implementing GDALDriver<a class="headerlink" href="#implementing-gdaldriver" title="Permalink to this headline">¶</a></h2>
+<p>The format specific driver class is implemented as a instance of GDALDriver.
+One instance of the driver will normally be created, and registered with
+the GDALDriverManager.  The instantiation of the driver is normally
+handled by a global C callable registration function, similar to the
+following placed in the same file as the driver class.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span> <span class="nf">RegisterOGRSPF</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">GDALGetDriverByName</span><span class="p">(</span><span class="s">&quot;SPF&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">NULL</span> <span class="p">)</span>
+        <span class="k">return</span><span class="p">;</span>
+
+    <span class="n">GDALDriver</span> <span class="o">*</span><span class="n">poDriver</span> <span class="o">=</span> <span class="k">new</span> <span class="n">GDALDriver</span><span class="p">();</span>
+
+    <span class="n">poDriver</span><span class="o">-&gt;</span><span class="n">SetDescription</span><span class="p">(</span><span class="s">&quot;SPF&quot;</span><span class="p">);</span>
+    <span class="n">poDriver</span><span class="o">-&gt;</span><span class="n">SetMetadataItem</span><span class="p">(</span><span class="n">GDAL_DCAP_VECTOR</span><span class="p">,</span> <span class="s">&quot;YES&quot;</span><span class="p">);</span>
+    <span class="n">poDriver</span><span class="o">-&gt;</span><span class="n">SetMetadataItem</span><span class="p">(</span><span class="n">GDAL_DMD_LONGNAME</span><span class="p">,</span> <span class="s">&quot;Long name for SPF driver&quot;</span><span class="p">);</span>
+    <span class="n">poDriver</span><span class="o">-&gt;</span><span class="n">SetMetadataItem</span><span class="p">(</span><span class="n">GDAL_DMD_EXTENSION</span><span class="p">,</span> <span class="s">&quot;spf&quot;</span><span class="p">);</span>
+    <span class="n">poDriver</span><span class="o">-&gt;</span><span class="n">SetMetadataItem</span><span class="p">(</span><span class="n">GDAL_DMD_HELPTOPIC</span><span class="p">,</span> <span class="s">&quot;drv_spf.html&quot;</span><span class="p">);</span>
+
+    <span class="n">poDriver</span><span class="o">-&gt;</span><span class="n">pfnOpen</span> <span class="o">=</span> <span class="n">OGRSPFDriverOpen</span><span class="p">;</span>
+    <span class="n">poDriver</span><span class="o">-&gt;</span><span class="n">pfnIdentify</span> <span class="o">=</span> <span class="n">OGRSPFDriverIdentify</span><span class="p">;</span>
+    <span class="n">poDriver</span><span class="o">-&gt;</span><span class="n">pfnCreate</span> <span class="o">=</span> <span class="n">OGRSPFDriverCreate</span><span class="p">;</span>
+
+    <span class="n">poDriver</span><span class="o">-&gt;</span><span class="n">SetMetadataItem</span><span class="p">(</span><span class="n">GDAL_DCAP_VIRTUALIO</span><span class="p">,</span> <span class="s">&quot;YES&quot;</span><span class="p">);</span>
+
+    <span class="n">GetGDALDriverManager</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">RegisterDriver</span><span class="p">(</span><span class="n">poDriver</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDriver::SetDescription()</span></code> sets the name of the driver.  This name is specified
+on the commandline when creating datasources so it is generally good to keep
+it short and without any special characters or spaces.</p>
+<p>SetMetadataItem( GDAL_DCAP_VECTOR, “YES” ) is specified to indicate that the driver
+will handle vector data.</p>
+<p>SetMetadataItem( GDAL_DCAP_VIRTUALIO, “YES” ) is specified to indicate that the
+driver can deal with files opened with the VSI*L GDAL API.
+Otherwise this metadata item should not be defined.</p>
+<p>The driver declaration generally looks something like this for a
+format with read or read and update access (the Open() method) and creation
+support (the Create() method).</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">static</span> <span class="n">GDALDataset</span><span class="o">*</span> <span class="nf">OGRSPFDriverOpen</span><span class="p">(</span><span class="n">GDALOpenInfo</span><span class="o">*</span> <span class="n">poOpenInfo</span><span class="p">);</span>
+<span class="k">static</span> <span class="kt">int</span>          <span class="nf">OGRSPFDriverIdentify</span><span class="p">(</span><span class="n">GDALOpenInfo</span><span class="o">*</span> <span class="n">poOpenInfo</span><span class="p">);</span>
+<span class="k">static</span> <span class="n">GDALDataset</span><span class="o">*</span> <span class="nf">OGRSPFDriverCreate</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">pszName</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nXSize</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nYSize</span><span class="p">,</span>
+                                    <span class="kt">int</span> <span class="n">nBands</span><span class="p">,</span> <span class="n">GDALDataType</span> <span class="n">eDT</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">papszOptions</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The Open() method is called by <a class="reference internal" href="../api/raster_c_api.html#_CPPv410GDALOpenExPKcjPPCKcPPCKcPPCKc" title="GDALOpenEx"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALOpenEx()</span></code></a>. It should quietly return NULL if
+the passed filename is not of the format supported by the driver.  If it is the
+target format, then a new GDALDataset object for the dataset should be returned.</p>
+<p>It is common for the Open() method to be delegated to an Open() method on
+the actual format’s GDALDataset class.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">static</span> <span class="n">GDALDataset</span> <span class="o">*</span><span class="nf">OGRSPFDriverOpen</span><span class="p">(</span> <span class="n">GDALOpenInfo</span><span class="o">*</span> <span class="n">poOpenInfo</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="n">OGRSPFDriverIdentify</span><span class="p">(</span><span class="n">poOpenInfo</span><span class="p">)</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+
+    <span class="n">OGRSPFDataSource</span> <span class="o">*</span><span class="n">poDS</span> <span class="o">=</span> <span class="k">new</span> <span class="n">OGRSPFDataSource</span><span class="p">();</span>
+    <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="n">poDS</span><span class="o">-&gt;</span><span class="n">Open</span><span class="p">(</span><span class="n">poOpenInfo</span><span class="o">-&gt;</span><span class="n">pszFilename</span><span class="p">,</span> <span class="n">poOpenInfo</span><span class="o">-&gt;</span><span class="n">eAccess</span> <span class="o">==</span> <span class="n">GA_Update</span><span class="p">)</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">poDS</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">poDS</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The Identify() method is implemented as such :</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">static</span> <span class="kt">int</span> <span class="nf">OGRSPFDriverIdentify</span><span class="p">(</span> <span class="n">GDALOpenInfo</span><span class="o">*</span> <span class="n">poOpenInfo</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// Does this appear to be an .spf file?</span>
+    <span class="k">return</span> <span class="n">EQUAL</span><span class="p">(</span><span class="n">CPLGetExtension</span><span class="p">(</span><span class="n">poOpenInfo</span><span class="o">-&gt;</span><span class="n">pszFilename</span><span class="p">),</span> <span class="s">&quot;spf&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Examples of the Create() method is left for the section on creation and update.</p>
+</div>
+<div class="section" id="basic-read-only-data-source">
+<h2>Basic Read Only Data Source<a class="headerlink" href="#basic-read-only-data-source" title="Permalink to this headline">¶</a></h2>
+<p>We will start implementing a minimal read-only datasource.  No attempt is
+made to optimize operations, and default implementations of many methods
+inherited from GDALDataset are used.</p>
+<p>The primary responsibility of the datasource is to manage the list of layers.
+In the case of the SPF format a datasource is a single file representing one
+layer so there is at most one layer.  The “name” of a datasource should
+generally be the name passed to the Open() method.</p>
+<p>The Open() method below is not overriding a base class method, but we have
+it to implement the open operation delegated by the driver class.</p>
+<p>For this simple case we provide a stub <a class="reference internal" href="../api/gdaldataset_cpp.html#_CPPv4N11GDALDataset14TestCapabilityEPKc" title="GDALDataset::TestCapability"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDataset::TestCapability()</span></code></a> that returns FALSE
+for all extended capabilities.  The TestCapability() method is pure virtual,
+so it does need to be implemented.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">OGRSPFDataSource</span> <span class="o">:</span> <span class="k">public</span> <span class="n">GDALDataset</span>
+<span class="p">{</span>
+    <span class="n">OGRSPFLayer</span>       <span class="o">**</span><span class="n">papoLayers</span><span class="p">;</span>
+    <span class="kt">int</span>                 <span class="n">nLayers</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+                        <span class="n">OGRSPFDataSource</span><span class="p">();</span>
+                        <span class="o">~</span><span class="n">OGRSPFDataSource</span><span class="p">();</span>
+
+    <span class="kt">int</span>                 <span class="nf">Open</span><span class="p">(</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">pszFilename</span><span class="p">,</span> <span class="kt">int</span> <span class="n">bUpdate</span> <span class="p">);</span>
+
+    <span class="kt">int</span>                 <span class="nf">GetLayerCount</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">nLayers</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">OGRLayer</span>            <span class="o">*</span><span class="nf">GetLayer</span><span class="p">(</span> <span class="kt">int</span> <span class="p">);</span>
+
+    <span class="kt">int</span>                 <span class="nf">TestCapability</span><span class="p">(</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">FALSE</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The constructor is a simple initializer to a default state.  The Open() will
+take care of actually attaching it to a file.  The destructor is responsible
+for orderly cleanup of layers.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">OGRSPFDataSource</span><span class="o">::</span><span class="n">OGRSPFDataSource</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">papoLayers</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="n">nLayers</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">OGRSPFDataSource</span><span class="o">::~</span><span class="n">OGRSPFDataSource</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nLayers</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">)</span>
+        <span class="k">delete</span> <span class="n">papoLayers</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="n">CPLFree</span><span class="p">(</span><span class="n">papoLayers</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The Open() method is the most important one on the datasource, though
+in this particular instance it passes most of its work off to the
+OGRSPFLayer constructor if it believes the file is of the desired format.</p>
+<p>Note that Open() methods should try and determine that a file isn’t of the
+identified format as efficiently as possible, since many drivers may be
+invoked with files of the wrong format before the correct driver is
+reached.  In this particular Open() we just test the file extension but this
+is generally a poor way of identifying a file format.  If available, checking
+“magic header values” or something similar is preferable.</p>
+<p>In the case of the SPF format, update in place is not supported,
+so we always fail if bUpdate is FALSE.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span>  <span class="n">OGRSPFDataSource</span><span class="o">::</span><span class="n">Open</span><span class="p">(</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">pszFilename</span><span class="p">,</span> <span class="kt">int</span> <span class="n">bUpdate</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">bUpdate</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">CPLError</span><span class="p">(</span><span class="n">CE_Failure</span><span class="p">,</span> <span class="n">CPLE_OpenFailed</span><span class="p">,</span>
+                <span class="s">&quot;Update access not supported by the SPF driver.&quot;</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Create a corresponding layer.</span>
+    <span class="n">nLayers</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">papoLayers</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">OGRSPFLayer</span> <span class="o">**&gt;</span><span class="p">(</span><span class="n">CPLMalloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)));</span>
+
+    <span class="n">papoLayers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">OGRSPFLayer</span><span class="p">(</span><span class="n">pszFilename</span><span class="p">);</span>
+
+    <span class="n">pszName</span> <span class="o">=</span> <span class="n">CPLStrdup</span><span class="p">(</span><span class="n">pszFilename</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="n">TRUE</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>A GetLayer() method also needs to be implemented.  Since the layer list
+is created in the Open() this is just a lookup with some safety testing.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">OGRLayer</span> <span class="o">*</span><span class="n">OGRSPFDataSource</span><span class="o">::</span><span class="n">GetLayer</span><span class="p">(</span> <span class="kt">int</span> <span class="n">iLayer</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">iLayer</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">iLayer</span> <span class="o">&gt;=</span> <span class="n">nLayers</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="n">papoLayers</span><span class="p">[</span><span class="n">iLayer</span><span class="p">];</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="read-only-layer">
+<h2>Read Only Layer<a class="headerlink" href="#read-only-layer" title="Permalink to this headline">¶</a></h2>
+<p>The OGRSPFLayer is implements layer semantics for an .spf file.  It provides
+access to a set of feature objects in a consistent coordinate system
+with a particular set of attribute columns.  Our class definition looks like
+this:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">OGRSPFLayer</span> <span class="o">:</span> <span class="k">public</span> <span class="n">OGRLayer</span>
+<span class="p">{</span>
+    <span class="n">OGRFeatureDefn</span>     <span class="o">*</span><span class="n">poFeatureDefn</span><span class="p">;</span>
+    <span class="kt">FILE</span>               <span class="o">*</span><span class="n">fp</span><span class="p">;</span>
+    <span class="kt">int</span>                 <span class="n">nNextFID</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">OGRSPFLayer</span><span class="p">(</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">pszFilename</span> <span class="p">);</span>
+<span class="o">~</span><span class="n">OGRSPFLayer</span><span class="p">();</span>
+
+    <span class="kt">void</span>                <span class="nf">ResetReading</span><span class="p">();</span>
+    <span class="n">OGRFeature</span> <span class="o">*</span>        <span class="nf">GetNextFeature</span><span class="p">();</span>
+
+    <span class="n">OGRFeatureDefn</span> <span class="o">*</span>    <span class="nf">GetLayerDefn</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">poFeatureDefn</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="kt">int</span>                 <span class="nf">TestCapability</span><span class="p">(</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">FALSE</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The layer constructor is responsible for initialization.  The most important
+initialization is setting up the <a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv414OGRFeatureDefn" title="OGRFeatureDefn"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRFeatureDefn</span></code></a> for the layer.  This defines
+the list of fields and their types, the geometry type and the coordinate
+system for the layer.  In the SPF format the set of fields is fixed - a
+single string field and we have no coordinate system info to set.</p>
+<p>Pay particular attention to the reference counting of the OGRFeatureDefn.
+As OGRFeature’s for this layer will also take a reference to this definition,
+it is important that we also establish a reference on behalf of the layer
+itself.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">OGRSPFLayer</span><span class="o">::</span><span class="n">OGRSPFLayer</span><span class="p">(</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">pszFilename</span> <span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">nNextFID</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="n">poFeatureDefn</span> <span class="o">=</span> <span class="k">new</span> <span class="n">OGRFeatureDefn</span><span class="p">(</span><span class="n">CPLGetBasename</span><span class="p">(</span><span class="n">pszFilename</span><span class="p">));</span>
+    <span class="n">SetDescription</span><span class="p">(</span><span class="n">poFeatureDefn</span><span class="o">-&gt;</span><span class="n">GetName</span><span class="p">());</span>
+    <span class="n">poFeatureDefn</span><span class="o">-&gt;</span><span class="n">Reference</span><span class="p">();</span>
+    <span class="n">poFeatureDefn</span><span class="o">-&gt;</span><span class="n">SetGeomType</span><span class="p">(</span><span class="n">wkbPoint</span><span class="p">);</span>
+
+    <span class="n">OGRFieldDefn</span> <span class="nf">oFieldTemplate</span><span class="p">(</span><span class="s">&quot;Name&quot;</span><span class="p">,</span> <span class="n">OFTString</span><span class="p">);</span>
+
+    <span class="n">poFeatureDefn</span><span class="o">-&gt;</span><span class="n">AddFieldDefn</span><span class="p">(</span><span class="o">&amp;</span><span class="n">oFieldTemplate</span><span class="p">);</span>
+
+    <span class="n">fp</span> <span class="o">=</span> <span class="n">VSIFOpenL</span><span class="p">(</span><span class="n">pszFilename</span><span class="p">,</span> <span class="s">&quot;r&quot;</span><span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">fp</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="p">)</span>
+        <span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Note that the destructor uses <a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv4N14OGRFeatureDefn7ReleaseEv" title="OGRFeatureDefn::Release"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRFeatureDefn::Release()</span></code></a> on the OGRFeatureDefn.  This will
+destroy the feature definition if the reference count drops to zero, but if
+the application is still holding onto a feature from this layer, then that
+feature will hold a reference to the feature definition and it will not
+be destroyed here (which is good!).</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">OGRSPFLayer</span><span class="o">::~</span><span class="n">OGRSPFLayer</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">poFeatureDefn</span><span class="o">-&gt;</span><span class="n">Release</span><span class="p">();</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">fp</span> <span class="o">!=</span> <span class="nb">NULL</span> <span class="p">)</span>
+        <span class="n">VSIFCloseL</span><span class="p">(</span><span class="n">fp</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="../api/ogrlayer_cpp.html#_CPPv4N8OGRLayer14GetNextFeatureEv" title="OGRLayer::GetNextFeature"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRLayer::GetNextFeature()</span></code></a> method is usually the work horse of OGRLayer
+implementations.  It is responsible for reading the next feature according
+to the current spatial and attribute filters installed.</p>
+<p>The while() loop is present to loop until we find a satisfactory
+feature.  The first section of code is for parsing a single line of
+the SPF text file and establishing the x, y and name for the line.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">OGRFeature</span> <span class="o">*</span><span class="n">OGRSPFLayer</span><span class="o">::</span><span class="n">GetNextFeature</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="c1">// Loop till we find a feature matching our requirements.</span>
+    <span class="k">while</span><span class="p">(</span> <span class="nb">true</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">pszLine</span> <span class="o">=</span> <span class="n">CPLReadLineL</span><span class="p">(</span><span class="n">fp</span><span class="p">);</span>
+
+        <span class="c1">// Are we at end of file (out of features)?</span>
+        <span class="k">if</span><span class="p">(</span> <span class="n">pszLine</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="p">)</span>
+            <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+
+        <span class="k">const</span> <span class="kt">double</span> <span class="n">dfX</span> <span class="o">=</span> <span class="n">atof</span><span class="p">(</span><span class="n">pszLine</span><span class="p">);</span>
+
+        <span class="n">pszLine</span> <span class="o">=</span> <span class="n">strstr</span><span class="p">(</span><span class="n">pszLine</span><span class="p">,</span><span class="s">&quot;|&quot;</span><span class="p">);</span>
+        <span class="k">if</span><span class="p">(</span> <span class="n">pszLine</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="p">)</span>
+            <span class="k">continue</span><span class="p">;</span> <span class="c1">// we should issue an error!</span>
+        <span class="k">else</span>
+            <span class="n">pszLine</span><span class="o">++</span><span class="p">;</span>
+
+        <span class="k">const</span> <span class="kt">double</span> <span class="n">dfY</span> <span class="o">=</span> <span class="n">atof</span><span class="p">(</span><span class="n">pszLine</span><span class="p">);</span>
+
+        <span class="n">pszLine</span> <span class="o">=</span> <span class="n">strstr</span><span class="p">(</span><span class="n">pszLine</span><span class="p">,</span><span class="s">&quot;|&quot;</span><span class="p">);</span>
+
+        <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">pszName</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span> <span class="n">pszLine</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="p">)</span>
+            <span class="k">continue</span><span class="p">;</span> <span class="c1">// we should issue an error!</span>
+        <span class="k">else</span>
+            <span class="n">pszName</span> <span class="o">=</span> <span class="n">pszLine</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The next section turns the x, y and name into a feature.  Also note that
+we assign a linearly incremented feature id.  In our case we started at
+zero for the first feature, though some drivers start at 1.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">OGRFeature</span> <span class="o">*</span><span class="n">poFeature</span> <span class="o">=</span> <span class="k">new</span> <span class="n">OGRFeature</span><span class="p">(</span><span class="n">poFeatureDefn</span><span class="p">);</span>
+
+<span class="n">poFeature</span><span class="o">-&gt;</span><span class="n">SetGeometryDirectly</span><span class="p">(</span><span class="k">new</span> <span class="n">OGRPoint</span><span class="p">(</span><span class="n">dfX</span><span class="p">,</span> <span class="n">dfY</span><span class="p">));</span>
+<span class="n">poFeature</span><span class="o">-&gt;</span><span class="n">SetField</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">pszName</span><span class="p">);</span>
+<span class="n">poFeature</span><span class="o">-&gt;</span><span class="n">SetFID</span><span class="p">(</span><span class="n">nNextFID</span><span class="o">++</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Next we check if the feature matches our current attribute or
+spatial filter if we have them.  Methods on the OGRLayer base class
+support maintain filters in the OGRLayer member fields <code class="xref cpp cpp-member docutils literal notranslate"><span class="pre">OGRLayer::m_poFilterGeom</span></code>
+(spatial filter) and <code class="xref cpp cpp-member docutils literal notranslate"><span class="pre">OGRLayer::m_poAttrQuery</span></code> (attribute filter) so we can just use
+these values here if they are non-NULL.  The following test is essentially
+“stock” and done the same in all formats.  Some formats also do some
+spatial filtering ahead of time using a spatial index.</p>
+<p>If the feature meets our criteria we return it.  Otherwise we destroy it,
+and return to the top of the loop to fetch another to try.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span>        <span class="k">if</span><span class="p">(</span> <span class="p">(</span><span class="n">m_poFilterGeom</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="o">||</span>
+            <span class="n">FilterGeometry</span><span class="p">(</span><span class="n">poFeature</span><span class="o">-&gt;</span><span class="n">GetGeometryRef</span><span class="p">()))</span> <span class="o">&amp;&amp;</span>
+            <span class="p">(</span><span class="n">m_poAttrQuery</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="o">||</span>
+            <span class="n">m_poAttrQuery</span><span class="o">-&gt;</span><span class="n">Evaluate</span><span class="p">(</span><span class="n">poFeature</span><span class="p">))</span> <span class="p">)</span>
+            <span class="k">return</span> <span class="n">poFeature</span><span class="p">;</span>
+
+        <span class="k">delete</span> <span class="n">poFeature</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>While in the middle of reading a feature set from a layer, or at any other
+time the application can call <a class="reference internal" href="../api/ogrlayer_cpp.html#_CPPv4N8OGRLayer12ResetReadingEv" title="OGRLayer::ResetReading"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRLayer::ResetReading()</span></code></a> which is intended to restart
+reading at the beginning of the feature set.  We implement this by seeking
+back to the beginning of the file, and resetting our feature id counter.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span> <span class="n">OGRSPFLayer</span><span class="o">::</span><span class="n">ResetReading</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">VSIFSeekL</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">SEEK_SET</span><span class="p">);</span>
+    <span class="n">nNextFID</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>In this implementation we do not provide a custom implementation for the
+GetFeature() method.  This means an attempt to read a particular feature
+by its feature id will result in many calls to GetNextFeature() until the
+desired feature is found.  However, in a sequential text format like spf
+there is little else we could do anyway.</p>
+<p>There! We have completed a simple read-only feature file format driver.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="vector_python_driver.html" class="btn btn-neutral float-right" title="Vector driver in Python implementation tutorial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="vector_api_tut.html" class="btn btn-neutral float-left" title="Vector API tutorial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,445 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>GDAL Warp API tutorial (Reprojection, …) &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgtutorials/warp_tut.html"/>
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="GDAL Grid Tutorial" href="gdal_grid_tut.html" />
+    <link rel="prev" title="Raster driver implementation tutorial" href="raster_driver_tut.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorials</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#raster">Raster</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="raster_api_tut.html">Raster API tutorial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="raster_driver_tut.html">Raster driver implementation tutorial</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">GDAL Warp API tutorial (Reprojection, …)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#a-simple-reprojection-case">A Simple Reprojection Case</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#other-warping-options">Other Warping Options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#creating-the-output-file">Creating the Output File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#performance-optimization">Performance Optimization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#other-masking-options">Other Masking Options</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_grid_tut.html">GDAL Grid Tutorial</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#multidimensional-raster">Multidimensional raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#vector">Vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#geographic-network-model">Geographic Network Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#projections-and-spatial-reference-systems-tutorial-osr-ogrspatialreference">Projections and Spatial Reference Systems tutorial (OSR - OGRSpatialReference)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Tutorials</a> &raquo;</li>
+      
+      <li>GDAL Warp API tutorial (Reprojection, …)</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/tutorials/warp_tut.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="gdal_grid_tut.html" class="btn btn-neutral float-right" title="GDAL Grid Tutorial" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="raster_driver_tut.html" class="btn btn-neutral float-left" title="Raster driver implementation tutorial" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="gdal-warp-api-tutorial-reprojection">
+<span id="warp-tut"></span><h1>GDAL Warp API tutorial (Reprojection, …)<a class="headerlink" href="#gdal-warp-api-tutorial-reprojection" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>The GDAL Warp API (declared in <a class="reference internal" href="../api/gdalwarp_cpp.html#gdalwarp-cpp"><span class="std std-ref">gdalwarper.h</span></a>) provides services for high performance image warping using application provided geometric transformation functions (GDALTransformerFunc), a variety of resampling kernels, and various masking options. Files much larger than can be held in memory can be warped.</p>
+<p>This tutorial demonstrates how to implement an application using the Warp API. It assumes implementation in C++ as C and Python bindings are incomplete for the Warp API. It also assumes familiarity with the <a class="reference internal" href="../user/raster_data_model.html#raster-data-model"><span class="std std-ref">Raster Data Model</span></a>, and the general GDAL API.</p>
+<p>Applications normally perform a warp by initializing a <a class="reference internal" href="../api/gdalwarp_cpp.html#_CPPv415GDALWarpOptions" title="GDALWarpOptions"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALWarpOptions</span></code></a> structure with the options to be utilized, instantiating a GDALWarpOperation based on these options, and then invoking the <a class="reference internal" href="../api/gdalwarp_cpp.html#_CPPv4N17GDALWarpOperation17ChunkAndWarpImageEiiii" title="GDALWarpOperation::ChunkAndWarpImage"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALWarpOperation::ChunkAndWarpImage()</span></code></a> method to perform the warp options internally using the <a class="reference internal" href="../api/gdalwarp_cpp.html#_CPPv414GDALWarpKernel" title="GDALWarpKernel"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALWarpKernel</span></code></a> class.</p>
+</div>
+<div class="section" id="a-simple-reprojection-case">
+<h2>A Simple Reprojection Case<a class="headerlink" href="#a-simple-reprojection-case" title="Permalink to this headline">¶</a></h2>
+<p>First we will construct a relatively simple example for reprojecting an image, assuming an appropriate output file already exists, and with minimal error checking.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;gdalwarper.h&quot;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">GDALDatasetH</span>  <span class="n">hSrcDS</span><span class="p">,</span> <span class="n">hDstDS</span><span class="p">;</span>
+
+    <span class="c1">// Open input and output files.</span>
+    <span class="n">GDALAllRegister</span><span class="p">();</span>
+    <span class="n">hSrcDS</span> <span class="o">=</span> <span class="n">GDALOpen</span><span class="p">(</span> <span class="s">&quot;in.tif&quot;</span><span class="p">,</span> <span class="n">GA_ReadOnly</span> <span class="p">);</span>
+    <span class="n">hDstDS</span> <span class="o">=</span> <span class="n">GDALOpen</span><span class="p">(</span> <span class="s">&quot;out.tif&quot;</span><span class="p">,</span> <span class="n">GA_Update</span> <span class="p">);</span>
+
+    <span class="c1">// Setup warp options.</span>
+    <span class="n">GDALWarpOptions</span> <span class="o">*</span><span class="n">psWarpOptions</span> <span class="o">=</span> <span class="n">GDALCreateWarpOptions</span><span class="p">();</span>
+    <span class="n">psWarpOptions</span><span class="o">-&gt;</span><span class="n">hSrcDS</span> <span class="o">=</span> <span class="n">hSrcDS</span><span class="p">;</span>
+    <span class="n">psWarpOptions</span><span class="o">-&gt;</span><span class="n">hDstDS</span> <span class="o">=</span> <span class="n">hDstDS</span><span class="p">;</span>
+    <span class="n">psWarpOptions</span><span class="o">-&gt;</span><span class="n">nBandCount</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">psWarpOptions</span><span class="o">-&gt;</span><span class="n">panSrcBands</span> <span class="o">=</span>
+        <span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="p">)</span> <span class="n">CPLMalloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="o">*</span> <span class="n">psWarpOptions</span><span class="o">-&gt;</span><span class="n">nBandCount</span> <span class="p">);</span>
+    <span class="n">psWarpOptions</span><span class="o">-&gt;</span><span class="n">panSrcBands</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">psWarpOptions</span><span class="o">-&gt;</span><span class="n">panDstBands</span> <span class="o">=</span>
+        <span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="p">)</span> <span class="n">CPLMalloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="o">*</span> <span class="n">psWarpOptions</span><span class="o">-&gt;</span><span class="n">nBandCount</span> <span class="p">);</span>
+    <span class="n">psWarpOptions</span><span class="o">-&gt;</span><span class="n">panDstBands</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">psWarpOptions</span><span class="o">-&gt;</span><span class="n">pfnProgress</span> <span class="o">=</span> <span class="n">GDALTermProgress</span><span class="p">;</span>
+
+    <span class="c1">// Establish reprojection transformer.</span>
+    <span class="n">psWarpOptions</span><span class="o">-&gt;</span><span class="n">pTransformerArg</span> <span class="o">=</span>
+        <span class="n">GDALCreateGenImgProjTransformer</span><span class="p">(</span> <span class="n">hSrcDS</span><span class="p">,</span>
+                                        <span class="n">GDALGetProjectionRef</span><span class="p">(</span><span class="n">hSrcDS</span><span class="p">),</span>
+                                        <span class="n">hDstDS</span><span class="p">,</span>
+                                        <span class="n">GDALGetProjectionRef</span><span class="p">(</span><span class="n">hDstDS</span><span class="p">),</span>
+                                        <span class="n">FALSE</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mi">1</span> <span class="p">);</span>
+    <span class="n">psWarpOptions</span><span class="o">-&gt;</span><span class="n">pfnTransformer</span> <span class="o">=</span> <span class="n">GDALGenImgProjTransform</span><span class="p">;</span>
+
+    <span class="c1">// Initialize and execute the warp operation.</span>
+    <span class="n">GDALWarpOperation</span> <span class="n">oOperation</span><span class="p">;</span>
+    <span class="n">oOperation</span><span class="p">.</span><span class="n">Initialize</span><span class="p">(</span> <span class="n">psWarpOptions</span> <span class="p">);</span>
+    <span class="n">oOperation</span><span class="p">.</span><span class="n">ChunkAndWarpImage</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+                                <span class="n">GDALGetRasterXSize</span><span class="p">(</span> <span class="n">hDstDS</span> <span class="p">),</span>
+                                <span class="n">GDALGetRasterYSize</span><span class="p">(</span> <span class="n">hDstDS</span> <span class="p">)</span> <span class="p">);</span>
+    <span class="n">GDALDestroyGenImgProjTransformer</span><span class="p">(</span> <span class="n">psWarpOptions</span><span class="o">-&gt;</span><span class="n">pTransformerArg</span> <span class="p">);</span>
+    <span class="n">GDALDestroyWarpOptions</span><span class="p">(</span> <span class="n">psWarpOptions</span> <span class="p">);</span>
+    <span class="n">GDALClose</span><span class="p">(</span> <span class="n">hDstDS</span> <span class="p">);</span>
+    <span class="n">GDALClose</span><span class="p">(</span> <span class="n">hSrcDS</span> <span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This example opens the existing input and output files (in.tif and out.tif). A <a class="reference internal" href="../api/gdalwarp_cpp.html#_CPPv415GDALWarpOptions" title="GDALWarpOptions"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALWarpOptions</span></code></a> structure is allocated (<a class="reference internal" href="../api/gdalwarp_cpp.html#_CPPv421GDALCreateWarpOptionsv" title="GDALCreateWarpOptions"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALCreateWarpOptions()</span></code></a> sets lots of sensible defaults for stuff, always use it for defaulting things), and the input and output file handles, and band lists are set. The panSrcBands and panDstBands lists are dynamically allocated here and will be free automatically by <a class="reference internal" href="../api/gdalwarp_cpp.html#_CPPv422GDALDestroyWarpOptionsP15GDALWarpOptions" title="GDALDestroyWarpOptions"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDestroyWarpOptions()</span></code></a>. The simple terminal output progress monitor (GDALTermProgress) is installed for reporting completion progress to the user.</p>
+<p><a class="reference internal" href="../api/gdal_alg.html#_CPPv431GDALCreateGenImgProjTransformer12GDALDatasetHPKc12GDALDatasetHPKcidi" title="GDALCreateGenImgProjTransformer"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALCreateGenImgProjTransformer()</span></code></a> is used to initialize the reprojection transformation between the source and destination images. We assume that they already have reasonable bounds and coordinate systems set. Use of GCPs is disabled.</p>
+<p>Once the options structure is ready, a GDALWarpOperation is instantiated using them, and the warp actually performed with <a class="reference internal" href="../api/gdalwarp_cpp.html#_CPPv4N17GDALWarpOperation17ChunkAndWarpImageEiiii" title="GDALWarpOperation::ChunkAndWarpImage"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALWarpOperation::ChunkAndWarpImage()</span></code></a>. Then the transformer, warp options and datasets are cleaned up.</p>
+<p>Normally error check would be needed after opening files, setting up the reprojection transformer (returns NULL on failure), and initializing the warp.</p>
+</div>
+<div class="section" id="other-warping-options">
+<h2>Other Warping Options<a class="headerlink" href="#other-warping-options" title="Permalink to this headline">¶</a></h2>
+<p>The GDALWarpOptions structures contains a number of items that can be set to control warping behavior. A few of particular interest are:</p>
+<ul>
+<li><p><a class="reference internal" href="../api/gdalwarp_cpp.html#_CPPv4N15GDALWarpOptions17dfWarpMemoryLimitE" title="GDALWarpOptions::dfWarpMemoryLimit"><code class="xref cpp cpp-member docutils literal notranslate"><span class="pre">GDALWarpOptions::dfWarpMemoryLimit</span></code></a> - Set the maximum amount of memory to be used by the GDALWarpOperation when selecting a size of image chunk to operate on. The value is in bytes, and the default is likely to be conservative (small). Increasing the chunk size can help substantially in some situations but care should be taken to ensure that this size, plus the GDAL cache size plus the working set of GDAL, your application and the operating system are less than the size of RAM or else excessive swapping is likely to interfere with performance. On a system with 256MB of RAM, a value of at least 64MB (roughly 64000000 bytes) is reasonable. Note that this value does not include the memory used by GDAL for low level block caching.</p></li>
+<li><p><code class="xref cpp cpp-member docutils literal notranslate"><span class="pre">GDALWarpOpations::eResampleAlg</span></code> - One of GRA_NearestNeighbour (the default, and fastest), GRA_Bilinear (2x2 bilinear resampling) or GRA_Cubic. The GRA_NearestNeighbour type should generally be used for thematic or color mapped images. The other resampling types may give better results for thematic images, especially when substantially changing resolution.</p></li>
+<li><p><a class="reference internal" href="../api/gdalwarp_cpp.html#_CPPv4N15GDALWarpOptions17padfSrcNoDataRealE" title="GDALWarpOptions::padfSrcNoDataReal"><code class="xref cpp cpp-member docutils literal notranslate"><span class="pre">GDALWarpOptions::padfSrcNoDataReal</span></code></a> - This array (one entry per band being processed) may be setup with a “nodata” value for each band if you wish to avoid having pixels of some background value copied to the destination image.</p></li>
+<li><p><a class="reference internal" href="../api/gdalwarp_cpp.html#_CPPv4N15GDALWarpOptions16papszWarpOptionsE" title="GDALWarpOptions::papszWarpOptions"><code class="xref cpp cpp-member docutils literal notranslate"><span class="pre">GDALWarpOptions::papszWarpOptions</span></code></a> - This is a string list of NAME=VALUE options passed to the warper. See the <a class="reference internal" href="../api/gdalwarp_cpp.html#_CPPv4N15GDALWarpOptions16papszWarpOptionsE" title="GDALWarpOptions::papszWarpOptions"><code class="xref cpp cpp-member docutils literal notranslate"><span class="pre">GDALWarpOptions::papszWarpOptions</span></code></a> docs for all options. Supported values include:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>INIT_DEST=[value] or INIT_DEST=NO_DATA: This option forces the destination image to be initialized to the indicated value (for all bands) or indicates that it should be initialized to the NO_DATA value in padfDstNoDataReal/padfDstNoDataImag. If this value isn’t set the destination image will be read and the source warp overlaid on it.</p></li>
+<li><p>WRITE_FLUSH=YES/NO: This option forces a flush to disk of data after each chunk is processed. In some cases this helps ensure a serial writing of the output data otherwise a block of data may be written to disk each time a block of data is read for the input buffer resulting in a lot of extra seeking around the disk, and reduced IO throughput. The default at this time is NO.</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="creating-the-output-file">
+<h2>Creating the Output File<a class="headerlink" href="#creating-the-output-file" title="Permalink to this headline">¶</a></h2>
+<p>In the previous case an appropriate output file was already assumed to exist. Now we will go through a case where a new file with appropriate bounds in a new coordinate system is created. This operation doesn’t relate specifically to the warp API. It is just using the transformation API.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;gdalwarper.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;ogr_spatialref.h&quot;</span><span class="cp"></span>
+<span class="p">...</span>
+<span class="n">GDALDriverH</span> <span class="n">hDriver</span><span class="p">;</span>
+<span class="n">GDALDataType</span> <span class="n">eDT</span><span class="p">;</span>
+<span class="n">GDALDatasetH</span> <span class="n">hDstDS</span><span class="p">;</span>
+<span class="n">GDALDatasetH</span> <span class="n">hSrcDS</span><span class="p">;</span>
+
+<span class="c1">// Open the source file.</span>
+<span class="n">hSrcDS</span> <span class="o">=</span> <span class="n">GDALOpen</span><span class="p">(</span> <span class="s">&quot;in.tif&quot;</span><span class="p">,</span> <span class="n">GA_ReadOnly</span> <span class="p">);</span>
+<span class="n">CPLAssert</span><span class="p">(</span> <span class="n">hSrcDS</span> <span class="o">!=</span> <span class="nb">NULL</span> <span class="p">);</span>
+
+<span class="c1">// Create output with same datatype as first input band.</span>
+<span class="n">eDT</span> <span class="o">=</span> <span class="n">GDALGetRasterDataType</span><span class="p">(</span><span class="n">GDALGetRasterBand</span><span class="p">(</span><span class="n">hSrcDS</span><span class="p">,</span><span class="mi">1</span><span class="p">));</span>
+
+<span class="c1">// Get output driver (GeoTIFF format)</span>
+<span class="n">hDriver</span> <span class="o">=</span> <span class="n">GDALGetDriverByName</span><span class="p">(</span> <span class="s">&quot;GTiff&quot;</span> <span class="p">);</span>
+<span class="n">CPLAssert</span><span class="p">(</span> <span class="n">hDriver</span> <span class="o">!=</span> <span class="nb">NULL</span> <span class="p">);</span>
+
+<span class="c1">// Get Source coordinate system.</span>
+<span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">pszSrcWKT</span><span class="p">,</span> <span class="o">*</span><span class="n">pszDstWKT</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="n">pszSrcWKT</span> <span class="o">=</span> <span class="n">GDALGetProjectionRef</span><span class="p">(</span> <span class="n">hSrcDS</span> <span class="p">);</span>
+<span class="n">CPLAssert</span><span class="p">(</span> <span class="n">pszSrcWKT</span> <span class="o">!=</span> <span class="nb">NULL</span> <span class="o">&amp;&amp;</span> <span class="n">strlen</span><span class="p">(</span><span class="n">pszSrcWKT</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="p">);</span>
+
+<span class="c1">// Setup output coordinate system that is UTM 11 WGS84.</span>
+<span class="n">OGRSpatialReference</span> <span class="n">oSRS</span><span class="p">;</span>
+<span class="n">oSRS</span><span class="p">.</span><span class="n">SetUTM</span><span class="p">(</span> <span class="mi">11</span><span class="p">,</span> <span class="n">TRUE</span> <span class="p">);</span>
+<span class="n">oSRS</span><span class="p">.</span><span class="n">SetWellKnownGeogCS</span><span class="p">(</span> <span class="s">&quot;WGS84&quot;</span> <span class="p">);</span>
+<span class="n">oSRS</span><span class="p">.</span><span class="n">exportToWkt</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">pszDstWKT</span> <span class="p">);</span>
+
+<span class="c1">// Create a transformer that maps from source pixel/line coordinates</span>
+<span class="c1">// to destination georeferenced coordinates (not destination</span>
+<span class="c1">// pixel line).  We do that by omitting the destination dataset</span>
+<span class="c1">// handle (setting it to NULL).</span>
+<span class="kt">void</span> <span class="o">*</span><span class="n">hTransformArg</span><span class="p">;</span>
+<span class="n">hTransformArg</span> <span class="o">=</span>
+    <span class="n">GDALCreateGenImgProjTransformer</span><span class="p">(</span> <span class="n">hSrcDS</span><span class="p">,</span> <span class="n">pszSrcWKT</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">pszDstWKT</span><span class="p">,</span>
+                                     <span class="n">FALSE</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="p">);</span>
+<span class="n">CPLAssert</span><span class="p">(</span> <span class="n">hTransformArg</span> <span class="o">!=</span> <span class="nb">NULL</span> <span class="p">);</span>
+
+<span class="c1">// Get approximate output georeferenced bounds and resolution for file.</span>
+<span class="kt">double</span> <span class="n">adfDstGeoTransform</span><span class="p">[</span><span class="mi">6</span><span class="p">];</span>
+<span class="kt">int</span> <span class="n">nPixels</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">nLines</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+<span class="n">CPLErr</span> <span class="n">eErr</span><span class="p">;</span>
+<span class="n">eErr</span> <span class="o">=</span> <span class="n">GDALSuggestedWarpOutput</span><span class="p">(</span> <span class="n">hSrcDS</span><span class="p">,</span>
+                                <span class="n">GDALGenImgProjTransform</span><span class="p">,</span> <span class="n">hTransformArg</span><span class="p">,</span>
+                                <span class="n">adfDstGeoTransform</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">nPixels</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">nLines</span> <span class="p">);</span>
+<span class="n">CPLAssert</span><span class="p">(</span> <span class="n">eErr</span> <span class="o">==</span> <span class="n">CE_None</span> <span class="p">);</span>
+<span class="n">GDALDestroyGenImgProjTransformer</span><span class="p">(</span> <span class="n">hTransformArg</span> <span class="p">);</span>
+
+<span class="c1">// Create the output file.</span>
+<span class="n">hDstDS</span> <span class="o">=</span> <span class="n">GDALCreate</span><span class="p">(</span> <span class="n">hDriver</span><span class="p">,</span> <span class="s">&quot;out.tif&quot;</span><span class="p">,</span> <span class="n">nPixels</span><span class="p">,</span> <span class="n">nLines</span><span class="p">,</span>
+                     <span class="n">GDALGetRasterCount</span><span class="p">(</span><span class="n">hSrcDS</span><span class="p">),</span> <span class="n">eDT</span><span class="p">,</span> <span class="nb">NULL</span> <span class="p">);</span>
+<span class="n">CPLAssert</span><span class="p">(</span> <span class="n">hDstDS</span> <span class="o">!=</span> <span class="nb">NULL</span> <span class="p">);</span>
+
+<span class="c1">// Write out the projection definition.</span>
+<span class="n">GDALSetProjection</span><span class="p">(</span> <span class="n">hDstDS</span><span class="p">,</span> <span class="n">pszDstWKT</span> <span class="p">);</span>
+<span class="n">GDALSetGeoTransform</span><span class="p">(</span> <span class="n">hDstDS</span><span class="p">,</span> <span class="n">adfDstGeoTransform</span> <span class="p">);</span>
+
+<span class="c1">// Copy the color table, if required.</span>
+<span class="n">GDALColorTableH</span> <span class="n">hCT</span><span class="p">;</span>
+<span class="n">hCT</span> <span class="o">=</span> <span class="n">GDALGetRasterColorTable</span><span class="p">(</span> <span class="n">GDALGetRasterBand</span><span class="p">(</span><span class="n">hSrcDS</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="p">);</span>
+<span class="k">if</span><span class="p">(</span> <span class="n">hCT</span> <span class="o">!=</span> <span class="nb">NULL</span> <span class="p">)</span>
+    <span class="n">GDALSetRasterColorTable</span><span class="p">(</span> <span class="n">GDALGetRasterBand</span><span class="p">(</span><span class="n">hDstDS</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">hCT</span> <span class="p">);</span>
+<span class="p">...</span> <span class="n">proceed</span> <span class="n">with</span> <span class="n">warp</span> <span class="n">as</span> <span class="n">before</span> <span class="p">...</span>
+</pre></div>
+</div>
+<p>Some notes on this logic:</p>
+<ul class="simple">
+<li><p>We need to create the transformer to output coordinates such that the output of the transformer is georeferenced, not pixel line coordinates since we use the transformer to map pixels around the source image into destination georeferenced coordinates.</p></li>
+<li><p>The <a class="reference internal" href="../api/gdal_alg.html#_CPPv423GDALSuggestedWarpOutput12GDALDatasetH19GDALTransformerFuncPvPdPiPi" title="GDALSuggestedWarpOutput"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALSuggestedWarpOutput()</span></code></a> function will return an adfDstGeoTransform, nPixels and nLines that describes an output image size and georeferenced extents that should hold all pixels from the source image. The resolution is intended to be comparable to the source, but the output pixels are always square regardless of the shape of input pixels.</p></li>
+<li><p>The warper requires an output file in a format that can be “randomly” written to. This generally limits things to uncompressed formats that have an implementation of the Create() method (as opposed to CreateCopy()). To warp to compressed formats, or CreateCopy() style formats it is necessary to produce a full temporary copy of the image in a better behaved format, and then CreateCopy() it to the desired final format.</p></li>
+<li><p>The Warp API copies only pixels. All color maps, georeferencing and other metadata must be copied to the destination by the application.</p></li>
+</ul>
+</div>
+<div class="section" id="performance-optimization">
+<h2>Performance Optimization<a class="headerlink" href="#performance-optimization" title="Permalink to this headline">¶</a></h2>
+<p>There are a number of things that can be done to optimize the performance of the warp API:</p>
+<ul class="simple">
+<li><p>Increase the amount of memory available for the Warp API chunking so that larger chunks can be operated on at a time. This is the <a class="reference internal" href="../api/gdalwarp_cpp.html#_CPPv4N15GDALWarpOptions17dfWarpMemoryLimitE" title="GDALWarpOptions::dfWarpMemoryLimit"><code class="xref cpp cpp-member docutils literal notranslate"><span class="pre">GDALWarpOptions::dfWarpMemoryLimit</span></code></a> parameter. In theory the larger the chunk size operated on the more efficient the I/O strategy, and the more efficient the approximated transformation will be. However, the sum of the warp memory and the GDAL cache should be less than RAM size, likely around 2/3 of RAM size.</p></li>
+<li><p>Increase the amount of memory for GDAL caching. This is especially important when working with very large input and output images that are scanline oriented. If all the input or output scanlines have to be re-read for each chunk they intersect performance may degrade greatly. Use <a class="reference internal" href="../api/raster_c_api.html#_CPPv415GDALSetCacheMaxi" title="GDALSetCacheMax"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALSetCacheMax()</span></code></a> to control the amount of memory available for caching within GDAL.</p></li>
+<li><p>Use an approximated transformation instead of exact reprojection for each pixel to be transformed. This code illustrates how an approximated transformation could be created based on a reprojection transformation, but with a given error threshold (dfErrorThreshold in output pixels).</p></li>
+</ul>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">hTransformArg</span> <span class="o">=</span>
+    <span class="n">GDALCreateApproxTransformer</span><span class="p">(</span> <span class="n">GDALGenImgProjTransform</span><span class="p">,</span>
+                                 <span class="n">hGenImgProjArg</span><span class="p">,</span> <span class="n">dfErrorThreshold</span> <span class="p">);</span>
+<span class="n">pfnTransformer</span> <span class="o">=</span> <span class="n">GDALApproxTransform</span><span class="p">;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>When writing to a blank output file, use the INIT_DEST option in the <a class="reference internal" href="../api/gdalwarp_cpp.html#_CPPv4N15GDALWarpOptions16papszWarpOptionsE" title="GDALWarpOptions::papszWarpOptions"><code class="xref cpp cpp-member docutils literal notranslate"><span class="pre">GDALWarpOptions::papszWarpOptions</span></code></a> to cause the output chunks to be initialized to a fixed value, instead of being read from the output. This can substantially reduce unnecessary IO work.</p></li>
+<li><p>Use tiled input and output formats. Tiled formats allow a given chunk of source and destination imagery to be accessed without having to touch a great deal of extra image data. Large scanline oriented files can result in a great deal of wasted extra IO.</p></li>
+<li><p>Process all bands in one call. This ensures the transformation calculations don’t have to be performed for each band.</p></li>
+<li><p>Use the <a class="reference internal" href="../api/gdalwarp_cpp.html#_CPPv4N17GDALWarpOperation17ChunkAndWarpMultiEiiii" title="GDALWarpOperation::ChunkAndWarpMulti"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALWarpOperation::ChunkAndWarpMulti()</span></code></a> method instead of <a class="reference internal" href="../api/gdalwarp_cpp.html#_CPPv4N17GDALWarpOperation17ChunkAndWarpImageEiiii" title="GDALWarpOperation::ChunkAndWarpImage"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALWarpOperation::ChunkAndWarpImage()</span></code></a>. It uses a separate thread for the IO and the actual image warp operation allowing more effective use of CPU and IO bandwidth. For this to work GDAL needs to have been built with multi-threading support (default on Win32, default on Unix since GDAL 1.8.0, for previous versions -with-threads was required in configure).</p></li>
+<li><p>The resampling kernels vary is work required from nearest neighbour being least, then bilinear then cubic. Don’t use a more complex resampling kernel than needed.</p></li>
+<li><p>Avoid use of esoteric masking options so that special simplified logic case be used for common special cases. For instance, nearest neighbour resampling with no masking on 8bit data is highly optimized compared to the general case.</p></li>
+</ul>
+</div>
+<div class="section" id="other-masking-options">
+<h2>Other Masking Options<a class="headerlink" href="#other-masking-options" title="Permalink to this headline">¶</a></h2>
+<p>The GDALWarpOptions include a bunch of esoteric masking capabilities, for validity masks, and density masks on input and output. Some of these are not yet implemented and others are implemented but poorly tested. Other than per-band validity masks it is advised that these features be used with caution at this time.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="gdal_grid_tut.html" class="btn btn-neutral float-right" title="GDAL Grid Tutorial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="raster_driver_tut.html" class="btn btn-neutral float-left" title="Raster driver implementation tutorial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,983 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RFC 46: GDAL/OGR unification &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdevelopment/rfc/rfc46_gdal_ogr_unification.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="RFC 47: Per Dataset Caching and GDALRasterBand Multithreading" href="rfc47_dataset_caching.html" />
+    <link rel="prev" title="RFC 45: GDAL datasets and raster bands as virtual memory mappings" href="rfc45_virtualmem.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 46: GDAL/OGR unification</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#related-rfcs">Related RFCs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#self-assigned-development-constraints">Self-assigned development constraints</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#core-changes-summary">Core changes: summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#core-changes-details">Core changes: details</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#changes-in-drivers">Changes in drivers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#changes-in-utilities">Changes in utilities</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#changes-in-swig-bindings">Changes in SWIG bindings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#potential-changes-that-are-not-included-in-this-rfc">Potential changes that are <em>NOT</em> included in this RFC</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#backward-compatibility">Backward compatibility</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#testing">Testing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#version-numbering">Version numbering</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voting-history">Voting history</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 46: GDAL/OGR unification</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/development/rfc/rfc46_gdal_ogr_unification.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="rfc47_dataset_caching.html" class="btn btn-neutral float-right" title="RFC 47: Per Dataset Caching and GDALRasterBand Multithreading" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc45_virtualmem.html" class="btn btn-neutral float-left" title="RFC 45: GDAL datasets and raster bands as virtual memory mappings" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rfc-46-gdal-ogr-unification">
+<span id="rfc-46"></span><h1>RFC 46: GDAL/OGR unification<a class="headerlink" href="#rfc-46-gdal-ogr-unification" title="Permalink to this headline">¶</a></h1>
+<p>Author: Even Rouault</p>
+<p>Contact: even dot rouault at spatialys.com</p>
+<p>Status: Adopted, implemented in GDAL 2.0</p>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>In the 1.X series of GDAL/OGR, the GDAL/raster and OGR/vector sides are
+quite different on some aspects even where there is no strong reason for
+them to be different, particularly in the structure of drivers. This RFC
+aims at unifying the OGR driver structure with the GDAL driver
+structure. The main advantages of using the GDAL driver structure are :</p>
+<ul class="simple">
+<li><p>metadata capabilities : description of driver, extensions, creation
+options, virtual IO capability …</p></li>
+<li><p>efficient driver identification and opening.</p></li>
+</ul>
+<p>Similarly, OGR datasource and layer classes lack the metadata mechanisms
+offered by the corresponding GDAL dataset and raster band classes.</p>
+<p>Another aspect is that the separation between GDAL “datasets” and OGR
+“datasources” is sometimes artificial. Various data containers can
+accept both data types. The list of drivers that have a GDAL side and
+OGR side is : SDTS, PDS, GRASS, KML, Spatialite/Rasterlite, GeoPackage
+(raster side not yet implemented), PostGIS/PostGIS Raster, PDF, PCIDSK,
+FileGDB (raster side not yet implemented). For applications that are
+interested in both, this currently means to open the file twice with
+different API. And for update mode, for file-based drivers, the updates
+must be done sequentially to avoid opening a file twice simultaneously
+in update mode and making conflicting changes.</p>
+</div>
+<div class="section" id="related-rfcs">
+<h2>Related RFCs<a class="headerlink" href="#related-rfcs" title="Permalink to this headline">¶</a></h2>
+<p>There are a few related past RFCs that have never been adopted but
+strongly relate to RFC 46 :</p>
+<ul class="simple">
+<li><p><a class="reference external" href="./rfc10_ogropen">RFC 10: OGR Open Parameters</a>. All the
+functionality described in RFC 10 is included in RFC 46, mainly the
+GDALOpenEx() new API</p></li>
+<li><p><a class="reference external" href="./rfc25_fast_open">RFC 25: Fast Open</a>. RFC 25 mentions avoiding
+to systematically listing the sibling files to the file being opened.
+This can now achieved in RFC 46 by lazy loading with
+GDALOpenInfo::GetSiblingFiles(). At least Identify() should not
+trigger GetSiblingFiles().</p></li>
+<li><p><a class="reference external" href="./rfc36_open_by_drivername">RFC 36: Allow specification of intended on
+GDALOpen</a>. The new GDALOpenEx()
+accepts a list of a subset drivers that must be probed, as suggested
+by RFC36. The specification of the drivers on the command line of
+utilities could be easily done through a new option, but that’s not in
+the scope of RFC 46.</p></li>
+<li><p><a class="reference external" href="./rfc38_ogr_faster_open">RFC 38: OGR Faster Open</a> is completely
+included in RFC 46 through the possibility of using
+Open(GDALOpenInfo*) in OGR drivers</p></li>
+</ul>
+</div>
+<div class="section" id="self-assigned-development-constraints">
+<h2>Self-assigned development constraints<a class="headerlink" href="#self-assigned-development-constraints" title="Permalink to this headline">¶</a></h2>
+<p>The changes should have moderate impact on the existing GDAL/OGR code
+base, and particularly on most of its code, that lies in drivers.
+Existing users of the GDAL/OGR API should also be moderately impacted by
+the changes, if they do not need to use the new offered capabilities.</p>
+</div>
+<div class="section" id="core-changes-summary">
+<h2>Core changes: summary<a class="headerlink" href="#core-changes-summary" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>OGRSFDriver extends GDALDriver.</p></li>
+<li><p>Vector drivers can be implemented as GDALDriver.</p></li>
+<li><p>OGRSFDriverRegistrar is a compatibility wrapper around
+GDALDriverManager for legacy OGRSFDriver.</p></li>
+<li><p>OGRDataSource extends GDALDataSource.</p></li>
+<li><p>GDALOpenEx() API is added to be able to open “mixed” datasets.</p></li>
+<li><p>OGRLayer extends GDALMajorObject, thus adding metadata capability.</p></li>
+<li><p>The methods of OGRDataSource related to layers are moved to
+GDALDataset, making it both a raster and vector capable container.</p></li>
+<li><p>Performance improvements in GDALOpenInfo() mechanism.</p></li>
+<li><p>New driver metadata item to describe open options (i.e. deprecate the
+use of configuration option).</p></li>
+<li><p>New driver metadata item to describe layer creation options.</p></li>
+</ul>
+</div>
+<div class="section" id="core-changes-details">
+<h2>Core changes: details<a class="headerlink" href="#core-changes-details" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="drivers-and-driver-registration">
+<h3>Drivers and driver registration<a class="headerlink" href="#drivers-and-driver-registration" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>The OGRSFDriver now extends GDALDriver and is meant as being a legacy
+way of implementing a vector driver. It is kept mainbly because, in
+the current implementation, not all drivers have been migrated to
+being “pure” GDALDriver. The CopyDataSource() virtual method has been
+removed since no in-tree drivers implement it. The inheritance to
+GDALDriver make it possible to manage vector drivers by the
+GDALDriverManager, and to be able to attach metadata to them, to
+document driver long name, link to documentation, file extension,
+datasource creation options with the existing GDAL_DMD_* metadata
+items.</p></li>
+<li><p>Drivers directly inheriting from GDALDriver (to be opposed to those
+inheriting from OGRSFDriver) should : - declare SetMetadataItem(
+GDAL_DCAP_VECTOR, “YES” ). - implement pfnOpen() for dataset opening
+- optionally, implement pfnCreate() for dataset creation. For vector
+drivers, the nBands parameter of Create() is supposed to be passed to
+0. - optionally, implement pfnDelete() for dataset deletion</p></li>
+<li><p>The <em>C</em> OGR Driver API will still work with drivers that have been
+converted as “pure” GDALDrivers (this is not true of the C++ OGR
+Driver API). For example OGR_Dr_GetName() calls
+GDALDriver::GetDescription(), OGR_Dr_CreateDatasource() calls
+GDALDriver::Create(), etc…</p></li>
+<li><p>The C++ definition of GDALDriver is extended with the following
+function pointers so that it can work with legacy OGRSFDriver.</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/*</span> <span class="n">For</span> <span class="n">legacy</span> <span class="n">OGR</span> <span class="n">drivers</span> <span class="o">*/</span>
+<span class="n">GDALDataset</span>         <span class="o">*</span><span class="p">(</span><span class="o">*</span><span class="n">pfnOpenWithDriverArg</span><span class="p">)(</span> <span class="n">GDALDriver</span><span class="o">*</span><span class="p">,</span> <span class="n">GDALOpenInfo</span> <span class="o">*</span> <span class="p">);</span>
+<span class="n">GDALDataset</span>         <span class="o">*</span><span class="p">(</span><span class="o">*</span><span class="n">pfnCreateVectorOnly</span><span class="p">)(</span> <span class="n">GDALDriver</span><span class="o">*</span><span class="p">,</span>
+                                             <span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">pszName</span><span class="p">,</span>
+                                             <span class="n">char</span> <span class="o">**</span> <span class="n">papszOptions</span> <span class="p">);</span>
+<span class="n">CPLErr</span>              <span class="p">(</span><span class="o">*</span><span class="n">pfnDeleteDataSource</span><span class="p">)(</span> <span class="n">GDALDriver</span><span class="o">*</span><span class="p">,</span>
+                                             <span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">pszName</span> <span class="p">);</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">They</span> <span class="n">are</span> <span class="n">used</span> <span class="n">by</span> <span class="n">GDALOpenEx</span><span class="p">(),</span> <span class="n">GDALDriver</span><span class="p">::</span><span class="n">Create</span><span class="p">()</span> <span class="ow">and</span> <span class="n">GDALDriver</span><span class="p">::</span><span class="n">Delete</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">the</span> <span class="n">pfnOpen</span><span class="p">,</span> <span class="n">pfnCreate</span> <span class="ow">or</span> <span class="n">pfnDelete</span> <span class="n">pointers</span> <span class="n">are</span> <span class="n">NULL</span><span class="o">.</span> <span class="n">The</span> <span class="n">OGRSFDriverRegistrar</span>
+<span class="k">class</span> <span class="nc">has</span> <span class="n">an</span> <span class="n">implementation</span> <span class="n">of</span> <span class="n">those</span> <span class="n">function</span> <span class="n">pointers</span> <span class="n">that</span> <span class="n">calls</span> <span class="n">the</span>
+<span class="n">legacy</span> <span class="n">C</span><span class="o">++</span> <span class="n">OGRSFDriver</span><span class="p">::</span><span class="n">Open</span><span class="p">(),</span> <span class="n">OGRSFDriver</span><span class="p">::</span><span class="n">CreateDataSource</span><span class="p">()</span> <span class="ow">and</span>
+<span class="n">OGRSFDriver</span><span class="p">::</span><span class="n">DeleteDataSource</span><span class="p">()</span> <span class="n">virtual</span> <span class="n">methods</span><span class="o">.</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>GDALDriver::Create() can accept nBands == 0 for a vector capable
+driver.</p></li>
+<li><p>GDALDriver::DefaultCreateCopy() can accept a dataset with 0 bands for
+a vector capable driver, and if the output dataset has layer creation
+capability and the source dataset has layers, it copies the layers
+from the source dataset into the target dataset.</p></li>
+<li><p>GDALDriver::Identify() now iterates over all kinds of drivers. It has
+been modified to do a first pass on drivers that have an
+implementation of Identify(). If no match is found, it does a second
+pass on all drivers and use the potentially slower Open() as the
+identification method.</p></li>
+<li><p>Related to the above point, the implementations of
+GDALDriver::pfnIdentify function pointer used to return a boolean
+value to indicate if the passed GDALOpenInfo was a match for the
+driver. For some drivers, this was too restrictive so that they were
+able to implement Identify(). For example where the detection logic
+can return “yes, I definitely recognize that file”, “no, it is not
+for me” or “I have not enough elements in GDALOpenInfo to be able to
+tell”. That last state can now be advertized with a negative return
+value.</p></li>
+<li><p>The OGRSFDriverRegistrar is trimmed down to be mostly a wrapper
+around GDALDriverManager. In particular, it does not contain any
+longer a list of drivers. The Open(), OpenShared(),
+ReleaseDataSource(), DeregisterDriver() and AutoLoadDrivers() methods
+are removed from the class. This change can have impact on C++ code.
+A few adaptations in OGR utilities have been done to accommodate for
+those changes. The RegisterDriver() API has been kept for legacy OGR
+drivers and it automatically sets SetMetadataItem( GDAL_DCAP_VECTOR,
+“YES” ). The GetDriverCount(), GetDriver() and GetDriverByName()
+methods delegate to GDALDriverManager and make sure to only take into
+account drivers that have the GDAL_DCAP_VECTOR capability. In the
+case a driver has the same name as GDAL and OGR driver, the OGR
+variant is internally prefixed with OGR_, and GetDriverByName() will
+first try the OGR_ variant. The GetOpenDSCount() and GetOpenDS()
+have now a dummy implementation returning 0/NULL. For reference,
+neither MapServer nor QGIS use those functions.</p></li>
+<li><p>OGRRegisterAll() is now an alias of GDALAllRegister(). The past
+OGRRegisterAll() is now renamed OGRRegisterAllInternal() and called
+by GDALAllRegister(). So, GDALAllRegister() and OGRRegisterAll() are
+now equivalent and register all drivers.</p></li>
+<li><p>GDALDriverManager has received a few changes :</p>
+<ul>
+<li><p>use of a map from driver name to driver object to speed-up
+GetDriverByName()</p></li>
+<li><p>accept OGR_SKIP and OGR_DRIVER_PATH configuration options for
+backward compatibility.</p></li>
+<li><p>The recommended separator for driver names in GDAL_SKIP is now
+comma instead of space (similarly to what OGR_SKIP does). This is
+to make it possible to define OGR driver names in GDAL_SKIP that
+have spaces in their names like “ESRI Shapefile” or “MapInfo
+File”. If there is no comma in the GDAL_SKIP value, then space
+separator is assumed (backward compatibility).</p></li>
+<li><p>removal of GetHome()/SetHome() methods whose purpose seemed to
+define an alternate path for the search directory of plugins.
+Those methods only existed at the C++ level, and are redundant
+with GDAL_DRIVER_PATH configuration option</p></li>
+</ul>
+</li>
+<li><p>Raster-capable drivers should declare SetMetadataItem(
+GDAL_DCAP_RASTER, “YES” ). All in-tree GDAL drivers have been patched
+to declare it. But the registration code detects if a driver does not
+declare any of GDAL_DCAP_RASTER nor GDAL_DCAP_VECTOR, in which case
+it declares GDAL_DCAP_RASTER on behalf of the un-patched driver, with
+a debug message inviting to explicitly set it.</p></li>
+<li><p>New metadata items :</p>
+<ul>
+<li><p>GDAL_DCAP_RASTER=YES / GDAL_DCAP_VECTOR=YES at driver level. To
+declare that a driver has raster/vector capabilities. A driver can
+declare both.</p></li>
+<li><p>GDAL_DMD_EXTENSIONS (with a final S) at driver level. This is a
+small evolution of GDAL_DMD_EXTENSION where one can specify
+several extensions in the value string. The extensions are
+space-separated. For example “shp dbf”, “tab mif mid”, etc… For
+ease of use, GDALDriver::SetMetadataItem(GDAL_DMD_EXTENSION) also
+sets the passed value as GDAL_DMD_EXTENSIONS, if it is not already
+set. So new code can always use GDAL_DMD_EXTENSIONS.</p></li>
+<li><p>GDAL_DMD_OPENOPTIONLIST at driver level. The value of this item is
+an XML snippet with a format similar to creation options.
+GDALOpenEx(), once it has identified with Identify() that a driver
+accepts the file, will validate the passed open option list with
+the authorized open option list. Below an example of such an
+authorized open option list in the S57 driver</p></li>
+</ul>
+</li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">OpenOptionList</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">Option</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;UPDATES&quot;</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;string-select&quot;</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Should update files be incorporated into the base data on the fly&quot;</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;APPLY&quot;</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="n">APPLY</span><span class="o">&lt;/</span><span class="n">Value</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="n">IGNORE</span><span class="o">&lt;/</span><span class="n">Value</span><span class="o">&gt;</span>
+  <span class="o">&lt;/</span><span class="n">Option</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">Option</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;SPLIT_MULTIPOINT&quot;</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;boolean&quot;</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Should multipoint soundings be split into many single point &quot;</span>
+                <span class="s2">&quot;sounding features&quot;</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;NO&quot;</span> <span class="o">/&gt;</span>
+  <span class="o">&lt;</span><span class="n">Option</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;ADD_SOUNDG_DEPTH&quot;</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;boolean&quot;</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Should a DEPTH attribute be added on SOUNDG features and &quot;</span>
+                <span class="s2">&quot;assign the depth of the sounding&quot;</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;NO&quot;</span> <span class="o">/&gt;</span>
+  <span class="o">&lt;</span><span class="n">Option</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;RETURN_PRIMITIVES&quot;</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;boolean&quot;</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Should all the low level geometry primitives be returned as &quot;</span>
+                <span class="s2">&quot;special IsolatedNode, ConnectedNode, Edge and Face layers&quot;</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;NO&quot;</span> <span class="o">/&gt;</span>
+  <span class="o">&lt;</span><span class="n">Option</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;PRESERVE_EMPTY_NUMBERS&quot;</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;boolean&quot;</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;If enabled, numeric attributes assigned an empty string as a &quot;</span>
+                <span class="s2">&quot;value will be preserved as a special numeric value&quot;</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;NO&quot;</span> <span class="o">/&gt;</span>
+  <span class="o">&lt;</span><span class="n">Option</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;LNAM_REFS&quot;</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;boolean&quot;</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Should LNAM and LNAM_REFS fields be attached to features &quot;</span>
+                <span class="s2">&quot;capturing the feature to feature relationships in the FFPT &quot;</span>
+                <span class="s2">&quot;group of the S-57 file&quot;</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;YES&quot;</span> <span class="o">/&gt;</span>
+  <span class="o">&lt;</span><span class="n">Option</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;RETURN_LINKAGES&quot;</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;boolean&quot;</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Should additional attributes relating features to their underlying &quot;</span>
+                <span class="s2">&quot;geometric primtives be attached&quot;</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;NO&quot;</span> <span class="o">/&gt;</span>
+  <span class="o">&lt;</span><span class="n">Option</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;RECODE_BY_DSSI&quot;</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;boolean&quot;</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Should attribute values be recoded to UTF-8 from the character &quot;</span>
+                <span class="s2">&quot;encoding specified in the S57 DSSI record.&quot;</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;NO&quot;</span> <span class="o">/&gt;</span>
+<span class="o">&lt;/</span><span class="n">OpenOptionList</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">GDAL_DS_LAYER_CREATIONOPTIONLIST</span> <span class="n">at</span> <span class="n">dataset</span> <span class="n">level</span><span class="o">.</span> <span class="n">But</span> <span class="n">can</span> <span class="n">also</span> <span class="n">be</span> <span class="nb">set</span> <span class="n">at</span>
+  <span class="n">driver</span> <span class="n">level</span> <span class="n">because</span><span class="p">,</span> <span class="ow">in</span> <span class="n">practice</span><span class="p">,</span> <span class="n">layer</span> <span class="n">creation</span> <span class="n">options</span> <span class="n">do</span> <span class="ow">not</span> <span class="n">depend</span> <span class="n">on</span> <span class="n">the</span>
+  <span class="n">dataset</span> <span class="n">instance</span><span class="o">.</span>
+  <span class="n">The</span> <span class="n">value</span> <span class="n">of</span> <span class="n">this</span> <span class="n">item</span> <span class="ow">is</span> <span class="n">an</span> <span class="n">XML</span> <span class="n">snippet</span> <span class="k">with</span> <span class="n">a</span> <span class="nb">format</span> <span class="n">similar</span> <span class="n">to</span> <span class="n">dataset</span> <span class="n">creation</span>
+  <span class="n">options</span><span class="o">.</span>
+  <span class="n">If</span> <span class="n">specified</span><span class="p">,</span> <span class="n">the</span> <span class="n">passed</span> <span class="n">creation</span> <span class="n">options</span> <span class="n">to</span> <span class="n">CreateLayer</span><span class="p">()</span> <span class="n">are</span> <span class="n">validated</span>
+  <span class="n">against</span> <span class="n">that</span> <span class="n">authorized</span> <span class="n">creation</span> <span class="n">option</span> <span class="nb">list</span><span class="o">.</span>
+  <span class="n">Below</span> <span class="n">an</span> <span class="n">example</span> <span class="n">of</span> <span class="n">such</span> <span class="n">an</span> <span class="n">authorized</span> <span class="nb">open</span> <span class="n">option</span> <span class="nb">list</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">Shapefile</span> <span class="n">driver</span><span class="o">.</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">LayerCreationOptionList</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">Option</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;SHPT&quot;</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;string-select&quot;</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;type of shape&quot;</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;automatically detected&quot;</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="n">POINT</span><span class="o">&lt;/</span><span class="n">Value</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="n">ARC</span><span class="o">&lt;/</span><span class="n">Value</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="n">POLYGON</span><span class="o">&lt;/</span><span class="n">Value</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="n">MULTIPOINT</span><span class="o">&lt;/</span><span class="n">Value</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="n">POINTZ</span><span class="o">&lt;/</span><span class="n">Value</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="n">ARCZ</span><span class="o">&lt;/</span><span class="n">Value</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="n">POLYGONZ</span><span class="o">&lt;/</span><span class="n">Value</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="n">MULTIPOINTZ</span><span class="o">&lt;/</span><span class="n">Value</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="n">NONE</span><span class="o">&lt;/</span><span class="n">Value</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="n">NULL</span><span class="o">&lt;/</span><span class="n">Value</span><span class="o">&gt;</span>
+  <span class="o">&lt;/</span><span class="n">Option</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">Option</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;2GB_LIMIT&quot;</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;boolean&quot;</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Restrict .shp and .dbf to 2GB&quot;</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;NO&quot;</span> <span class="o">/&gt;</span>
+  <span class="o">&lt;</span><span class="n">Option</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;ENCODING&quot;</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;string&quot;</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;DBF encoding&quot;</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;LDID/87&quot;</span> <span class="o">/&gt;</span>
+  <span class="o">&lt;</span><span class="n">Option</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;RESIZE&quot;</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;boolean&quot;</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;To resize fields to their optimal size.&quot;</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;NO&quot;</span> <span class="o">/&gt;</span>
+<span class="o">&lt;/</span><span class="n">LayerCreationOptionList</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="datasets-datasources">
+<span id="id1"></span><h3>Datasets / Datasources<a class="headerlink" href="#datasets-datasources" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>The main methods from OGRDataSource have been moved to GDALDataset :</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">virtual</span> <span class="nb">int</span>         <span class="n">GetLayerCount</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span>
+<span class="n">virtual</span> <span class="n">OGRLayer</span>    <span class="o">*</span><span class="n">GetLayer</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">NULL</span><span class="p">;</span> <span class="p">}</span>
+<span class="n">virtual</span> <span class="n">OGRLayer</span>    <span class="o">*</span><span class="n">GetLayerByName</span><span class="p">(</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span><span class="p">);</span>
+<span class="n">virtual</span> <span class="n">OGRErr</span>      <span class="n">DeleteLayer</span><span class="p">(</span><span class="nb">int</span><span class="p">);</span>
+
+<span class="n">virtual</span> <span class="nb">int</span>         <span class="n">TestCapability</span><span class="p">(</span> <span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">FALSE</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="n">virtual</span> <span class="n">OGRLayer</span>   <span class="o">*</span><span class="n">CreateLayer</span><span class="p">(</span> <span class="n">const</span> <span class="n">char</span> <span class="o">*</span><span class="n">pszName</span><span class="p">,</span>
+                                 <span class="n">OGRSpatialReference</span> <span class="o">*</span><span class="n">poSpatialRef</span> <span class="o">=</span> <span class="n">NULL</span><span class="p">,</span>
+                                 <span class="n">OGRwkbGeometryType</span> <span class="n">eGType</span> <span class="o">=</span> <span class="n">wkbUnknown</span><span class="p">,</span>
+                                 <span class="n">char</span> <span class="o">**</span> <span class="n">papszOptions</span> <span class="o">=</span> <span class="n">NULL</span> <span class="p">);</span>
+<span class="n">virtual</span> <span class="n">OGRLayer</span>   <span class="o">*</span><span class="n">CopyLayer</span><span class="p">(</span> <span class="n">OGRLayer</span> <span class="o">*</span><span class="n">poSrcLayer</span><span class="p">,</span>
+                               <span class="n">const</span> <span class="n">char</span> <span class="o">*</span><span class="n">pszNewName</span><span class="p">,</span>
+                               <span class="n">char</span> <span class="o">**</span><span class="n">papszOptions</span> <span class="o">=</span> <span class="n">NULL</span> <span class="p">);</span>
+
+<span class="n">virtual</span> <span class="n">OGRStyleTable</span> <span class="o">*</span><span class="n">GetStyleTable</span><span class="p">();</span>
+<span class="n">virtual</span> <span class="n">void</span>        <span class="n">SetStyleTableDirectly</span><span class="p">(</span> <span class="n">OGRStyleTable</span> <span class="o">*</span><span class="n">poStyleTable</span> <span class="p">);</span>
+
+<span class="n">virtual</span> <span class="n">void</span>        <span class="n">SetStyleTable</span><span class="p">(</span><span class="n">OGRStyleTable</span> <span class="o">*</span><span class="n">poStyleTable</span><span class="p">);</span>
+
+<span class="n">virtual</span> <span class="n">OGRLayer</span> <span class="o">*</span>  <span class="n">ExecuteSQL</span><span class="p">(</span> <span class="n">const</span> <span class="n">char</span> <span class="o">*</span><span class="n">pszStatement</span><span class="p">,</span>
+                                <span class="n">OGRGeometry</span> <span class="o">*</span><span class="n">poSpatialFilter</span><span class="p">,</span>
+                                <span class="n">const</span> <span class="n">char</span> <span class="o">*</span><span class="n">pszDialect</span> <span class="p">);</span>
+<span class="n">virtual</span> <span class="n">void</span>        <span class="n">ReleaseResultSet</span><span class="p">(</span> <span class="n">OGRLayer</span> <span class="o">*</span> <span class="n">poResultsSet</span> <span class="p">);</span>
+
+<span class="nb">int</span>                 <span class="n">GetRefCount</span><span class="p">()</span> <span class="n">const</span><span class="p">;</span>
+<span class="nb">int</span>                 <span class="n">GetSummaryRefCount</span><span class="p">()</span> <span class="n">const</span><span class="p">;</span>
+<span class="n">OGRErr</span>              <span class="n">Release</span><span class="p">();</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">The</span> <span class="n">following</span> <span class="n">matching</span> <span class="n">C</span> <span class="n">API</span> <span class="ow">is</span> <span class="n">available</span> <span class="p">:</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">int</span>    <span class="n">CPL_DLL</span> <span class="n">GDALDatasetGetLayerCount</span><span class="p">(</span> <span class="n">GDALDatasetH</span> <span class="p">);</span>
+<span class="n">OGRLayerH</span> <span class="n">CPL_DLL</span> <span class="n">GDALDatasetGetLayer</span><span class="p">(</span> <span class="n">GDALDatasetH</span><span class="p">,</span> <span class="nb">int</span> <span class="p">);</span>
+<span class="n">OGRLayerH</span> <span class="n">CPL_DLL</span> <span class="n">GDALDatasetGetLayerByName</span><span class="p">(</span> <span class="n">GDALDatasetH</span><span class="p">,</span> <span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="p">);</span>
+<span class="n">OGRErr</span>    <span class="n">CPL_DLL</span> <span class="n">GDALDatasetDeleteLayer</span><span class="p">(</span> <span class="n">GDALDatasetH</span><span class="p">,</span> <span class="nb">int</span> <span class="p">);</span>
+<span class="n">OGRLayerH</span> <span class="n">CPL_DLL</span> <span class="n">GDALDatasetCreateLayer</span><span class="p">(</span> <span class="n">GDALDatasetH</span><span class="p">,</span> <span class="n">const</span> <span class="n">char</span> <span class="o">*</span><span class="p">,</span>
+                                      <span class="n">OGRSpatialReferenceH</span><span class="p">,</span> <span class="n">OGRwkbGeometryType</span><span class="p">,</span>
+                                      <span class="n">char</span> <span class="o">**</span> <span class="p">);</span>
+<span class="n">OGRLayerH</span> <span class="n">CPL_DLL</span> <span class="n">GDALDatasetCopyLayer</span><span class="p">(</span> <span class="n">GDALDatasetH</span><span class="p">,</span> <span class="n">OGRLayerH</span><span class="p">,</span> <span class="n">const</span> <span class="n">char</span> <span class="o">*</span><span class="p">,</span>
+                                        <span class="n">char</span> <span class="o">**</span> <span class="p">);</span>
+<span class="nb">int</span>    <span class="n">CPL_DLL</span> <span class="n">GDALDatasetTestCapability</span><span class="p">(</span> <span class="n">GDALDatasetH</span><span class="p">,</span> <span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="p">);</span>
+<span class="n">OGRLayerH</span> <span class="n">CPL_DLL</span> <span class="n">GDALDatasetExecuteSQL</span><span class="p">(</span> <span class="n">GDALDatasetH</span><span class="p">,</span> <span class="n">const</span> <span class="n">char</span> <span class="o">*</span><span class="p">,</span>
+                                     <span class="n">OGRGeometryH</span><span class="p">,</span> <span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="p">);</span>
+<span class="n">void</span>   <span class="n">CPL_DLL</span> <span class="n">GDALDatasetReleaseResultSet</span><span class="p">(</span> <span class="n">GDALDatasetH</span><span class="p">,</span> <span class="n">OGRLayerH</span> <span class="p">);</span>
+<span class="n">OGRStyleTableH</span> <span class="n">CPL_DLL</span> <span class="n">GDALDatasetGetStyleTable</span><span class="p">(</span> <span class="n">GDALDatasetH</span> <span class="p">);</span>
+<span class="n">void</span>   <span class="n">CPL_DLL</span> <span class="n">GDALDatasetSetStyleTableDirectly</span><span class="p">(</span> <span class="n">GDALDatasetH</span><span class="p">,</span> <span class="n">OGRStyleTableH</span> <span class="p">);</span>
+<span class="n">void</span>   <span class="n">CPL_DLL</span> <span class="n">GDALDatasetSetStyleTable</span><span class="p">(</span> <span class="n">GDALDatasetH</span><span class="p">,</span> <span class="n">OGRStyleTableH</span> <span class="p">);</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">OGRDataSource</span> <span class="n">definition</span> <span class="ow">is</span> <span class="n">now</span> <span class="n">reduced</span> <span class="n">to</span> <span class="p">:</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">CPL_DLL</span> <span class="n">OGRDataSource</span> <span class="p">:</span> <span class="n">public</span> <span class="n">GDALDataset</span>
+<span class="p">{</span>
+<span class="n">public</span><span class="p">:</span>
+                        <span class="n">OGRDataSource</span><span class="p">();</span>
+
+    <span class="n">virtual</span> <span class="n">const</span> <span class="n">char</span>  <span class="o">*</span><span class="n">GetName</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="n">static</span> <span class="n">void</span>         <span class="n">DestroyDataSource</span><span class="p">(</span> <span class="n">OGRDataSource</span> <span class="o">*</span> <span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>The existing OGR_DS_* API is preserved. The implementation of those functions
+casts the OGRDataSourceH opaque pointer to GDALDataset*, so it is possible to
+consider GDALDatasetH and OGRDataSourceH as equivalent from the C API point of
+view. Note that it is not true at the C++ level !
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>OGRDataSource::SyncToDisk() has been removed. The equivalent
+functionality should be implemented in existing FlushCache().
+GDALDataset::FlushCache() nows does the job of the previous generic
+implementation of OGRDataSource::SyncToDisk(), i.e. iterate over all
+layers and call SyncToDisk() on them.</p></li>
+<li><p>GDALDataset has now a protected ICreateLayer() method.</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">virtual</span> <span class="n">OGRLayer</span>   <span class="o">*</span><span class="n">ICreateLayer</span><span class="p">(</span> <span class="n">const</span> <span class="n">char</span> <span class="o">*</span><span class="n">pszName</span><span class="p">,</span>
+                                 <span class="n">OGRSpatialReference</span> <span class="o">*</span><span class="n">poSpatialRef</span> <span class="o">=</span> <span class="n">NULL</span><span class="p">,</span>
+                                 <span class="n">OGRwkbGeometryType</span> <span class="n">eGType</span> <span class="o">=</span> <span class="n">wkbUnknown</span><span class="p">,</span>
+                                 <span class="n">char</span> <span class="o">**</span> <span class="n">papszOptions</span> <span class="o">=</span> <span class="n">NULL</span> <span class="p">);</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">This</span> <span class="n">method</span> <span class="ow">is</span> <span class="n">what</span> <span class="n">used</span> <span class="n">to</span> <span class="n">be</span> <span class="n">CreateLayer</span><span class="p">(),</span> <span class="n">i</span><span class="o">.</span><span class="n">e</span><span class="o">.</span> <span class="n">that</span> <span class="n">drivers</span> <span class="n">should</span>
+<span class="n">rename</span> <span class="n">their</span> <span class="n">specialized</span> <span class="n">CreateLayer</span><span class="p">()</span> <span class="n">implementations</span> <span class="k">as</span> <span class="n">ICreateLayer</span><span class="p">()</span><span class="o">.</span>
+<span class="n">CreateLayer</span><span class="p">()</span> <span class="ow">is</span> <span class="n">kept</span> <span class="n">at</span> <span class="n">GDALDataset</span> <span class="n">level</span><span class="p">,</span> <span class="n">but</span> <span class="n">its</span> <span class="n">implementation</span> <span class="n">does</span> <span class="n">a</span>
+<span class="n">prior</span> <span class="n">validation</span> <span class="n">of</span> <span class="n">passed</span> <span class="n">creation</span> <span class="n">options</span> <span class="n">against</span> <span class="n">an</span> <span class="n">optional</span> <span class="n">authorized</span>
+<span class="n">creation</span> <span class="n">option</span> <span class="nb">list</span> <span class="p">(</span><span class="n">GDAL_DS_LAYER_CREATIONOPTIONLIST</span><span class="p">),</span> <span class="n">before</span> <span class="n">calling</span>
+<span class="n">ICreateLayer</span><span class="p">()</span> <span class="p">(</span><span class="n">this</span> <span class="ow">is</span> <span class="n">similar</span> <span class="n">to</span> <span class="n">RasterIO</span><span class="p">()</span> <span class="o">/</span> <span class="n">IRasterIO</span><span class="p">()</span> <span class="p">)</span>
+<span class="n">A</span> <span class="k">global</span> <span class="k">pass</span> <span class="n">on</span> <span class="nb">all</span> <span class="ow">in</span><span class="o">-</span><span class="n">tree</span> <span class="n">OGR</span> <span class="n">drivers</span> <span class="n">has</span> <span class="n">been</span> <span class="n">made</span> <span class="n">to</span> <span class="n">rename</span> <span class="n">CreateLayer</span><span class="p">()</span>
+<span class="k">as</span> <span class="n">ICreateLayer</span><span class="p">()</span><span class="o">.</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>GDALOpenEx() is added to be able to open raster-only, vector-only, or
+raster-vector datasets. It accepts read-only/update mode,
+shared/non-shared mode. A list of potential candidate drivers can be
+passed. If NULL, all drivers are probed. A list of open options
+(NAME=VALUE syntax) can be passed. If the list of sibling files has
+already been established, it can also be passed. Otherwise
+GDALOpenInfo will establish it.</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">GDALDatasetH</span> <span class="n">CPL_STDCALL</span> <span class="n">GDALOpenEx</span><span class="p">(</span> <span class="n">const</span> <span class="n">char</span><span class="o">*</span> <span class="n">pszFilename</span><span class="p">,</span>
+                                 <span class="n">unsigned</span> <span class="nb">int</span> <span class="n">nOpenFlags</span><span class="p">,</span>
+                                 <span class="n">const</span> <span class="n">char</span><span class="o">*</span> <span class="n">const</span><span class="o">*</span> <span class="n">papszAllowedDrivers</span><span class="p">,</span>
+                                 <span class="n">const</span> <span class="n">char</span><span class="o">*</span> <span class="n">const</span><span class="o">*</span> <span class="n">papszOpenOptions</span><span class="p">,</span>
+                                 <span class="n">const</span> <span class="n">char</span><span class="o">*</span> <span class="n">const</span><span class="o">*</span> <span class="n">papszSiblingFiles</span> <span class="p">);</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">The</span> <span class="n">nOpenFlags</span> <span class="n">argument</span> <span class="ow">is</span> <span class="n">a</span> <span class="s1">&#39;or-able&#39;</span> <span class="n">combination</span> <span class="n">of</span> <span class="n">the</span> <span class="n">following</span> <span class="n">values</span> <span class="p">:</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/*</span> <span class="n">Note</span><span class="p">:</span> <span class="n">we</span> <span class="n">define</span> <span class="n">GDAL_OF_READONLY</span> <span class="ow">and</span> <span class="n">GDAL_OF_UPDATE</span> <span class="n">to</span> <span class="n">be</span> <span class="n">on</span> <span class="n">purpose</span> <span class="o">*/</span>
+<span class="o">/*</span> <span class="n">equals</span> <span class="n">to</span> <span class="n">GA_ReadOnly</span> <span class="ow">and</span> <span class="n">GA_Update</span> <span class="o">*/</span>
+
+<span class="o">/**</span> <span class="n">Open</span> <span class="ow">in</span> <span class="n">read</span><span class="o">-</span><span class="n">only</span> <span class="n">mode</span><span class="o">.</span> <span class="o">*/</span>
+<span class="c1">#define     GDAL_OF_READONLY        0x00</span>
+<span class="o">/**</span> <span class="n">Open</span> <span class="ow">in</span> <span class="n">update</span> <span class="n">mode</span><span class="o">.</span> <span class="o">*/</span>
+<span class="c1">#define     GDAL_OF_UPDATE          0x01</span>
+
+<span class="o">/**</span> <span class="n">Allow</span> <span class="n">raster</span> <span class="ow">and</span> <span class="n">vector</span> <span class="n">drivers</span><span class="o">.</span> <span class="o">*/</span>
+<span class="c1">#define     GDAL_OF_ALL             0x00</span>
+
+<span class="o">/**</span> <span class="n">Allow</span> <span class="n">raster</span> <span class="n">drivers</span><span class="o">.</span> <span class="o">*/</span>
+<span class="c1">#define     GDAL_OF_RASTER          0x02</span>
+<span class="o">/**</span> <span class="n">Allow</span> <span class="n">vector</span> <span class="n">drivers</span><span class="o">.</span> <span class="o">*/</span>
+<span class="c1">#define     GDAL_OF_VECTOR          0x04</span>
+<span class="o">/*</span> <span class="n">Some</span> <span class="n">space</span> <span class="k">for</span> <span class="n">GDAL</span> <span class="mf">3.0</span> <span class="n">new</span> <span class="n">types</span> <span class="p">;</span><span class="o">-</span><span class="p">)</span> <span class="o">*/</span>
+<span class="o">/*</span><span class="c1">#define     GDAL_OF_OTHER_KIND1   0x08 */</span>
+<span class="o">/*</span><span class="c1">#define     GDAL_OF_OTHER_KIND2   0x10 */</span>
+
+<span class="o">/**</span> <span class="n">Open</span> <span class="ow">in</span> <span class="n">shared</span> <span class="n">mode</span><span class="o">.</span> <span class="o">*/</span>
+<span class="c1">#define     GDAL_OF_SHARED          0x20</span>
+
+<span class="o">/**</span> <span class="n">Emit</span> <span class="n">error</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">case</span> <span class="n">of</span> <span class="n">failed</span> <span class="nb">open</span><span class="o">.</span> <span class="o">*/</span>
+<span class="c1">#define     GDAL_OF_VERBOSE_ERROR   0x40</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">The</span> <span class="n">existing</span> <span class="n">GDALOpen</span><span class="p">(),</span> <span class="n">GDALOpenShared</span><span class="p">(),</span> <span class="n">OGROpen</span><span class="p">(),</span> <span class="n">OGROpenShared</span><span class="p">(),</span>
+<span class="n">OGR_Dr_Open</span><span class="p">()</span> <span class="n">are</span> <span class="n">just</span> <span class="n">wrappers</span> <span class="n">of</span> <span class="n">GDALOpenEx</span><span class="p">()</span> <span class="k">with</span> <span class="n">appropriate</span> <span class="nb">open</span> <span class="n">flags</span><span class="o">.</span>
+<span class="n">From</span> <span class="n">the</span> <span class="n">user</span> <span class="n">point</span> <span class="n">of</span> <span class="n">view</span><span class="p">,</span> <span class="n">their</span> <span class="n">behavior</span> <span class="ow">is</span> <span class="n">identical</span> <span class="n">to</span> <span class="n">the</span> <span class="n">existing</span> <span class="n">one</span><span class="p">,</span>
+<span class="n">i</span><span class="o">.</span><span class="n">e</span><span class="o">.</span> <span class="n">GDALOpen</span><span class="p">()</span> <span class="n">family</span> <span class="n">will</span> <span class="n">only</span> <span class="n">returns</span> <span class="n">datasets</span> <span class="n">of</span> <span class="n">drivers</span> <span class="k">with</span> <span class="n">declared</span> <span class="n">raster</span>
+<span class="n">capabilities</span><span class="p">,</span> <span class="ow">and</span> <span class="n">similarly</span> <span class="k">with</span> <span class="n">OGROpen</span><span class="p">()</span> <span class="n">family</span> <span class="k">with</span> <span class="n">vector</span><span class="o">.</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>GDALOpenInfo class. The following changes are done :</p>
+<ul>
+<li><p>the second argument of the constructor is now nOpenFlags instead
+of GDALAccess, with same semantics as GDALOpenEx(). GDALOpenInfo
+uses the read-only/update bit to “compute” the eAccess flag that
+is heavily used in existing drivers. Drivers with both raster and
+vector capabilities can use the GDAL_OF_VECTOR/GDAL_OF_RASTER bits
+to determine the intent of the caller. For example if a caller
+opens with GDAL_OF_RASTER only and the dataset only contains
+vector data, the driver might decide to not open the dataset (if
+it is a read-only driver. If it is a driver with update
+capability, it should do that only if the opening is done in
+read-only mode).</p></li>
+<li><p>the open options passed to GDALOpenEx() are stored into a
+papszOpenOptions member of GDALOpenInfo, so that drivers can use
+them.</p></li>
+<li><p>the “FILE* fp” member is transformed into “VSILFILE* fpL”. This
+change is motivated by the fact that most popular drivers now use
+the VSI Virtual File API, so they can now directly use the fpL
+member instead of re-opening again the file. A global pass on all
+in-tree GDAL drivers that used fp has been made.</p></li>
+<li><p>A VSIStatExL() was done previously to determine the nature of the
+file passed. Now, we optimistically begin with a VSIFOpenL(),
+assuming that in most use cases the passed filename is a file. If
+the opening fails, VSIStatExL() is done to determine the nature of
+the filename.</p></li>
+<li><p>If the requested access mode is update, the opening of the file
+with VSIFOpenL() is done with “rb+” permissions to be directly
+usable.</p></li>
+<li><p>The papszSiblingFiles member is now private. It is accessed by a
+GetSiblingFiles() method that does the ReadDir() on demand. This
+can speed up the Identify() method that generally does not require
+to know sibling files.</p></li>
+<li><p>A new method, TryToIngest(), is added to read more than the first
+1024 bytes of a file. This is useful for a few vector drivers,
+like GML or NAS, that must fetch a bit more bytes to be able to
+identify the file.</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="layer">
+<h3>Layer<a class="headerlink" href="#layer" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>OGRLayer extends GDALMajorObject. Drivers can now define layer
+metadata items that can be retrieved with the usual
+GetMetadata()/GetMetadateItem() API.</p></li>
+<li><p>The GetInfo() method has been removed. It has never been implemented
+in any in-tree drivers and has been deprecated for a long time.</p></li>
+</ul>
+</div>
+<div class="section" id="other">
+<h3>Other<a class="headerlink" href="#other" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>The deprecated and unused GDALProjDefH and GDALOptionDefinition types
+have been removed from gdal.h</p></li>
+<li><p>GDALGeneralCmdLineProcessor() now interprets the nOptions
+(combination of GDAL_OF_RASTER and GDAL_OF_RASTER) argument as the
+type of drivers that should be displayed with the –formats option.
+If set to 0, GDAL_OF_RASTER is assumed.</p></li>
+<li><p>the –formats option of GDAL utilities outputs whether drivers have
+raster and/or vector capabilities</p></li>
+<li><p>the –format option of GDAL utilities outputs GDAL_DMD_EXTENSIONS,
+GDAL_DMD_OPENOPTIONLIST, GDAL_DS_LAYER_CREATIONOPTIONLIST.</p></li>
+<li><p>OGRGeneralCmdLineProcessor() use GDALGeneralCmdLineProcessor()
+implementation, restricting –formats to vector capable drivers.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="changes-in-drivers">
+<h2>Changes in drivers<a class="headerlink" href="#changes-in-drivers" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>OGR PCIDSK driver has been merged into GDAL PCIDSK driver.</p></li>
+<li><p>OGR PDF driver has been merged into GDAL PDF driver.</p></li>
+<li><p>A global pass has been made to in-tree OGR drivers that have to open
+a file to determine if they recognize it. They have been converted to
+GDALDriver to accept a GDALOpenInfo argument and they now use its
+pabyHeader field to examine the first bytes of files. The number of
+system calls realated to file access (open/stat), in order to
+determine that a file is not recognized by any OGR driver, has now
+dropped from 46 in GDAL 1.11 to 1. The converted drivers are :
+AeronavFAA, ArcGEN, AVCBin, AVCE00, BNA, CSV, DGN, EDIGEO, ESRI
+Shapefile, GeoJSON, GeoRSS, GML, GPKG, GPSBabel, GPX, GTM, HTF, ILI1,
+ILI2, KML, LIBKML, MapInfo File, MySQL, NAS, NTF, OpenAIR, OSM, PDS,
+REC, S57, SDTS, SEGUKOOA, SEGY, SOSI, SQLite, SUA, SVG, TIGER, VFK,
+VRT, WFS</p></li>
+<li><p>Long driver descrption is set for most OGR drivers.</p></li>
+<li><p>All classes deriving from OGRLayer have been modified to call
+SetDescription() with the value of
+GetName()/poFeatureDefn-&gt;GetName(). test_ogrsf tests that it is
+properly set.</p></li>
+<li><p>Following drivers are kept as OGRSFDriver, but their Open() method
+does early extension/prefix testing to avoid datasource object to be
+instantiated : CartoDB, CouchDB, DXF, EDIGEO, GeoConcept, GFT, GME,
+IDRISI, OGDI, PCIDSK, PG, XPlane.</p></li>
+<li><p>Identify() has been implemented for CSV, DGN, DXF, EDIGEO, GeoJSON,
+GML, KML, LIBKML, MapInfo File, NAS, OpenFileGDB, OSM, S57, Shape,
+SQLite, VFK, VRT.</p></li>
+<li><p>GDAL_DMD_EXTENSION/GDAL_DMD_EXTENSIONS set for following drivers:
+AVCE00, BNA, CSV, DGN, DWG, DXF, EDIGEO, FileGDB, Geoconcept,
+GeoJSON, Geomedia, GML, GMT, GPKG, GPX, GPSTrackMaker, IDRISI Vector,
+Interlis 1, Interlis 2, KML, LIBKML, MDB, MapInfo File, NAS, ODS,
+OpenFileGDB, OSM, PGDump, PGeo, REC, S57, ESRI Shapefile, SQLite,
+SVG, WaSP, XLS, XLSX, XPlane.</p></li>
+<li><p>Document dataset and layer creation options of BNA, DGN, FileGDB,
+GeoConccept, GeoJSON, GeoRSS, GML, GPKG, KML, LIBKML, PG, PGDump and
+ESRI Shapefile drivers as GDAL_DMD_CREATIONOPTIONLIST /
+GDAL_DS_LAYER_CREATIONOPTIONLIST.</p></li>
+<li><p>Add open options AAIGRID, PDF, S57 and ESRI Shapefile drivers.</p></li>
+<li><p>GetFileList() implemented in OpenFileGDB, Shapefile and OGR VRT
+drivers.</p></li>
+<li><p>Rename datasource SyncToDisk() as FlushCache() for LIBKML, OCI, ODS,
+XLSX drivers.</p></li>
+<li><p>Use poOpenInfo-&gt;fpL to avoid useless file re-opening in GTiff, PNG,
+JPEG, GIF, VRT, NITF, DTED.</p></li>
+<li><p>HTTP driver: declared as GDAL_DCAP_RASTER and GDAL_DCAP_VECTOR
+driver.</p></li>
+<li><p>RIK: implement Identify()</p></li>
+<li><p>Note: the compilation and good working of the following OGR drivers
+(mostly proprietary) could not be tested: ArcObjects, DWG, DODS, SDE,
+FME, GRASS, IDB, OCI, MSSQLSpatial(compilation OK, but not runtime
+tested)</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-utilities">
+<h2>Changes in utilities<a class="headerlink" href="#changes-in-utilities" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>gdalinfo accepts a -oo option to define open options</p></li>
+<li><p>ogrinfo accepts a -oo option to define open options</p></li>
+<li><p>ogr2ogr accepts a -oo option to define input dataset open options,
+and -doo to define destination dataset open options</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-swig-bindings">
+<h2>Changes in SWIG bindings<a class="headerlink" href="#changes-in-swig-bindings" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Python and Java bindings:</p>
+<ul>
+<li><p>add new GDALDataset methods taken from OGRDataSource :
+CreateLayer(), CopyLayer(), DeleteLayer(), GetLayerCount(),
+GetLayerByIndex(), GetLayerByName(), TestCapability(),
+ExecuteSQL(), ReleaseResultSet(), GetStyleTable() and
+SetStyleTable().</p></li>
+<li><p>make OGR Driver, DataSource and Layer objects derive from
+MajorObject</p></li>
+</ul>
+</li>
+<li><p>Perl and CSharp: make sure that it still compiles but some work would
+have to be done by their mainteners to be able to use the new
+capabilities</p></li>
+</ul>
+</div>
+<div class="section" id="potential-changes-that-are-not-included-in-this-rfc">
+<h2>Potential changes that are <em>NOT</em> included in this RFC<a class="headerlink" href="#potential-changes-that-are-not-included-in-this-rfc" title="Permalink to this headline">¶</a></h2>
+<p>“Natural” evolutions of current RFC :</p>
+<ul class="simple">
+<li><p>Unifying the GDAL MEM and OGR Memory drivers.</p></li>
+<li><p>Unifying the GDAL VRT and OGR VRT drivers.</p></li>
+</ul>
+<p>Further unification steps :</p>
+<ul class="simple">
+<li><p>Source tree changes to move OGR drivers from ogr/ogrsf_frmts/ to
+frmts/ , to move ogr/ogrsf_frmts/generic/* to gcore/*, etc…</p></li>
+<li><p>Documentation unification (pages with list of drivers, etc…)</p></li>
+<li><p>Renaming to remove traces of OGR namespace : OGRLayer -&gt; GDALLayer,
+etc…</p></li>
+<li><p>Kill –without-ogr compilation option ? It has been preserved in a
+working state even if it embeds now ogr/ogrsf_frmts/generic and
+ogr/ogrsf_frmts/mitab for conveniency.</p></li>
+<li><p>Unification of some utilities : “gdal info XXX”, “gdal convert XXX”
+that would work on all kind of datasets.</p></li>
+</ul>
+</div>
+<div class="section" id="backward-compatibility">
+<h2>Backward compatibility<a class="headerlink" href="#backward-compatibility" title="Permalink to this headline">¶</a></h2>
+<p>GDALDriverManager::GetDriverCount(), GetDriver() now returns OGR
+drivers, as well as GDAL drivers</p>
+<p>The reference counting in GDAL datasets and GDAL 1.X OGR datasources was
+a bit different. It starts at 1 for GDAL datasets, and started at 0 for
+OGR datasources. Now that OGRDataSource is basically a GDALDataset, it
+starts at 1 for both cases. Hopefully there are very few users of the
+OGR_DS_GetRefCount() API. If it was deemed necessary we could restore
+the previous behavior at the C API, but that would not be possible at
+the C++ level. For reference, neither MapServer nor QGIS use
+OGR_DS_GetRefCount().</p>
+</div>
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<p>A pass should be made on the documentation to check that all new methods
+are properly documented. The OGR general documentation (especially C++
+API Read/Write tutorial, Driver implementation tutorial and OGR
+architecture) should be updated to reflect the changes.</p>
+</div>
+<div class="section" id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
+<p>Very few changes have been made so that the existing autotest suite
+still passes. Additions have been made to test the GDALOpenEx() API and
+the methods “imported” from OGRDataSource into GDALDataset.</p>
+</div>
+<div class="section" id="version-numbering">
+<h2>Version numbering<a class="headerlink" href="#version-numbering" title="Permalink to this headline">¶</a></h2>
+<p>Although the above describes changes should have very few impact on
+existing applications of the C API, some behavior changes, C++ level
+changes and the conceptual changes are thought to deserve a 2.0 version
+number.</p>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>Implementation will be done by Even Rouault.</p>
+<p>The proposed implementation lies in the “unification” branch of the
+<a class="reference external" href="https://github.com/rouault/gdal2/tree/unification">https://github.com/rouault/gdal2/tree/unification</a>
+repository.</p>
+<p>The list of changes :
+<a class="reference external" href="https://github.com/rouault/gdal2/compare/unification">https://github.com/rouault/gdal2/compare/unification</a></p>
+</div>
+<div class="section" id="voting-history">
+<h2>Voting history<a class="headerlink" href="#voting-history" title="Permalink to this headline">¶</a></h2>
+<p>+1 from JukkaR, FrankW, DanielM, TamasS and EvenR.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rfc47_dataset_caching.html" class="btn btn-neutral float-right" title="RFC 47: Per Dataset Caching and GDALRasterBand Multithreading" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc45_virtualmem.html" class="btn btn-neutral float-left" title="RFC 45: GDAL datasets and raster bands as virtual memory mappings" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

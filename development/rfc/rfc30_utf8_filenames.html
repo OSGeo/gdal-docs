@@ -1,0 +1,519 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RFC 30: Unicode Filenames &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdevelopment/rfc/rfc30_utf8_filenames.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="RFC 31: OGR 64bit Integer Fields and FIDs" href="rfc31_ogr_64.html" />
+    <link rel="prev" title="RFC 29: OGR Set Ignored Fields" href="rfc29_desired_fields.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 30: Unicode Filenames</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#key-interfaces">Key Interfaces</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#windows">Windows</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#linux-unix-macos-x">Linux / Unix / MacOS X</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#metadata">Metadata</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#python-changes">Python Changes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#c-changes">C# Changes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#perl-changes">Perl Changes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#java-changes">Java Changes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#commandline-issues">Commandline Issues</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#file-formats">File Formats</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#test-suite">Test Suite</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 30: Unicode Filenames</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/development/rfc/rfc30_utf8_filenames.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="rfc31_ogr_64.html" class="btn btn-neutral float-right" title="RFC 31: OGR 64bit Integer Fields and FIDs" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc29_desired_fields.html" class="btn btn-neutral float-left" title="RFC 29: OGR Set Ignored Fields" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rfc-30-unicode-filenames">
+<span id="rfc-30"></span><h1>RFC 30: Unicode Filenames<a class="headerlink" href="#rfc-30-unicode-filenames" title="Permalink to this headline">¶</a></h1>
+<p>Authors: Frank Warmerdam</p>
+<p>Contact: <a class="reference external" href="mailto:warmerdam&#37;&#52;&#48;pobox&#46;com">warmerdam<span>&#64;</span>pobox<span>&#46;</span>com</a></p>
+<p>Status: Adopted</p>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>This document describes steps to generally handle filenames as UTF-8
+strings in GDAL/OGR. In brief it will be assumed that filenames passed
+into and returned by GDAL/OGR interfaces are UTF-8. On some operating
+systems, notably Windows, this will require use of “wide character”
+interfaces in the low level VSI*L API.</p>
+</div>
+<div class="section" id="key-interfaces">
+<h2>Key Interfaces<a class="headerlink" href="#key-interfaces" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="vsi-l-api">
+<h3>VSI*L API<a class="headerlink" href="#vsi-l-api" title="Permalink to this headline">¶</a></h3>
+<p>All filenames in the VSI*L API will be treated as UTF-8, which means the
+cpl_vsil_win32.cpp implementation will need substantial updates to use
+wide character interfaces.</p>
+<ul class="simple">
+<li><p>VSIFOpenL()</p></li>
+<li><p>VSIFStatL()</p></li>
+<li><p>VSIReadDir()</p></li>
+<li><p>VSIMkdir()</p></li>
+<li><p>VSIRmdir()</p></li>
+<li><p>VSIUnlink()</p></li>
+<li><p>VSIRename()</p></li>
+</ul>
+</div>
+<div class="section" id="old-small-file-vsi-api">
+<h3>Old (small file) VSI API<a class="headerlink" href="#old-small-file-vsi-api" title="Permalink to this headline">¶</a></h3>
+<p>The old VSIFOpen() function will be adapted to use _wfopen() on windows
+instead of fopen() so that utf-8 filenames will be supported.</p>
+<ul class="simple">
+<li><p>VSIFOpen()</p></li>
+<li><p>VSIStat()</p></li>
+</ul>
+</div>
+<div class="section" id="filename-parsing">
+<h3>Filename Parsing<a class="headerlink" href="#filename-parsing" title="Permalink to this headline">¶</a></h3>
+<p>Because the path/extension delimiter characters ‘.’, ‘’, ‘/’ and ‘:’
+will never appear in the non-ascii portion of utf-8 strings we can
+safely leave the existing path parsing functions working as they do now.
+They do not need to be aware of the real character boundaries for exotic
+characters in utf-8 paths. The following will be left unchanged.</p>
+<ul class="simple">
+<li><p>CPLGetPath()</p></li>
+<li><p>CPLGetDirname()</p></li>
+<li><p>CPLGetFilename()</p></li>
+<li><p>CPLGetBasename()</p></li>
+<li><p>CPLGetExtension()</p></li>
+<li><p>CPLResetExtension()</p></li>
+</ul>
+</div>
+<div class="section" id="other">
+<h3>Other<a class="headerlink" href="#other" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>CPLStat()</p></li>
+<li><p>CPLGetCurrentDir()</p></li>
+<li><p>GDALDataset::GetFileList()</p></li>
+</ul>
+<p>These will all also need to treat filenames as utf-8.</p>
+</div>
+</div>
+<div class="section" id="windows">
+<h2>Windows<a class="headerlink" href="#windows" title="Permalink to this headline">¶</a></h2>
+<p>Currently Windows’s cpl_vsil_win32.cpp module uses CreateFile() with
+ascii filenames. It needs to be converted to use CreateFileW() and other
+wide character functions for stat(), rename, mkdir, etc. Prototype
+implementation already developed (r20620).</p>
+</div>
+<div class="section" id="linux-unix-macos-x">
+<span id="id1"></span><h2>Linux / Unix / MacOS X<a class="headerlink" href="#linux-unix-macos-x" title="Permalink to this headline">¶</a></h2>
+<p>On modern linux, unix and MacOS operating systems the fopen(), stat(),
+readdir() functions already support UTF-8 strings. It is not currently
+anticipated that any work will be needed on Linux/Unix/MacOS X though
+there is some question about this. It is considered permissible under
+the definition of this RFC for old, and substandard operating systems
+(WinCE?) to support only ASCII, not UTF-8 filenames.</p>
+</div>
+<div class="section" id="metadata">
+<h2>Metadata<a class="headerlink" href="#metadata" title="Permalink to this headline">¶</a></h2>
+<p>There are a variety of places where general text may contain filenames.
+One obvious case is the subdataset filenames returned from the
+SUBDATASET domain. Previously these were just exposed as plain text and
+interpretation of the character set was undefined. As part of this RFC
+we state that such filenames should be considered to be in utf-8 format.</p>
+</div>
+<div class="section" id="python-changes">
+<h2>Python Changes<a class="headerlink" href="#python-changes" title="Permalink to this headline">¶</a></h2>
+<p>I observe with Python 2.6 that functions like gdal.Open() do not accept
+unicode strings, but they do accept utf-8 string objects. One possible
+solution is to update the bindings in selective places to identify
+unicode strings passed in, and transform them to utf-8 strings.</p>
+<p>eg.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span>  <span class="sa">u</span><span class="s1">&#39;xx</span><span class="se">\u4E2D\u6587</span><span class="s1">.</span><span class="se">\u4E2D\u6587</span><span class="s1">&#39;</span>
+<span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="o">==</span> <span class="nb">type</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;a&#39;</span><span class="p">):</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>I’m not sure what the easiest way is to accomplish this in the bindings.
+The key entries are:</p>
+<ul class="simple">
+<li><p>gdal.Open()</p></li>
+<li><p>ogr.Open()</p></li>
+<li><p>gdal.ReadDir()</p></li>
+<li><p>gdal.PushFinderLocation()</p></li>
+<li><p>gdal.FindFile()</p></li>
+<li><p>gdal.Unlink()</p></li>
+</ul>
+<p>Similarly all interfaces (ie. gdal.ReadDir()) that return filenames will
+hereafter return unicode objects rather than string objects.</p>
+<p>Also note that in Python 3.x strings are always unicode.</p>
+</div>
+<div class="section" id="c-changes">
+<h2>C# Changes<a class="headerlink" href="#c-changes" title="Permalink to this headline">¶</a></h2>
+<p>Tamas notes that in C# we normally convert the unicode C# strings into C
+string with the PtrToStringAnsi marshaller. Presumably we will need to
+use a utf-8 converter for all interface strings considered to be
+filenames. I would note this should also apploy to OGR string attribute
+values which are also intended to be treated as utf-8.</p>
+<p>(It is unclear who will take care of this aspect since the primary
+author (FrankW) is not C#-binding-competent.</p>
+</div>
+<div class="section" id="perl-changes">
+<h2>Perl Changes<a class="headerlink" href="#perl-changes" title="Permalink to this headline">¶</a></h2>
+<p>The general rule in Perl is that all strings should be decoded before
+giving them to Perl and encoded when they are output. In practice things
+usually just work. To be sure, I (Ari) have added an explicit decode
+from utf8 to FindFile and ReadDir (#20800).</p>
+</div>
+<div class="section" id="java-changes">
+<h2>Java Changes<a class="headerlink" href="#java-changes" title="Permalink to this headline">¶</a></h2>
+<p>No changes are needed for Java. Java strings are unicode, and they are
+already converted to utf-8 in the java swig bindings. That is, the java
+bindings already assumed passing and receiving utf-8 strings to/from
+GDAL/OGR.</p>
+</div>
+<div class="section" id="commandline-issues">
+<h2>Commandline Issues<a class="headerlink" href="#commandline-issues" title="Permalink to this headline">¶</a></h2>
+<p>On windows argv[] as passed into main() will not generally be able to
+represent exotic filenames that can’t be represented in the locale
+charset. It is possible to fetch the commandline and parse it as wide
+characters using GetCommandLineW() and CommandLinetoArgvW() to capture
+ucs-16 filenames (easily converted to utf-8); however, this interferes
+with the use of setargv.obj to expand wildcards on windows.</p>
+<p>I have not been able to come up with a good solution, so for now I am
+not intending to make any changes to the GDAL/OGR commandline utilities
+to allow passing exotic filenames. So this RFC is mainly aimed at
+ensuring that other applications using GDAL/OGR can utilize exotic
+filenames.</p>
+</div>
+<div class="section" id="file-formats">
+<h2>File Formats<a class="headerlink" href="#file-formats" title="Permalink to this headline">¶</a></h2>
+<p>The proposed implementation really only addresses file format drivers
+that use VSIFOpenL(), VSIFOpen() and related functions. Some drivers
+dependent on external libraries (ie. netcdf) do not have a way to hook
+the file IO API and may not support utf-8 filenames. It might be nice to
+be able to distinguish these.</p>
+<p>At the very least any driver marked with GDAL_DCAP_VIRTUALIO as “YES”
+will support UTF-8. Perhaps this opportunity ought to be used to more
+uniformly apply this driver metadata (done).</p>
+</div>
+<div class="section" id="test-suite">
+<h2>Test Suite<a class="headerlink" href="#test-suite" title="Permalink to this headline">¶</a></h2>
+<p>We will need to introduce some test suite tests with multibyte utf-8
+filenames. In support of that aspects of the VSI*L API - particularly
+the rename, mkdir, rmdir, functions and VSIFOpenL itself have been
+exposed in python.</p>
+</div>
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<p>Appropriate API entry points will be documented as taking and return
+UTF-8 strings.</p>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>Implementation is underway and being tracked in ticket #3766.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rfc31_ogr_64.html" class="btn btn-neutral float-right" title="RFC 31: OGR 64bit Integer Fields and FIDs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc29_desired_fields.html" class="btn btn-neutral float-left" title="RFC 29: OGR Set Ignored Fields" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

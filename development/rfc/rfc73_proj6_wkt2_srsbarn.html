@@ -1,0 +1,840 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database &mdash; GDAL  documentation</title>
+  
+
+  
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdevelopment/rfc/rfc73_proj6_wkt2_srsbarn.html"/>
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure" href="rfc74_sphinx.html" />
+    <link rel="prev" title="RFC 72: Update autotest suite to use pytest" href="rfc72_pytest.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motivation">Motivation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#related-work-in-other-libraries">Related work in other libraries</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#proposal">Proposal</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#backward-compatibility">Backward compatibility</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#testing">Testing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voting-history">Voting history</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#modifications">Modifications</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/development/rfc/rfc73_proj6_wkt2_srsbarn.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="rfc74_sphinx.html" class="btn btn-neutral float-right" title="RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc72_pytest.html" class="btn btn-neutral float-left" title="RFC 72: Update autotest suite to use pytest" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rfc-73-integration-of-proj6-for-wkt2-late-binding-capabilities-time-support-and-unified-crs-database">
+<span id="rfc-73"></span><h1>RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database<a class="headerlink" href="#rfc-73-integration-of-proj6-for-wkt2-late-binding-capabilities-time-support-and-unified-crs-database" title="Permalink to this headline">¶</a></h1>
+<table class="docutils align-center">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 67%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Author:</p></td>
+<td><p>Even Rouault</p></td>
+</tr>
+<tr class="row-even"><td><p>Contact:</p></td>
+<td><p>even.rouault &#64; spatialys.com</p></td>
+</tr>
+<tr class="row-odd"><td><p>Started:</p></td>
+<td><p>2019-Jan-08</p></td>
+</tr>
+<tr class="row-even"><td><p>Last modified:</p></td>
+<td><p>2019-May-02</p></td>
+</tr>
+<tr class="row-odd"><td><p>Status:</p></td>
+<td><p>Implemented in GDAL 3.0</p></td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>The document describe work related to integration of PROJ 6 with GDAL,
+which adds different capabilities: support for CRS WKT 2 version, “late
+binding” capabilities for coordinate transformations between CRS,
+support of time-dimension for coordinate operations and the use of a
+unified CRS database.</p>
+</div>
+<div class="section" id="motivation">
+<h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">¶</a></h2>
+<p>The motivations are those exposed in
+<a class="reference external" href="https://gdalbarn.com/#why">https://gdalbarn.com/#why</a> , which are
+copied here</p>
+<p>Coordinate systems in GDAL, PROJ, and libgeotiff are missing modern
+capabilities and need a thorough refactoring:</p>
+<ul class="simple">
+<li><p>The dreaded ad hoc CSV databases in PROJ_LIB and GDAL_DATA are
+frustrating for users, pose challenges for developers, and impede
+interoperability of definitions.</p></li>
+<li><p>GDAL and PROJ are missing OGC WKT2 support.</p></li>
+<li><p>PROJ 5.0+ no longer requires datum transformation pivots through
+WGS84, which can introduce errors of up to 2m, but the rest of the
+tools do not take advantage of it.</p></li>
+</ul>
+<div class="section" id="csv-database">
+<h3>CSV database<a class="headerlink" href="#csv-database" title="Permalink to this headline">¶</a></h3>
+<p>The use of a SQLite-based database for EPSG and other definitions will
+allow the projects to add more capability (area-aware validation),
+transition the custom peculiar data structures of the projects to
+something more universally consumable, and promote definition
+interoperability between many coordinate system handling software tools.</p>
+</div>
+<div class="section" id="wkt2">
+<h3>WKT2<a class="headerlink" href="#wkt2" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="http://docs.opengeospatial.org/is/12-063r5/12-063r5.html">OGC WKT2</a>
+fixes longstanding interoperability coordinate system definition
+discrepancies. WKT2 contains tools for describing time-dependent
+coordinate reference systems. PROJ 5+ is now capable of time-dependent
+transformations, but GDAL and other tools do not yet support them.</p>
+<p>Several countries are updating their geodetic infrastructure to include
+time-dependent coordinate systems. For example, Australia and the United
+States are adapting time-dependent coordinate systems in 2020 and 2022,
+respectively. The familiar NAD83 and NAVD88 in North America being
+replaced by NATRF2022 and NAPGD2022, and the industry WILL have to adapt
+to these challenges sooner or later.</p>
+</div>
+<div class="section" id="wgs84-pivot">
+<h3>WGS84 Pivot<a class="headerlink" href="#wgs84-pivot" title="Permalink to this headline">¶</a></h3>
+<p>PROJ previously required datum transformation that pivoted through WGS84
+via a 7-parameter transform. This pivot is a practical solution, but it
+can introduce error of about two meters, and many legacy datums cannot
+be defined in terms of WGS84. PROJ 5+ now provides the tools to support
+late-binding through its <a class="reference external" href="https://proj4.org/usage/transformation.html#geodetic-transformation">transformation pipeline
+framework</a>,
+but GDAL and the rest of the tools cannot use it yet. Higher accuracy
+transformations avoid stepping through WGS84 and eliminates extra
+transformation steps with side-car data from a local geodetic authority.</p>
+</div>
+</div>
+<div class="section" id="related-work-in-other-libraries">
+<h2>Related work in other libraries<a class="headerlink" href="#related-work-in-other-libraries" title="Permalink to this headline">¶</a></h2>
+<p>This RFC is the last step in the “gdalbarn” work. Previous steps have
+consisted in implementing the related changes in PROJ master per <a class="reference external" href="https://proj4.org/community/rfc/rfc-2.html">PROJ
+RFC 2</a> and in libgeotiff
+master per <a class="reference external" href="https://github.com/OSGeo/libgeotiff/pull/2">libgeotiff pull request
+2</a>.</p>
+</div>
+<div class="section" id="proposal">
+<h2>Proposal<a class="headerlink" href="#proposal" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="third-party-library-requirements">
+<h3>Third-party library requirements<a class="headerlink" href="#third-party-library-requirements" title="Permalink to this headline">¶</a></h3>
+<p>GDAL master (future 3.0) will require PROJ master (future PROJ 6.0) and
+libgeotiff master (future libgeotiff 1.5 or 2.0) for build and
+execution.</p>
+<p>Regarding PROJ, no internal copy of PROJ will be embedded in GDAL
+master. It is not doable of supporting older versions of PROJ, as the
+OGRSpatialReference class has been largely rewritten to take advantage
+of functionality that has been completely moved from GDAL to PROJ: PROJ
+string import and export, WKT string import and export, EPSG database
+exploitation. To be able to use more easily GDAL master and PROJ master
+in complex setups where some GDAL dependencies use a libproj provided by
+the system, and where mixing naively PROJ master and this older libproj
+would result in runtime crashes, PROJ master can be built with
+CFLAGS/CXXFLAGS=-DPROJ_RENAME_SYMBOLS to alias its public symbols, and
+GDAL will be able to use this custom build. Note that this is not
+intended to be used in a long term, since proper packaging solutions
+will eventually use PROJ 6 to rebuild all its reverse dependencies. It
+should be noted also that PROJ is required at configure / nmake time,
+that is the dynamic loading at runtime through dlopen() / LoadLibrary()
+is no longer available.</p>
+<p>Regarding libgeotiff, the internal copy in frmts/gtiff/libgeotiff has
+been refreshed with the content of upstream libgeotiff master.</p>
+<p>All continuous integration systems (Travis-CI and AppVeyor) have been
+updated to build PROJ master as part of the GDAL build.</p>
+</div>
+<div class="section" id="ogrspatialreference-rewrite">
+<h3>OGRSpatialReference rewrite<a class="headerlink" href="#ogrspatialreference-rewrite" title="Permalink to this headline">¶</a></h3>
+<p>The OGRSpatialReference class is central in GDAL/OGR for all coordinate
+reference systems (CRS) manipulations. Up to GDAL 2.4, this class
+contained mostly a OGR_SRSNode root node of a WKT 1 representation, and
+all getters and setters manipulated this tree representation. As part of
+this work, the main object contained internally by OGRSpatialReference
+is now a PROJ PJ object, and methods call PROJ C API getters and setters
+on this PJ object. This enables to be, mostly (*), representation
+independent.</p>
+<p>WKT1, WKT2, ESRI WKT, PROJ strings import and export is now delegated to
+PROJ. The same holds for import of CRS from the EPSG database, that now
+relies on proj.db SQLite database. Consequently all the data/*.csv files
+that contained CRS related information have been removed from GDAL. It
+should be noted that “morphing” from ESRI WKT is now done automatically
+when importing WKT.</p>
+<p>While general semantics of methods like IsSame() or FindMatches() remain
+the same, underneath implementations are substantially different, which
+can lead to different results than previous GDAL versions in some cases.
+In the FindMatches() case, identification of CRS to EPSG entries is
+generally improved due to enhanced query capabilities in the database.</p>
+<p>(*) The “mostly” precision is here since it was not practical to do this
+rewrite in every place. So for some methods, an internal WKT1 export is
+still done. This is the case for methods that take a path to a SRS node
+(like “GEOGCS|UNIT”) as an argument, or some methods like
+SetProjection(), GetProjParm(), that expect a OGC WKT1 specific name.
+Those are thought to be used mostly be drivers. Changing them to be EPSG
+names would impact a number of drivers, some of them little tested
+regarding SRS support, and which furthermore mostly support WKT1
+representation only.</p>
+</div>
+<div class="section" id="ogrcoordinatetransformation-changes">
+<h3>OGRCoordinateTransformation changes<a class="headerlink" href="#ogrcoordinatetransformation-changes" title="Permalink to this headline">¶</a></h3>
+<p>Since GDAL 2.3 and initial PROJ 5 support, when transforming between two
+CRS we still relied on the PROJ.4 string export of the source and target
+CRS to create a coordinate operation pipeline. So this limited to
+“early-binding” operations, that is using the WGS84 pivot through
+towgs84 or nadgrids PROJ keywords. Now PROJ new capabilities to find
+appropriate coordinate operations between two CRS is used, offering
+“late-binding” capabilities to take into account other pivots than WGS84
+or area of uses.</p>
+<p>OGRCreateCoordinateOperation() now takes an extra optional arguments to
+define options.</p>
+<p>One of those options is to define an area of interest that will be taken
+into account when searching candidate operations. If several operations
+match, the “best” (according to PROJ sorting criterion) will be
+selected. Note: it will systematically be used even if later calls to
+Transform() use coordinates outside of the initial area of interest.</p>
+<p>Another option is the ability to specify the coordinate operation to
+apply, so as an override of what GDAL / PROJ would have automatically
+computed, either as a PROJ string (generally a +proj=pipeline), or a WKT
+coordinate operation/concatenated operation. Users can typically select
+a specific coordinate operation by using the new PROJ projinfo utility
+that can return the candidate operations from a source_crs / target_crs
+tuple.</p>
+<p>When no option is specified, GDAL will use PROJ to list all candidate
+coordinate operations. For each call to Transform(), it will compute the
+average coordinate of the input coordinates and use it to determine the
+best coordinate operation from the candidate ones.</p>
+<p>The Transform() method now takes an extra argument to contain the
+coordinate epoch (generally as a decimal year value) for coordinate
+operations that are time-dependent. Related, the transform options of
+the GDALTransform mechanism typically used by gdalwarp now accepts a
+COORDINATE_EPOCH for the same purpose.</p>
+</div>
+<div class="section" id="use-of-ogrspatialreference-in-gdal">
+<h3>Use of OGRSpatialReference in GDAL<a class="headerlink" href="#use-of-ogrspatialreference-in-gdal" title="Permalink to this headline">¶</a></h3>
+<p>Currently GDAL datasets accept and return a WKT 1 string to describe the
+SRS. To be more independent of the actual encoding, and for example
+allowing a GeoPackage raster dataset to be able to use WKT 2, it is
+desirable to be able to attach a SRS that is not dependent of the
+representation (WKT 1 or WKT 2), hence using a OGRSpatialReference
+object instead of a const char* string.</p>
+<p>The following new methods are added in GDALDataset:</p>
+<ul class="simple">
+<li><p>virtual const OGRSpatialReference* GetSpatialRef() const;</p></li>
+<li><p>virtual CPLErr SetSpatialRef(const OGRSpatialReference*);</p></li>
+<li><p>virtual const OGRSpatialReference* GetGCPSpatialRef() const;</p></li>
+<li><p>virtual CPLErr SetGCPs(int nGCPCount, const GDAL_GCP <em>pasGCPList,
+const OGRSpatialReference</em>);</p></li>
+</ul>
+<p>To ease the transition, the following non virtual methods are added in
+GDALDataset:</p>
+<ul class="simple">
+<li><p>const OGRSpatialReference* GetSpatialRefFromOldGetProjectionRef()
+const;</p></li>
+<li><p>CPLErr OldSetProjectionFromSetSpatialRef(const OGRSpatialReference*
+poSRS);</p></li>
+<li><p>const OGRSpatialReference* GetGCPSpatialRefFromOldGetGCPProjection()
+const;</p></li>
+<li><p>CPLErr OldSetGCPsFromNew( int nGCPCount, const GDAL_GCP *pasGCPList,
+const OGRSpatialReference * poGCP_SRS );</p></li>
+</ul>
+<p>and the previous GetProjectionRef(), SetProjection(), GetGCPProjection()
+and SetGCPs() are available as projected virtual methods, prefixed by an
+underscore</p>
+<p>This way to convert an existing driver, it is a matter of renaming its
+GetProjectionRef() method as _GetProjectionRef(), and adding:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">const</span> <span class="n">OGRSpatialReference</span><span class="o">*</span> <span class="n">GetSpatialRef</span><span class="p">()</span> <span class="n">const</span> <span class="n">override</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">GetSpatialRefFromOldGetProjectionRef</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="default-wkt-version">
+<h3>Default WKT version<a class="headerlink" href="#default-wkt-version" title="Permalink to this headline">¶</a></h3>
+<p>OGRSpatialReference::exportToWkt() without options will report WKT 1
+(with explicit AXIS nodes. See below “Axis order issues” paragraph) for
+CRS compatibles of this representation, and otherwise use WKT2:2018
+(typically for Geographic 3D CRS).</p>
+<p>An enhanced version of exportToWkt() accepts options to specify the
+exact WKT version used, if multi-line or single-line output must be
+used, etc.</p>
+<p>Alternatively the OSR_WKT_FORMAT configuration option can be used to
+modify the WKT version used by exportToWk() (when no explicit version is
+passed in the options of exportToWkt())</p>
+<p>The gdalinfo, ogrinfo and gdalsrsinfo utililies will default to
+outputting WKT2:2018</p>
+</div>
+<div class="section" id="axis-order-issues">
+<h3>Axis order issues<a class="headerlink" href="#axis-order-issues" title="Permalink to this headline">¶</a></h3>
+<p>This is a recurring pain point. This RFC proposes a new approach
+(without pretending to solving it completely) to what was initially done
+per <a class="reference external" href="./rfc20_srs_axes">RFC 20: OGRSpatialReference Axis Support</a>. The
+issue is that CRS official definitions use axis orders that do not
+conform to the way raster or vector data is traditionally encoded in GIS
+applications. The typical example is the Geographic “WGS 84” definition
+from EPSG, EPSG:4326, which uses latitude as the first axis and
+longitude as the second axis. RFC 20 decided that by default the AXIS
+definition would be stripped off from the WKT when the axis order from
+the authority did not match the GIS friendly one (and use a custom EPSGA
+authority to have WKT with official AXIS elements)</p>
+<p>This was technically possible since the WKT 1 grammar makes the AXIS
+element definition. However removal of the AXIS definitions was a
+potential source of confusion as it was unclear which axis order was
+actually used. Furthermore, in WKT2, the AXIS element is compulsory, and
+the internal PROJ representation requires also a coordinate system to be
+defined. So there would have been two unsatisfactory options:</p>
+<ul class="simple">
+<li><p>return patched versions of the official definition with the GIS
+friendly order, while still using the official authority code.
+Practical since we keep the link with the source code, but a lie
+since we modify it. Users would not know whether they must trust the
+encoded order, or the official order from the authority.</p></li>
+<li><p>return patched versions of the official definition with the GIS
+friendly order, but without the official authority code. This would
+be compliant, but we would lose the link with the authority code.</p></li>
+</ul>
+<p>The solution put forward in this RFC is to add a “data axis to SRS axis
+mapping” concept, which is a bit similar to what is done in WCS
+DescribeCoverage response to explain how the SRS axis map to the grid
+axis of a coverage</p>
+<p>Extract from
+<a class="reference external" href="https://docs.geoserver.org/stable/en/user/extensions/wcs20eo/index.html">https://docs.geoserver.org/stable/en/user/extensions/wcs20eo/index.html</a>
+for a coverage that uses EPSG:4326</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">gml</span><span class="p">:</span><span class="n">coverageFunction</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">gml</span><span class="p">:</span><span class="n">GridFunction</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">gml</span><span class="p">:</span><span class="n">sequenceRule</span> <span class="n">axisOrder</span><span class="o">=</span><span class="s2">&quot;+2 +1&quot;</span><span class="o">&gt;</span><span class="n">Linear</span><span class="o">&lt;/</span><span class="n">gml</span><span class="p">:</span><span class="n">sequenceRule</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">gml</span><span class="p">:</span><span class="n">startPoint</span><span class="o">&gt;</span><span class="mi">0</span> <span class="mi">0</span><span class="o">&lt;/</span><span class="n">gml</span><span class="p">:</span><span class="n">startPoint</span><span class="o">&gt;</span>
+  <span class="o">&lt;/</span><span class="n">gml</span><span class="p">:</span><span class="n">GridFunction</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">gml</span><span class="p">:</span><span class="n">coverageFunction</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>A similar mapping is added to define how the ‘x’ and ‘y’ components in
+the geotransform matrix or in a OGRGeometry map to the axis defined by
+the CRS definition.</p>
+<p>Such mapping is given by a new method in OGRSpatialReference</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">const</span> <span class="n">std</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="nb">int</span><span class="o">&gt;&amp;</span> <span class="n">GetDataAxisToSRSAxisMapping</span><span class="p">()</span> <span class="n">const</span>
+</pre></div>
+</div>
+<p>To explain its semantics, imagine that it return 2,-1,3. That is
+interpreted as:</p>
+<ul class="simple">
+<li><p>2: the first axis of the CRS maps to the second axis of the data</p></li>
+<li><p>-1: the second axis of the CRS maps to the first axis of the data,
+with values negated</p></li>
+<li><p>3: the third axis of the CRS maps to the third axis of the data</p></li>
+</ul>
+<p>This is similar to the PROJ axisswap operation:
+<a class="reference external" href="https://proj4.org/operations/conversions/axisswap.html">https://proj4.org/operations/conversions/axisswap.html</a></p>
+<p>By default, on a newly create OGRSpatialReference object,
+GetDataAxisToSRSAxisMapping() returns the identity 1,2[,3], that is,
+conform to the axis order defined by the authority.</p>
+<p>As all GDAL and a vast majority of OGR drivers depend on using the “GIS
+axis mapping”, a method SetAxisMappingStrategy(
+OAMS_TRADITIONAL_GIS_ORDER or OAMS_AUTHORITY_COMPLIANT or OAMS_CUSTOM )
+is added to make their job of specifying the axis mapping easier;</p>
+<p>OAMS_TRADITIONAL_GIS_ORDER means:</p>
+<ul class="simple">
+<li><p>for geographic 2D CRS,</p>
+<ul>
+<li><p>for Latitude NORTH, Longitude EAST (such as EPSG:4326),
+GetDataAxisToSRSAxisMapping() returns {2,1}, meaning that the data
+order is longitude, latitude</p></li>
+<li><p>for Longitude EAST, Latitude NORTH (such as OGC:CRS84), returns
+{1,2}</p></li>
+</ul>
+</li>
+<li><p>for projected CRS,</p>
+<ul>
+<li><p>for EAST, NORTH (ie most projected CRS), return {1,2}</p></li>
+<li><p>for NORTH, EAST, return {2,1}</p></li>
+<li><p>for North Pole CRS, with East/SOUTH, North/SOUTH, such as
+EPSG:5041 (“WGS 84 / UPS North (E,N)”), would return {1,2}</p></li>
+<li><p>for North Pole CRS, with northing/SOUTH, easting/SOUTH, such as
+EPSG:32661 (“WGS 84 / UPS North (N,E)”), would return {2,1}</p></li>
+<li><p>similarly for South Pole CRS</p></li>
+<li><p>for all other cases, return {1,2}</p></li>
+</ul>
+</li>
+</ul>
+<p>OGRCreateCoordinateTransformation() now honors the data axis to srs axis
+mapping.</p>
+<p>Note: contrary to what I indicated in a previous email, gdaltransform
+behavior is unchanged, since internally the GDALTransform mechanism
+forces the GIS friendly order.</p>
+<p>Raster datasets are modified to call
+SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER) on the
+OGRSpatialReference* they return, and assumes it in SetSpatialRef()
+(assumed and unchecked for now)</p>
+<p>Vector layers mostly all call
+SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER) on the
+OGRSpatialReference* returned by GetSpatialRef(). In the case of the
+GML driver, if the user defines the INVERT_AXIS_ORDER_IF_LAT_LONG open
+option, axis swapping is not done (as previously) and the
+AUTHORITY_COMPLIANT strategy is used. ICreateLayer() when receiving a
+OGRSpatialReference* may decide (and most will do it) to change the
+axis mapping strategy. That is: if it receives a OGRSpatialReference
+with AUTHORITY_COMPLIANT order, it may decide to switch to
+TRADITIONAL_GIS_ORDER and GetSpatialRef()::GetDataAxisToSRSAxisMapping()
+will reflect that. ogr2ogr is modified to do the geometry axis swapping
+in that case.</p>
+<p>Related to that change, WKT 1 export now always return the AXIS element,
+and EPSG:xxxx thus behaves identically to EPSGA:xxxx</p>
+<p>So a summary view of this approach is that in the formal SRS definition,
+we no longer do derogations regarding axis order, but we add an
+additional interface to describe how we actually make our match match
+with the SRS definition.</p>
+</div>
+<div class="section" id="driver-changes">
+<h3>Driver changes<a class="headerlink" href="#driver-changes" title="Permalink to this headline">¶</a></h3>
+<p>Raster drivers that returned / accepted a SRS as a WKT string through
+the GetProjectionRef(), SetProjection(), GetGCPProjection() and
+SetGCPs() methods have been upgraded to use the new virtual methods, in
+most cases by using the compatibility layer.</p>
+<p>The GDALPamDataset (PAM .aux.xml files) and the GDAL VRT drivers have
+been fully upgraded to support the new interfaces, and
+serialize/deserialize the data axis to SRS axis mapping values.</p>
+<p>The GeoPackage driver now fully supports the official “gpkg_crs_wkt”
+extension used to store WKT 2 string definitions in the
+gpkg_spatial_ref_sys table. The driver attempts at not using the
+extension when SRS can be encoded as WKT1 strings, and will
+automatically add the “definition_12_063” column to an existing
+gpkg_spatial_ref_sys table if a SRS requiring WKT2 (typically a
+Geographic 3D CRS) is inserted.</p>
+</div>
+<div class="section" id="changes-in-utilities">
+<h3>Changes in utilities<a class="headerlink" href="#changes-in-utilities" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>gdalinfo and ogrinfo reports the data axis to CRS axis mapping
+whenever a CRS is reported. They will also output WKT2_2018 by
+default, unless “-wkt_format wkt1” is specified.</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Driver</span><span class="p">:</span> <span class="n">GTiff</span><span class="o">/</span><span class="n">GeoTIFF</span>
+<span class="n">Files</span><span class="p">:</span> <span class="n">out</span><span class="o">.</span><span class="n">tif</span>
+<span class="n">Size</span> <span class="ow">is</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">20</span>
+<span class="n">Coordinate</span> <span class="n">System</span> <span class="ow">is</span><span class="p">:</span>
+<span class="n">GEOGCRS</span><span class="p">[</span><span class="s2">&quot;WGS 84&quot;</span><span class="p">,</span>
+    <span class="n">DATUM</span><span class="p">[</span><span class="s2">&quot;World Geodetic System 1984&quot;</span><span class="p">,</span>
+        <span class="n">ELLIPSOID</span><span class="p">[</span><span class="s2">&quot;WGS 84&quot;</span><span class="p">,</span><span class="mi">6378137</span><span class="p">,</span><span class="mf">298.257223563</span><span class="p">,</span>
+            <span class="n">LENGTHUNIT</span><span class="p">[</span><span class="s2">&quot;metre&quot;</span><span class="p">,</span><span class="mi">1</span><span class="p">]]],</span>
+    <span class="n">PRIMEM</span><span class="p">[</span><span class="s2">&quot;Greenwich&quot;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">ANGLEUNIT</span><span class="p">[</span><span class="s2">&quot;degree&quot;</span><span class="p">,</span><span class="mf">0.0174532925199433</span><span class="p">]],</span>
+    <span class="n">CS</span><span class="p">[</span><span class="n">ellipsoidal</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span>
+        <span class="n">AXIS</span><span class="p">[</span><span class="s2">&quot;geodetic latitude (Lat)&quot;</span><span class="p">,</span><span class="n">north</span><span class="p">,</span>
+            <span class="n">ORDER</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">ANGLEUNIT</span><span class="p">[</span><span class="s2">&quot;degree&quot;</span><span class="p">,</span><span class="mf">0.0174532925199433</span><span class="p">]],</span>
+        <span class="n">AXIS</span><span class="p">[</span><span class="s2">&quot;geodetic longitude (Lon)&quot;</span><span class="p">,</span><span class="n">east</span><span class="p">,</span>
+            <span class="n">ORDER</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+            <span class="n">ANGLEUNIT</span><span class="p">[</span><span class="s2">&quot;degree&quot;</span><span class="p">,</span><span class="mf">0.0174532925199433</span><span class="p">]],</span>
+    <span class="n">USAGE</span><span class="p">[</span>
+        <span class="n">SCOPE</span><span class="p">[</span><span class="s2">&quot;unknown&quot;</span><span class="p">],</span>
+        <span class="n">AREA</span><span class="p">[</span><span class="s2">&quot;World&quot;</span><span class="p">],</span>
+        <span class="n">BBOX</span><span class="p">[</span><span class="o">-</span><span class="mi">90</span><span class="p">,</span><span class="o">-</span><span class="mi">180</span><span class="p">,</span><span class="mi">90</span><span class="p">,</span><span class="mi">180</span><span class="p">]],</span>
+    <span class="n">ID</span><span class="p">[</span><span class="s2">&quot;EPSG&quot;</span><span class="p">,</span><span class="mi">4326</span><span class="p">]]</span>
+<span class="n">Data</span> <span class="n">axis</span> <span class="n">to</span> <span class="n">CRS</span> <span class="n">axis</span> <span class="n">mapping</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span><span class="mi">1</span> <span class="o">&lt;--</span> <span class="n">here</span>
+<span class="n">Origin</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.000000000000000</span><span class="p">,</span><span class="mf">49.000000000000000</span><span class="p">)</span>
+<span class="n">Pixel</span> <span class="n">Size</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.100000000000000</span><span class="p">,</span><span class="o">-</span><span class="mf">0.100000000000000</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>gdalwarp, ogr2ogr and gdaltransform have gained a -ct switch that can
+be used by advanced users to specify a coordinate operation, either
+as a PROJ string (generally a +proj=pipeline), or a WKT coordinate
+operation/concatenated operation, as explained in the above
+“OGRCoordinateTransformation changes” paragraph. Note: the pipeline
+must take into account the axis order of the CRS, even if the
+underlying raster/vector drivers use the “GIS friendly” order. For
+example “+proj=pipeline +step +proj=axisswap +order=2,1 +step
++proj=unitconvert +xy_in=deg +xy_out=rad +step +proj=utm +zone=31
++ellps=WGS84” when transforming from EPSG:4326 to EPSG:32631.</p></li>
+<li><p>gdalsrsinfo is enhanced to be able to specify the 2 new supported WKT
+variants: WKT2_2015 and WKT2_2018. It will default to outputting
+WKT2_2018</p></li>
+</ul>
+</div>
+<div class="section" id="swig-binding-changes">
+<h3>SWIG binding changes<a class="headerlink" href="#swig-binding-changes" title="Permalink to this headline">¶</a></h3>
+<p>The enhanced ExportToWkt() and OGRCoordinateTransformation methods are
+available through SWIG bindings. May require additional typemaps for
+non-Python languages (particularly for the support of 4D X,Y,Z,time
+coordinates)</p>
+</div>
+</div>
+<div class="section" id="backward-compatibility">
+<h2>Backward compatibility<a class="headerlink" href="#backward-compatibility" title="Permalink to this headline">¶</a></h2>
+<p>This work is intended to be <em>mostly</em> backward compatible, yet inevitable
+differences will be found. For example the WKT 1 and PROJ string export
+has been completely rewritten in PROJ, and so while being hopefully
+equivalent to what GDAL 2.4 or earlier generated, this is not strictly
+identical: number of significant digits, order of PROJ parameters,
+rounding, etc etc…</p>
+<p>MIGRATION_GUIDE.TXT has been updated to reflect some differences:</p>
+<ul class="simple">
+<li><p>OSRImportFromEPSG() takes into account official axis order.</p></li>
+<li><p>removal of OPTGetProjectionMethods(), OPTGetParameterList() and
+OPTGetParameterInfo() No equivalent.</p></li>
+<li><p>removal of OSRFixup() and OSRFixupOrdering(): no longer needed since
+objects constructed are always valid</p></li>
+<li><p>removal of OSRStripCTParms(). Use OSRExportToWktEx() instead with the
+FORMAT=SQSQL option</p></li>
+<li><p>exportToWkt() outputs AXIS nodes</p></li>
+<li><p>OSRIsSame(): now takes into account data axis to CRS axis mapping,
+unless IGNORE_DATA_AXIS_TO_SRS_AXIS_MAPPING=YES is set as an option
+to OSRIsSameEx()</p></li>
+<li><p>ogr_srs_api.h: SRS_WKT_WGS84 macro is no longer declared by default
+since WKT without AXIS is too ambiguous. Preferred remediation: use
+SRS_WKT_WGS84_LAT_LONG. Or #define USE_DEPRECATED_SRS_WKT_WGS84
+before including ogr_srs_api.h</p></li>
+</ul>
+<p>Out-of-tree raster drivers will be impacted by the introduction of the
+new virtual methods GetSpatialRef(), SetSpatialRef(), GetGCPSpatialRef()
+and SetGCPs(…, const OGRSpatialReference* poSRS), and the removal of
+their older equivalents using WKT strings instead of a
+OGRSpatialReference* instance.</p>
+</div>
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<p>New methods have been documented, and documentation of existing methods
+has been changed when appropriate during the development. That said, a
+more thorough pass will be needed. The tutorials will also have to be
+updated.</p>
+</div>
+<div class="section" id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
+<p>The autotest suite has been adapted in a number of places since the
+expected results have changed for a number of reasons (AXIS node
+exported in WKT, differences in WKT and PROJ string generation). New
+tests have been added for the new capabilities.</p>
+<p>It should be noted that autotest not necessarily checks everything, and
+issues have been discovered and fixed through manual testing. The
+introduction of the “data axis to CRS axis mapping” concept is also
+quite error prone, as it requires setting the OAMS_TRADITIONAL_GIS_ORDER
+strategy in a lot of different places.</p>
+<p>So users and developers are kindly invited to thoroughly test GDAL once
+this work has landed in master.</p>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>Done by Even Rouault, <a class="reference external" href="http://www.spatialys.com">Spatialys</a>.
+Available per <a class="reference external" href="https://github.com/OSGeo/gdal/pull/1185">PR 1185</a>
+Funded through <a class="reference external" href="https://gdalbarn.com/">gdalbarn</a> sponsoring.</p>
+<p>While it is provided as a multiple commit for “”“easier”“” review, it
+will be probably squashed in a single commit for inclusion in master, as
+intermediate steps are not all buildable, due to PROJ symbol renames
+having occurred during the development, which would break bisectability.</p>
+</div>
+<div class="section" id="voting-history">
+<h2>Voting history<a class="headerlink" href="#voting-history" title="Permalink to this headline">¶</a></h2>
+<p>Adopted with +1 from PSC members HowardB, JukkaR, DanielM and EvenR</p>
+</div>
+<div class="section" id="modifications">
+<h2>Modifications<a class="headerlink" href="#modifications" title="Permalink to this headline">¶</a></h2>
+<p>2019-May-02: change mentions of GDAL 2.5 to GDAL 3.0</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rfc74_sphinx.html" class="btn btn-neutral float-right" title="RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc72_pytest.html" class="btn btn-neutral float-left" title="RFC 72: Update autotest suite to use pytest" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2020 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
