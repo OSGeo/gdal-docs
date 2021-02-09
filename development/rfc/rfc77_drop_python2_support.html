@@ -1,0 +1,622 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RFC 77: Drop Python 2 support in favour of Python 3.6 &mdash; GDAL  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgdevelopment/rfc/rfc77_drop_python2_support.html"/>
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Community" href="../../community.html" />
+    <link rel="prev" title="RFC 76: OGR Python drivers" href="rfc76_ogrpythondrivers.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../../index.html">
+          
+
+          
+            
+            <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters (not implemented)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open (withdrawn)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open (withdrawn)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading (not implemented)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 77: Drop Python 2 support in favour of Python 3.6</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motivation">Motivation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#related-projects-that-dropped-python-2-support">Related projects that dropped Python 2 support:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#python-3-version-status">Python 3 version status:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#python-3-os-support">Python 3 OS Support:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#which-version-should-be-the-new-minimum-version">Which version should be the new minimum version ?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#backward-compatibility">Backward compatibility</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ci-impacts">CI Impacts:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#impacts-on-gdal-core">Impacts on GDAL core</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#limitations-and-scope">Limitations and scope</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#swig-binding-changes">SWIG binding changes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#security-implications">Security implications</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#performance-impact">Performance impact</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#testing">Testing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#previous-discussions">Previous discussions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#related-prs">Related PRs:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voting-history">Voting history</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#credits">Credits</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 77: Drop Python 2 support in favour of Python 3.6</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/development/rfc/rfc77_drop_python2_support.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="../../community.html" class="btn btn-neutral float-right" title="Community" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc76_ogrpythondrivers.html" class="btn btn-neutral float-left" title="RFC 76: OGR Python drivers" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rfc-77-drop-python-2-support-in-favour-of-python-3-6">
+<span id="rfc-77"></span><h1>RFC 77: Drop Python 2 support in favour of Python 3.6<a class="headerlink" href="#rfc-77-drop-python-2-support-in-favour-of-python-3-6" title="Permalink to this headline">¶</a></h1>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Author:</p></td>
+<td><p>Idan Miara</p></td>
+</tr>
+<tr class="row-even"><td><p>Contact:</p></td>
+<td><p><a class="reference external" href="mailto:idan&#37;&#52;&#48;miara&#46;com">idan<span>&#64;</span>miara<span>&#46;</span>com</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Started:</p></td>
+<td><p>2020-Nov-3</p></td>
+</tr>
+<tr class="row-even"><td><p>Last updated:</p></td>
+<td><p>2020-Nov-29</p></td>
+</tr>
+<tr class="row-odd"><td><p>Status:</p></td>
+<td><p>Adopted, implemented in GDAL 3.3</p></td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>This RFC drops Python 2 support and sets Python 3.6 as the new minimum supported Python version.</p>
+</div>
+<div class="section" id="motivation">
+<h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">¶</a></h2>
+<p>Currently GDAL Python bindings support Python 2.7 and Python 3 (so only the common between the two).
+Python 2 is at End Of Life, and is no longer supported since the January 2020.
+<a class="reference external" href="https://www.python.org/doc/sunset-python-2/">https://www.python.org/doc/sunset-python-2/</a></p>
+<p>“We did not want to hurt the people using Python 2. So, in 2008, we announced that we would sunset Python 2 in 2015,
+and asked people to upgrade before then. Some did, but many did not. So, in 2014, we extended that sunset till 2020.”</p>
+<p>While keeping Python 2.7 support might serve those who didn’t upgrade their code to Python 3 in the 12 year transition period,
+This PR suggests that the time has come and the benefits of dropping Python 2 support outnumber the drawbacks.
+Virtually all supported OS and relevant programs already use Python 3.
+Moreover, most of the related projects that usually is used with GDAL already dropped Python 2 support (as can be seen below).
+It makes sense that people who didn’t upgrade their code in 12 years are still using a much older version of GDAL anyway…</p>
+<p>The drawbacks of keeping Python 2 support puts unnecessary maintenance burden on the GDAL maintainers,
+As maintainers need to make sure their new code is backwards compatible with Python 2.
+Furthermore, many important features that added in Python 3 cannot be used in GDAL to maintain backwards compatibility with Python 2.</p>
+</div>
+<div class="section" id="related-projects-that-dropped-python-2-support">
+<h2>Related projects that dropped Python 2 support:<a class="headerlink" href="#related-projects-that-dropped-python-2-support" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>QGIS since v3.0 - February 2018. (now supports Python 3.7)</p></li>
+</ul>
+<p><a class="reference external" href="https://www.qgis.org/en/site/forusers/visualchangelog30/index.html">https://www.qgis.org/en/site/forusers/visualchangelog30/index.html</a>
+<a class="reference external" href="https://qgis.org/api/api_break.html">https://qgis.org/api/api_break.html</a></p>
+<ul class="simple">
+<li><p>GRASS GIS since v7.8 - September 2019 (now supports Python 3.7)</p></li>
+</ul>
+<p><a class="reference external" href="https://trac.osgeo.org/grass/wiki/Python3Support">https://trac.osgeo.org/grass/wiki/Python3Support</a></p>
+<ul class="simple">
+<li><p>pyproj since v2.3 - August 2019 (now supports Python 3.5-3.7)</p></li>
+</ul>
+<p><a class="reference external" href="https://pyproj4.github.io/pyproj/stable/history.html">https://pyproj4.github.io/pyproj/stable/history.html</a></p>
+<ul class="simple">
+<li><p>numpy since v1.19 - June 2020 (now supports Python Python 3.6-3.8)</p></li>
+</ul>
+<p><a class="reference external" href="https://numpy.org/devdocs/release/1.19.0-notes.html">https://numpy.org/devdocs/release/1.19.0-notes.html</a></p>
+<ul class="simple">
+<li><p>RasterIO since v1.1 - October 2019 (now supports Python 3.6)</p></li>
+</ul>
+<p><a class="reference external" href="https://sgillies.net/2019/10/10/rasterio-1-1-0.html">https://sgillies.net/2019/10/10/rasterio-1-1-0.html</a>
+<a class="reference external" href="https://github.com/mapbox/rasterio/issues/1813">https://github.com/mapbox/rasterio/issues/1813</a></p>
+</div>
+<div class="section" id="python-3-version-status">
+<h2>Python 3 version status:<a class="headerlink" href="#python-3-version-status" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Python 3.5 (Released: Sep 2015) is End Of Life. Many related projects already dropped support of it.</p></li>
+<li><p>Python 3.6 (Released: Dec 2016) will be End Of Life on Dec 2021. Python 3.6 brings many important features.</p></li>
+<li><p>Python 3.7 (Released: Jun 2018) will be End Of Life on Jun 2023. Python 3.7 is already widely adopted and supported by all the related projects listed above.</p></li>
+<li><p>Python 3.8 (Released: Oct 2019) will be End Of Life on Oct 2024. Python 3.8 is too new to be set as the minimum supported version.</p></li>
+</ul>
+<p><a class="reference external" href="https://endoflife.date/python#:~:text=The%20support%20for%20Python%202.7,dropping%20support%20for%20Python%202.7">https://endoflife.date/python#:~:text=The%20support%20for%20Python%202.7,dropping%20support%20for%20Python%202.7</a>.</p>
+</div>
+<div class="section" id="python-3-os-support">
+<h2>Python 3 OS Support:<a class="headerlink" href="#python-3-os-support" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="linux">
+<h3>Linux:<a class="headerlink" href="#linux" title="Permalink to this headline">¶</a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 27%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 37%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Distribution</p></td>
+<td><p>Release date</p></td>
+<td><p>End Of Life</p></td>
+<td><p>Python Version</p></td>
+</tr>
+<tr class="row-even"><td><p>Ubuntu 16.04 Xenial LTS</p></td>
+<td><p>April 2016</p></td>
+<td><p>April 2021</p></td>
+<td><p>Python 3.5</p></td>
+</tr>
+<tr class="row-odd"><td><p>Ubuntu 18.04 Bionic LTS</p></td>
+<td><p>April 2018</p></td>
+<td><p>April 2023</p></td>
+<td><p>Python 3.6 (3.7 in universe)</p></td>
+</tr>
+<tr class="row-even"><td><p>Ubuntu 20.04 Xenial LTS</p></td>
+<td><p>April 2020</p></td>
+<td><p>April 2021</p></td>
+<td><p>Python 3.8</p></td>
+</tr>
+<tr class="row-odd"><td><p>Debian  9.0 Stretch LTS</p></td>
+<td><p>June 2017</p></td>
+<td><p>July 2022</p></td>
+<td><p>Python 3.5</p></td>
+</tr>
+<tr class="row-even"><td><p>Debian 10.0 Buster LTS</p></td>
+<td><p>July 2019</p></td>
+<td><p>~2022</p></td>
+<td><p>Python 3.7</p></td>
+</tr>
+<tr class="row-odd"><td><p>Centos/RHEL 8</p></td>
+<td><p>September 2019</p></td>
+<td><p>?</p></td>
+<td><p>Python 3.6 (?)</p></td>
+</tr>
+<tr class="row-even"><td><p>Amazon Linux</p></td>
+<td></td>
+<td><p>December 2021</p></td>
+<td><p>Python 3.6</p></td>
+</tr>
+</tbody>
+</table>
+<p><a class="reference external" href="https://wiki.python.org/moin/Python3LinuxDistroPortingStatus">https://wiki.python.org/moin/Python3LinuxDistroPortingStatus</a></p>
+</div>
+<div class="section" id="windows">
+<h3>Windows:<a class="headerlink" href="#windows" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Conda: Python 3.6-3.9</p></li>
+<li><p>OSGeo4W: Python 3.7</p></li>
+<li><p>gisinternals: Python 2.7, 3.4-3.7</p></li>
+</ul>
+</div>
+<div class="section" id="macos">
+<h3>MacOS:<a class="headerlink" href="#macos" title="Permalink to this headline">¶</a></h3>
+<p>It appears the even though Python 2.7 is preinstalled on Mac OS X,
+Python 3.5-3.9 can be installed alongside Python 2 on Mac OS X 10.8 (Released: July 2012) and newer.</p>
+<p><a class="reference external" href="https://docs.python.org/3.6/using/mac.html">https://docs.python.org/3.6/using/mac.html</a>.</p>
+</div>
+</div>
+<div class="section" id="which-version-should-be-the-new-minimum-version">
+<h2>Which version should be the new minimum version ?<a class="headerlink" href="#which-version-should-be-the-new-minimum-version" title="Permalink to this headline">¶</a></h2>
+<p>This RFC suggest the new minimum supported Python version should be 3.6 for the following reasons:</p>
+<ul class="simple">
+<li><p>Python &lt; 3.6 is End of Life.</p></li>
+<li><dl class="simple">
+<dt>Long list of great new features that were introduced in Python 3.6, Several of which are immediately useful to simplify code or improve testing:</dt><dd><ul>
+<li><p>f-strings</p></li>
+<li><p>builtin pathlib</p></li>
+<li><p>underscores in numeric literals</p></li>
+<li><p>type annotations</p></li>
+<li><p>malloc debugging</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>Python 3.6 is supported out of the box in virtually every relevant OS.</p></li>
+<li><p>Python 3.6 is probably the safest choice for now in respect to other related projects.</p></li>
+<li><p>Python 3.7 (and newer) isn’t available seamlessly in some popular LTS Linux distributions.</p></li>
+<li><p>We want to make the transition as smooth and easy as possible. Setting the minimum to Python 3.7 might make the transition harder for the CI because of the above reason.</p></li>
+<li><p>Dropping Python 3.6 in favour of Python 3.7 or newer in future versions shouldn’t be as hard as this drop (see next section for a suggested approach).</p></li>
+</ul>
+<div class="section" id="gdal-release-cycle-and-regular-python-version-dropping">
+<h3>GDAL Release cycle and regular Python version dropping<a class="headerlink" href="#gdal-release-cycle-and-regular-python-version-dropping" title="Permalink to this headline">¶</a></h3>
+<p>When releasing GDAL 3.1.0, Even Rouault suggested GDAL would use fixed release cycles of 6 months between major versions:</p>
+<p><a class="reference external" href="http://osgeo-org.1560.x6.nabble.com/gdal-dev-Reconsidering-release-cycle-length-td5436163.html#a5436242">http://osgeo-org.1560.x6.nabble.com/gdal-dev-Reconsidering-release-cycle-length-td5436163.html#a5436242</a></p>
+<p>Projecting from that suggestion, GDAL 3.3.0 should be released around April-May 2021.</p>
+<p>We could potentially synchronize with NEP 29 -
+Recommend Python and Numpy version support as a community policy standard.
+Which suggests when to drop each Python version.</p>
+<p><a class="reference external" href="https://numpy.org/neps/nep-0029-deprecation_policy.html">https://numpy.org/neps/nep-0029-deprecation_policy.html</a></p>
+<p>NEP 29 suggests to drop support for Python 3.6 support on Jun 23, 2020 (in favour of Python 3.7).</p>
+<p>We could potentially discuss similar/more conservative approaches and delay each drop by a few more months,
+or only drop Python versions that have reached End Of Life (As of today, Python &lt; 3.6 have reached End Of Life).
+Further discussion on the matter of dropping other Python versions is a subject for another RFC.</p>
+</div>
+</div>
+<div class="section" id="backward-compatibility">
+<h2>Backward compatibility<a class="headerlink" href="#backward-compatibility" title="Permalink to this headline">¶</a></h2>
+<p>Currently, GDAL Python code itself is compatible with Python 2 and Python 3.
+Once this PR is accepted, GDAL 3.3.0 would not be compatible with Python 2.
+Thus any “Python 2 only” code that uses GDAL would need to be upgraded to Python 3 and
+at the same time the respective Python interpreter would need to be upgraded
+to a supported Python version.</p>
+<div class="section" id="will-gdal-3-2-be-a-lts">
+<h3>Will GDAL 3.2 be a LTS?<a class="headerlink" href="#will-gdal-3-2-be-a-lts" title="Permalink to this headline">¶</a></h3>
+<p>Currently - No.
+So far, nobody has stepped up to make a LTS, So there won’t be one unless someone takes it up upon themselves or raise funds to make it happen.
+GDAL only provide bugfix releases of the current stable branch for 6 months.</p>
+</div>
+</div>
+<div class="section" id="ci-impacts">
+<h2>CI Impacts:<a class="headerlink" href="#ci-impacts" title="Permalink to this headline">¶</a></h2>
+<p>Impacts on our CI should be analyzed.
+It seems that all our CI builds use Python 2.7 or 3.5, so all of them would need to be adjusted.
+In particular, builds that use older Linux distributions would need to be upgraded.</p>
+</div>
+<div class="section" id="impacts-on-gdal-core">
+<h2>Impacts on GDAL core<a class="headerlink" href="#impacts-on-gdal-core" title="Permalink to this headline">¶</a></h2>
+<p>There should be no impacts on GDAL core,
+As the Python bindings are generated by SWIG on top of the binary form of GDAL.</p>
+</div>
+<div class="section" id="limitations-and-scope">
+<h2>Limitations and scope<a class="headerlink" href="#limitations-and-scope" title="Permalink to this headline">¶</a></h2>
+<p>The scope of this RFC should be the GDAL Python code alone. There shouldn’t be effect on any other language supported by GDAL.</p>
+</div>
+<div class="section" id="swig-binding-changes">
+<h2>SWIG binding changes<a class="headerlink" href="#swig-binding-changes" title="Permalink to this headline">¶</a></h2>
+<p>To begin with, the SWIG Python bindings already support Python 3.6.
+Dropping Python 2 support might allow us to use a newer SWIG version or to make some improvements to the bindings,
+but it doesn’t have to be in the first step.</p>
+</div>
+<div class="section" id="security-implications">
+<h2>Security implications<a class="headerlink" href="#security-implications" title="Permalink to this headline">¶</a></h2>
+<p>Python 3.6 is the minimum Python version that is not End Of Life,
+thus still receiving security updates.</p>
+</div>
+<div class="section" id="performance-impact">
+<h2>Performance impact<a class="headerlink" href="#performance-impact" title="Permalink to this headline">¶</a></h2>
+<p>There might be some performance gain for this upgrade for some uses as there were many performance improvements between Python 2.7-3.6.
+The scope of the improvements could be limited because most of GDAL Python code is a thin wrapper around the C++ code.</p>
+</div>
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<p>The GDAL Python documentation is generated automatically in should already support Python 3.
+If there are sections in the documentation that are Python 2 specific, they should be removed or refactored.</p>
+</div>
+<div class="section" id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
+<p>While upgrading the CI, Python 2 tests should be removed or upgraded.
+A simple test that fails on Python &lt; 3.6 should be added.
+No any additional tests should be needed.</p>
+</div>
+<div class="section" id="previous-discussions">
+<h2>Previous discussions<a class="headerlink" href="#previous-discussions" title="Permalink to this headline">¶</a></h2>
+<p>This topic has been discussed in the past in :</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/OSGeo/gdal/issues/3114">https://github.com/OSGeo/gdal/issues/3114</a></p></li>
+<li><p><a class="reference external" href="https://github.com/OSGeo/gdal/pull/3142">https://github.com/OSGeo/gdal/pull/3142</a></p></li>
+</ul>
+</div>
+<div class="section" id="related-prs">
+<h2>Related PRs:<a class="headerlink" href="#related-prs" title="Permalink to this headline">¶</a></h2>
+<p>Adding a deprecation warning if running a Python version that is known to be unsupported in the the next GDAL version:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/OSGeo/gdal/pull/3165">https://github.com/OSGeo/gdal/pull/3165</a></p></li>
+</ul>
+</div>
+<div class="section" id="voting-history">
+<h2>Voting history<a class="headerlink" href="#voting-history" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://lists.osgeo.org/pipermail/gdal-dev/2020-November/053039.html">https://lists.osgeo.org/pipermail/gdal-dev/2020-November/053039.html</a></p>
+<ul class="simple">
+<li><p>+1 from EvenR, HowardB, KurtS, JukkaR, DanielM</p></li>
+</ul>
+</div>
+<div class="section" id="credits">
+<h2>Credits<a class="headerlink" href="#credits" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>implemented by Even Rouault, Robert Coup and Idan Miara</p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../../community.html" class="btn btn-neutral float-right" title="Community" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc76_ogrpythondrivers.html" class="btn btn-neutral float-left" title="RFC 76: OGR Python drivers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2021 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

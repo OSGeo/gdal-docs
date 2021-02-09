@@ -1,0 +1,734 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>GDAL Virtual File Systems (compressed, network hosted, etc…): /vsimem, /vsizip, /vsitar, /vsicurl, … &mdash; GDAL  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orguser/virtual_file_systems.html"/>
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Feature Style Specification" href="ogr_feature_style.html" />
+    <link rel="prev" title="SQL SQLite dialect" href="sql_sqlite_dialect.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">User</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="raster_data_model.html">Raster Data Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multidim_raster_data_model.html">Multidimensional Raster Data Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vector_data_model.html">Vector Data Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gnm_data_model.html">Geographic Networks Data Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ogr_sql_sqlite_dialect.html">OGR SQL dialect and SQLITE SQL dialect</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">GDAL Virtual File Systems</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#chaining">Chaining</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#drivers-supporting-virtual-file-systems">Drivers supporting virtual file systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vsizip-zip-archives">/vsizip/ (.zip archives)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vsigzip-gzipped-file">/vsigzip/ (gzipped file)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vsitar-tar-tgz-archives">/vsitar/ (.tar, .tgz archives)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#network-based-file-systems">Network based file systems</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#vsicurl-http-https-ftp-files-random-access">/vsicurl/ (http/https/ftp files: random access)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vsicurl-streaming-http-https-ftp-files-streaming">/vsicurl_streaming/ (http/https/ftp files: streaming)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vsis3-aws-s3-files">/vsis3/ (AWS S3 files)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vsis3-streaming-aws-s3-files-streaming">/vsis3_streaming/ (AWS S3 files: streaming)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vsigs-google-cloud-storage-files">/vsigs/ (Google Cloud Storage files)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vsigs-streaming-google-cloud-storage-files-streaming">/vsigs_streaming/ (Google Cloud Storage files: streaming)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vsiaz-microsoft-azure-blob-files">/vsiaz/ (Microsoft Azure Blob files)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vsiaz-streaming-microsoft-azure-blob-files-streaming">/vsiaz_streaming/ (Microsoft Azure Blob files: streaming)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vsiadls-microsoft-azure-data-lake-storage-gen2">/vsiadls/ (Microsoft Azure Data Lake Storage Gen2)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vsioss-alibaba-cloud-oss-files">/vsioss/ (Alibaba Cloud OSS files)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vsioss-streaming-alibaba-cloud-oss-files-streaming">/vsioss_streaming/ (Alibaba Cloud OSS files: streaming)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vsiswift-openstack-swift-object-storage">/vsiswift/ (OpenStack Swift Object Storage)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vsiswift-streaming-openstack-swift-object-storage-streaming">/vsiswift_streaming/ (OpenStack Swift Object Storage: streaming)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vsihdfs-hadoop-file-system">/vsihdfs/ (Hadoop File System)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vsiwebhdfs-web-hadoop-file-system-rest-api">/vsiwebhdfs/ (Web Hadoop File System REST API)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#vsistdin-standard-input-streaming">/vsistdin/ (standard input streaming)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vsistdout-standard-output-streaming">/vsistdout/ (standard output streaming)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vsimem-in-memory-files">/vsimem/ (in-memory files)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vsisubfile-portions-of-files">/vsisubfile/ (portions of files)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vsisparse-sparse-files">/vsisparse/ (sparse files)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#file-caching">File caching</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vsicrypt-encrypted-files">/vsicrypt/ (encrypted files)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ogr_feature_style.html">Feature Style Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configoptions.html">Configuration options</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">User oriented documentation</a> &raquo;</li>
+      
+      <li>GDAL Virtual File Systems (compressed, network hosted, etc…): /vsimem, /vsizip, /vsitar, /vsicurl, …</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/user/virtual_file_systems.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="ogr_feature_style.html" class="btn btn-neutral float-right" title="Feature Style Specification" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="sql_sqlite_dialect.html" class="btn btn-neutral float-left" title="SQL SQLite dialect" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="gdal-virtual-file-systems-compressed-network-hosted-etc-vsimem-vsizip-vsitar-vsicurl">
+<span id="virtual-file-systems"></span><h1>GDAL Virtual File Systems (compressed, network hosted, etc…): /vsimem, /vsizip, /vsitar, /vsicurl, …<a class="headerlink" href="#gdal-virtual-file-systems-compressed-network-hosted-etc-vsimem-vsizip-vsitar-vsicurl" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>GDAL can access files located on “standard” file systems, i.e. in the / hierarchy on Unix-like systems or in C:, D:, etc… drives on Windows. But most GDAL raster and vector drivers use a GDAL-specific abstraction to access files. This makes it possible to access less standard types of files, such as in-memory files, compressed files (.zip, .gz, .tar, .tar.gz archives), encrypted files, files stored on network (either publicly accessible, or in private buckets of commercial cloud storage services), etc.</p>
+<p>Each special file system has a prefix, and the general syntax to name a file is /vsiPREFIX/…</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdalinfo</span> <span class="o">/</span><span class="n">vsizip</span><span class="o">/</span><span class="n">my</span><span class="o">.</span><span class="n">zip</span><span class="o">/</span><span class="n">my</span><span class="o">.</span><span class="n">tif</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="chaining">
+<h2>Chaining<a class="headerlink" href="#chaining" title="Permalink to this headline">¶</a></h2>
+<p>It is possible to chain multiple file system handlers.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># ogrinfo a shapefile in a zip file on the internet:</span>
+
+<span class="n">ogrinfo</span> <span class="o">-</span><span class="n">ro</span> <span class="o">-</span><span class="n">al</span> <span class="o">-</span><span class="n">so</span> <span class="o">/</span><span class="n">vsizip</span><span class="o">//</span><span class="n">vsicurl</span><span class="o">/</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">raw</span><span class="o">.</span><span class="n">githubusercontent</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">OSGeo</span><span class="o">/</span><span class="n">gdal</span><span class="o">/</span><span class="n">master</span><span class="o">/</span><span class="n">autotest</span><span class="o">/</span><span class="n">ogr</span><span class="o">/</span><span class="n">shp</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">poly</span><span class="o">.</span><span class="n">zip</span>
+
+<span class="c1"># ogrinfo a shapefile in a zip file on an ftp:</span>
+
+<span class="n">ogrinfo</span> <span class="o">-</span><span class="n">ro</span> <span class="o">-</span><span class="n">al</span> <span class="o">-</span><span class="n">so</span> <span class="o">/</span><span class="n">vsizip</span><span class="o">//</span><span class="n">vsicurl</span><span class="o">/</span><span class="n">ftp</span><span class="p">:</span><span class="o">//</span><span class="n">user</span><span class="p">:</span><span class="n">password</span><span class="nd">@example</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">foldername</span><span class="o">/</span><span class="n">file</span><span class="o">.</span><span class="n">zip</span><span class="o">/</span><span class="n">example</span><span class="o">.</span><span class="n">shp</span>
+</pre></div>
+</div>
+<p>(Note is also OK to say /vsizip/vsicurl/… with a single slash. (But when writing documentation please still use two.))</p>
+</div>
+<div class="section" id="drivers-supporting-virtual-file-systems">
+<h2>Drivers supporting virtual file systems<a class="headerlink" href="#drivers-supporting-virtual-file-systems" title="Permalink to this headline">¶</a></h2>
+<p>Virtual file systems can only be used with GDAL or OGR drivers supporting the “large file API”, which is now the vast majority of file based drivers. The full list of these formats can be obtained by looking at the driver marked with ‘v’ when running either <code class="docutils literal notranslate"><span class="pre">gdalinfo</span> <span class="pre">--formats</span></code> or <code class="docutils literal notranslate"><span class="pre">ogrinfo</span> <span class="pre">--formats</span></code>.</p>
+<p>Notable exceptions are the netCDF, HDF4 and HDF5 drivers.</p>
+</div>
+<div class="section" id="vsizip-zip-archives">
+<h2>/vsizip/ (.zip archives)<a class="headerlink" href="#vsizip-zip-archives" title="Permalink to this headline">¶</a></h2>
+<p>/vsizip/ is a file handler that allows reading ZIP archives on-the-fly without decompressing them beforehand.</p>
+<p>To point to a file inside a zip file, the filename must be of the form <code class="file docutils literal notranslate"><span class="pre">/vsizip/path/to/the/file.zip/path/inside/the/zip/file</span></code>, where <code class="file docutils literal notranslate"><span class="pre">path/to/the/file.zip</span></code> is relative or absolute and <code class="file docutils literal notranslate"><span class="pre">path/inside/the/zip/file</span></code> is the relative path to the file inside the archive.</p>
+<p>To use the .zip as a directory, you can use <code class="file docutils literal notranslate"><span class="pre">/vsizip/path/to/the/file.zip</span></code> or <code class="file docutils literal notranslate"><span class="pre">/vsizip/path/to/the/file.zip/subdir</span></code>. Directory listing is available with <a class="reference internal" href="../api/cpl.html#_CPPv410VSIReadDirPKc" title="VSIReadDir"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIReadDir()</span></code></a>. A <a class="reference internal" href="../api/cpl.html#_CPPv48VSIStatLPKcP11VSIStatBufL" title="VSIStatL"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIStatL()</span></code></a> (“/vsizip/…”) call will return the uncompressed size of the file. Directories inside the ZIP file can be distinguished from regular files with the VSI_ISDIR(stat.st_mode) macro as for regular file systems. Getting directory listing and file statistics are fast operations.</p>
+<p>Note: in the particular case where the .zip file contains a single file located at its root, just mentioning <code class="file docutils literal notranslate"><span class="pre">/vsizip/path/to/the/file.zip</span></code> will work.</p>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">vsizip</span><span class="o">/</span><span class="n">my</span><span class="o">.</span><span class="n">zip</span><span class="o">/</span><span class="n">my</span><span class="o">.</span><span class="n">tif</span>  <span class="p">(</span><span class="n">relative</span> <span class="n">path</span> <span class="n">to</span> <span class="n">the</span> <span class="o">.</span><span class="n">zip</span><span class="p">)</span>
+<span class="o">/</span><span class="n">vsizip</span><span class="o">//</span><span class="n">home</span><span class="o">/</span><span class="n">even</span><span class="o">/</span><span class="n">my</span><span class="o">.</span><span class="n">zip</span><span class="o">/</span><span class="n">subdir</span><span class="o">/</span><span class="n">my</span><span class="o">.</span><span class="n">tif</span>  <span class="p">(</span><span class="n">absolute</span> <span class="n">path</span> <span class="n">to</span> <span class="n">the</span> <span class="o">.</span><span class="n">zip</span><span class="p">)</span>
+<span class="o">/</span><span class="n">vsizip</span><span class="o">/</span><span class="n">c</span><span class="p">:</span>\<span class="n">users</span>\<span class="n">even</span>\<span class="n">my</span><span class="o">.</span><span class="n">zip</span>\<span class="n">subdir</span>\<span class="n">my</span><span class="o">.</span><span class="n">tif</span>
+</pre></div>
+</div>
+<p>.kmz, .ods and .xlsx extensions are also detected as valid extensions for zip-compatible archives.</p>
+<p>Starting with GDAL 2.2, an alternate syntax is available so as to enable chaining and not being dependent on .zip extension, e.g.: <code class="docutils literal notranslate"><span class="pre">/vsizip/{/path/to/the/archive}/path/inside/the/zip/file</span></code>. Note that <code class="file docutils literal notranslate"><span class="pre">/path/to/the/archive</span></code> may also itself use this alternate syntax.</p>
+<p>Write capabilities are also available. They allow creating a new zip file and adding new files to an already existing (or just created) zip file.</p>
+<p>Creation of a new zip file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fmain</span> <span class="o">=</span> <span class="n">VSIFOpenL</span><span class="p">(</span><span class="s2">&quot;/vsizip/my.zip&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">);</span>
+<span class="n">subfile</span> <span class="o">=</span> <span class="n">VSIFOpenL</span><span class="p">(</span><span class="s2">&quot;/vsizip/my.zip/subfile&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">);</span>
+<span class="n">VSIFWriteL</span><span class="p">(</span><span class="s2">&quot;Hello World&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">strlen</span><span class="p">(</span><span class="s2">&quot;Hello world&quot;</span><span class="p">),</span> <span class="n">subfile</span><span class="p">);</span>
+<span class="n">VSIFCloseL</span><span class="p">(</span><span class="n">subfile</span><span class="p">);</span>
+<span class="n">VSIFCloseL</span><span class="p">(</span><span class="n">fmain</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Addition of a new file to an existing zip:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">newfile</span> <span class="o">=</span> <span class="n">VSIFOpenL</span><span class="p">(</span><span class="s2">&quot;/vsizip/my.zip/newfile&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">);</span>
+<span class="n">VSIFWriteL</span><span class="p">(</span><span class="s2">&quot;Hello World&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">strlen</span><span class="p">(</span><span class="s2">&quot;Hello world&quot;</span><span class="p">),</span> <span class="n">newfile</span><span class="p">);</span>
+<span class="n">VSIFCloseL</span><span class="p">(</span><span class="n">newfile</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Starting with GDAL 2.4, the <code class="decl_configoption docutils literal notranslate"><span class="pre">GDAL_NUM_THREADS</span></code> configuration option can be set to an integer or <code class="docutils literal notranslate"><span class="pre">ALL_CPUS</span></code> to enable multi-threaded compression of a single file. This is similar to the pigz utility in independent mode. By default the input stream is split into 1 MB chunks (the chunk size can be tuned with the <code class="decl_configoption docutils literal notranslate"><span class="pre">CPL_VSIL_DEFLATE_CHUNK_SIZE</span></code> configuration option, with values like “x K” or “x M”), and each chunk is independently compressed (and terminated by a nine byte marker 0x00 0x00 0xFF 0xFF 0x00 0x00 0x00 0xFF 0xFF, signaling a full flush of the stream and dictionary, enabling potential independent decoding of each chunk). This slightly reduces the compression rate, so very small chunk sizes should be avoided.</p>
+<p>Read and write operations cannot be interleaved. The new zip must be closed before being re-opened in read mode.</p>
+</div>
+<div class="section" id="vsigzip-gzipped-file">
+<h2>/vsigzip/ (gzipped file)<a class="headerlink" href="#vsigzip-gzipped-file" title="Permalink to this headline">¶</a></h2>
+<p>/vsigzip/ is a file handler that allows on-the-fly reading of GZip (.gz) files without decompressing them in advance.</p>
+<p>To view a gzipped file as uncompressed by GDAL, you must use the <code class="file docutils literal notranslate"><span class="pre">/vsigzip/path/to/the/file.gz</span></code> syntax, where <code class="file docutils literal notranslate"><span class="pre">path/to/the/file.gz</span></code> is relative or absolute.</p>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">vsigzip</span><span class="o">/</span><span class="n">my</span><span class="o">.</span><span class="n">gz</span> <span class="c1"># (relative path to the .gz)</span>
+<span class="o">/</span><span class="n">vsigzip</span><span class="o">//</span><span class="n">home</span><span class="o">/</span><span class="n">even</span><span class="o">/</span><span class="n">my</span><span class="o">.</span><span class="n">gz</span> <span class="c1"># (absolute path to the .gz)</span>
+<span class="o">/</span><span class="n">vsigzip</span><span class="o">/</span><span class="n">c</span><span class="p">:</span>\<span class="n">users</span>\<span class="n">even</span>\<span class="n">my</span><span class="o">.</span><span class="n">gz</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="../api/cpl.html#_CPPv48VSIStatLPKcP11VSIStatBufL" title="VSIStatL"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIStatL()</span></code></a> will return the uncompressed file size, but this is potentially a slow operation on large files, since it requires uncompressing the whole file. Seeking to the end of the file, or at random locations, is similarly slow. To speed up that process, “snapshots” are internally created in memory so as to be able being able to seek to part of the files already decompressed in a faster way. This mechanism of snapshots also apply to /vsizip/ files.</p>
+<p>When the file is located in a writable location, a file with extension .gz.properties is created with an indication of the uncompressed file size (the creation of that file can be disabled by setting the <code class="decl_configoption docutils literal notranslate"><span class="pre">CPL_VSIL_GZIP_WRITE_PROPERTIES</span></code> configuration option to <code class="docutils literal notranslate"><span class="pre">NO</span></code>).</p>
+<p>Write capabilities are also available, but read and write operations cannot be interleaved.</p>
+<p>Starting with GDAL 2.4, the <code class="decl_configoption docutils literal notranslate"><span class="pre">GDAL_NUM_THREADS</span></code> configuration option can be set to an integer or <code class="docutils literal notranslate"><span class="pre">ALL_CPUS</span></code> to enable multi-threaded compression of a single file. This is similar to the pigz utility in independent mode. By default the input stream is split into 1 MB chunks (the chunk size can be tuned with the <code class="decl_configoption docutils literal notranslate"><span class="pre">CPL_VSIL_DEFLATE_CHUNK_SIZE</span></code> configuration option, with values like “x K” or “x M”), and each chunk is independently compressed (and terminated by a nine byte marker 0x00 0x00 0xFF 0xFF 0x00 0x00 0x00 0xFF 0xFF, signaling a full flush of the stream and dictionary, enabling potential independent decoding of each chunk). This slightly reduces the compression rate, so very small chunk sizes should be avoided.</p>
+</div>
+<div class="section" id="vsitar-tar-tgz-archives">
+<h2>/vsitar/ (.tar, .tgz archives)<a class="headerlink" href="#vsitar-tar-tgz-archives" title="Permalink to this headline">¶</a></h2>
+<p>/vsitar/ is a file handler that allows on-the-fly reading in regular uncompressed .tar or compressed .tgz or .tar.gz archives, without decompressing them in advance.</p>
+<p>To point to a file inside a .tar, .tgz .tar.gz file, the filename must be of the form <code class="file docutils literal notranslate"><span class="pre">/vsitar/path/to/the/file.tar/path/inside/the/tar/file</span></code>, where <code class="file docutils literal notranslate"><span class="pre">path/to/the/file.tar</span></code> is relative or absolute and <code class="file docutils literal notranslate"><span class="pre">path/inside/the/tar/file</span></code> is the relative path to the file inside the archive.</p>
+<p>To use the .tar as a directory, you can use <code class="file docutils literal notranslate"><span class="pre">/vsizip/path/to/the/file.tar</span></code> or <code class="file docutils literal notranslate"><span class="pre">/vsitar/path/to/the/file.tar/subdir</span></code>. Directory listing is available with <a class="reference internal" href="../api/cpl.html#_CPPv410VSIReadDirPKc" title="VSIReadDir"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIReadDir()</span></code></a>. A <a class="reference internal" href="../api/cpl.html#_CPPv48VSIStatLPKcP11VSIStatBufL" title="VSIStatL"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIStatL()</span></code></a> (“/vsitar/…”) call will return the uncompressed size of the file. Directories inside the TAR file can be distinguished from regular files with the VSI_ISDIR(stat.st_mode) macro as for regular file systems. Getting directory listing and file statistics are fast operations.</p>
+<p>Note: in the particular case where the .tar file contains a single file located at its root, just mentioning <code class="file docutils literal notranslate"><span class="pre">/vsitar/path/to/the/file.tar</span></code> will work.</p>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">vsitar</span><span class="o">/</span><span class="n">my</span><span class="o">.</span><span class="n">tar</span><span class="o">/</span><span class="n">my</span><span class="o">.</span><span class="n">tif</span> <span class="c1"># (relative path to the .tar)</span>
+<span class="o">/</span><span class="n">vsitar</span><span class="o">//</span><span class="n">home</span><span class="o">/</span><span class="n">even</span><span class="o">/</span><span class="n">my</span><span class="o">.</span><span class="n">tar</span><span class="o">/</span><span class="n">subdir</span><span class="o">/</span><span class="n">my</span><span class="o">.</span><span class="n">tif</span> <span class="c1"># (absolute path to the .tar)</span>
+<span class="o">/</span><span class="n">vsitar</span><span class="o">/</span><span class="n">c</span><span class="p">:</span>\<span class="n">users</span>\<span class="n">even</span>\<span class="n">my</span><span class="o">.</span><span class="n">tar</span>\<span class="n">subdir</span>\<span class="n">my</span><span class="o">.</span><span class="n">tif</span>
+</pre></div>
+</div>
+<p>Starting with GDAL 2.2, an alternate syntax is available so as to enable chaining and not being dependent on .tar extension, e.g.: <code class="file docutils literal notranslate"><span class="pre">/vsitar/</span><em><span class="pre">/path/to/the/archive</span></em><span class="pre">/path/inside/the/tar/file</span></code>. Note that <code class="file docutils literal notranslate"><span class="pre">/path/to/the/archive</span></code> may also itself use this alternate syntax.</p>
+</div>
+<div class="section" id="network-based-file-systems">
+<h2>Network based file systems<a class="headerlink" href="#network-based-file-systems" title="Permalink to this headline">¶</a></h2>
+<p>A generic <a class="reference internal" href="#vsicurl"><span class="std std-ref">/vsicurl/</span></a> file system handler exists for online resources that do not require particular signed authentication schemes. It is specialized into sub-filesystems for commercial cloud storage services, such as <a class="reference internal" href="#vsis3"><span class="std std-ref">/vsis3/</span></a>,  <a class="reference internal" href="#vsigs"><span class="std std-ref">/vsigs/</span></a>, <a class="reference internal" href="#vsiaz"><span class="std std-ref">/vsiaz/</span></a>, <a class="reference internal" href="#vsioss"><span class="std std-ref">/vsioss/</span></a> or  <a class="reference internal" href="#vsiswift"><span class="std std-ref">/vsiswift/</span></a>.</p>
+<p>When reading of entire files in a streaming way is possible, prefer using the <a class="reference internal" href="#vsicurl-streaming"><span class="std std-ref">/vsicurl_streaming/</span></a>, and its variants for the above cloud storage services, for more efficiency.</p>
+<div class="section" id="vsicurl-http-https-ftp-files-random-access">
+<span id="vsicurl"></span><h3>/vsicurl/ (http/https/ftp files: random access)<a class="headerlink" href="#vsicurl-http-https-ftp-files-random-access" title="Permalink to this headline">¶</a></h3>
+<p>/vsicurl/ is a file system handler that allows on-the-fly random reading of files available through HTTP/FTP web protocols, without prior download of the entire file. It requires GDAL to be built against libcurl.</p>
+<p>Recognized filenames are of the form <code class="file docutils literal notranslate"><span class="pre">/vsicurl/http[s]://path/to/remote/resource</span></code> or <code class="file docutils literal notranslate"><span class="pre">/vsicurl/ftp://path/to/remote/resource</span></code>, where <code class="file docutils literal notranslate"><span class="pre">path/to/remote/resource</span></code> is the URL of a remote resource.</p>
+<p>Example using <strong class="program">ogrinfo</strong> to read a shapefile on the internet:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogrinfo</span> <span class="o">-</span><span class="n">ro</span> <span class="o">-</span><span class="n">al</span> <span class="o">-</span><span class="n">so</span> <span class="o">/</span><span class="n">vsicurl</span><span class="o">/</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">raw</span><span class="o">.</span><span class="n">githubusercontent</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">OSGeo</span><span class="o">/</span><span class="n">gdal</span><span class="o">/</span><span class="n">master</span><span class="o">/</span><span class="n">autotest</span><span class="o">/</span><span class="n">ogr</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">poly</span><span class="o">.</span><span class="n">shp</span>
+</pre></div>
+</div>
+<p>Starting with GDAL 2.3, options can be passed in the filename with the following syntax: <code class="docutils literal notranslate"><span class="pre">/vsicurl?[option_i=val_i&amp;]*url=http://...</span></code> where each option name and value (including the value of “url”) is URL-encoded. Currently supported options are:</p>
+<ul class="simple">
+<li><p>use_head=yes/no: whether the HTTP HEAD request can be emitted. Default to YES. Setting this option overrides the behavior of the <code class="decl_configoption docutils literal notranslate"><span class="pre">CPL_VSIL_CURL_USE_HEAD</span></code> configuration option.</p></li>
+<li><p>max_retry=number: default to 0. Setting this option overrides the behavior of the <code class="decl_configoption docutils literal notranslate"><span class="pre">GDAL_HTTP_MAX_RETRY</span></code> configuration option.</p></li>
+<li><p>retry_delay=number_in_seconds: default to 30. Setting this option overrides the behavior of the <code class="decl_configoption docutils literal notranslate"><span class="pre">GDAL_HTTP_RETRY_DELAY</span></code> configuration option.</p></li>
+<li><p>list_dir=yes/no: whether an attempt to read the file list of the directory where the file is located should be done. Default to YES.</p></li>
+</ul>
+<p>Partial downloads (requires the HTTP server to support random reading) are done with a 16 KB granularity by default. Starting with GDAL 2.3, the chunk size can be configured with the <code class="decl_configoption docutils literal notranslate"><span class="pre">CPL_VSIL_CURL_CHUNK_SIZE</span></code> configuration option, with a value in bytes. If the driver detects sequential reading it will progressively increase the chunk size up to 2 MB to improve download performance. Starting with GDAL 2.3, the <code class="decl_configoption docutils literal notranslate"><span class="pre">GDAL_INGESTED_BYTES_AT_OPEN</span></code> configuration option can be set to impose the number of bytes read in one GET call at file opening (can help performance to read Cloud optimized geotiff with a large header).</p>
+<p>The <code class="decl_configoption docutils literal notranslate"><span class="pre">GDAL_HTTP_PROXY</span></code> (for both HTTP and HTTPS protocols), <code class="decl_configoption docutils literal notranslate"><span class="pre">GDAL_HTTPS_PROXY</span></code> (for HTTPS protocol only), <code class="decl_configoption docutils literal notranslate"><span class="pre">GDAL_HTTP_PROXYUSERPWD</span></code> and <code class="decl_configoption docutils literal notranslate"><span class="pre">GDAL_PROXY_AUTH</span></code> configuration options can be used to define a proxy server. The syntax to use is the one of Curl <code class="docutils literal notranslate"><span class="pre">CURLOPT_PROXY</span></code>, <code class="docutils literal notranslate"><span class="pre">CURLOPT_PROXYUSERPWD</span></code> and <code class="docutils literal notranslate"><span class="pre">CURLOPT_PROXYAUTH</span></code> options.</p>
+<p>Starting with GDAL 2.1.3, the <code class="decl_configoption docutils literal notranslate"><span class="pre">CURL_CA_BUNDLE</span></code> or <code class="decl_configoption docutils literal notranslate"><span class="pre">SSL_CERT_FILE</span></code> configuration options can be used to set the path to the Certification Authority (CA) bundle file (if not specified, curl will use a file in a system location).</p>
+<p>Starting with GDAL 2.3, additional HTTP headers can be sent by setting the <code class="decl_configoption docutils literal notranslate"><span class="pre">GDAL_HTTP_HEADER_FILE</span></code> configuration option to point to a filename of a text file with “key: value” HTTP headers.   <code class="decl_configoption docutils literal notranslate"><span class="pre">CPL_CURL_VERBOSE</span></code> set to <code class="docutils literal notranslate"><span class="pre">YES</span></code> allows one to see them and more, when combined with <code class="docutils literal notranslate"><span class="pre">--debug</span></code>.</p>
+<p>Starting with GDAL 2.3, the <code class="decl_configoption docutils literal notranslate"><span class="pre">GDAL_HTTP_MAX_RETRY</span></code> (number of attempts) and <code class="decl_configoption docutils literal notranslate"><span class="pre">GDAL_HTTP_RETRY_DELAY</span></code> (in seconds) configuration option can be set, so that request retries are done in case of HTTP errors 429, 502, 503 or 504.</p>
+<p>More generally options of <a class="reference internal" href="../api/cpl.html#_CPPv412CPLHTTPFetchPKc12CSLConstList" title="CPLHTTPFetch"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">CPLHTTPFetch()</span></code></a> available through configuration options are available.</p>
+<p>The file can be cached in RAM by setting the configuration option <code class="decl_configoption docutils literal notranslate"><span class="pre">VSI_CACHE</span></code> to <code class="docutils literal notranslate"><span class="pre">TRUE</span></code>. The cache size defaults to 25 MB, but can be modified by setting the configuration option <code class="decl_configoption docutils literal notranslate"><span class="pre">VSI_CACHE_SIZE</span></code> (in bytes). Content in that cache is discarded when the file handle is closed.</p>
+<p>In addition, a global least-recently-used cache of 16 MB shared among all downloaded content is enabled by default, and content in it may be reused after a file handle has been closed and reopen, during the life-time of the process or until <a class="reference internal" href="../api/cpl.html#_CPPv417VSICurlClearCachev" title="VSICurlClearCache"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSICurlClearCache()</span></code></a> is called. Starting with GDAL 2.3, the size of this global LRU cache can be modified by setting the configuration option <code class="decl_configoption docutils literal notranslate"><span class="pre">CPL_VSIL_CURL_CACHE_SIZE</span></code> (in bytes).</p>
+<p>Starting with GDAL 2.3, the <code class="decl_configoption docutils literal notranslate"><span class="pre">CPL_VSIL_CURL_NON_CACHED</span></code> configuration option can be set to values like <code class="file docutils literal notranslate"><span class="pre">/vsicurl/http://example.com/foo.tif:/vsicurl/http://example.com/some_directory</span></code>, so that at file handle closing, all cached content related to the mentioned file(s) is no longer cached. This can help when dealing with resources that can be modified during execution of GDAL related code. Alternatively, <a class="reference internal" href="../api/cpl.html#_CPPv417VSICurlClearCachev" title="VSICurlClearCache"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSICurlClearCache()</span></code></a> can be used.</p>
+<p>Starting with GDAL 2.1, <code class="docutils literal notranslate"><span class="pre">/vsicurl/</span></code> will try to query directly redirected URLs to Amazon S3 signed URLs during their validity period, so as to minimize round-trips. This behavior can be disabled by setting the configuration option <code class="decl_configoption docutils literal notranslate"><span class="pre">CPL_VSIL_CURL_USE_S3_REDIRECT</span></code> to <code class="docutils literal notranslate"><span class="pre">NO</span></code>.</p>
+<p><a class="reference internal" href="../api/cpl.html#_CPPv48VSIStatLPKcP11VSIStatBufL" title="VSIStatL"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIStatL()</span></code></a> will return the size in st_size member and file nature- file or directory - in st_mode member (the later only reliable with FTP resources for now).</p>
+<p><a class="reference internal" href="../api/cpl.html#_CPPv410VSIReadDirPKc" title="VSIReadDir"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIReadDir()</span></code></a> should be able to parse the HTML directory listing returned by the most popular web servers, such as Apache and Microsoft IIS.</p>
+</div>
+<div class="section" id="vsicurl-streaming-http-https-ftp-files-streaming">
+<span id="vsicurl-streaming"></span><h3>/vsicurl_streaming/ (http/https/ftp files: streaming)<a class="headerlink" href="#vsicurl-streaming-http-https-ftp-files-streaming" title="Permalink to this headline">¶</a></h3>
+<p>/vsicurl_streaming/ is a file system handler that allows on-the-fly sequential reading of files streamed through HTTP/FTP web protocols, without prior download of the entire file. It requires GDAL to be built against libcurl.</p>
+<p>Although this file handler is able seek to random offsets in the file, this will not be efficient. If you need efficient random access and that the server supports range downloading, you should use the <a class="reference internal" href="#vsicurl"><span class="std std-ref">/vsicurl/</span></a> file system handler instead.</p>
+<p>Recognized filenames are of the form <code class="file docutils literal notranslate"><span class="pre">/vsicurl_streaming/http[s]://path/to/remote/resource</span></code> or <code class="file docutils literal notranslate"><span class="pre">/vsicurl_streaming/ftp://path/to/remote/resource</span></code>, where <code class="file docutils literal notranslate"><span class="pre">path/to/remote/resource</span></code> is the URL of a remote resource.</p>
+<p>The <code class="decl_configoption docutils literal notranslate"><span class="pre">GDAL_HTTP_PROXY</span></code> (for both HTTP and HTTPS protocols), <code class="decl_configoption docutils literal notranslate"><span class="pre">GDAL_HTTPS_PROXY</span></code> (for HTTPS protocol only), <code class="decl_configoption docutils literal notranslate"><span class="pre">GDAL_HTTP_PROXYUSERPWD</span></code> and <code class="decl_configoption docutils literal notranslate"><span class="pre">GDAL_PROXY_AUTH</span></code> configuration options can be used to define a proxy server. The syntax to use is the one of Curl <code class="docutils literal notranslate"><span class="pre">CURLOPT_PROXY</span></code>, <code class="docutils literal notranslate"><span class="pre">CURLOPT_PROXYUSERPWD</span></code> and <code class="docutils literal notranslate"><span class="pre">CURLOPT_PROXYAUTH</span></code> options.</p>
+<p>Starting with GDAL 2.1.3, the <code class="decl_configoption docutils literal notranslate"><span class="pre">CURL_CA_BUNDLE</span></code> or <code class="decl_configoption docutils literal notranslate"><span class="pre">SSL_CERT_FILE</span></code> configuration options can be used to set the path to the Certification Authority (CA) bundle file (if not specified, curl will use a file in a system location).</p>
+<p>The file can be cached in RAM by setting the configuration option <code class="decl_configoption docutils literal notranslate"><span class="pre">VSI_CACHE</span></code> to <code class="docutils literal notranslate"><span class="pre">TRUE</span></code>. The cache size defaults to 25 MB, but can be modified by setting the configuration option <code class="decl_configoption docutils literal notranslate"><span class="pre">VSI_CACHE_SIZE</span></code> (in bytes).</p>
+<p><a class="reference internal" href="../api/cpl.html#_CPPv48VSIStatLPKcP11VSIStatBufL" title="VSIStatL"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIStatL()</span></code></a> will return the size in st_size member and file nature- file or directory - in st_mode member (the later only reliable with FTP resources for now).</p>
+</div>
+<div class="section" id="vsis3-aws-s3-files">
+<span id="vsis3"></span><h3>/vsis3/ (AWS S3 files)<a class="headerlink" href="#vsis3-aws-s3-files" title="Permalink to this headline">¶</a></h3>
+<p>/vsis3/ is a file system handler that allows on-the-fly random reading of (primarily non-public) files available in AWS S3 buckets, without prior download of the entire file. It requires GDAL to be built against libcurl.</p>
+<p>It also allows sequential writing of files. No seeks or read operations are then allowed, so in particular direct writing of GeoTIFF files with the GTiff driver is not supported, unless, if,
+starting with GDAL 3.2, the <code class="decl_configoption docutils literal notranslate"><span class="pre">CPL_VSIL_USE_TEMP_FILE_FOR_RANDOM_WRITE</span></code> configuration option is set to <code class="docutils literal notranslate"><span class="pre">YES</span></code>, in which case random-write access is possible (involves the creation of a temporary local file, whose location is controlled by the <code class="decl_configoption docutils literal notranslate"><span class="pre">CPL_TMPDIR</span></code> configuration option).
+Deletion of files with <a class="reference internal" href="../api/cpl.html#_CPPv49VSIUnlinkPKc" title="VSIUnlink"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIUnlink()</span></code></a> is also supported. Starting with GDAL 2.3, creation of directories with <a class="reference internal" href="../api/cpl.html#_CPPv48VSIMkdirPKcl" title="VSIMkdir"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIMkdir()</span></code></a> and deletion of (empty) directories with <a class="reference internal" href="../api/cpl.html#_CPPv48VSIRmdirPKc" title="VSIRmdir"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIRmdir()</span></code></a> are also possible.</p>
+<p>Recognized filenames are of the form <code class="file docutils literal notranslate"><span class="pre">/vsis3/bucket/key</span></code>, where <code class="docutils literal notranslate"><span class="pre">bucket</span></code> is the name of the S3 bucket and <code class="docutils literal notranslate"><span class="pre">key</span></code> is the S3 object “key”, i.e. a filename potentially containing subdirectories.</p>
+<p>The generalities of <a class="reference internal" href="#vsicurl"><span class="std std-ref">/vsicurl/</span></a> apply.</p>
+<p>Several authentication methods are possible, and are attempted in the following order:</p>
+<ol class="arabic simple">
+<li><p>If <code class="decl_configoption docutils literal notranslate"><span class="pre">AWS_NO_SIGN_REQUEST=YES</span></code> configuration option is set, request signing is disabled. This option might be used for buckets with public access rights. Available since GDAL 2.3</p></li>
+<li><p>The <code class="decl_configoption docutils literal notranslate"><span class="pre">AWS_SECRET_ACCESS_KEY</span></code> and <code class="decl_configoption docutils literal notranslate"><span class="pre">AWS_ACCESS_KEY_ID</span></code> configuration options can be set. The <code class="decl_configoption docutils literal notranslate"><span class="pre">AWS_SESSION_TOKEN</span></code> configuration option must be set when temporary credentials are used.</p></li>
+<li><p>Starting with GDAL 2.3, alternate ways of providing credentials similar to what the “aws” command line utility or Boto3 support can be used. If the above mentioned environment variables are not provided, the <code class="docutils literal notranslate"><span class="pre">~/.aws/credentials</span></code> or <code class="docutils literal notranslate"><span class="pre">UserProfile%/.aws/credentials</span></code> file will be read (or the file pointed by <code class="decl_configoption docutils literal notranslate"><span class="pre">CPL_AWS_CREDENTIALS_FILE</span></code>). The profile may be specified with the <code class="decl_configoption docutils literal notranslate"><span class="pre">AWS_DEFAULT_PROFILE</span></code> environment variable, or starting with GDAL 3.2 with the <code class="decl_configoption docutils literal notranslate"><span class="pre">AWS_PROFILE</span></code> environment variable (the default profile is “default”)</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">~/.aws/config</span></code> or <code class="docutils literal notranslate"><span class="pre">UserProfile%/.aws/config</span></code> file may also be used (or the file pointer by <code class="decl_configoption docutils literal notranslate"><span class="pre">AWS_CONFIG_FILE</span></code>) to retrieve credentials and the AWS region.</p></li>
+<li><p>If none of the above method succeeds, instance profile credentials will be retrieved when GDAL is used on EC2 instances.</p></li>
+</ol>
+<p>The <code class="decl_configoption docutils literal notranslate"><span class="pre">AWS_REGION</span></code> (or <code class="decl_configoption docutils literal notranslate"><span class="pre">AWS_DEFAULT_REGION</span></code> starting with GDAL 2.3) configuration option may be set to one of the supported S3 regions and defaults to <code class="docutils literal notranslate"><span class="pre">us-east-1</span></code>.</p>
+<p>Starting with GDAL 2.2, the <code class="decl_configoption docutils literal notranslate"><span class="pre">AWS_REQUEST_PAYER</span></code> configuration option may be set to “requester” to facilitate use with Requester Pays buckets.</p>
+<p>The <code class="decl_configoption docutils literal notranslate"><span class="pre">AWS_S3_ENDPOINT</span></code> configuration option defaults to s3.amazonaws.com.</p>
+<p>The <code class="decl_configoption docutils literal notranslate"><span class="pre">AWS_HTTPS</span></code> configuration option defaults to <code class="docutils literal notranslate"><span class="pre">YES</span></code>.</p>
+<p>The <code class="decl_configoption docutils literal notranslate"><span class="pre">AWS_VIRTUAL_HOSTING</span></code> configuration option defaults to <code class="docutils literal notranslate"><span class="pre">TRUE</span></code>. This allows you to configure the two ways to access the buckets, see Bucket and Host Name for more details.
+- <code class="docutils literal notranslate"><span class="pre">TRUE</span></code> value, identifies the bucket via a virtual bucket host name, e.g.: mybucket.cname.domain.com
+- <code class="docutils literal notranslate"><span class="pre">FALSE</span></code> value, identifies the bucket as the top-level directory in the URI, e.g.: cname.domain.com/mybucket</p>
+<p>On writing, the file is uploaded using the S3 multipart upload API. The size of chunks is set to 50 MB by default, allowing creating files up to 500 GB (10000 parts of 50 MB each). If larger files are needed, then increase the value of the <code class="decl_configoption docutils literal notranslate"><span class="pre">VSIS3_CHUNK_SIZE</span></code> config option to a larger value (expressed in MB). In case the process is killed and the file not properly closed, the multipart upload will remain open, causing Amazon to charge you for the parts storage. You’ll have to abort yourself with other means such “ghost” uploads (e.g. with the s3cmd utility) For files smaller than the chunk size, a simple PUT request is used instead of the multipart upload API.</p>
+<p>Since GDAL 2.4, when listing a directory, files with GLACIER storage class are ignored unless the <code class="decl_configoption docutils literal notranslate"><span class="pre">CPL_VSIL_CURL_IGNORE_GLACIER_STORAGE</span></code> configuration option is set to <code class="docutils literal notranslate"><span class="pre">NO</span></code>.</p>
+<p>Since GDAL 3.1, the <a class="reference internal" href="../api/cpl.html#_CPPv49VSIRenamePKcPKc" title="VSIRename"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIRename()</span></code></a> operation is supported (first doing a copy of the original file and then deleting it)</p>
+<p>Since GDAL 3.1, the <a class="reference internal" href="../api/cpl.html#_CPPv417VSIRmdirRecursivePKc" title="VSIRmdirRecursive"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIRmdirRecursive()</span></code></a> operation is supported (using batch deletion method). The <code class="decl_configoption docutils literal notranslate"><span class="pre">CPL_VSIS3_USE_BASE_RMDIR_RECURSIVE</span></code> configuration option can be set to YES if using a S3-like API that doesn’t support batch deletion (GDAL &gt;= 3.2)</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.1.</span></p>
+</div>
+</div>
+<div class="section" id="vsis3-streaming-aws-s3-files-streaming">
+<span id="vsis3-streaming"></span><h3>/vsis3_streaming/ (AWS S3 files: streaming)<a class="headerlink" href="#vsis3-streaming-aws-s3-files-streaming" title="Permalink to this headline">¶</a></h3>
+<p>/vsis3_streaming/ is a file system handler that allows on-the-fly sequential reading of (primarily non-public) files available in AWS S3 buckets, without prior download of the entire file. It requires GDAL to be built against libcurl.</p>
+<p>Recognized filenames are of the form <code class="file docutils literal notranslate"><span class="pre">/vsis3_streaming/bucket/key</span></code> where <code class="docutils literal notranslate"><span class="pre">bucket</span></code> is the name of the S3 bucket and <code class="docutils literal notranslate"><span class="pre">key</span></code> is the S3 object “key”, i.e. a filename potentially containing subdirectories.</p>
+<p>Authentication options, and read-only features, are identical to <a class="reference internal" href="#vsis3"><span class="std std-ref">/vsis3/</span></a></p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.1.</span></p>
+</div>
+</div>
+<div class="section" id="vsigs-google-cloud-storage-files">
+<span id="vsigs"></span><h3>/vsigs/ (Google Cloud Storage files)<a class="headerlink" href="#vsigs-google-cloud-storage-files" title="Permalink to this headline">¶</a></h3>
+<p>/vsigs/ is a file system handler that allows on-the-fly random reading of (primarily non-public) files available in Google Cloud Storage buckets, without prior download of the entire file. It requires GDAL to be built against libcurl.</p>
+<p>Starting with GDAL 2.3, it also allows sequential writing of files. No seeks or read operations are then allowed, so in particular direct writing of GeoTIFF files with the GTiff driver is not supported, unless, if, starting with GDAL 3.2, the <code class="decl_configoption docutils literal notranslate"><span class="pre">CPL_VSIL_USE_TEMP_FILE_FOR_RANDOM_WRITE</span></code> configuration option is set to <code class="docutils literal notranslate"><span class="pre">YES</span></code>, in which case random-write access is possible (involves the creation of a temporary local file, whose location is controlled by the <code class="decl_configoption docutils literal notranslate"><span class="pre">CPL_TMPDIR</span></code> configuration option).
+Deletion of files with <a class="reference internal" href="../api/cpl.html#_CPPv49VSIUnlinkPKc" title="VSIUnlink"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIUnlink()</span></code></a>, creation of directories with <a class="reference internal" href="../api/cpl.html#_CPPv48VSIMkdirPKcl" title="VSIMkdir"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIMkdir()</span></code></a> and deletion of (empty) directories with <a class="reference internal" href="../api/cpl.html#_CPPv48VSIRmdirPKc" title="VSIRmdir"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIRmdir()</span></code></a> are also possible.</p>
+<p>Recognized filenames are of the form <code class="file docutils literal notranslate"><span class="pre">/vsigs/bucket/key</span></code> where <code class="docutils literal notranslate"><span class="pre">bucket</span></code> is the name of the bucket and <code class="docutils literal notranslate"><span class="pre">key</span></code> is the object “key”, i.e. a filename potentially containing subdirectories.</p>
+<p>The generalities of <a class="reference internal" href="#vsicurl"><span class="std std-ref">/vsicurl/</span></a> apply.</p>
+<p>Several authentication methods are possible, and are attempted in the following order:</p>
+<ol class="arabic simple">
+<li><p>The <code class="decl_configoption docutils literal notranslate"><span class="pre">GS_SECRET_ACCESS_KEY</span></code> and <code class="decl_configoption docutils literal notranslate"><span class="pre">GS_ACCESS_KEY_ID</span></code> configuration options can be set for AWS-style authentication</p></li>
+<li><p>The <code class="decl_configoption docutils literal notranslate"><span class="pre">GDAL_HTTP_HEADER_FILE</span></code> configuration option to point to a filename of a text file with “key: value” headers. Typically, it must contain a “Authorization: Bearer XXXXXXXXX” line.</p></li>
+<li><p>(GDAL &gt;= 2.3) The <code class="decl_configoption docutils literal notranslate"><span class="pre">GS_OAUTH2_REFRESH_TOKEN</span></code> configuration option can be set to use OAuth2 client authentication. See <a class="reference external" href="http://code.google.com/apis/accounts/docs/OAuth2.html">http://code.google.com/apis/accounts/docs/OAuth2.html</a> This refresh token can be obtained with the <code class="docutils literal notranslate"><span class="pre">gdal_auth.py</span> <span class="pre">-s</span> <span class="pre">storage</span></code> or <code class="docutils literal notranslate"><span class="pre">gdal_auth.py</span> <span class="pre">-s</span> <span class="pre">storage-rw</span></code> script Note: instead of using the default GDAL application credentials, you may define the <code class="decl_configoption docutils literal notranslate"><span class="pre">GS_OAUTH2_CLIENT_ID</span></code> and <code class="decl_configoption docutils literal notranslate"><span class="pre">GS_OAUTH2_CLIENT_SECRET</span></code> configuration options (need to be defined both for gdal_auth.py and later execution of /vsigs)</p></li>
+<li><p>(GDAL &gt;= 2.3) The <code class="decl_configoption docutils literal notranslate"><span class="pre">GOOGLE_APPLICATION_CREDENTIALS</span></code> configuration option can be set to point to a JSON file containing OAuth2 service account credentials, in particular a private key and a client email. See <a class="reference external" href="https://developers.google.com/identity/protocols/OAuth2ServiceAccount">https://developers.google.com/identity/protocols/OAuth2ServiceAccount</a> for more details on this authentication method. The bucket must grant the “Storage Legacy Bucket Owner” or “Storage Legacy Bucket Reader” permissions to the service account. The <code class="decl_configoption docutils literal notranslate"><span class="pre">GS_OAUTH2_SCOPE</span></code> configuration option can be set to change the default permission scope from “<a class="reference external" href="https://www.googleapis.com/auth/devstorage.read_write">https://www.googleapis.com/auth/devstorage.read_write</a>” to “<a class="reference external" href="https://www.googleapis.com/auth/devstorage.read_only">https://www.googleapis.com/auth/devstorage.read_only</a>” if needed.</p></li>
+<li><p>(GDAL &gt;= 2.3) Variant of the previous method. The <code class="decl_configoption docutils literal notranslate"><span class="pre">GS_OAUTH2_PRIVATE_KEY</span></code> (or <code class="decl_configoption docutils literal notranslate"><span class="pre">GS_OAUTH2_PRIVATE_KEY_FILE)</span></code> and <code class="decl_configoption docutils literal notranslate"><span class="pre">GS_OAUTH2_CLIENT_EMAIL</span></code> can be set to use OAuth2 service account authentication. See <a class="reference external" href="https://developers.google.com/identity/protocols/OAuth2ServiceAccount">https://developers.google.com/identity/protocols/OAuth2ServiceAccount</a> for more details on this authentication method. The <code class="decl_configoption docutils literal notranslate"><span class="pre">GS_OAUTH2_PRIVATE_KEY</span></code> configuration option must contain the private key as a inline string, starting with <code class="docutils literal notranslate"><span class="pre">-----BEGIN</span> <span class="pre">PRIVATE</span> <span class="pre">KEY-----</span></code>. Alternatively the <code class="decl_configoption docutils literal notranslate"><span class="pre">GS_OAUTH2_PRIVATE_KEY_FILE</span></code> configuration option can be set to indicate a filename that contains such a private key. The bucket must grant the “Storage Legacy Bucket Owner” or “Storage Legacy Bucket Reader” permissions to the service account. The <code class="decl_configoption docutils literal notranslate"><span class="pre">GS_OAUTH2_SCOPE</span></code> configuration option can be set to change the default permission scope from “<a class="reference external" href="https://www.googleapis.com/auth/devstorage.read_write">https://www.googleapis.com/auth/devstorage.read_write</a>” to “<a class="reference external" href="https://www.googleapis.com/auth/devstorage.read_only">https://www.googleapis.com/auth/devstorage.read_only</a>” if needed.</p></li>
+<li><p>(GDAL &gt;= 2.3) An alternate way of providing credentials similar to what the “gsutil” command line utility or Boto3 support can be used. If the above mentioned environment variables are not provided, the <code class="file docutils literal notranslate"><span class="pre">~/.boto</span></code> or <code class="file docutils literal notranslate"><span class="pre">UserProfile%/.boto</span></code> file will be read (or the file pointed by <code class="decl_configoption docutils literal notranslate"><span class="pre">CPL_GS_CREDENTIALS_FILE</span></code>) for the gs_secret_access_key and gs_access_key_id entries for AWS style authentication. If not found, it will look for the gs_oauth2_refresh_token (and optionally client_id and client_secret) entry for OAuth2 client authentication.</p></li>
+<li><p>(GDAL &gt;= 2.3) Finally if none of the above method succeeds, the code will check if the current machine is a Google Compute Engine instance, and if so will use the permissions associated to it (using the default service account associated with the VM). To force a machine to be detected as a GCE instance (for example for code running in a container with no access to the boot logs), you can set <code class="decl_configoption docutils literal notranslate"><span class="pre">CPL_MACHINE_IS_GCE</span></code> to <code class="docutils literal notranslate"><span class="pre">YES</span></code>.</p></li>
+</ol>
+<p>Since GDAL 3.1, the Rename() operation is supported (first doing a copy of the original file and then deleting it).</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.2.</span></p>
+</div>
+</div>
+<div class="section" id="vsigs-streaming-google-cloud-storage-files-streaming">
+<span id="vsigs-streaming"></span><h3>/vsigs_streaming/ (Google Cloud Storage files: streaming)<a class="headerlink" href="#vsigs-streaming-google-cloud-storage-files-streaming" title="Permalink to this headline">¶</a></h3>
+<p>/vsigs_streaming/ is a file system handler that allows on-the-fly sequential reading of files (primarily non-public) files available in Google Cloud Storage buckets, without prior download of the entire file. It requires GDAL to be built against libcurl.</p>
+<p>Recognized filenames are of the form <code class="file docutils literal notranslate"><span class="pre">/vsigs_streaming/bucket/key</span></code> where <code class="docutils literal notranslate"><span class="pre">bucket</span></code> is the name of the bucket and <code class="docutils literal notranslate"><span class="pre">key</span></code> is the object “key”, i.e. a filename potentially containing subdirectories.</p>
+<p>Authentication options, and read-only features, are identical to <a class="reference internal" href="#vsigs"><span class="std std-ref">/vsigs/</span></a></p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.2.</span></p>
+</div>
+</div>
+<div class="section" id="vsiaz-microsoft-azure-blob-files">
+<span id="vsiaz"></span><h3>/vsiaz/ (Microsoft Azure Blob files)<a class="headerlink" href="#vsiaz-microsoft-azure-blob-files" title="Permalink to this headline">¶</a></h3>
+<p>/vsiaz/ is a file system handler that allows on-the-fly random reading of (primarily non-public) files available in Microsoft Azure Blob containers, without prior download of the entire file. It requires GDAL to be built against libcurl.</p>
+<p>See <a class="reference internal" href="#vsiadls"><span class="std std-ref">/vsiadls/</span></a> for a related filesystem for Azure Data Lake Storage Gen2.</p>
+<p>It also allows sequential writing of files. No seeks or read operations are then allowed, so in particular direct writing of GeoTIFF files with the GTiff driver is not supported, unless, if, starting with GDAL 3.2, the <code class="decl_configoption docutils literal notranslate"><span class="pre">CPL_VSIL_USE_TEMP_FILE_FOR_RANDOM_WRITE</span></code> configuration option is set to <code class="docutils literal notranslate"><span class="pre">YES</span></code>, in which case random-write access is possible (involves the creation of a temporary local file, whose location is controlled by the <code class="decl_configoption docutils literal notranslate"><span class="pre">CPL_TMPDIR</span></code> configuration option).
+A block blob will be created if the file size is below 4 MB. Beyond, an append blob will be created (with a maximum file size of 195 GB).</p>
+<p>Deletion of files with <a class="reference internal" href="../api/cpl.html#_CPPv49VSIUnlinkPKc" title="VSIUnlink"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIUnlink()</span></code></a>, creation of directories with <a class="reference internal" href="../api/cpl.html#_CPPv48VSIMkdirPKcl" title="VSIMkdir"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIMkdir()</span></code></a> and deletion of (empty) directories with <a class="reference internal" href="../api/cpl.html#_CPPv48VSIRmdirPKc" title="VSIRmdir"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIRmdir()</span></code></a> are also possible. Note: when using <a class="reference internal" href="../api/cpl.html#_CPPv48VSIMkdirPKcl" title="VSIMkdir"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIMkdir()</span></code></a>, a special hidden <code class="file docutils literal notranslate"><span class="pre">.gdal_marker_for_dir</span></code> empty file is created, since Azure Blob does not natively support empty directories. If that file is the last one remaining in a directory, <a class="reference internal" href="../api/cpl.html#_CPPv48VSIRmdirPKc" title="VSIRmdir"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIRmdir()</span></code></a> will automatically remove it. This file will not be seen with <a class="reference internal" href="../api/cpl.html#_CPPv410VSIReadDirPKc" title="VSIReadDir"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIReadDir()</span></code></a>. If removing files from directories not created with <a class="reference internal" href="../api/cpl.html#_CPPv48VSIMkdirPKcl" title="VSIMkdir"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIMkdir()</span></code></a>, when the last file is deleted, its directory is automatically removed by Azure, so the sequence <code class="docutils literal notranslate"><span class="pre">VSIUnlink(&quot;/vsiaz/container/subdir/lastfile&quot;)</span></code> followed by <code class="docutils literal notranslate"><span class="pre">VSIRmdir(&quot;/vsiaz/container/subdir&quot;)</span></code> will fail on the <a class="reference internal" href="../api/cpl.html#_CPPv48VSIRmdirPKc" title="VSIRmdir"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIRmdir()</span></code></a> invocation.</p>
+<p>Recognized filenames are of the form <code class="file docutils literal notranslate"><span class="pre">/vsiaz/container/key</span></code>, where <code class="docutils literal notranslate"><span class="pre">container</span></code> is the name of the container and <code class="docutils literal notranslate"><span class="pre">key</span></code> is the object “key”, i.e. a filename potentially containing subdirectories.</p>
+<p>The generalities of <a class="reference internal" href="#vsicurl"><span class="std std-ref">/vsicurl/</span></a> apply.</p>
+<p>Several authentication methods are possible, and are attempted in the following order:</p>
+<ol class="arabic">
+<li><p>The <code class="decl_configoption docutils literal notranslate"><span class="pre">AZURE_STORAGE_CONNECTION_STRING</span></code> configuration option, given in the access key section of the administration interface. It contains both the account name and a secret key.</p></li>
+<li><p>The <code class="decl_configoption docutils literal notranslate"><span class="pre">AZURE_STORAGE_ACCOUNT</span></code> configuration option is set to specify the account name AND</p>
+<blockquote>
+<div><ol class="loweralpha simple">
+<li><p>The <code class="decl_configoption docutils literal notranslate"><span class="pre">AZURE_STORAGE_ACCESS_KEY</span></code> configuration option is set to specify the secret key.</p></li>
+<li><p>The <code class="decl_configoption docutils literal notranslate"><span class="pre">AZURE_NO_SIGN_REQUEST=YES</span></code> configuration option is set, so as to disable any request signing. This option might be used for accounts with public access rights. Available since GDAL 3.2</p></li>
+<li><p>The <code class="decl_configoption docutils literal notranslate"><span class="pre">AZURE_SAS</span></code> configuration option is set to specify a Shared Access Signature. This SAS is appended to URLs built by the /vsiaz/ file system handler. Its value should already be URL-encoded and should not contain any leading ‘?’ or ‘&amp;’ character (e.g. a valid one may look like “st=2019-07-18T03%3A53%3A22Z&amp;se=2035-07-19T03%3A53%3A00Z&amp;sp=rl&amp;sv=2018-03-28&amp;sr=c&amp;sig=2RIXmLbLbiagYnUd49rgx2kOXKyILrJOgafmkODhRAQ%3D”). Available since GDAL 3.2</p></li>
+<li><p>The current machine is a Azure Virtual Machine with Azure Active Directory permissions assigned to it (see <a class="reference external" href="https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/qs-configure-portal-windows-vm">https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/qs-configure-portal-windows-vm</a>). Available since GDAL 3.3</p></li>
+</ol>
+</div></blockquote>
+</li>
+</ol>
+<p>Since GDAL 3.1, the <a class="reference internal" href="../api/cpl.html#_CPPv49VSIRenamePKcPKc" title="VSIRename"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIRename()</span></code></a> operation is supported (first doing a copy of the original file and then deleting it)</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.3.</span></p>
+</div>
+</div>
+<div class="section" id="vsiaz-streaming-microsoft-azure-blob-files-streaming">
+<span id="vsiaz-streaming"></span><h3>/vsiaz_streaming/ (Microsoft Azure Blob files: streaming)<a class="headerlink" href="#vsiaz-streaming-microsoft-azure-blob-files-streaming" title="Permalink to this headline">¶</a></h3>
+<p>/vsiaz_streaming/ is a file system handler that allows on-the-fly sequential reading of files (primarily non-public) files available in Microsoft Azure Blob containers, buckets, without prior download of the entire file. It requires GDAL to be built against libcurl.</p>
+<p>Recognized filenames are of the form <code class="file docutils literal notranslate"><span class="pre">/vsiaz_streaming/container/key</span></code> where <code class="docutils literal notranslate"><span class="pre">container</span></code> is the name of the container and <code class="docutils literal notranslate"><span class="pre">key</span></code> is the object “key”, i.e. a filename potentially containing subdirectories.</p>
+<p>Authentication options, and read-only features, are identical to <a class="reference internal" href="#vsiaz"><span class="std std-ref">/vsiaz/</span></a></p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.3.</span></p>
+</div>
+</div>
+<div class="section" id="vsiadls-microsoft-azure-data-lake-storage-gen2">
+<span id="vsiadls"></span><h3>/vsiadls/ (Microsoft Azure Data Lake Storage Gen2)<a class="headerlink" href="#vsiadls-microsoft-azure-data-lake-storage-gen2" title="Permalink to this headline">¶</a></h3>
+<p>/vsiadls/ is a file system handler that allows on-the-fly random reading of
+(primarily non-public) files available in Microsoft Azure Data Lake Storage file
+systems, without prior download of the entire file.
+It requires GDAL to be built against libcurl.</p>
+<p>It has similar capabilities as <a class="reference internal" href="#vsiaz"><span class="std std-ref">/vsiaz/</span></a>, and in particular uses the same
+configuration options for authentication. Its advantages over /vsiaz/ are a real
+management of directory and Unix-style ACL support. Some features require the Azure
+storage to have hierarchical support turned on. Consult its
+<a class="reference external" href="https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-introduction">documentation</a></p>
+<p>The main enhancements over /vsiaz/ are:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>True directory support (no need for the artificial <code class="file docutils literal notranslate"><span class="pre">.gdal_marker_for_dir</span></code>
+empty file that is used for /vsiaz/ to have empty directories)</p></li>
+<li><p>One-call recursive directory deletion with <a class="reference internal" href="../api/cpl.html#_CPPv417VSIRmdirRecursivePKc" title="VSIRmdirRecursive"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIRmdirRecursive()</span></code></a></p></li>
+<li><p>Atomic renaming with <a class="reference internal" href="../api/cpl.html#_CPPv49VSIRenamePKcPKc" title="VSIRename"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIRename()</span></code></a></p></li>
+<li><p><a class="reference internal" href="../api/cpl.html#_CPPv418VSIGetFileMetadataPKcPKc12CSLConstList" title="VSIGetFileMetadata"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIGetFileMetadata()</span></code></a> support for the “STATUS” and “ACL” metadata domains</p></li>
+<li><p><a class="reference internal" href="../api/cpl.html#_CPPv418VSISetFileMetadataPKc12CSLConstListPKc12CSLConstList" title="VSISetFileMetadata"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSISetFileMetadata()</span></code></a> support for the “PROPERTIES” and “ACL” metadata domains</p></li>
+</ul>
+</div></blockquote>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 3.3.</span></p>
+</div>
+</div>
+<div class="section" id="vsioss-alibaba-cloud-oss-files">
+<span id="vsioss"></span><h3>/vsioss/ (Alibaba Cloud OSS files)<a class="headerlink" href="#vsioss-alibaba-cloud-oss-files" title="Permalink to this headline">¶</a></h3>
+<p>/vsioss/ is a file system handler that allows on-the-fly random reading of (primarily non-public) files available in Alibaba Cloud Object Storage Service (OSS) buckets, without prior download of the entire file. It requires GDAL to be built against libcurl.</p>
+<p>It also allows sequential writing of files. No seeks or read operations are then allowed, so in particular direct writing of GeoTIFF files with the GTiff driver is not supported, unless, if, starting with GDAL 3.2, the <code class="decl_configoption docutils literal notranslate"><span class="pre">CPL_VSIL_USE_TEMP_FILE_FOR_RANDOM_WRITE</span></code> configuration option is set to <code class="docutils literal notranslate"><span class="pre">YES</span></code>, in which case random-write access is possible (involves the creation of a temporary local file, whose location is controlled by the <code class="decl_configoption docutils literal notranslate"><span class="pre">CPL_TMPDIR</span></code> configuration option).
+Deletion of files with <a class="reference internal" href="../api/cpl.html#_CPPv49VSIUnlinkPKc" title="VSIUnlink"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIUnlink()</span></code></a> is also supported. Creation of directories with <a class="reference internal" href="../api/cpl.html#_CPPv48VSIMkdirPKcl" title="VSIMkdir"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIMkdir()</span></code></a> and deletion of (empty) directories with <a class="reference internal" href="../api/cpl.html#_CPPv48VSIRmdirPKc" title="VSIRmdir"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIRmdir()</span></code></a> are also possible.</p>
+<p>Recognized filenames are of the form <code class="file docutils literal notranslate"><span class="pre">/vsioss/bucket/key</span></code> where <code class="docutils literal notranslate"><span class="pre">bucket</span></code> is the name of the OSS bucket and <code class="docutils literal notranslate"><span class="pre">key</span></code> is the OSS object “key”, i.e. a filename potentially containing subdirectories.</p>
+<p>The generalities of <a class="reference internal" href="#vsicurl"><span class="std std-ref">/vsicurl/</span></a> apply.</p>
+<p>The <code class="decl_configoption docutils literal notranslate"><span class="pre">OSS_SECRET_ACCESS_KEY</span></code> and <code class="decl_configoption docutils literal notranslate"><span class="pre">OSS_ACCESS_KEY_ID</span></code> configuration options must be set. The <code class="decl_configoption docutils literal notranslate"><span class="pre">OSS_ENDPOINT</span></code> configuration option should normally be set to the appropriate value, which reflects the region attached to the bucket. The default is <code class="docutils literal notranslate"><span class="pre">oss-us-east-1.aliyuncs.com</span></code>. If the bucket is stored in another region than oss-us-east-1, the code logic will redirect to the appropriate endpoint.</p>
+<p>On writing, the file is uploaded using the OSS multipart upload API. The size of chunks is set to 50 MB by default, allowing creating files up to 500 GB (10000 parts of 50 MB each). If larger files are needed, then increase the value of the <code class="decl_configoption docutils literal notranslate"><span class="pre">VSIOSS_CHUNK_SIZE</span></code> config option to a larger value (expressed in MB). In case the process is killed and the file not properly closed, the multipart upload will remain open, causing Alibaba to charge you for the parts storage. You’ll have to abort yourself with other means. For files smaller than the chunk size, a simple PUT request is used instead of the multipart upload API.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.3.</span></p>
+</div>
+</div>
+<div class="section" id="vsioss-streaming-alibaba-cloud-oss-files-streaming">
+<span id="vsioss-streaming"></span><h3>/vsioss_streaming/ (Alibaba Cloud OSS files: streaming)<a class="headerlink" href="#vsioss-streaming-alibaba-cloud-oss-files-streaming" title="Permalink to this headline">¶</a></h3>
+<p>/vsioss_streaming/ is a file system handler that allows on-the-fly sequential reading of files (primarily non-public) files available in Alibaba Cloud Object Storage Service (OSS) buckets, without prior download of the entire file. It requires GDAL to be built against libcurl.</p>
+<p>Recognized filenames are of the form <code class="file docutils literal notranslate"><span class="pre">/vsioss_streaming/bucket/key</span></code> where <code class="docutils literal notranslate"><span class="pre">bucket</span></code> is the name of the bucket and <code class="docutils literal notranslate"><span class="pre">key</span></code> is the object “key”, i.e. a filename potentially containing subdirectories.</p>
+<p>Authentication options, and read-only features, are identical to <a class="reference internal" href="#vsioss"><span class="std std-ref">/vsioss/</span></a></p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.3.</span></p>
+</div>
+</div>
+<div class="section" id="vsiswift-openstack-swift-object-storage">
+<span id="vsiswift"></span><h3>/vsiswift/ (OpenStack Swift Object Storage)<a class="headerlink" href="#vsiswift-openstack-swift-object-storage" title="Permalink to this headline">¶</a></h3>
+<p>/vsiswift/ is a file system handler that allows on-the-fly random reading of (primarily non-public) files available in OpenStack Swift Object Storage (swift) buckets, without prior download of the entire file. It requires GDAL to be built against libcurl.</p>
+<p>It also allows sequential writing of files. No seeks or read operations are then allowed, so in particular direct writing of GeoTIFF files with the GTiff driver is not supported, unless, if, starting with GDAL 3.2, the <code class="decl_configoption docutils literal notranslate"><span class="pre">CPL_VSIL_USE_TEMP_FILE_FOR_RANDOM_WRITE</span></code> configuration option is set to <code class="docutils literal notranslate"><span class="pre">YES</span></code>, in which case random-write access is possible (involves the creation of a temporary local file, whose location is controlled by the <code class="decl_configoption docutils literal notranslate"><span class="pre">CPL_TMPDIR</span></code> configuration option).
+Deletion of files with <a class="reference internal" href="../api/cpl.html#_CPPv49VSIUnlinkPKc" title="VSIUnlink"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIUnlink()</span></code></a> is also supported. Creation of directories with <a class="reference internal" href="../api/cpl.html#_CPPv48VSIMkdirPKcl" title="VSIMkdir"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIMkdir()</span></code></a> and deletion of (empty) directories with <a class="reference internal" href="../api/cpl.html#_CPPv48VSIRmdirPKc" title="VSIRmdir"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIRmdir()</span></code></a> are also possible.</p>
+<p>Recognized filenames are of the form <code class="file docutils literal notranslate"><span class="pre">/vsiswift/bucket/key</span></code> where <code class="docutils literal notranslate"><span class="pre">bucket</span></code> is the name of the swift bucket and <code class="docutils literal notranslate"><span class="pre">key</span></code> is the swift object “key”, i.e. a filename potentially containing subdirectories.</p>
+<p>The generalities of <a class="reference internal" href="#vsicurl"><span class="std std-ref">/vsicurl/</span></a> apply.</p>
+<p>Three authentication methods are possible, and are attempted in the following order:</p>
+<ol class="arabic simple">
+<li><p>The <code class="decl_configoption docutils literal notranslate"><span class="pre">SWIFT_STORAGE_URL</span></code> and <code class="decl_configoption docutils literal notranslate"><span class="pre">SWIFT_AUTH_TOKEN</span></code> configuration options are set respectively to the storage URL (e.g <a class="reference external" href="http://127.0.0.1:12345/v1/AUTH_something">http://127.0.0.1:12345/v1/AUTH_something</a>) and the value of the x-auth-token authorization token.</p></li>
+<li><p>The <code class="decl_configoption docutils literal notranslate"><span class="pre">SWIFT_AUTH_V1_URL</span></code>, <code class="decl_configoption docutils literal notranslate"><span class="pre">SWIFT_USER</span></code> and <code class="decl_configoption docutils literal notranslate"><span class="pre">SWIFT_KEY</span></code> configuration options are set respectively to the endpoint of the Auth V1 authentication (e.g <a class="reference external" href="http://127.0.0.1:12345/auth/v1.0">http://127.0.0.1:12345/auth/v1.0</a>), the user name and the key/password. This authentication endpoint will be used to retrieve the storage URL and authorization token mentioned in the first authentication method.</p></li>
+<li><p>Authentication with Keystone v3 is using the same options as python-swiftclient, see <a class="reference external" href="https://docs.openstack.org/python-swiftclient/latest/cli/index.html#authentication">https://docs.openstack.org/python-swiftclient/latest/cli/index.html#authentication</a> for more details. GDAL (&gt;= 3.1) supports the following options:</p>
+<ul class="simple">
+<li><p><cite>OS_IDENTITY_API_VERSION=3</cite></p></li>
+<li><p><cite>OS_AUTH_URL</cite></p></li>
+<li><p><cite>OS_USERNAME</cite></p></li>
+<li><p><cite>OS_PASSWORD</cite></p></li>
+<li><p><cite>OS_USER_DOMAIN_NAME</cite></p></li>
+<li><p><cite>OS_PROJECT_NAME</cite></p></li>
+<li><p><cite>OS_PROJECT_DOMAIN_NAME</cite></p></li>
+<li><p><cite>OS_REGION_NAME</cite></p></li>
+</ul>
+</li>
+</ol>
+<p>This file system handler also allows sequential writing of files (no seeks or read operations are then allowed).</p>
+<p>In some versions of OpenStack Swift, the access to large (segmented) files fails unless they are explicitly marked as static large objects, instead of being dynamic large objects which is the default. Using the python-swiftclient this can be achieved when uploading the file by passing the <code class="docutils literal notranslate"><span class="pre">--use-slo</span></code> flag (see <a class="reference external" href="https://docs.openstack.org/python-swiftclient/latest/cli/index.html#swift-upload">https://docs.openstack.org/python-swiftclient/latest/cli/index.html#swift-upload</a> for all options). For more information about large objects see <a class="reference external" href="https://docs.openstack.org/swift/latest/api/large_objects.html">https://docs.openstack.org/swift/latest/api/large_objects.html</a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.3.</span></p>
+</div>
+</div>
+<div class="section" id="vsiswift-streaming-openstack-swift-object-storage-streaming">
+<span id="vsiswift-streaming"></span><h3>/vsiswift_streaming/ (OpenStack Swift Object Storage: streaming)<a class="headerlink" href="#vsiswift-streaming-openstack-swift-object-storage-streaming" title="Permalink to this headline">¶</a></h3>
+<p>/vsiswift_streaming/ is a file system handler that allows on-the-fly sequential reading of files (primarily non-public) files available in OpenStack Swift Object Storage (swift) buckets, without prior download of the entire file. It requires GDAL to be built against libcurl.</p>
+<p>Recognized filenames are of the form <code class="file docutils literal notranslate"><span class="pre">/vsiswift_streaming/bucket/key</span></code> where <code class="docutils literal notranslate"><span class="pre">bucket</span></code> is the name of the bucket and <code class="docutils literal notranslate"><span class="pre">key</span></code> is the object “key”, i.e. a filename potentially containing subdirectories.</p>
+<p>Authentication options, and read-only features, are identical to <a class="reference internal" href="#vsiswift"><span class="std std-ref">/vsiswift/</span></a></p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.3.</span></p>
+</div>
+</div>
+<div class="section" id="vsihdfs-hadoop-file-system">
+<span id="vsihdfs"></span><h3>/vsihdfs/ (Hadoop File System)<a class="headerlink" href="#vsihdfs-hadoop-file-system" title="Permalink to this headline">¶</a></h3>
+<p>/vsihdfs/ is a file system handler that provides read access to HDFS. This handler requires GDAL to have been built with Java support (<code class="docutils literal notranslate"><span class="pre">--with-java</span></code>) and HDFS support (<code class="docutils literal notranslate"><span class="pre">--with-hdfs</span></code>). Support for this handler is currently only available on Unix-like systems. Note: support for the HTTP REST API (webHdfs) is also available with <a class="reference internal" href="#vsiwebhdfs"><span class="std std-ref">/vsiwebhdfs/ (Web Hadoop File System REST API)</span></a></p>
+<p>Recognized filenames are of the form <code class="file docutils literal notranslate"><span class="pre">/vsihdfs/hdfsUri</span></code> where <code class="docutils literal notranslate"><span class="pre">hdfsUri</span></code> is a valid HDFS URI.</p>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">vsihdfs</span><span class="o">/</span><span class="n">file</span><span class="p">:</span><span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">my</span><span class="o">.</span><span class="n">tif</span>  <span class="p">(</span><span class="n">a</span> <span class="n">local</span> <span class="n">file</span> <span class="n">accessed</span> <span class="n">through</span> <span class="n">HDFS</span><span class="p">)</span>
+<span class="o">/</span><span class="n">vsihdfs</span><span class="o">/</span><span class="n">hdfs</span><span class="p">:</span><span class="o">/</span><span class="n">hadoop</span><span class="o">/</span><span class="n">my</span><span class="o">.</span><span class="n">tif</span>  <span class="p">(</span><span class="n">a</span> <span class="n">file</span> <span class="n">stored</span> <span class="ow">in</span> <span class="n">HDFS</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.4.</span></p>
+</div>
+</div>
+<div class="section" id="vsiwebhdfs-web-hadoop-file-system-rest-api">
+<span id="vsiwebhdfs"></span><h3>/vsiwebhdfs/ (Web Hadoop File System REST API)<a class="headerlink" href="#vsiwebhdfs-web-hadoop-file-system-rest-api" title="Permalink to this headline">¶</a></h3>
+<p>/vsiwebhdfs/ is a file system handler that provides read and write access to HDFS through its HTTP REST API.</p>
+<p>Recognized filenames are of the form <code class="file docutils literal notranslate"><span class="pre">/vsiwebhdfs/http://hostname:port/webhdfs/v1/path/to/filename</span></code>.</p>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">vsiwebhdfs</span><span class="o">/</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">50070</span><span class="o">/</span><span class="n">webhdfs</span><span class="o">/</span><span class="n">v1</span><span class="o">/</span><span class="n">mydir</span><span class="o">/</span><span class="n">byte</span><span class="o">.</span><span class="n">tif</span>
+</pre></div>
+</div>
+<p>It also allows sequential writing of files. No seeks or read operations are then allowed, so in particular direct writing of GeoTIFF files with the GTiff driver is not supported, unless, if, starting with GDAL 3.2, the <code class="decl_configoption docutils literal notranslate"><span class="pre">CPL_VSIL_USE_TEMP_FILE_FOR_RANDOM_WRITE</span></code> configuration option is set to <code class="docutils literal notranslate"><span class="pre">YES</span></code>, in which case random-write access is possible (involves the creation of a temporary local file, whose location is controlled by the <code class="decl_configoption docutils literal notranslate"><span class="pre">CPL_TMPDIR</span></code> configuration option).
+Deletion of files with <a class="reference internal" href="../api/cpl.html#_CPPv49VSIUnlinkPKc" title="VSIUnlink"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIUnlink()</span></code></a> is also supported. Creation of directories with <a class="reference internal" href="../api/cpl.html#_CPPv48VSIMkdirPKcl" title="VSIMkdir"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIMkdir()</span></code></a> and deletion of (empty) directories with <a class="reference internal" href="../api/cpl.html#_CPPv48VSIRmdirPKc" title="VSIRmdir"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIRmdir()</span></code></a> are also possible.</p>
+<p>The generalities of <a class="reference internal" href="#vsicurl"><span class="std std-ref">/vsicurl/</span></a> apply.</p>
+<p>The following configuration options are available:</p>
+<ul class="simple">
+<li><p><code class="decl_configoption docutils literal notranslate"><span class="pre">WEBHDFS_USERNAME</span></code> = value: User name (when security is off).</p></li>
+<li><p><code class="decl_configoption docutils literal notranslate"><span class="pre">WEBHDFS_DELEGATION</span></code> = value: Hadoop delegation token (when security is on).</p></li>
+<li><p><code class="decl_configoption docutils literal notranslate"><span class="pre">WEBHDFS_DATANODE_HOST</span></code> = value: For APIs using redirect, substitute the redirection hostname with the one provided by this option (normally resolvable hostname should be rewritten by a proxy)</p></li>
+<li><p><code class="decl_configoption docutils literal notranslate"><span class="pre">WEBHDFS_REPLICATION</span></code> = int_value: Replication value used when creating a file</p></li>
+<li><p><code class="decl_configoption docutils literal notranslate"><span class="pre">WEBHDFS_PERMISSION</span></code> = int_value: Permission mask (to provide as decimal number) when creating a file or directory</p></li>
+</ul>
+<p>This file system handler also allows sequential writing of files (no seeks or read operations are then allowed)</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.4.</span></p>
+</div>
+</div>
+</div>
+<div class="section" id="vsistdin-standard-input-streaming">
+<span id="vsistdin"></span><h2>/vsistdin/ (standard input streaming)<a class="headerlink" href="#vsistdin-standard-input-streaming" title="Permalink to this headline">¶</a></h2>
+<p>/vsistdin/ is a file handler that allows reading from the standard input stream.</p>
+<p>The filename syntax must be only <code class="file docutils literal notranslate"><span class="pre">/vsistdin/</span></code>.</p>
+<p>The file operations available are of course limited to Read() and forward Seek(). Full seek in the first MB of a file is possible, and it is cached so that closing, re-opening <code class="file docutils literal notranslate"><span class="pre">/vsistdin/</span></code> and reading within this first megabyte is possible multiple times in the same process.</p>
+</div>
+<div class="section" id="vsistdout-standard-output-streaming">
+<span id="vsistdout"></span><h2>/vsistdout/ (standard output streaming)<a class="headerlink" href="#vsistdout-standard-output-streaming" title="Permalink to this headline">¶</a></h2>
+<p>/vsistdout/ is a file handler that allows writing into the standard output stream.</p>
+<p>The filename syntax must be only <code class="file docutils literal notranslate"><span class="pre">/vsistdout/</span></code>.</p>
+<p>The file operations available are of course limited to Write().</p>
+<p>A variation of this file system exists as the <code class="file docutils literal notranslate"><span class="pre">/vsistdout_redirect/</span></code> file system handler, where the output function can be defined with <a class="reference internal" href="../api/cpl.html#_CPPv423VSIStdoutSetRedirection16VSIWriteFunctionP4FILE" title="VSIStdoutSetRedirection"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIStdoutSetRedirection()</span></code></a>.</p>
+</div>
+<div class="section" id="vsimem-in-memory-files">
+<span id="vsimem"></span><h2>/vsimem/ (in-memory files)<a class="headerlink" href="#vsimem-in-memory-files" title="Permalink to this headline">¶</a></h2>
+<p>/vsimem/ is a file handler that allows block of memory to be treated as files. All portions of the file system underneath the base path <code class="file docutils literal notranslate"><span class="pre">/vsimem/</span></code> will be handled by this driver.</p>
+<p>Normal VSI*L functions can be used freely to create and destroy memory arrays, treating them as if they were real file system objects. Some additional methods exist to efficiently create memory file system objects without duplicating original copies of the data or to “steal” the block of memory associated with a memory file. See <a class="reference internal" href="../api/cpl.html#_CPPv420VSIFileFromMemBufferPKcP5GByte12vsi_l_offseti" title="VSIFileFromMemBuffer"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIFileFromMemBuffer()</span></code></a> and <a class="reference internal" href="../api/cpl.html#_CPPv419VSIGetMemFileBufferPKcP12vsi_l_offseti" title="VSIGetMemFileBuffer"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIGetMemFileBuffer()</span></code></a>.</p>
+<p>Directory related functions are supported.</p>
+<p>/vsimem/ files are visible within the same process. Multiple threads can access the same underlying file in read mode, provided they used different handles, but concurrent write and read operations on the same underlying file are not supported (locking is left to the responsibility of calling code).</p>
+</div>
+<div class="section" id="vsisubfile-portions-of-files">
+<span id="vsisubfile"></span><h2>/vsisubfile/ (portions of files)<a class="headerlink" href="#vsisubfile-portions-of-files" title="Permalink to this headline">¶</a></h2>
+<p>The /vsisubfile/ virtual file system handler allows access to subregions of files, treating them as a file on their own to the virtual file system functions (VSIFOpenL(), etc).</p>
+<p>A special form of the filename is used to indicate a subportion of another file: <code class="file docutils literal notranslate"><span class="pre">/vsisubfile/&lt;offset&gt;[_&lt;size&gt;],&lt;filename&gt;</span></code>.</p>
+<p>The size parameter is optional. Without it the remainder of the file from the start offset as treated as part of the subfile. Otherwise only &lt;size&gt; bytes from &lt;offset&gt; are treated as part of the subfile. The &lt;filename&gt; portion may be a relative or absolute path using normal rules. The &lt;offset&gt; and &lt;size&gt; values are in bytes.</p>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">vsisubfile</span><span class="o">/</span><span class="mi">1000_3000</span><span class="p">,</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">abc</span><span class="o">.</span><span class="n">ntf</span>
+<span class="o">/</span><span class="n">vsisubfile</span><span class="o">/</span><span class="mi">5000</span><span class="p">,</span><span class="o">../</span><span class="n">xyz</span><span class="o">/</span><span class="n">raw</span><span class="o">.</span><span class="n">dat</span>
+</pre></div>
+</div>
+<p>Unlike the /vsimem/ or conventional file system handlers, there is no meaningful support for filesystem operations for creating new files, traversing directories, and deleting files within the /vsisubfile/ area. Only the <a class="reference internal" href="../api/cpl.html#_CPPv48VSIStatLPKcP11VSIStatBufL" title="VSIStatL"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIStatL()</span></code></a>, <a class="reference internal" href="../api/cpl.html#_CPPv49VSIFOpenLPKcPKc" title="VSIFOpenL"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIFOpenL()</span></code></a> and operations based on the file handle returned by <a class="reference internal" href="../api/cpl.html#_CPPv49VSIFOpenLPKcPKc" title="VSIFOpenL"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIFOpenL()</span></code></a> operate properly.</p>
+</div>
+<div class="section" id="vsisparse-sparse-files">
+<span id="vsisparse"></span><h2>/vsisparse/ (sparse files)<a class="headerlink" href="#vsisparse-sparse-files" title="Permalink to this headline">¶</a></h2>
+<p>The /vsisparse/ virtual file handler allows a virtual file to be composed from chunks of data in other files, potentially with large spaces in the virtual file set to a constant value. This can make it possible to test some sorts of operations on what seems to be a large file with image data set to a constant value. It is also helpful when wanting to add test files to the test suite that are too large, but for which most of the data can be ignored. It could, in theory, also be used to treat several files on different file systems as one large virtual file.</p>
+<p>The file referenced by /vsisparse/ should be an XML control file formatted something like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&lt;VSISparseFile&gt;
+    &lt;Length&gt;87629264&lt;/Length&gt;
+    &lt;SubfileRegion&gt;  &lt;!-- Stuff at start of file. --&gt;
+        &lt;Filename relative=&quot;1&quot;&gt;251_head.dat&lt;/Filename&gt;
+        &lt;DestinationOffset&gt;0&lt;/DestinationOffset&gt;
+        &lt;SourceOffset&gt;0&lt;/SourceOffset&gt;
+        &lt;RegionLength&gt;2768&lt;/RegionLength&gt;
+    &lt;/SubfileRegion&gt;
+
+    &lt;SubfileRegion&gt;  &lt;!-- RasterDMS node. --&gt;
+        &lt;Filename relative=&quot;1&quot;&gt;251_rasterdms.dat&lt;/Filename&gt;
+        &lt;DestinationOffset&gt;87313104&lt;/DestinationOffset&gt;
+        &lt;SourceOffset&gt;0&lt;/SourceOffset&gt;
+        &lt;RegionLength&gt;160&lt;/RegionLength&gt;
+    &lt;/SubfileRegion&gt;
+
+    &lt;SubfileRegion&gt;  &lt;!-- Stuff at end of file. --&gt;
+        &lt;Filename relative=&quot;1&quot;&gt;251_tail.dat&lt;/Filename&gt;
+        &lt;DestinationOffset&gt;87611924&lt;/DestinationOffset&gt;
+        &lt;SourceOffset&gt;0&lt;/SourceOffset&gt;
+        &lt;RegionLength&gt;17340&lt;/RegionLength&gt;
+    &lt;/SubfileRegion&gt;
+
+    &lt;ConstantRegion&gt;  &lt;!-- Default for the rest of the file. --&gt;
+        &lt;DestinationOffset&gt;0&lt;/DestinationOffset&gt;
+        &lt;RegionLength&gt;87629264&lt;/RegionLength&gt;
+        &lt;Value&gt;0&lt;/Value&gt;
+    &lt;/ConstantRegion&gt;
+&lt;/VSISparseFile&gt;
+</pre></div>
+</div>
+<p>Hopefully the values and semantics are fairly obvious.</p>
+</div>
+<div class="section" id="file-caching">
+<h2>File caching<a class="headerlink" href="#file-caching" title="Permalink to this headline">¶</a></h2>
+<p>This is not a proper virtual file system handler, but a C function that takes a virtual file handle and returns a new handle that caches read-operations on the input file handle. The cache is RAM based and the content of the cache is discarded when the file handle is closed. The cache is a least-recently used lists of blocks of 32KB each.</p>
+<p>The <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">VSICachedFile</span></code> class only handles read operations at that time, and will error out on write operations.</p>
+<p>This is done with the <a class="reference internal" href="../api/cpl_cpp.html#_CPPv419VSICreateCachedFileP16VSIVirtualHandle6size_t6size_t" title="VSICreateCachedFile"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSICreateCachedFile()</span></code></a> function, that is implicitly used by a number of the above mentioned file systems (namely the default one for standard file system operations, and the /vsicurl/ and other related network file systems) if the <code class="docutils literal notranslate"><span class="pre">VSI_CACHE</span></code> configuration option is set to <code class="docutils literal notranslate"><span class="pre">YES</span></code>.</p>
+<p>The default size of caching for each file is 25 MB (25 MB for each file that is cached), and can be controlled with the <code class="docutils literal notranslate"><span class="pre">VSI_CACHE_SIZE</span></code> configuration option (value in bytes).</p>
+</div>
+<div class="section" id="vsicrypt-encrypted-files">
+<h2>/vsicrypt/ (encrypted files)<a class="headerlink" href="#vsicrypt-encrypted-files" title="Permalink to this headline">¶</a></h2>
+<p>/vsicrypt/ is a special file handler is installed that allows reading/creating/update encrypted files on the fly, with random access capabilities.</p>
+<p>Refer to <a class="reference internal" href="../api/cpl.html#_CPPv426VSIInstallCryptFileHandlerv" title="VSIInstallCryptFileHandler"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIInstallCryptFileHandler()</span></code></a> for more details.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ogr_feature_style.html" class="btn btn-neutral float-right" title="Feature Style Specification" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="sql_sqlite_dialect.html" class="btn btn-neutral float-left" title="SQL SQLite dialect" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2021 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

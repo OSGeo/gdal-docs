@@ -1,0 +1,505 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Python Gotchas in the GDAL and OGR Python Bindings &mdash; GDAL  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgapi/python_gotchas.html"/>
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Tutorials" href="../tutorials/index.html" />
+    <link rel="prev" title="Python API reference" href="python_api_ref.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#id2">Full Doxygen output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#c-api">C API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id3">C++ API</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#python-api">Python API</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="python_api_ref.html">Python API reference</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Python Gotchas in the GDAL and OGR Python Bindings</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#gotchas-that-are-by-design-or-per-history">Gotchas that are by design… or per history</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gotchas-that-result-from-bugs-or-behaviors-of-other-software">Gotchas that result from bugs or behaviors of other software</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id4">Java API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">API</a> &raquo;</li>
+      
+      <li>Python Gotchas in the GDAL and OGR Python Bindings</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/api/python_gotchas.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="../tutorials/index.html" class="btn btn-neutral float-right" title="Tutorials" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="python_api_ref.html" class="btn btn-neutral float-left" title="Python API reference" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="python-gotchas-in-the-gdal-and-ogr-python-bindings">
+<span id="python-gotchas"></span><h1>Python Gotchas in the GDAL and OGR Python Bindings<a class="headerlink" href="#python-gotchas-in-the-gdal-and-ogr-python-bindings" title="Permalink to this headline">¶</a></h1>
+<p>This page lists aspects of GDAL’s and OGR’s Python bindings that may catch Python programmers by surprise.
+If you find something new, feel free to add it to the list, but consider discussing it on the <a class="reference external" href="https://lists.osgeo.org/mailman/listinfo/gdal-dev">gdal-dev mailing list</a>  first,
+to make sure you fully understand the issue and that others agree that it is unexpected, “non-Pythonic”,
+or something that would catch many Python programmers by surprise.
+Be sure to reference email threads, GitHub tickets, and other sources of additional information.</p>
+<p>This list is not the place to report bugs. If you believe something is a bug, please <a class="reference external" href="https://github.com/OSGeo/gdal/issues">open a ticket</a> and report the problem to gdal-dev.
+Then consider listing it here if it is something related to Python specifically. Do not list it here if it relates to GDAL or OGR generally, and not the Python bindings specifically.</p>
+<p>Not all items listed here are bugs. Some of these are just how GDAL and OGR work and cannot be fixed easily without breaking existing code.
+If you don’t like how something works and think it should be changed, feel free to discuss it on gdal-dev and see what can be done.</p>
+<div class="section" id="gotchas-that-are-by-design-or-per-history">
+<h2>Gotchas that are by design… or per history<a class="headerlink" href="#gotchas-that-are-by-design-or-per-history" title="Permalink to this headline">¶</a></h2>
+<p>These are unexpected behaviors that are not considered by the GDAL and OGR teams to be bugs and are unlikely to be changed due to effort required, or whose fixing might affect backward compatibility, etc.</p>
+<div class="section" id="python-bindings-do-not-raise-exceptions-unless-you-explicitly-call-useexceptions">
+<h3>Python bindings do not raise exceptions unless you explicitly call <code class="docutils literal notranslate"><span class="pre">UseExceptions()</span></code><a class="headerlink" href="#python-bindings-do-not-raise-exceptions-unless-you-explicitly-call-useexceptions" title="Permalink to this headline">¶</a></h3>
+<p>By default, the GDAL and OGR Python bindings do not raise exceptions when errors occur.
+Instead they return an error value such as <code class="docutils literal notranslate"><span class="pre">None</span></code> and write an error message to <code class="docutils literal notranslate"><span class="pre">sys.stdout</span></code>. For example, when you try to open a non-existing dataset with GDAL:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">osgeo</span> <span class="kn">import</span> <span class="n">gdal</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gdal</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="s1">&#39;C:</span><span class="se">\\</span><span class="s1">foo.img&#39;</span><span class="p">)</span>
+<span class="go">ERROR 4: &#39;C:\foo.img does not exist in the file system,</span>
+<span class="go">and is not recognized as a supported dataset name.</span>
+
+<span class="go">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+<p>In Python, it is traditional to report errors by raising exceptions. You can enable this behavior in GDAL and OGR by calling the <code class="docutils literal notranslate"><span class="pre">UseExceptions()</span></code> function:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">osgeo</span> <span class="kn">import</span> <span class="n">gdal</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gdal</span><span class="o">.</span><span class="n">UseExceptions</span><span class="p">()</span>    <span class="c1"># Enable exceptions</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gdal</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;C:</span><span class="se">\\</span><span class="s1">foo.img&#39;</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+  File <span class="nb">&quot;&lt;stdin&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
+<span class="gr">RuntimeError</span>: <span class="n">&#39;C:\foo.img&#39; does not exist in the file system,</span>
+<span class="go">and is not recognized as a supported dataset name.</span>
+
+<span class="go">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+<p>The GDAL team acknowledges that Python programmers expect exceptions to be enabled by default, but says that exceptions are disabled by default to <a class="reference external" href="https://lists.osgeo.org/pipermail/gdal-dev/2010-September/026031.html">preserve backward compatibility</a>.</p>
+</div>
+<div class="section" id="python-crashes-if-you-use-an-object-after-deleting-an-object-it-has-a-relationship-with">
+<h3>Python crashes if you use an object after deleting an object it has a relationship with<a class="headerlink" href="#python-crashes-if-you-use-an-object-after-deleting-an-object-it-has-a-relationship-with" title="Permalink to this headline">¶</a></h3>
+<p>Consider this example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">osgeo</span> <span class="kn">import</span> <span class="n">gdal</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dataset</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="s1">&#39;C:</span><span class="se">\\</span><span class="s1">RandomData.img&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">band</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">band</span><span class="o">.</span><span class="n">Checksum</span><span class="p">())</span>
+<span class="go">31212</span>
+</pre></div>
+</div>
+<p>In this example, <code class="docutils literal notranslate"><span class="pre">band</span></code> has a relationship with <code class="docutils literal notranslate"><span class="pre">dataset</span></code> that requires <code class="docutils literal notranslate"><span class="pre">dataset</span></code> to remain allocated in order for <code class="docutils literal notranslate"><span class="pre">band</span></code> to work.
+If we delete <code class="docutils literal notranslate"><span class="pre">dataset</span></code> and then try to use <code class="docutils literal notranslate"><span class="pre">band</span></code>, Python will crash:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">osgeo</span> <span class="kn">import</span> <span class="n">gdal</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dataset</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="s1">&#39;C:</span><span class="se">\\</span><span class="s1">RandomData.img&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">band</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">del</span> <span class="n">dataset</span>           <span class="c1"># This will cause the Python garbage collector to deallocate dataset</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">band</span><span class="o">.</span><span class="n">GetChecksum</span><span class="p">()</span>    <span class="c1"># This will now crash Python because the band&#39;s dataset is gone</span>
+<span class="go">&lt; Python crashes &gt;</span>
+</pre></div>
+</div>
+<p>This problem can manifest itself in subtle ways. For example, it can occur if you try to instantiate a temporary dataset instance within a single line of code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">osgeo</span> <span class="kn">import</span> <span class="n">gdal</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">gdal</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="s1">&#39;C:</span><span class="se">\\</span><span class="s1">RandomData.img&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">Checksum</span><span class="p">())</span>
+<span class="go">&lt; Python crashes &gt;</span>
+</pre></div>
+</div>
+<p>In this example, the dataset instance was no longer needed after the call to <code class="docutils literal notranslate"><span class="pre">GetRasterBand()</span></code> so Python deallocated it <em>before</em> calling <code class="docutils literal notranslate"><span class="pre">Checksum()</span></code>.</p>
+<p>This problem occurs because the GDAL and OGR objects are implemented in C++ and the relationships between them are maintained in C++ using pointers.
+When you delete the dataset instance in Python it causes the C++ object behind it to be deallocated. But the C++ object behind the band instance does not know that this happened, so it contains a pointer to the C++ dataset object that no longer exists.
+When the band tries to access the non-existing object, the process crashes.</p>
+<p>The GDAL team knows that this design is not what Python programmers expect. Unfortunately the design is difficult to correct so it is likely to remain for some time.
+Please consult the GDAL team for more information.</p>
+<p>The problem is not restricted to GDAL band and dataset objects. It happens in other areas where objects have relationships with each other.
+Unfortunately there is no complete list, so you have to watch for it yourself.
+One other known place involves the OGR <code class="docutils literal notranslate"><span class="pre">GetGeometryRef()</span></code> function:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">feat</span> <span class="o">=</span> <span class="n">lyr</span><span class="o">.</span><span class="n">GetNextFeature</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">geom</span> <span class="o">=</span> <span class="n">feat</span><span class="o">.</span><span class="n">GetGeometryRef</span><span class="p">()</span>     <span class="c1"># geom contains a reference into the C++ geometry object maintained by the C++ feature object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">del</span> <span class="n">feat</span>                         <span class="c1"># This deallocates the C++ feature object, and its C++ geometry</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">geom</span><span class="o">.</span><span class="n">ExportToWkt</span><span class="p">())</span>        <span class="c1"># Crash here. The C++ geometry no longer exists</span>
+<span class="go">&lt; Python crashes &gt;</span>
+</pre></div>
+</div>
+<p>If you read the GDAL and OGR API documentation carefully, you will see that the functions that end in “Ref” obtain references to internal objects, rather than making new copies.
+This is a clue that the problem could occur. Be careful when using the “Ref” functions. Also watch out for functions that end in “Directly”, such as <code class="docutils literal notranslate"><span class="pre">SetGeometryDirectly()</span></code>, which transfer ownership of internal objects:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">point</span> <span class="o">=</span> <span class="n">ogr</span><span class="o">.</span><span class="n">Geometry</span><span class="p">(</span><span class="n">ogr</span><span class="o">.</span><span class="n">wkbPoint</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">feature</span> <span class="o">=</span> <span class="n">ogr</span><span class="o">.</span><span class="n">Feature</span><span class="p">(</span><span class="n">layer_defn</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">feature</span><span class="o">.</span><span class="n">SetGeometryDirectly</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>    <span class="c1"># Transfers ownership of the C++ geometry from point to feature</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">del</span> <span class="n">feature</span>                           <span class="c1"># point becomes implicitly invalid, because feature owns the C++ geometry</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">point</span><span class="o">.</span><span class="n">ExportToWkt</span><span class="p">())</span>            <span class="c1"># Crash here</span>
+<span class="go">&lt; Python crashes &gt;</span>
+</pre></div>
+</div>
+<p>The advantage of the “Ref” and “Directly” functions is they provide faster performance because a duplicate object does not need to be created. The disadvantage is that you have to watch out for this problem.</p>
+</div>
+<div class="section" id="python-crashes-if-you-add-a-new-field-to-an-ogr-layer-when-features-deriving-from-this-layer-definition-are-still-active">
+<h3>Python crashes if you add a new field to an OGR layer when features deriving from this layer definition are still active<a class="headerlink" href="#python-crashes-if-you-add-a-new-field-to-an-ogr-layer-when-features-deriving-from-this-layer-definition-are-still-active" title="Permalink to this headline">¶</a></h3>
+<p>For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">feature</span> <span class="o">=</span> <span class="n">lyr</span><span class="o">.</span><span class="n">GetNextFeature</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">field_defn</span> <span class="o">=</span> <span class="n">ogr</span><span class="o">.</span><span class="n">FieldDefn</span><span class="p">(</span><span class="s2">&quot;foo&quot;</span><span class="p">,</span> <span class="n">ogr</span><span class="o">.</span><span class="n">OFTString</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lyr</span><span class="o">.</span><span class="n">CreateField</span><span class="p">(</span><span class="n">field_defn</span><span class="p">)</span>                       <span class="c1"># now, existing features deriving from this layer are invalid</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">feature</span><span class="o">.</span><span class="n">DumpReadable</span><span class="p">()</span>                            <span class="c1"># segfault</span>
+<span class="go">&lt; Python crashes &gt;</span>
+</pre></div>
+</div>
+<p>For more information, please see <a class="reference external" href="https://trac.osgeo.org/gdal/ticket/3552">#3552</a>.</p>
+</div>
+<div class="section" id="layers-with-attribute-filters-setattributefilter-will-only-return-filtered-features-when-using-getnextfeature">
+<h3>Layers with attribute filters (<code class="docutils literal notranslate"><span class="pre">SetAttributeFilter()</span></code>) will only return filtered features when using <code class="docutils literal notranslate"><span class="pre">GetNextFeature()</span></code><a class="headerlink" href="#layers-with-attribute-filters-setattributefilter-will-only-return-filtered-features-when-using-getnextfeature" title="Permalink to this headline">¶</a></h3>
+<p>If you read the documentation for <code class="docutils literal notranslate"><span class="pre">SetAttributeFilter()</span></code> carefully you will see the caveat about <code class="docutils literal notranslate"><span class="pre">OGR_L_GetNextFeature()</span></code>.
+This means that if you use <code class="docutils literal notranslate"><span class="pre">GetFeature()</span></code>, instead of <code class="docutils literal notranslate"><span class="pre">GetNextFeature()</span></code>, then you can still access and work with features from the layer that are not covered by the filter.
+<code class="docutils literal notranslate"><span class="pre">GetFeatureCount()</span></code> will respect the filter and show the correct number of features filtered. However, working with <code class="docutils literal notranslate"><span class="pre">GetFeatureCount()</span></code> in a loop can lead to some subtle confusion.
+Iterating over the Layer object or using <code class="docutils literal notranslate"><span class="pre">GetNextFeature()</span></code> should be the default method for accessing features:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lyr</span> <span class="o">=</span> <span class="n">inDataSource</span><span class="o">.</span><span class="n">GetLayer</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lyr</span><span class="o">.</span><span class="n">SetAttributeFilter</span><span class="p">(</span><span class="s2">&quot;PIN = &#39;0000200001&#39;&quot;</span><span class="p">)</span>      <span class="c1"># this is a unique filter for only one record</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="n">lyr</span><span class="o">.</span><span class="n">GetFeatureCount</span><span class="p">()</span> <span class="p">):</span>
+<span class="gp">... </span>   <span class="n">feat</span> <span class="o">=</span> <span class="n">lyr</span><span class="o">.</span><span class="n">GetFeature</span><span class="p">(</span> <span class="n">i</span> <span class="p">)</span>
+<span class="gp">... </span>   <span class="nb">print</span><span class="p">(</span><span class="n">feat</span><span class="p">)</span>                                    <span class="c1"># this will print one feat, but it&#39;s the first feat in the Layer and not the filtered feat</span>
+<span class="gp">...</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="certain-objects-contain-a-destroy-method-but-you-should-never-use-it">
+<h3>Certain objects contain a <code class="docutils literal notranslate"><span class="pre">Destroy()</span></code> method, but you should never use it<a class="headerlink" href="#certain-objects-contain-a-destroy-method-but-you-should-never-use-it" title="Permalink to this headline">¶</a></h3>
+<p>You may come across examples that call the <code class="docutils literal notranslate"><span class="pre">Destroy()</span></code> method. <a class="reference external" href="https://www.gis.usu.edu/~chrisg/python/2009/lectures/ospy_slides2.pdf">This tutorial</a> even gives specific advice on page 12 about when to call <code class="docutils literal notranslate"><span class="pre">Destroy</span></code>.
+But according to <a class="reference external" href="https://lists.osgeo.org/pipermail/gdal-dev/2010-September/026027.html">email from Even Rouault</a>, <code class="docutils literal notranslate"><span class="pre">Destroy()</span></code> never need to be called:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span><span class="n">I</span> <span class="n">have</span> <span class="n">some</span> <span class="n">Python</span> <span class="n">code</span> <span class="n">that</span> <span class="n">uses</span> <span class="n">OGR</span> <span class="n">geometry</span> <span class="n">objects</span> <span class="n">internally</span><span class="p">,</span> <span class="n">creating</span>
+<span class="o">&gt;</span> <span class="n">them</span> <span class="n">like</span> <span class="n">this</span><span class="p">:</span>
+<span class="o">&gt;</span>
+<span class="o">&gt;</span> <span class="n">point</span> <span class="o">=</span> <span class="n">ogr</span><span class="o">.</span><span class="n">Geometry</span><span class="p">(</span><span class="n">ogr</span><span class="o">.</span><span class="n">wkbPoint</span><span class="p">)</span>
+<span class="o">&gt;</span>
+<span class="o">&gt;</span> <span class="n">Does</span> <span class="n">this</span> <span class="n">code</span> <span class="n">need</span> <span class="n">to</span> <span class="n">explicitly</span> <span class="n">destroy</span> <span class="n">these</span> <span class="n">geometries</span><span class="p">,</span> <span class="n">like</span> <span class="n">the</span>
+<span class="o">&gt;</span> <span class="n">following</span><span class="p">,</span> <span class="n">to</span> <span class="n">avoid</span> <span class="n">leaks</span><span class="p">,</span> <span class="ow">or</span> <span class="n">can</span> <span class="n">it</span> <span class="n">simply</span> <span class="n">allow</span> <span class="n">them</span> <span class="n">to</span> <span class="n">go</span> <span class="n">out</span> <span class="n">of</span> <span class="n">scope</span>
+<span class="o">&gt;</span> <span class="ow">and</span> <span class="n">have</span> <span class="n">Python</span><span class="s1">&#39;s reference counting and garbage collector clean them up?</span>
+<span class="o">&gt;</span>
+<span class="o">&gt;</span> <span class="n">point</span><span class="o">.</span><span class="n">Destroy</span><span class="p">()</span>
+
+<span class="n">There</span><span class="s1">&#39;s no reason to call Destroy(), at all. Native object gets destroyed when</span>
+<span class="n">Python</span> <span class="nb">object</span> <span class="n">goes</span> <span class="n">out</span> <span class="n">of</span> <span class="n">scope</span><span class="p">,</span> <span class="ow">or</span> <span class="n">when</span> <span class="n">they</span> <span class="n">are</span> <span class="n">assigned</span> <span class="n">to</span> <span class="kc">None</span><span class="o">.</span> <span class="n">So</span> <span class="n">replace</span>
+<span class="n">foo</span><span class="o">.</span><span class="n">Destroy</span><span class="p">()</span> <span class="n">by</span> <span class="n">foo</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">you</span> <span class="n">really</span> <span class="n">want</span> <span class="n">to</span> <span class="n">control</span> <span class="n">when</span> <span class="n">the</span> <span class="n">underlying</span>
+<span class="n">C</span><span class="o">++</span> <span class="nb">object</span> <span class="ow">is</span> <span class="n">destroyed</span><span class="o">.</span>
+
+<span class="o">&gt;</span> <span class="n">I</span><span class="s1">&#39;m sorry for my ignorance here. I found a nice GDAL tutorial that seems to</span>
+<span class="o">&gt;</span> <span class="n">say</span> <span class="n">they</span> <span class="o">*</span><span class="n">should</span><span class="o">*</span> <span class="n">be</span> <span class="n">explicitly</span> <span class="n">destroyed</span> <span class="ow">in</span> <span class="n">certain</span> <span class="n">circumstances</span> <span class="p">(</span><span class="n">see</span>
+<span class="o">&gt;</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">gis</span><span class="o">.</span><span class="n">usu</span><span class="o">.</span><span class="n">edu</span><span class="o">/~</span><span class="n">chrisg</span><span class="o">/</span><span class="n">python</span><span class="o">/</span><span class="mi">2009</span><span class="o">/</span><span class="n">lectures</span><span class="o">/</span><span class="n">ospy_slides2</span><span class="o">.</span><span class="n">pdf</span><span class="p">,</span> <span class="n">page</span>
+<span class="o">&gt;</span> <span class="mi">12</span><span class="p">)</span><span class="o">.</span> <span class="n">But</span> <span class="n">I</span> <span class="n">have</span> <span class="ow">not</span> <span class="n">really</span> <span class="n">seen</span> <span class="nb">any</span> <span class="n">other</span> <span class="n">examples</span> <span class="n">of</span> <span class="n">this</span><span class="o">.</span>
+<span class="o">&gt;</span>
+
+<span class="n">Destroy</span><span class="p">()</span> <span class="n">was</span> <span class="n">perhaps</span> <span class="n">necessary</span> <span class="k">with</span> <span class="n">old</span><span class="o">-</span><span class="n">gen</span> <span class="n">bindings</span><span class="p">,</span> <span class="n">but</span> <span class="n">I</span><span class="s1">&#39;m not even sure</span>
+<span class="n">of</span> <span class="n">that</span><span class="o">...</span> <span class="n">Perhaps</span> <span class="n">this</span> <span class="n">shouldn</span><span class="s1">&#39;t have been exposed at all... But, as</span>
+<span class="n">mentioned</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">slides</span><span class="p">,</span> <span class="n">it</span> <span class="ow">is</span> <span class="n">true</span> <span class="n">that</span> <span class="n">there</span> <span class="n">are</span> <span class="n">situations</span> <span class="n">where</span> <span class="n">you</span>
+<span class="n">shouldn</span><span class="s1">&#39;t call Destroy() at all.</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="saving-and-closing-datasets-datasources">
+<h3>Saving and closing datasets/datasources<a class="headerlink" href="#saving-and-closing-datasets-datasources" title="Permalink to this headline">¶</a></h3>
+<p>To save and close GDAL raster datasets or OGR vector datasources, the object needs to be dereferenced, such as setting it to <code class="docutils literal notranslate"><span class="pre">None</span></code>, a different value, or deleting the object.
+If there are more than one copies of the dataset or datasource object, then each copy needs to be dereferenced.</p>
+<p>For example, creating and saving a raster dataset:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">osgeo</span> <span class="kn">import</span> <span class="n">gdal</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">driver</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GetDriverByName</span><span class="p">(</span><span class="s1">&#39;GTiff&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dst_ds</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="s1">&#39;new.tif&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">band</span> <span class="o">=</span> <span class="n">dst_ds</span><span class="o">.</span><span class="n">GetRasterBand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">arr</span> <span class="o">=</span> <span class="n">band</span><span class="o">.</span><span class="n">ReadAsArray</span><span class="p">()</span>  <span class="c1"># raster values are all zero</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">arr</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">:]</span> <span class="o">=</span> <span class="mi">50</span>  <span class="c1"># modify some data</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">band</span><span class="o">.</span><span class="n">WriteArray</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>  <span class="c1"># raster file still unmodified</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">band</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># dereference band to avoid gotcha described previously</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dst_ds</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># save, close</span>
+</pre></div>
+</div>
+<p>The last dereference to the raster dataset writes the data modifications and closes the raster file. <code class="docutils literal notranslate"><span class="pre">WriteArray(arr)</span></code> does not write the array to disk, unless the GDAL block cache is full (typically 40 MB).</p>
+<p>With some drivers, raster datasets can be intermittently saved without closing using <code class="docutils literal notranslate"><span class="pre">FlushCache()</span></code>. Similarly, vector datasets can be saved using <code class="docutils literal notranslate"><span class="pre">SyncToDisk()</span></code>.
+However, neither of these methods guarantee that the data are written to disk, so the preferred method is to deallocate as shown above.</p>
+</div>
+<div class="section" id="exceptions-raised-in-custom-error-handlers-do-not-get-caught">
+<h3>Exceptions raised in custom error handlers do not get caught<a class="headerlink" href="#exceptions-raised-in-custom-error-handlers-do-not-get-caught" title="Permalink to this headline">¶</a></h3>
+<p>The python bindings allow you to specify a python callable as an error handler (<a class="reference external" href="https://trac.osgeo.org/gdal/ticket/4993">#4993</a>).
+However, these error handlers appear to be called in a separate thread and any exceptions raised do not propagate back to the main thread (<a class="reference external" href="https://trac.osgeo.org/gdal/ticket/5186">#5186</a>).</p>
+<p>So if you want to  <a class="reference external" href="https://gis.stackexchange.com/questions/43404/how-to-detect-a-gdal-ogr-warning/68042">catch warnings as well as errors</a>, something like this won’t work:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">error_handler</span><span class="p">(</span><span class="n">err_level</span><span class="p">,</span> <span class="n">err_no</span><span class="p">,</span> <span class="n">err_msg</span><span class="p">):</span>
+
+   <span class="k">if</span> <span class="n">err_level</span> <span class="o">&gt;=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">CE_Warning</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">err_level</span><span class="p">,</span> <span class="n">err_no</span><span class="p">,</span> <span class="n">err_msg</span><span class="p">)</span> <span class="c1">#this exception does not propagate back to main thread!</span>
+
+<span class="k">if</span> <span class="vm">__name__</span><span class="o">==</span><span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+
+   <span class="c1">#Test custom error handler</span>
+   <span class="n">gdal</span><span class="o">.</span><span class="n">PushErrorHandler</span><span class="p">(</span><span class="n">error_handler</span><span class="p">)</span>
+   <span class="n">gdal</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="n">gdal</span><span class="o">.</span><span class="n">CE_Warning</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="s1">&#39;test warning message&#39;</span><span class="p">)</span>
+   <span class="n">gdal</span><span class="o">.</span><span class="n">PopErrorHandler</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>But you can do something like this instead:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>class GdalErrorHandler(object):
+   def __init__(self):
+      self.err_level=gdal.CE_None
+      self.err_no=0
+      self.err_msg=``
+
+   def handler(self, err_level, err_no, err_msg):
+      self.err_level=err_level
+      self.err_no=err_no
+      self.err_msg=err_msg
+
+if __name__==&#39;__main__&#39;:
+
+   err=GdalErrorHandler()
+   handler=err.handler # Note don&#39;t pass class method directly or python segfaults
+                       # due to a reference counting bug
+                       # http://trac.osgeo.org/gdal/ticket/5186#comment:4
+
+   gdal.PushErrorHandler(handler)
+   gdal.UseExceptions() #Exceptions will get raised on anything &gt;= gdal.CE_Failure
+
+   try:
+      gdal.Error(gdal.CE_Warning,1,&#39;Test warning message&#39;)
+   except Exception as e:
+      print(&#39;Operation raised an exception&#39;)
+      raise e
+else:
+   if err.err_level &gt;= gdal.CE_Warning:
+      print(&#39;Operation raised an warning&#39;)
+         raise RuntimeError(err.err_level, err.err_no, err.err_msg)
+finally:
+   gdal.PopErrorHandler()
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="gotchas-that-result-from-bugs-or-behaviors-of-other-software">
+<h2>Gotchas that result from bugs or behaviors of other software<a class="headerlink" href="#gotchas-that-result-from-bugs-or-behaviors-of-other-software" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="python-crashes-in-gdal-functions-when-you-upgrade-or-downgrade-numpy">
+<h3>Python crashes in GDAL functions when you upgrade or downgrade numpy<a class="headerlink" href="#python-crashes-in-gdal-functions-when-you-upgrade-or-downgrade-numpy" title="Permalink to this headline">¶</a></h3>
+<p>Much of GDAL’s Python bindings are implemented in C++. Much of the core of numpy is implemented in C. The C++ part of GDAL’s Python bindings interacts with the C part of numpy through numpy’s ABI (application binary interface).
+This requires GDAL’s Python bindings to be compiled using numpy header files that define numpy C data structures. Those data structures sometimes change between numpy versions. When this happens, the new version of numpy is not be compatible at the binary level with the old version, and the GDAL Python bindings must be recompiled before they will work with the new version of numpy.
+And when they are recompiled, they probably won’t work with the old version.</p>
+<p>If you obtained a precompiled version of GDAL’s Python bindings, such as the Windows packages from <a class="reference external" href="http://gisinternals.com/sdk.php">http://gisinternals.com/sdk.php</a> be sure you look up what version of numpy was used to compile them, and install that version of numpy on your machine.</p>
+</div>
+<div class="section" id="python-bindings-cannot-be-used-successfully-from-arcgis-in-process-geoprocessing-tools-arcgis-9-3-and-later">
+<h3>Python bindings cannot be used successfully from ArcGIS in-process geoprocessing tools (ArcGIS 9.3 and later)<a class="headerlink" href="#python-bindings-cannot-be-used-successfully-from-arcgis-in-process-geoprocessing-tools-arcgis-9-3-and-later" title="Permalink to this headline">¶</a></h3>
+<p>ArcGIS allows the creation of custom, Python-based geoprocessing tools. Until ArcGIS 10, there was no easy way to read raster data into memory. GDAL provides such a mechanism.</p>
+<p>Starting with ArcGIS 9.3, geoprocessing tools can either run in the ArcGIS process itself (ArcCatalog.exe or ArcMap.exe) or run in a separate python.exe worker process. Unfortunately ArcGIS contains a bug in how it runs in-process tools. Thus, if you use GDAL from an in-process tool, it will run fine the first time but after that it may fail with <code class="docutils literal notranslate"><span class="pre">TypeError</span></code> exceptions until you restart the ArcGIS process. For example, band.ReadAsArray() fails with:</p>
+<p><code class="docutils literal notranslate"><span class="pre">TypeError:</span> <span class="pre">in</span> <span class="pre">method</span> <span class="pre">'BandRasterIONumpy',</span> <span class="pre">argument</span> <span class="pre">1</span> <span class="pre">of</span> <span class="pre">type</span> <span class="pre">'GDALRasterBandShadow</span> <span class="pre">*</span></code>’</p>
+<p>This is a bug in ArcGIS. Please see <a class="reference external" href="https://trac.osgeo.org/gdal/ticket/3672">#3672</a> for complete details and advice on workarounds.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../tutorials/index.html" class="btn btn-neutral float-right" title="Tutorials" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="python_api_ref.html" class="btn btn-neutral float-left" title="Python API reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2021 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

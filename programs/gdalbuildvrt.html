@@ -1,0 +1,547 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gdalbuildvrt &mdash; GDAL  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgprograms/gdalbuildvrt.html"/>
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="gdal_contour" href="gdal_contour.html" />
+    <link rel="prev" title="gdaltindex" href="gdaltindex.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Programs</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#raster-programs">Raster programs</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="raster_common_options.html">Common options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalinfo.html">gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_translate.html">gdal_translate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaladdo.html">gdaladdo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalwarp.html">gdalwarp</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaltindex.html">gdaltindex</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">gdalbuildvrt</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#synopsis">Synopsis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#description">Description</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_contour.html">gdal_contour</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaldem.html">gdaldem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rgb2pct.html">rgb2pct</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pct2rgb.html">pct2rgb</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalattachpct.html">gdalattachpct</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_merge.html">gdal_merge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal2tiles.html">gdal2tiles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_rasterize.html">gdal_rasterize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaltransform.html">gdaltransform</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nearblack.html">nearblack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_retile.html">gdal_retile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_grid.html">gdal_grid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_proximity.html">gdal_proximity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_polygonize.html">gdal_polygonize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_sieve.html">gdal_sieve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_fillnodata.html">gdal_fillnodata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdallocationinfo.html">gdallocationinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalsrsinfo.html">gdalsrsinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalmove.html">gdalmove</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_edit.html">gdal_edit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_calc.html">gdal_calc.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_pansharpen.html">gdal_pansharpen.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal-config.html">gdal-config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalmanage.html">gdalmanage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalcompare.html">gdalcompare</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_viewshed.html">gdal_viewshed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_create.html">gdal_create</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#multidimensional-raster-programs">Multidimensional Raster programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#vector-programs">Vector programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#geographic-network-programs">Geographic network programs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Programs</a> &raquo;</li>
+      
+      <li>gdalbuildvrt</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/programs/gdalbuildvrt.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="gdal_contour.html" class="btn btn-neutral float-right" title="gdal_contour" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gdaltindex.html" class="btn btn-neutral float-left" title="gdaltindex" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="gdalbuildvrt">
+<span id="id1"></span><h1>gdalbuildvrt<a class="headerlink" href="#gdalbuildvrt" title="Permalink to this headline">¶</a></h1>
+<p>Builds a VRT from a list of datasets.</p>
+<div class="section" id="synopsis">
+<span id="index-0"></span><h2>Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdalbuildvrt</span> <span class="p">[</span><span class="o">-</span><span class="n">tileindex</span> <span class="n">field_name</span><span class="p">]</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">resolution</span> <span class="p">{</span><span class="n">highest</span><span class="o">|</span><span class="n">lowest</span><span class="o">|</span><span class="n">average</span><span class="o">|</span><span class="n">user</span><span class="p">}]</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">te</span> <span class="n">xmin</span> <span class="n">ymin</span> <span class="n">xmax</span> <span class="n">ymax</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">tr</span> <span class="n">xres</span> <span class="n">yres</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">tap</span><span class="p">]</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">separate</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">b</span> <span class="n">band</span><span class="p">]</span><span class="o">*</span> <span class="p">[</span><span class="o">-</span><span class="n">sd</span> <span class="n">subdataset</span><span class="p">]</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">allow_projection_difference</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">q</span><span class="p">]</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">optim</span> <span class="p">{[</span><span class="n">AUTO</span><span class="p">]</span><span class="o">/</span><span class="n">VECTOR</span><span class="o">/</span><span class="n">RASTER</span><span class="p">}]</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">addalpha</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">hidenodata</span><span class="p">]</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">srcnodata</span> <span class="s2">&quot;value [value...]&quot;</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">vrtnodata</span> <span class="s2">&quot;value [value...]&quot;</span><span class="p">]</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">ignore_srcmaskband</span><span class="p">]</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">a_srs</span> <span class="n">srs_def</span><span class="p">]</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">r</span> <span class="p">{</span><span class="n">nearest</span><span class="p">,</span><span class="n">bilinear</span><span class="p">,</span><span class="n">cubic</span><span class="p">,</span><span class="n">cubicspline</span><span class="p">,</span><span class="n">lanczos</span><span class="p">,</span><span class="n">average</span><span class="p">,</span><span class="n">mode</span><span class="p">}]</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">oo</span> <span class="n">NAME</span><span class="o">=</span><span class="n">VALUE</span><span class="p">]</span><span class="o">*</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">input_file_list</span> <span class="n">my_list</span><span class="o">.</span><span class="n">txt</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">overwrite</span><span class="p">]</span> <span class="n">output</span><span class="o">.</span><span class="n">vrt</span> <span class="p">[</span><span class="n">gdalfile</span><span class="p">]</span><span class="o">*</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>This program builds a VRT (Virtual Dataset) that is a mosaic of the list of
+input GDAL datasets. The list of input GDAL datasets can be specified at the end
+of the command line, or put in a text file (one filename per line) for very long lists,
+or it can be a MapServer tileindex (see ref gdaltindex utility). In the later case, all
+entries in the tile index will be added to the VRT.</p>
+<p>With -separate, each files goes into a separate band in the VRT dataset. Otherwise,
+the files are considered as tiles of a larger mosaic and the VRT file has as many bands as one
+of the input files.</p>
+<p>If one GDAL dataset is made of several subdatasets and has 0 raster bands,
+all the subdatasets will be added to the VRT rather than the dataset itself.</p>
+<p>gdalbuildvrt does some amount of checks to assure that all files that will be put
+in the resulting VRT have similar characteristics : number of bands, projection, color
+interpretation… If not, files that do not match the common characteristics will be skipped.
+(This is only true in the default mode, and not when using the -separate option)</p>
+<p>If there is some amount of spatial overlapping between files, the order of files
+appearing in the list of source matter: files that are listed at the end are the ones
+from which the content will be fetched. Note that nodata will be taken into account
+to potentially fetch data from less priority datasets, but currently, alpha channel
+is not taken into account to do alpha compositing (so a source with alpha=0
+appearing on top of another source will override is content). This might be
+changed in later versions.</p>
+<dl class="std option">
+<dt id="cmdoption-gdalbuildvrt-tileindex">
+<code class="sig-name descname">-tileindex</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-gdalbuildvrt-tileindex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use the specified value as the tile index field, instead of the default
+value which is ‘location’.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt id="cmdoption-gdalbuildvrt-resolution">
+<code class="sig-name descname">-resolution</code><code class="sig-prename descclassname"> {highest|lowest|average|user}</code><a class="headerlink" href="#cmdoption-gdalbuildvrt-resolution" title="Permalink to this definition">¶</a></dt>
+<dd><p>In case the resolution of all input files is not the same, the -resolution flag
+enables the user to control the way the output resolution is computed.</p>
+<p><cite>highest</cite> will pick the smallest values of pixel dimensions within the set of source rasters.</p>
+<p><cite>lowest</cite> will pick the largest values of pixel dimensions within the set of source rasters.</p>
+<p><cite>average</cite> is the default and will compute an average of pixel dimensions within the set of source rasters.</p>
+<p><cite>user</cite> must be used in combination with the <a class="reference internal" href="#cmdoption-gdalbuildvrt-tr"><code class="xref std std-option docutils literal notranslate"><span class="pre">-tr</span></code></a> option to specify the target resolution.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt id="cmdoption-gdalbuildvrt-tr">
+<code class="sig-name descname">-tr</code><code class="sig-prename descclassname"> &lt;res&gt; &lt;yres&gt;</code><a class="headerlink" href="#cmdoption-gdalbuildvrt-tr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set target resolution. The values must be expressed in georeferenced units.
+Both must be positive values. Specifying those values is of course incompatible with
+highest|lowest|average values for <a class="reference internal" href="#cmdoption-gdalbuildvrt-resolution"><code class="xref std std-option docutils literal notranslate"><span class="pre">-resolution</span></code></a> option.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt id="cmdoption-gdalbuildvrt-tap">
+<code class="sig-name descname">-tap</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-gdalbuildvrt-tap" title="Permalink to this definition">¶</a></dt>
+<dd><p>(target aligned pixels) align
+the coordinates of the extent of the output file to the values of the <a class="reference internal" href="#cmdoption-gdalbuildvrt-tr"><code class="xref std std-option docutils literal notranslate"><span class="pre">-tr</span></code></a>,
+such that the aligned extent includes the minimum extent.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt id="cmdoption-gdalbuildvrt-te">
+<code class="sig-name descname">-te</code><code class="sig-prename descclassname"> xmin ymin xmax ymax</code><a class="headerlink" href="#cmdoption-gdalbuildvrt-te" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set georeferenced extents of VRT file. The values must be expressed in georeferenced units.
+If not specified, the extent of the VRT is the minimum bounding box of the set of source rasters.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt id="cmdoption-gdalbuildvrt-addalpha">
+<code class="sig-name descname">-addalpha</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-gdalbuildvrt-addalpha" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds an alpha mask band to the VRT when the source raster have none. Mainly useful for RGB sources (or grey-level sources).
+The alpha band is filled on-the-fly with the value 0 in areas without any source raster, and with value
+255 in areas with source raster. The effect is that a RGBA viewer will render
+the areas without source rasters as transparent and areas with source rasters as opaque.
+This option is not compatible with <a class="reference internal" href="#cmdoption-gdalbuildvrt-separate"><code class="xref std std-option docutils literal notranslate"><span class="pre">-separate</span></code></a>.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt id="cmdoption-gdalbuildvrt-hidenodata">
+<code class="sig-name descname">-hidenodata</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-gdalbuildvrt-hidenodata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Even if any band contains nodata value, giving this option makes the VRT band
+not report the NoData. Useful when you want to control the background color of
+the dataset. By using along with the -addalpha option, you can prepare a
+dataset which doesn’t report nodata value but is transparent in areas with no
+data.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt id="cmdoption-gdalbuildvrt-srcnodata">
+<code class="sig-name descname">-srcnodata</code><code class="sig-prename descclassname"> &lt;value&gt; [&lt;value&gt;...]</code><a class="headerlink" href="#cmdoption-gdalbuildvrt-srcnodata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set nodata values for input bands (different values can be supplied for each band). If
+more than one value is supplied all values should be quoted to keep them
+together as a single operating system argument. If the option is not specified, the
+intrinsic nodata settings on the source datasets will be used (if they exist). The value set by this option
+is written in the NODATA element of each ComplexSource element. Use a value of
+<cite>None</cite> to ignore intrinsic nodata settings on the source datasets.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt id="cmdoption-gdalbuildvrt-ignore_srcmaskband">
+<code class="sig-name descname">-ignore_srcmaskband</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-gdalbuildvrt-ignore_srcmaskband" title="Permalink to this definition">¶</a></dt>
+<dd><div class="versionadded">
+<p><span class="versionmodified added">New in version 3.3.</span></p>
+</div>
+<p>Starting with GDAL 3.3, if a source has a mask band (internal/external mask
+band, or alpha band), a &lt;ComplexSource&gt; element is created by default with
+a &lt;UseMaskBand&gt;true&lt;/UseMaskBand&gt; child element, to instruct the VRT driver
+to use the mask band of the source to mask pixels being composited. This is
+a generalization of the NODATA element.
+When specifying the -ignore_srcmaskband option, the mask band of sources will
+not be taken into account, and in case of overlapping between sources, the
+last one will override previous ones in areas of overlap.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt id="cmdoption-gdalbuildvrt-b">
+<code class="sig-name descname">-b</code><code class="sig-prename descclassname"> &lt;band&gt;</code><a class="headerlink" href="#cmdoption-gdalbuildvrt-b" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select an input &lt;band&gt; to be processed. Bands are numbered from 1.
+If input bands not set all bands will be added to vrt.
+Multiple <a class="reference internal" href="#cmdoption-gdalbuildvrt-b"><code class="xref std std-option docutils literal notranslate"><span class="pre">-b</span></code></a> switches may be used to select a set of input bands.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt id="cmdoption-gdalbuildvrt-sd">
+<code class="sig-name descname">-sd&lt;</code><code class="sig-prename descclassname"> &lt;subdataset&gt;</code><a class="headerlink" href="#cmdoption-gdalbuildvrt-sd" title="Permalink to this definition">¶</a></dt>
+<dd><p>If the input
+dataset contains several subdatasets use a subdataset with the specified
+number (starting from 1). This is an alternative of giving the full subdataset
+name as an input.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt id="cmdoption-gdalbuildvrt-vrtnodata">
+<code class="sig-name descname">-vrtnodata</code><code class="sig-prename descclassname"> &lt;value&gt; [&lt;value&gt;...]</code><a class="headerlink" href="#cmdoption-gdalbuildvrt-vrtnodata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set nodata values at the VRT band level (different values can be supplied for each band).  If more
+than one value is supplied all values should be quoted to keep them together
+as a single operating system argument.  If the option is not specified,
+intrinsic nodata settings on the first dataset will be used (if they exist). The value set by this option
+is written in the NoDataValue element of each VRTRasterBand element. Use a value of
+<cite>None</cite> to ignore intrinsic nodata settings on the source datasets.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt id="cmdoption-gdalbuildvrt-separate">
+<code class="sig-name descname">-separate</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-gdalbuildvrt-separate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Place each input file into a separate band. In that case, only the first
+band of each dataset will be placed into a new band. Contrary to the default mode, it is not
+required that all bands have the same datatype.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt id="cmdoption-gdalbuildvrt-allow_projection_difference">
+<code class="sig-name descname">-allow_projection_difference</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-gdalbuildvrt-allow_projection_difference" title="Permalink to this definition">¶</a></dt>
+<dd><p>When this option is specified, the utility will accept to make a VRT even if the input datasets have
+not the same projection. Note: this does not mean that they will be reprojected. Their projection will
+just be ignored.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt id="cmdoption-gdalbuildvrt-optim">
+<code class="sig-name descname">-optim</code><code class="sig-prename descclassname"> {[AUTO]/VECTOR/RASTER}}</code><a class="headerlink" href="#cmdoption-gdalbuildvrt-optim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Force the algorithm used (results are identical). The raster mode is used in most cases and optimise
+read/write operations. The vector mode is useful with a decent amount of input features and optimise
+the CPU use. That mode have to be used with tiled images to be efficient. The auto mode (the default)
+will chose the algorithm based on input and output properties.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.3.</span></p>
+</div>
+</dd></dl>
+
+<dl class="std option">
+<dt id="cmdoption-gdalbuildvrt-a_srs">
+<code class="sig-name descname">-a_srs</code><code class="sig-prename descclassname"> &lt;srs_def&gt;</code><a class="headerlink" href="#cmdoption-gdalbuildvrt-a_srs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override the projection for the output file.  The &lt;srs_def&gt; may be any of the usual GDAL/OGR forms,
+complete WKT, PROJ.4, EPSG:n or a file containing the WKT. No reprojection is done.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt id="cmdoption-gdalbuildvrt-r">
+<code class="sig-name descname">-r</code><code class="sig-prename descclassname"> {nearest (default),bilinear,cubic,cubicspline,lanczos,average,mode}</code><a class="headerlink" href="#cmdoption-gdalbuildvrt-r" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select a resampling algorithm.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt id="cmdoption-gdalbuildvrt-oo">
+<code class="sig-name descname">-oo</code><code class="sig-prename descclassname"> NAME=VALUE</code><a class="headerlink" href="#cmdoption-gdalbuildvrt-oo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dataset open option (format specific)</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.2.</span></p>
+</div>
+</dd></dl>
+
+<dl class="std option">
+<dt id="cmdoption-gdalbuildvrt-input_file_list">
+<code class="sig-name descname">-input_file_list</code><code class="sig-prename descclassname"> &lt;mylist.txt&gt;</code><a class="headerlink" href="#cmdoption-gdalbuildvrt-input_file_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>To specify a text file with an input filename on each line</p>
+</dd></dl>
+
+<dl class="std option">
+<dt id="cmdoption-gdalbuildvrt-q">
+<code class="sig-name descname">-q</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-gdalbuildvrt-q" title="Permalink to this definition">¶</a></dt>
+<dd><p>To disable the progress bar on the console</p>
+</dd></dl>
+
+<dl class="std option">
+<dt id="cmdoption-gdalbuildvrt-overwrite">
+<code class="sig-name descname">-overwrite</code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-gdalbuildvrt-overwrite" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overwrite the VRT if it already exists.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Make a virtual mosaic from all TIFF files contained in a directory :</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdalbuildvrt</span> <span class="n">doq_index</span><span class="o">.</span><span class="n">vrt</span> <span class="n">doq</span><span class="o">/*.</span><span class="n">tif</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Make a virtual mosaic from files whose name is specified in a text file :</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdalbuildvrt</span> <span class="o">-</span><span class="n">input_file_list</span> <span class="n">my_list</span><span class="o">.</span><span class="n">txt</span> <span class="n">doq_index</span><span class="o">.</span><span class="n">vrt</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Make a RGB virtual mosaic from 3 single-band input files :</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdalbuildvrt</span> <span class="o">-</span><span class="n">separate</span> <span class="n">rgb</span><span class="o">.</span><span class="n">vrt</span> <span class="n">red</span><span class="o">.</span><span class="n">tif</span> <span class="n">green</span><span class="o">.</span><span class="n">tif</span> <span class="n">blue</span><span class="o">.</span><span class="n">tif</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Make a virtual mosaic with blue background colour (RGB: 0 0 255) :</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdalbuildvrt</span> <span class="o">-</span><span class="n">hidenodata</span> <span class="o">-</span><span class="n">vrtnodata</span> <span class="s2">&quot;0 0 255&quot;</span> <span class="n">doq_index</span><span class="o">.</span><span class="n">vrt</span> <span class="n">doq</span><span class="o">/*.</span><span class="n">tif</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="gdal_contour.html" class="btn btn-neutral float-right" title="gdal_contour" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gdaltindex.html" class="btn btn-neutral float-left" title="gdaltindex" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2021 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

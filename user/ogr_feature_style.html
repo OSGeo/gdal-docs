@@ -1,0 +1,1086 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Feature Style Specification &mdash; GDAL  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orguser/ogr_feature_style.html"/>
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Configuration options" href="configoptions.html" />
+    <link rel="prev" title="GDAL Virtual File Systems (compressed, network hosted, etc…): /vsimem, /vsizip, /vsitar, /vsicurl, …" href="virtual_file_systems.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">User</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="raster_data_model.html">Raster Data Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multidim_raster_data_model.html">Multidimensional Raster Data Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vector_data_model.html">Vector Data Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gnm_data_model.html">Geographic Networks Data Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ogr_sql_sqlite_dialect.html">OGR SQL dialect and SQLITE SQL dialect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="virtual_file_systems.html">GDAL Virtual File Systems</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Feature Style Specification</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">1. Overview</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#style-is-a-property-of-feature-object">1.1 Style is a property of Feature object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#feature-styles-can-be-stored-at-2-levels">1.2 Feature Styles can be stored at 2 levels</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#drawing-tools">1.3 Drawing Tools</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#feature-attributes-can-be-used-by-style-definitions">1.4 Feature attributes can be used by style definitions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tool-parameter-units">1.5 Tool parameter units</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#feature-style-string">2. Feature Style String</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#examples">2.1 Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#style-string-syntax">2.2 Style String Syntax</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pen-tool-parameters">2.3 Pen Tool Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#brush-tool-parameters">2.4 Brush Tool Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#symbol-tool-parameters">2.5 Symbol Tool Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#label-tool-parameters">2.6 Label Tool Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#styles-table-format">2.7 Styles Table Format</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#using-ogr-sql-to-transfer-the-style-between-the-data-sources">2.8 Using OGR SQL to transfer the style between the data sources</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#ogr-support-classes">3. OGR Support Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#revision-history">Revision history</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="configoptions.html">Configuration options</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">User oriented documentation</a> &raquo;</li>
+      
+      <li>Feature Style Specification</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/user/ogr_feature_style.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="configoptions.html" class="btn btn-neutral float-right" title="Configuration options" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="virtual_file_systems.html" class="btn btn-neutral float-left" title="GDAL Virtual File Systems (compressed, network hosted, etc…): /vsimem, /vsizip, /vsitar, /vsicurl, …" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="feature-style-specification">
+<span id="ogr-feature-style"></span><h1>Feature Style Specification<a class="headerlink" href="#feature-style-specification" title="Permalink to this headline">¶</a></h1>
+<p>Version 0.016 - 2018-12-03</p>
+<div class="section" id="overview">
+<h2>1. Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>This document defines the way feature style information (i.e. colors,
+line width, symbols, etc.) should be handled at the various levels in
+GDAL’s vector drivers (OGR).</p>
+<p>The following GDAL vector drivers have varying levels of support for
+feature styles: <a class="reference internal" href="../drivers/vector/cad.html#vector-cad"><span class="std std-ref">DWG (libopencad)</span></a>, <a class="reference internal" href="../drivers/vector/dwg.html#vector-dwg"><span class="std std-ref">DWG
+(Teigha)</span></a>, <a class="reference internal" href="../drivers/vector/dxf.html#vector-dxf"><span class="std std-ref">DXF</span></a>, <a class="reference internal" href="../drivers/vector/libkml.html#vector-libkml"><span class="std std-ref">KML
+(libkml)</span></a>, <a class="reference internal" href="../drivers/vector/mitab.html#vector-mitab"><span class="std std-ref">MapInfo</span></a>,
+<a class="reference internal" href="../drivers/vector/dgn.html#vector-dgn"><span class="std std-ref">MicroStation DGN v7</span></a> and <a class="reference internal" href="../drivers/vector/dgnv8.html#vector-dgnv8"><span class="std std-ref">DGN v8</span></a>,
+<a class="reference internal" href="../drivers/vector/jml.html#vector-jml"><span class="std std-ref">OpenJUMP JML</span></a> and <a class="reference internal" href="../drivers/raster/pdf.html#raster-pdf"><span class="std std-ref">PDF</span></a>.</p>
+<div class="section" id="style-is-a-property-of-feature-object">
+<h3>1.1 Style is a property of Feature object<a class="headerlink" href="#style-is-a-property-of-feature-object" title="Permalink to this headline">¶</a></h3>
+<p>Conceptually, the feature style should be seen as a property of a
+feature. Even though some systems store style information in a special
+attribute, in GDAL it is more consistent to see the style as a property,
+just the same way the geometry of a feature is also a property.</p>
+<p>This does not prevent us from storing the style information in an
+attribute when writing to some formats that have no provision for styles
+(e.g. E00). But then at the time such a dataset is opened through GDAL,
+the name of the attribute that contains style information should either
+be specified in some metadata, or be specified by the user.</p>
+<p>Also, in the SFCOM interface, the style information will be stored in an
+attribute just like the geometry is.</p>
+</div>
+<div class="section" id="feature-styles-can-be-stored-at-2-levels">
+<h3>1.2 Feature Styles can be stored at 2 levels<a class="headerlink" href="#feature-styles-can-be-stored-at-2-levels" title="Permalink to this headline">¶</a></h3>
+<p>The style defines the way a feature should be drawn, but it is very
+common to have several features that share the same style. In those
+cases, instead of duplicating the style information on each feature, we
+will provide a more efficient way to share style information.</p>
+<p>There are two levels at which style information can be found:</p>
+<ul class="simple">
+<li><p>A <strong>dataset</strong> can have a table of pre-defined styles that can then be
+referred to by the layers or by the individual features. The
+mechanism for that is defined further down in this document.</p></li>
+<li><p>A <strong>feature (OGRFeature object)</strong> can have its own complete style
+definition. Alternatively, a feature can be linked to a style in the
+dataset’s table of styles. This can save storage space when the same
+styles are reused often.</p></li>
+</ul>
+<p>It should be possible to have style information stored at one or more of
+the various levels while working on a given dataset. The level(s) where
+the style is actually stored will depend on the most efficient approach
+for the format we are dealing with.</p>
+</div>
+<div class="section" id="drawing-tools">
+<h3>1.3 Drawing Tools<a class="headerlink" href="#drawing-tools" title="Permalink to this headline">¶</a></h3>
+<p>We define a small set of drawing tools that are used to build style
+definitions:</p>
+<ul class="simple">
+<li><p><strong>PEN</strong>: For linear styles</p></li>
+<li><p><strong>BRUSH</strong>: For filling areas</p></li>
+<li><p><strong>SYMBOL</strong>: Point symbols</p></li>
+<li><p><strong>LABEL</strong>: For annotations</p></li>
+</ul>
+<p>Each drawing tool can take a number of parameters, all optional. The
+style syntax is built in a way that a system that cannot support all
+possible parameters can safely skip and ignore the parameters it does
+not support. This will also make it easy to extend the specification in
+the future without breaking existing code or applications.</p>
+<p>A style can use a single tool, or use a combination of one or more
+tools. By combining the use of several tools in a style, one can build
+virtually any type of graphical representation. For instance, the SYMBOL
+tool can be used to place spaced symbols along a line. Also, the LABEL
+tool can be used to place text on a point, stretch it along a line, or
+even, by combining the PEN tool with the LABEL tool, use the line as a
+leader to the text label, and draw the text string on the last vertex of
+the line.</p>
+<p>Of course, few systems can support all that. But the intention here is
+to have a style specification that is powerful and flexible enough to
+allow all types of formats to exchange style information with the least
+possible loss.</p>
+</div>
+<div class="section" id="feature-attributes-can-be-used-by-style-definitions">
+<h3>1.4 Feature attributes can be used by style definitions<a class="headerlink" href="#feature-attributes-can-be-used-by-style-definitions" title="Permalink to this headline">¶</a></h3>
+<p>In some cases, it might be useful for a style definition to refer to an
+attribute field on the feature for a given tool parameter’s value
+instead of having a hardcoded value inside the style itself.</p>
+<p>Example of this are text angle, text string, etc… these values change
+for every single text label, but we can share the rest of the label
+style at the layer level if we lookup the angle and text string in an
+attribute on each feature.</p>
+<p>The syntax of the style string provides a way that any parameter value
+can be either a constant value, or a lookup to an attribute field.</p>
+</div>
+<div class="section" id="tool-parameter-units">
+<h3>1.5 Tool parameter units<a class="headerlink" href="#tool-parameter-units" title="Permalink to this headline">¶</a></h3>
+<p>Several parameter values can be expressed in different measurement units
+depending on the file format you are dealing with. For instance, some
+systems express line width, or text height in points, other in pixels,
+and others use ground units. In order to accommodate all that, all
+parameters can be specified in one of the following units systems:</p>
+<ul class="simple">
+<li><p><strong>g</strong>: Map Ground Units (whatever the map coordinate units are)</p></li>
+<li><p><strong>px</strong>: Pixels</p></li>
+<li><p><strong>pt</strong>: Points (1/72 inch)</p></li>
+<li><p><strong>mm</strong>: Millimeters</p></li>
+<li><p><strong>cm</strong>: Centimeters</p></li>
+<li><p><strong>in</strong>: Inches</p></li>
+</ul>
+<p>Some tools will have to be provided at the GDAL client level to simplify
+the conversion of any value from one units system to another. This would
+imply that the GDAL client has to specify a map scale so that
+conversions from ground units to paper/pixel units can be performed.</p>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="feature-style-string">
+<h2>2. Feature Style String<a class="headerlink" href="#feature-style-string" title="Permalink to this headline">¶</a></h2>
+<p>As was mentioned earlier, styles definitions will usually be stored as
+strings, either in a per-layer (or per-dataset) table, or directly in
+the features.</p>
+<div class="section" id="examples">
+<h3>2.1 Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h3>
+<p>Here are some example style definition strings:</p>
+<ul class="simple">
+<li><p>A 5 pixels wide red line:
+<code class="docutils literal notranslate"><span class="pre">PEN(c:#FF0000,w:5px)</span></code></p></li>
+<li><p>A polygon filled in blue, with a black outline:
+<code class="docutils literal notranslate"><span class="pre">BRUSH(fc:#0000FF);PEN(c:#000000)</span></code></p></li>
+<li><p>A point symbol:
+<code class="docutils literal notranslate"><span class="pre">SYMBOL(c:#00FF00,id:&quot;points.sym-45,ogr-sym-7&quot;)</span></code></p></li>
+<li><p>A text label, taking the text string from the “text_attribute”
+attribute field:
+<code class="docutils literal notranslate"><span class="pre">LABEL(f:&quot;Times</span> <span class="pre">New</span> <span class="pre">Roman&quot;,s:12pt,t:{text_attribute})&quot;</span></code></p></li>
+</ul>
+<p>Here is what a style table that contains all the above styles could look
+like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">road</span><span class="p">:</span>      <span class="n">PEN</span><span class="p">(</span><span class="n">c</span><span class="p">:</span><span class="c1">#FF0000,w:5px)</span>
+<span class="n">lake</span><span class="p">:</span>      <span class="n">BRUSH</span><span class="p">(</span><span class="n">fc</span><span class="p">:</span><span class="c1">#0000FF);PEN(c:#000000)</span>
+<span class="n">campsite</span><span class="p">:</span>  <span class="n">SYMBOL</span><span class="p">(</span><span class="n">c</span><span class="p">:</span><span class="c1">#00FF00,id:&quot;points.sym-45,ogr-sym-7&quot;)</span>
+<span class="n">label</span><span class="p">:</span>     <span class="n">LABEL</span><span class="p">(</span><span class="n">f</span><span class="p">:</span><span class="s2">&quot;Times New Roman&quot;</span><span class="p">,</span><span class="n">s</span><span class="p">:</span><span class="mi">12</span><span class="n">pt</span><span class="p">,</span><span class="n">t</span><span class="p">:{</span><span class="n">text_attribute</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>Then individual features can refer to styles from the table above using
+the “&#64;” character followed by the style name in their style property.</p>
+<p>For instance, a feature with its style set to “&#64;road” would be drawn as
+a red line.</p>
+</div>
+<div class="section" id="style-string-syntax">
+<h3>2.2 Style String Syntax<a class="headerlink" href="#style-string-syntax" title="Permalink to this headline">¶</a></h3>
+<p>Each feature object has a style property (a string):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">style_property</span><span class="o">&gt;</span> <span class="o">=</span> <span class="s2">&quot;&lt;style_def&gt;&quot;</span> <span class="o">|</span> <span class="s2">&quot;&quot;</span> <span class="o">|</span> <span class="s2">&quot;@&lt;style_name&gt;&quot;</span> <span class="o">|</span> <span class="s2">&quot;{&lt;field_name&gt;}&quot;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;style_def&gt;</span></code> is defined later in this section.</p></li>
+<li><p>An empty style string means that the feature’s style is unspecified.
+It does not indicate that the feature is invisible – an invisible
+feature may be indicated using a fully transparent color, like
+PEN(c:#00000000).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&#64;&lt;style_name&gt;</span></code> is a reference to a predefined style in the layer
+or the dataset’s style table. The layer’s table is looked up first,
+and if style_name is not found there then the dataset’s table will be
+looked up.</p></li>
+<li><p>Finally, <code class="docutils literal notranslate"><span class="pre">{&lt;field_name&gt;}</span></code> means that the style property should be
+read from the specified attribute field.</p></li>
+</ul>
+<p>The &lt;style_def&gt; is the real style definition. It is a combination of 1
+or more style parts separated by semicolons. Each style_part uses a
+drawing tool to define a portion of the complete graphical
+representation:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">style_def</span><span class="o">&gt;</span> <span class="o">=</span>    <span class="o">&lt;</span><span class="n">style_part</span><span class="o">&gt;</span><span class="p">[;</span><span class="o">&lt;</span><span class="n">style_part</span><span class="o">&gt;</span><span class="p">[;</span><span class="o">...</span><span class="p">]]</span>
+
+<span class="o">&lt;</span><span class="n">style_part</span><span class="o">&gt;</span> <span class="o">=</span>   <span class="o">&lt;</span><span class="n">tool_name</span><span class="o">&gt;</span><span class="p">([</span><span class="o">&lt;</span><span class="n">tool_param</span><span class="o">&gt;</span><span class="p">[,</span><span class="o">&lt;</span><span class="n">tool_param</span><span class="o">&gt;</span><span class="p">[,</span><span class="o">...</span><span class="p">]]])</span>
+
+<span class="o">&lt;</span><span class="n">tool_name</span><span class="o">&gt;</span> <span class="o">=</span>    <span class="n">name</span> <span class="n">of</span> <span class="n">a</span> <span class="n">drawing</span> <span class="n">tool</span><span class="p">,</span> <span class="k">for</span> <span class="n">now</span><span class="p">:</span> <span class="n">PEN</span> <span class="o">|</span> <span class="n">BRUSH</span> <span class="o">|</span> <span class="n">SYMBOL</span> <span class="o">|</span> <span class="n">LABEL</span>
+
+<span class="o">&lt;</span><span class="n">tool_param</span><span class="o">&gt;</span> <span class="o">=</span>   <span class="o">&lt;</span><span class="n">param_name</span><span class="o">&gt;</span><span class="p">:</span><span class="o">&lt;</span><span class="n">param_value</span><span class="o">&gt;</span>
+
+<span class="o">&lt;</span><span class="n">param_name</span><span class="o">&gt;</span> <span class="o">=</span>   <span class="n">see</span> <span class="nb">list</span> <span class="n">of</span> <span class="n">parameters</span> <span class="n">names</span> <span class="k">for</span> <span class="n">each</span> <span class="n">drawing</span> <span class="n">tool</span>
+
+<span class="o">&lt;</span><span class="n">param_value</span><span class="o">&gt;</span> <span class="o">=</span>  <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span> <span class="o">|</span> <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;&lt;</span><span class="n">units</span><span class="o">&gt;</span>
+
+<span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span> <span class="o">=</span>        <span class="s2">&quot;&lt;string_value&gt;&quot;</span> <span class="o">|</span> <span class="o">&lt;</span><span class="n">numeric_value</span><span class="o">&gt;</span> <span class="o">|</span> <span class="p">{</span><span class="o">&lt;</span><span class="n">field_name</span><span class="o">&gt;</span><span class="p">}</span>
+
+<span class="o">&lt;</span><span class="n">units</span><span class="o">&gt;</span> <span class="o">=</span>        <span class="n">g</span> <span class="o">|</span> <span class="n">px</span> <span class="o">|</span> <span class="n">pt</span> <span class="o">|</span> <span class="n">mm</span> <span class="o">|</span> <span class="n">cm</span> <span class="o">|</span> <span class="ow">in</span>
+</pre></div>
+</div>
+<p>By default, style parts are drawn in the order that they appear in the
+style_def string unless each part is assigned a different level
+parameter value (see the level parameter definition).</p>
+<p>All drawing tool parameters are optional. So it is legal to have a
+style_part with an empty drawing tool parameter list (e.g. “PEN()”). For
+each parameter that does not have any specified value, it is up to the
+client application to use its own default value. This document provides
+advisory default values for most parameters, but it is not mandatory for
+an application to use those default values.</p>
+<p>When {&lt;field_name&gt;} is used for a tool_param value, several options are
+available with respect to the units. The units can be specified after
+the field name as in PEN(c:#FF0000,w:{line_width}pt) or can be left
+unspecified as in PEN(c:#FF0000,w:{line_width}). In the first case, the
+default units will be points (pt), but if the attribute field line_width
+contains a value followed by a units abbreviation (e.g. “5px”) then the
+units specified in the attribute fields have precedence (in this case
+pixels). Note that the attribute field does not have to contain a units
+value and probably won’t in most cases; it is just an optional feature
+to be able to override the default units from inside an attribute
+field’s value.</p>
+</div>
+<div class="section" id="pen-tool-parameters">
+<h3>2.3 Pen Tool Parameters<a class="headerlink" href="#pen-tool-parameters" title="Permalink to this headline">¶</a></h3>
+<p><strong>Applicable geometry types:</strong></p>
+<ul class="simple">
+<li><p>Point: When applied to a point, a PEN tool can only define the color
+and the size of the point to draw.</p></li>
+<li><p>Polyline: This is the most obvious case.</p></li>
+<li><p>Polygon: Defines the way the outline of a polygon should be drawn.</p></li>
+</ul>
+<p>Here is the current list of PEN tool parameters. While this is
+sufficient to cover all the cases that we have encountered so far, new
+parameters might be added in the future to handle new types of graphical
+representation. Note again that all parameters are optional:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">c</span></code>: <strong>Pen Color</strong>, expressed hexadecimal (#RRGGBB[AA])</p>
+<ul class="simple">
+<li><p>[AA]: the last 2 digits define the alpha channel value, with 0 being
+transparent and FF being opaque. The default is FF (opaque)</p></li>
+<li><p>Suggested default: black (c:#000000)</p></li>
+<li><p>Example: PEN(c:#FF0000), or PEN(C:#FF0000FF)</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">w</span></code>: <strong>Pen Width</strong>, expressed as a numeric value with units (g, px, pt, mm,
+cm, in)</p>
+<ul class="simple">
+<li><p>Suggested default: 1 pixel</p></li>
+<li><p>Examples: PEN(c:#FF0000,w:5px), PEN(w:3pt), PEN(w:50g)</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">p</span></code>: <strong>Pattern</strong>. To create dash lines. A list of pen-down/pen-up distances</p>
+<p>Examples:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../_images/style_pen1.png"><img alt="style_pen1" src="../_images/style_pen1.png" style="width: 75px; height: 15px;" /></a> = PEN(c:#FF0000,w:2px,p:”4px 5px”). short-dash line</p></li>
+<li><p><a class="reference internal" href="../_images/style_pen2.png"><img alt="style_pen2" src="../_images/style_pen2.png" style="width: 75px; height: 15px;" /></a> = PEN(c:#FF0000,w:2px,p:”10px 5px”). long-dash line</p></li>
+<li><p><a class="reference internal" href="../_images/style_pen3.png"><img alt="style_pen3" src="../_images/style_pen3.png" style="width: 75px; height: 15px;" /></a> = PEN(c:#FF0000,w:2px,p:”10px 5px 4px 5px”). long/short dash</p></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">id</span></code>: <strong>Comma-delimited list of Pen Names or Ids</strong>
+For systems that identify pens with a name or an id. The names in the
+comma-delimited list of ids are scanned until one is recognized by the target
+system. Pen Ids can be either system-specific ids (see further below) or be
+one of the pre-defined OGR pen ids for known line patterns. The id parameter
+should always include one of the OGR ids at the end of the comma-delimited
+list of ids so that an application never has to rely on understanding
+system-specific ids.</p>
+<p>Here is the current list of OGR pen ids (this could grow time):</p>
+<ul class="simple">
+<li><p>ogr-pen-0: solid (the default when no id is provided)</p></li>
+<li><p>ogr-pen-1: null pen (invisible)</p></li>
+<li><p>ogr-pen-2: dash</p></li>
+<li><p>ogr-pen-3: short-dash</p></li>
+<li><p>ogr-pen-4: long-dash</p></li>
+<li><p>ogr-pen-5: dot line</p></li>
+<li><p>ogr-pen-6: dash-dot line</p></li>
+<li><p>ogr-pen-7: dash-dot-dot line</p></li>
+<li><p>ogr-pen-8: alternate-line (sets every other pixel)</p></li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<div><p>System-specific ids are very likely to be meaningful only to that specific
+system that created them. The ids should start with the system’s name,
+followed by a dash (-), followed by whatever information is meaningful to that
+system (a number, a name, a filename, etc.).
+e.g. “mapinfo-5”, or “mysoft-lines.sym-123”, or “othersystems-funnyline”</p>
+<p>System-specific ids are allowed in order to prevent loss of information when
+dealing with data from systems that store line patterns in external files or
+that have their own pre-defined set of line styles (for instance, to do a
+MapInfo MIF to TAB translation without any loss.</p>
+<p>Examples:</p>
+<ul class="simple">
+<li><p>PEN(c:#00FF00,id:”ogr-pen-0”) - simple solid line</p></li>
+<li><p>PEN(c:#00FF00,id:”mapinfo-5,ogr-pen-7”) - corresponds to MapInfo’s Pen #5,
+and a system that can’t understand MapInfo pens falls back on the default
+“ogr-pen-7” pen (dot-dot line).</p></li>
+</ul>
+</div></blockquote>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">cap</span></code>: <strong>Pen Cap</strong> - Set the shape of  end points of lines.</p>
+<ul class="simple">
+<li><p>“cap:b” - Butt: The ends of the line don’t extend beyond the end points.
+This is the default.</p></li>
+<li><p>“cap:r” - Round: Terminate lines with a circle whose diameter is equal to
+the line width.</p></li>
+<li><p>“cap:p” - Projecting: Similar to Butt, but the ends of the line extend by
+half of line width beyond the end points.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">j</span></code>: <strong>Pen Join</strong> - Set the shape of the join point (vertex) of lines.</p>
+<ul class="simple">
+<li><p>“j:m” - Miter: Extend the outer edge of the lines until they touch.
+This is the default.</p></li>
+<li><p>“j:r” - Rounded: Join lines with an arc whose center is at the join point
+and whose diameter is equal to the line width.</p></li>
+<li><p>“j:b” - Bevel: Join the lines with butt end caps and fill the resulting
+triangular notch at the join position.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dp</span></code>: <strong>Perpendicular Offset</strong>, expressed as a numeric value units (g, px,
+pt, mm, cm, in)</p>
+<p>Offset from the line center. If the offset is negative then the pen will be
+drawn left of the main segment and right otherwise.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">l</span></code>: <strong>Priority Level</strong> - Numeric value defining the order in which style
+parts should be drawn.</p>
+<p>Lower priority style parts are drawn first, and higher priority ones are
+drawn on top. If priority level is unspecified, the default is 1.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="brush-tool-parameters">
+<h3>2.4 Brush Tool Parameters<a class="headerlink" href="#brush-tool-parameters" title="Permalink to this headline">¶</a></h3>
+<p><strong>Applicable geometry types:</strong></p>
+<ul class="simple">
+<li><p>Point: Not applicable.</p></li>
+<li><p>Polyline: Not applicable.</p></li>
+<li><p>Polygon: Defines the way the surface of a polygon is filled.</p></li>
+</ul>
+<p>Here is the current list of BRUSH tool parameters. Note again that that
+this list may be extended in the future, and all parameters are
+optional:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">fc</span></code>: <strong>Brush ForeColor</strong>, expressed in hexadecimal (#RRGGBB[AA]).
+Used for painting the brush pattern itself.</p>
+<ul class="simple">
+<li><p>[AA]: the last 2 digits define the alpha channel value, with 0 being
+transparent and FF being opaque. The default is FF (opaque)</p></li>
+<li><p>Suggested default: 50% grey (c:#808080)</p></li>
+<li><p>Example: BRUSH(fc:#FF0000)</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bc</span></code>: <strong>Brush BackColor</strong>, expressed in hexadecimal (#RRGGBB[AA]).
+Used for painting the area behind the brush pattern.</p>
+<ul class="simple">
+<li><p>[AA]: the last 2 digits define the alpha channel value, with 0 being
+transparent and FF being opaque. The default is FF (opaque)</p></li>
+<li><p>Suggested default: transparent (c:#FFFFFF00)</p></li>
+<li><p>Example: BRUSH(fc:#FF0000,bc:#FFEEDD)</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">id</span></code>: <strong>Brush Name or Brush Id</strong> - Comma-delimited list of brush names or
+ids. The names in the comma-delimited list of ids are scanned until one is
+recognized by the target system.</p>
+<p>Brush Ids can be either system-specific ids (see furtherbelow) or be one of
+the pre-defined OGR brush ids for well known brush patterns. The id parameter
+should always include one of the OGR ids at the end of the comma-delimited
+list of ids so that an application never has to rely on understanding
+system-specific ids.</p>
+<p>Here is the current list of OGR brush ids (this could grow over time):</p>
+<img alt="../_images/style_ogr_brush.png" src="../_images/style_ogr_brush.png" />
+<ul class="simple">
+<li><p>ogr-brush-0: solid foreground color (the default when no id  is provided)</p></li>
+<li><p>ogr-brush-1: null brush (transparent - no fill, irrespective of fc or bc
+values</p></li>
+<li><p>ogr-brush-2: horizontal hatch</p></li>
+<li><p>ogr-brush-3: vertical hatch</p></li>
+<li><p>ogr-brush-4: top-left to bottom-right diagonal hatch</p></li>
+<li><p>ogr-brush-5: bottom-left to top-right diagonal hatch</p></li>
+<li><p>ogr-brush-6: cross hatch</p></li>
+<li><p>ogr-brush-7: diagonal cross hatch</p></li>
+</ul>
+<p>Like with Pen Ids, system-specific brush ids are very likely to be meaningful
+only to that specific system that created them. The ids should start with the
+system’s name, followed by a dash (-), followed by whatever information is
+meaningful to that system (a number, a name, a filename, etc.).</p>
+<p>The following conventions will be used for common system-specific brush ids:</p>
+<ul class="simple">
+<li><p>“bmp-filename.bmp” for Windows BMP patterns</p></li>
+</ul>
+<p>Other conventions may be added in the future (such as vector symbols, WMF,
+etc).</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">a</span></code>: <strong>Angle</strong> - Rotation angle (in degrees, counterclockwise) to apply to
+the brush pattern.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">s</span></code>: <strong>Size or Scaling Factor</strong> - Numeric value with or without units.</p>
+<p>If units are specified, then this value is the absolute size to draw the
+brush or symbol. If no units are specified then it is taken as a scaling
+factor relative to the symbol’s default size.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dx</span></code>, <code class="docutils literal notranslate"><span class="pre">dy</span></code>: <strong>Spacing</strong>, expressed as a numeric value with units (g, px,
+pt, mm, cm, in)</p>
+<p>If filling an area using point symbols, these values will define the spacing
+to use between them. “dx” is the horizontal distance between the center of
+two adjacent symbols and “dy” is the vertical distance. The default is to use
+the symbol’s bounding box width and height for dx and dy respectively.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">l</span></code>: <strong>Priority Level</strong> - Numeric value defining the order in which style
+parts should be drawn.</p>
+<p>Lower priority style parts are drawn first, and higher priority ones are drawn
+on top. If priority level is unspecified, the default is 1.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="symbol-tool-parameters">
+<h3>2.5 Symbol Tool Parameters<a class="headerlink" href="#symbol-tool-parameters" title="Permalink to this headline">¶</a></h3>
+<p><strong>Applicable geometry types:</strong></p>
+<ul class="simple">
+<li><p>Point: Place a symbol at the point’s location</p></li>
+<li><p>Polyline: Place symbols along the polyline, either at each vertex, or
+equally spaced.</p></li>
+<li><p>Polygon: Place the symbols on the outline of the polygon.</p></li>
+</ul>
+<p>Here is the current list of SYMBOL tool parameters. Note again that that
+this list may be extended in the future, and all parameters are
+optional:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">id</span></code>: <strong>Symbol Name or Id</strong> - Comma-delimited list of symbol names or ids.</p>
+<p>The names in the comma-delimited list of ids are scanned until one is
+recognized by the target system.</p>
+<p>Symbol Ids can be either system-specific ids (see further below) or be one of
+the pre-defined OGR symbol ids for well known symbols. The id parameter should
+always include one of the OGR ids at the end of the comma-delimited list of
+ids so that an application never has to rely on understanding system-specific
+ids.</p>
+<p>Here is the current list of OGR symbol ids (this could grow over time):</p>
+<img alt="../_images/style_ogr_sym.png" src="../_images/style_ogr_sym.png" />
+<ul class="simple">
+<li><p>ogr-sym-0: cross (+)</p></li>
+<li><p>ogr-sym-1: diagcross (X)</p></li>
+<li><p>ogr-sym-2: circle (not filled)</p></li>
+<li><p>ogr-sym-3: circle (filled)</p></li>
+<li><p>ogr-sym-4: square (not filled)</p></li>
+<li><p>ogr-sym-5: square (filled)</p></li>
+<li><p>ogr-sym-6: triangle (not filled)</p></li>
+<li><p>ogr-sym-7: triangle (filled)</p></li>
+<li><p>ogr-sym-8: star (not filled)</p></li>
+<li><p>ogr-sym-9: star (filled)</p></li>
+<li><p>ogr-sym-10: vertical bar (can be rotated using angle attribute to produce
+diagonal bar)</p></li>
+</ul>
+<p>Like with Pen Ids, system-specific symbol ids are very likely to be meaningful
+only to that specific system that created them. The ids should start with the
+system’s name, followed by a dash (-), followed by whatever information is
+meaningful to that system (a number, a name, a filename, etc.).</p>
+<p>The following conventions will be used for common system-specific symbol ids:</p>
+<ul class="simple">
+<li><p>“bmp-filename.bmp” for Windows BMP symbols</p></li>
+<li><p>“font-sym-%d” for a font symbols, where %d is a glyph number inside a font,
+font family is defined by <strong>f</strong> style field.</p></li>
+</ul>
+<p>Other conventions may be added in the future (such as vector symbols, WMF,
+etc.)</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">a</span></code>: <strong>Angle</strong> - Rotation angle (in degrees, counterclockwise) to apply to
+the symbol.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">c</span></code>: <strong>Symbol Color</strong>, expressed in hexadecimal (#RRGGBB[AA])</p>
+<ul>
+<li><p>[AA]: the last 2 digits define the alpha channel value, with 0 being
+transparent and FF being opaque. The default is FF (opaque)</p></li>
+<li><p>Suggested default symbol color: black (c:#000000)</p></li>
+<li><p>Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SYMBOL</span><span class="p">(</span><span class="n">c</span><span class="p">:</span><span class="c1">#FF0000)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">o</span></code>: <strong>Symbol Outline Color</strong>, expressed in hexadecimal (#RRGGBB[AA]).</p>
+<p>If this parameter is set, an additional halo or border of this color is drawn
+around the symbol.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">s</span></code>:  <strong>Size or Scaling Factor</strong> - Numeric value with or without units.</p>
+<p>If units are specified, then this value is the absolute size to draw the
+symbol. If no units are specified then it is taken as a scaling factor
+relative to the symbol’s default size.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dx</span></code>, <code class="docutils literal notranslate"><span class="pre">dy</span></code>: <strong>X and Y offset</strong>, of the symbol’s insertion point, expressed
+as a numeric value with units (g, px, pt, mm, cm, in)</p>
+<p>Applies to point geometries, and to symbols placed at each vertex of a
+polyline.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ds</span></code>, <code class="docutils literal notranslate"><span class="pre">dp</span></code>, <code class="docutils literal notranslate"><span class="pre">di</span></code>: <strong>Spacing parameters</strong> for symbols spaced along a
+line, expressed as a numeric value with units (g, px, pt, mm, cm, in).</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">ds</span></code> is the step to use when  placing symbols along the line.
+By default, symbols applied to a feature with a line geometry are placed at
+each vertex, butsetting “ds” triggers the placement of symbols at an equal
+distance along the line. “ds” has no effect for a feature with a point
+geometry.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dp</span></code> can be used together with “ds” to specify the perpendicular distance
+between the symbols’ center and the line along which they’re placed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">di</span></code> can be used to specify an initial offset from the beginning of the
+line.</p></li>
+<li><p>Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SYMBOL</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span><span class="mi">123</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span> <span class="n">di</span><span class="p">:</span><span class="mi">5</span><span class="n">px</span><span class="p">,</span> <span class="n">ds</span><span class="p">:</span><span class="mi">50</span><span class="n">px</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">l</span></code>: <strong>Priority Level</strong> - Numeric value defining the order in which style
+parts should be drawn.</p>
+<p>Lower priority style parts are drawn first, and higher priority ones are drawn
+on top. If priority level is unspecified, the default is 1.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">f</span></code>: <strong>Font Name</strong> - Comma-delimited list of fonts names.</p>
+<p>Works like the CSS font-family property: the list of font names is scanned
+until a known font name is encountered.</p>
+<p>Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SYMBOL</span><span class="p">(</span><span class="n">c</span><span class="p">:</span><span class="c1">#00FF00,s:12pt,id:&quot;font-sym-75,ogr-sym-9&quot;,f:&quot;MapInfo_Cartographic&quot;)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="label-tool-parameters">
+<h3>2.6 Label Tool Parameters<a class="headerlink" href="#label-tool-parameters" title="Permalink to this headline">¶</a></h3>
+<p><strong>Applicable geometry types:</strong></p>
+<ul class="simple">
+<li><p>Point: Place a text label at the point’s location</p></li>
+<li><p>Polyline: Place text along the polyline.</p></li>
+<li><p>Polygon: Place a label at the centroid of the polygon. All parameters
+behave exactly as if the geometry was a point located at the
+polygon’s centroid.</p></li>
+</ul>
+<p>Here is the current list of LABEL tool parameters. Note again that that
+this list may be extended in the future, and all parameters are
+optional:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">f</span></code>: <strong>Font Name</strong> - Comma-delimited list of fonts names.</p>
+<p>Works like the CSS font-family property: the list of font names is scanned
+until a known font name is encountered.</p>
+<p>Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">LABEL</span><span class="p">(</span><span class="n">f</span><span class="p">:</span><span class="s2">&quot;Noto Sans, Helvetica&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span><span class="mi">12</span><span class="n">pt</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span><span class="s2">&quot;Hello World!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">s</span></code>: <strong>Font Size</strong>, expressed as a numeric value with units (g, px, pt,
+mm, cm, in).</p>
+<p>In the CAD world, font size, or “text height”, determines the height of a
+capital letter - what typographers call “cap height”. But in the worlds of
+typesetting, graphics and cartography, font size refers to the “em height”
+of the font, which is taller than the cap height. This means that text
+assigned a height of 1 inch in a DXF file will look larger (often about 45%
+larger) than 72-point text in a PDF file or MapInfo map. At present, GDAL
+vector drivers treat the “s:” style string value as whichever font size
+measurement (cap height or em height) is used natively by that format, which
+may result in incorrect text sizing when using the ogr2ogr tool. This
+parameter could be subject to clearer specification in the future.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">t</span></code>: <strong>Text String</strong> - Can be a constant string, or a reference to an
+attribute field’s value.</p>
+<p>If a double-quote character or backslash () character is present in the
+string, it is escaped with a backslash character before it.</p>
+<p>Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">LABEL</span><span class="p">(</span><span class="n">f</span><span class="p">:</span><span class="s2">&quot;Arial, Helvetica&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span><span class="mi">12</span><span class="n">pt</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span><span class="s2">&quot;Hello World!&quot;</span><span class="p">)</span>
+<span class="n">LABEL</span><span class="p">(</span><span class="n">f</span><span class="p">:</span><span class="s2">&quot;Arial, Helvetica&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span><span class="mi">12</span><span class="n">pt</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span><span class="s2">&quot;Hello World with escaped </span><span class="se">\\</span><span class="s2">&quot;</span><span class="n">quotes</span>\<span class="s2">&quot; and </span><span class="se">\\\b</span><span class="s2">ackslash!&quot;</span><span class="p">)</span>
+<span class="n">LABEL</span><span class="p">(</span><span class="n">f</span><span class="p">:</span><span class="s2">&quot;Arial, Helvetica&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span><span class="mi">12</span><span class="n">pt</span><span class="p">,</span> <span class="n">t</span><span class="p">:{</span><span class="n">text_attribute</span><span class="p">})</span>
+</pre></div>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">a</span></code>: <strong>Angle</strong> - Rotation angle (in degrees, counterclockwise).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">c</span></code>: <strong>Text Foreground Color</strong>, expressed in hexadecimal (#RRGGBB[AA])
+Suggested default: black (c:#000000)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">b</span></code>: <strong>Text Background Color</strong> - Color of the filled box to draw behind the
+label, expressed in hexadecimal (#RRGGBB[AA]). No box drawn if not set.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">o</span></code>: <strong>Text Outline Color</strong> - Color of the text outline (halo in MapInfo
+terminology), expressed in hexadecimal (#RRGGBB[AA]). No outline if not set.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">h</span></code>: <strong>Shadow Color</strong> - Color of the text shadow, expressed in hexadecimal
+(#RRGGBB[AA]). No shadow if not set.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">w</span></code>: <strong>Stretch</strong> - The stretch factor changes the width of all characters in
+the font by the given percentage. For example, a setting of 150 results in all
+characters in the font being stretched to 150% of their usual width. The
+default stretch factor is 100.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">m</span></code>: <strong>Label Placement Mode</strong> - How the text is drawn relative to the
+feature’s geometry.</p>
+<ul class="simple">
+<li><p>“m:p” - The default. A simple label is attached to a point or to the first
+vertex of a polyline.</p></li>
+<li><p>“m:l” - Text is attached to the last vertex of a polyline. A PEN tool can
+be combined with this LABEL tool to draw the polyline as a leader to the
+label.</p></li>
+<li><p>“m:s” - Stretch the text string along a polyline, with an equal spacing
+between each character.</p></li>
+<li><p>“m:m” - Place text as a single label at the middle of a polyline (based on
+total line length).</p></li>
+<li><p>“m:w” - One word per line segment in a polyline.</p></li>
+<li><p>“m:h” - Every word of text attached to polyline is placed horizontally in
+its segment, anchor point is a center of segment.</p></li>
+<li><p>“m:a” - Every word of text attached to polyline is stretched to fit the
+segment of polyline and placed along that segment. The anchor point is a
+start of a segment.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">p</span></code>: <strong>Anchor Position</strong> - A value from 1 to 12 defining the label’s
+position relative to the point to which it is attached</p>
+<p>There are four vertical alignment modes: <em>baseline</em>, <em>center</em>, <em>top</em> and
+<em>bottom</em>; and three horizontal modes: <em>left</em>, <em>center</em> and <em>right</em>.</p>
+<img alt="../_images/style_textanchor.png" src="../_images/style_textanchor.png" />
+<p>Currently, the precise interpretation of these values (for example, whether
+accents on uppercase letters sit above or below the alignment point with p:7)
+differs from file format to file format. This parameter could be subject to
+clearer specification in the future.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dx</span></code>, <code class="docutils literal notranslate"><span class="pre">dy</span></code>: <strong>X and Y offset</strong> of the label’s insertion point, expressed
+as a numeric value with units (g, px, pt, mm, cm, in).</p>
+<p>Applies to text placed on a point, or at each vertex of a polyline.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dp</span></code>: <strong>Perpendicular Offset</strong> for labels placed along a line, expressed as
+a numeric value with units (g, px, pt, mm, cm, in).</p>
+<p>“dp” specifies the perpendicular distance between the label and the line along
+which it is placed. If the offset is negative then the label will be shifted
+left of the main segment, and right otherwise.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bo</span></code>: <strong>Bold</strong> - Set to 1 for bold text. Set to 0 or omitted otherwise.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">it</span></code>: <strong>Italic</strong> - Set to 1 for italic text. Set to 0 or omitted otherwise.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">un</span></code>: <strong>Underline</strong> - Set to 1 for underlined text. Set to 0 or omitted
+otherwise.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">st</span></code>:  <strong>Strikethrough</strong> - Set to 1 for struck-through text. Set to 0 or
+omitted otherwise.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">l</span></code>: <strong>Priority Level</strong> - Numeric value defining the order in which style
+parts should be drawn.</p>
+<p>Lower priority style parts are drawn first, and higher priority ones are drawn
+on top. If priority level is unspecified, the default is 1.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="styles-table-format">
+<h3>2.7 Styles Table Format<a class="headerlink" href="#styles-table-format" title="Permalink to this headline">¶</a></h3>
+<p>For file formats that support tables of styles, then the predefined
+styles would be stored in that format.</p>
+<p>For file formats that do not support tables of styles, then the style
+table could be stored in a text file with a .ofs (OGR Feature Styles)
+extension and the same basename as the dataset. This would apply to
+formats like Esri Shapefile.</p>
+<p>Here is an example of a .ofs file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#OFS-Version: 1.0</span>
+<span class="c1">#StyleField: &quot;style&quot;</span>
+
+<span class="n">DefaultStyle</span><span class="p">:</span> <span class="n">PEN</span><span class="p">(</span><span class="n">c</span><span class="p">:</span><span class="c1">#000000)</span>
+<span class="n">road</span><span class="p">:</span>      <span class="n">PEN</span><span class="p">(</span><span class="n">c</span><span class="p">:</span><span class="c1">#FF0000,w:5px)</span>
+<span class="n">lake</span><span class="p">:</span>      <span class="n">BRUSH</span><span class="p">(</span><span class="n">fc</span><span class="p">:</span><span class="c1">#0000FF);PEN(c:#000000)</span>
+<span class="n">campsite</span><span class="p">:</span>  <span class="n">SYMBOL</span><span class="p">(</span><span class="n">c</span><span class="p">:</span><span class="c1">#00FF00,id:&quot;points.sym-45,ogr-sym-7&quot;)</span>
+<span class="n">label</span><span class="p">:</span>     <span class="n">LABEL</span><span class="p">(</span><span class="n">f</span><span class="p">:</span><span class="s2">&quot;Times New Roman&quot;</span><span class="p">,</span><span class="n">s</span><span class="p">:</span><span class="mi">12</span><span class="n">pt</span><span class="p">,</span><span class="n">t</span><span class="p">:{</span><span class="n">text_attribute</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>The first line is a signature with a version number, which must be
+present.</p>
+<p>The second line (StyleField: “style”) is the name of the attribute field
+in which the Feature Style String is stored for each object in the
+corresponding layer. This is optional, if not set, then the objects in
+the layer will all share the same style defined in DefaultStyle.</p>
+<p>The third line (DefaultStyle:…) defines the style that applies by
+default to all objects that have no explicit style.</p>
+<p>Then the list of style definitions follow.</p>
+</div>
+<div class="section" id="using-ogr-sql-to-transfer-the-style-between-the-data-sources">
+<h3>2.8 Using OGR SQL to transfer the style between the data sources<a class="headerlink" href="#using-ogr-sql-to-transfer-the-style-between-the-data-sources" title="Permalink to this headline">¶</a></h3>
+<p>You can use the <strong>OGR_STYLE</strong> special field to extract the feature level
+style, and ogr2ogr can be used to transfer the style string between data
+sources according to the following example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogr2ogr</span> <span class="o">-</span><span class="n">f</span> <span class="s2">&quot;ESRI Shapefile&quot;</span> <span class="o">-</span><span class="n">sql</span> <span class="s2">&quot;select *, OGR_STYLE from rivers&quot;</span> <span class="n">rivers</span><span class="o">.</span><span class="n">shp</span> <span class="n">rivers</span><span class="o">.</span><span class="n">tab</span>
+</pre></div>
+</div>
+<p>Without specifying the length of the style field, the output driver may
+truncate the length to a default value. Therefore it may be necessary to
+specify the target length manually, like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogr2ogr</span> <span class="o">-</span><span class="n">f</span> <span class="s2">&quot;ESRI Shapefile&quot;</span> <span class="o">-</span><span class="n">sql</span> <span class="s2">&quot;select *, CAST(OGR_STYLE AS character(255)) from rivers&quot;</span> <span class="n">rivers</span><span class="o">.</span><span class="n">shp</span> <span class="n">rivers</span><span class="o">.</span><span class="n">tab</span>
+</pre></div>
+</div>
+<p>OGR is aware of using the OGR_STYLE field if it exists, and
+OGRFeature::GetStyleString will return the value of this field if no
+style string has been specified programmatically.</p>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="ogr-support-classes">
+<h2>3. OGR Support Classes<a class="headerlink" href="#ogr-support-classes" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv410OGRFeature" title="OGRFeature"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRFeature</span></code></a> class has member functions
+<a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv4NK10OGRFeature14GetStyleStringEv" title="OGRFeature::GetStyleString"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRFeature::GetStyleString()</span></code></a>, <a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv4N10OGRFeature14SetStyleStringEPKc" title="OGRFeature::SetStyleString"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRFeature::SetStyleString()</span></code></a> and <a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv4N10OGRFeature22SetStyleStringDirectlyEPc" title="OGRFeature::SetStyleStringDirectly"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRFeature::SetStyleStringDirectly()</span></code></a>
+which may be used to interact with a feature’s style string as a C-style
+string. Additionally, there are <a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv4NK10OGRFeature13GetStyleTableEv" title="OGRFeature::GetStyleTable"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRFeature::GetStyleTable()</span></code></a>, <a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv4N10OGRFeature13SetStyleTableEP13OGRStyleTable" title="OGRFeature::SetStyleTable"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRFeature::SetStyleTable()</span></code></a> and
+<a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv4N10OGRFeature21SetStyleTableDirectlyEP13OGRStyleTable" title="OGRFeature::SetStyleTableDirectly"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRFeature::SetStyleTableDirectly()</span></code></a> for managing style tables as instances of the
+<a class="reference internal" href="../api/ogrfeaturestyle_cpp.html#_CPPv413OGRStyleTable" title="OGRStyleTable"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRStyleTable</span></code></a> class.</p>
+<p>The <a class="reference internal" href="../api/ogrlayer_cpp.html#_CPPv48OGRLayer" title="OGRLayer"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRLayer</span></code></a> and <a class="reference internal" href="../api/gdaldataset_cpp.html#_CPPv411GDALDataset" title="GDALDataset"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDataset</span></code></a> classes also have <a class="reference internal" href="../api/ogrlayer_cpp.html#_CPPv4N8OGRLayer13GetStyleTableEv" title="OGRLayer::GetStyleTable"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRLayer::GetStyleTable()</span></code></a>,
+<a class="reference internal" href="../api/ogrlayer_cpp.html#_CPPv4N8OGRLayer13SetStyleTableEP13OGRStyleTable" title="OGRLayer::SetStyleTable"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRLayer::SetStyleTable()</span></code></a> and <a class="reference internal" href="../api/ogrlayer_cpp.html#_CPPv4N8OGRLayer21SetStyleTableDirectlyEP13OGRStyleTable" title="OGRLayer::SetStyleTableDirectly"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRLayer::SetStyleTableDirectly()</span></code></a> member functions.</p>
+<p>To parse style strings, the <a class="reference internal" href="../api/ogrfeaturestyle_cpp.html#_CPPv411OGRStyleMgr" title="OGRStyleMgr"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRStyleMgr</span></code></a> class is used. Each style tool in the string
+is accessed as an instance of the <a class="reference internal" href="../api/ogrfeaturestyle_cpp.html#_CPPv412OGRStyleTool" title="OGRStyleTool"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRStyleTool</span></code></a> class. Lastly, four helper classes exist,
+one for each tool (<code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRStylePen</span></code>,
+<code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRStyleBrush</span></code>,
+<code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRStyleSymbol</span></code>,
+<code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRStyleLabel</span></code>), with each available
+parameter represented by a getter and setter member function. To
+understand these classes better, it may be useful to read the
+<a class="reference external" href="https://github.com/OSGeo/gdal/blob/master/gdal/ogr/ogr_featurestyle.h">ogr_featurestyle.h</a>
+and
+<a class="reference external" href="https://github.com/OSGeo/gdal/blob/master/gdal/ogr/ogrfeaturestyle.cpp">ogrfeaturestyle.cpp</a>
+code files.</p>
+<p>Here is some example C++ code:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">OGRStyleTable</span> <span class="n">oStyleTable</span><span class="p">;</span>
+
+<span class="n">OGRStyleMgr</span> <span class="o">*</span><span class="n">poStyleMgr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">OGRStyleMgr</span><span class="p">(</span><span class="o">&amp;</span><span class="n">oStyleTable</span><span class="p">);</span>
+
+<span class="c1">// Create a new style in the style table by specifying the whole style string</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="n">poStyleMgr</span><span class="o">-&gt;</span><span class="n">AddStyle</span><span class="p">(</span><span class="s">&quot;@Name&quot;</span><span class="p">,</span><span class="s">&quot;PEN(c:#123456;w:10px);BRUSH(c:#345678)&quot;</span><span class="p">))</span>
+<span class="p">{</span>
+  <span class="n">poStyleMgr</span><span class="o">-&gt;</span><span class="n">SetFeatureStyleString</span><span class="p">(</span><span class="n">poFeature</span><span class="p">,</span><span class="s">&quot;@Name&quot;</span><span class="p">,</span><span class="n">TRUE</span><span class="p">)</span>
+  <span class="c1">// or</span>
+  <span class="n">poStyleMgr</span><span class="o">-&gt;</span><span class="n">SetFeatureStyleString</span><span class="p">(</span><span class="n">poFeature</span><span class="p">,</span><span class="s">&quot;PEN(c:#123456,w:10px);BRUSH(c:#345678)&quot;</span><span class="p">,</span><span class="n">FALSE</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="n">oStyleTable</span><span class="o">-&gt;</span><span class="n">SaveStyleTable</span><span class="p">(</span><span class="s">&quot;ttt.tbl&quot;</span><span class="p">);</span>
+
+
+<span class="c1">// Create a new style in the style table by specifying each tool (part) as a string</span>
+
+<span class="n">poStyleMgr</span><span class="o">-&gt;</span><span class="n">InitStyleString</span><span class="p">();</span>
+<span class="n">poStyleMgr</span><span class="o">-&gt;</span><span class="n">AddPart</span><span class="p">(</span><span class="s">&quot;PEN(c:#123456,w:10px)&quot;</span><span class="p">);</span>
+<span class="n">poStyleMgr</span><span class="o">-&gt;</span><span class="n">AddPart</span><span class="p">(</span><span class="s">&quot;BRUSH(c:345678)&quot;</span><span class="p">);</span>
+<span class="n">poStyleMgr</span><span class="o">-&gt;</span><span class="n">AddStyle</span><span class="p">(</span><span class="s">&quot;@Name&quot;</span><span class="p">);</span>
+<span class="n">poStyleMgr</span><span class="o">-&gt;</span><span class="n">SetFeatureStyleString</span><span class="p">(</span><span class="n">poFeature</span><span class="p">,</span><span class="s">&quot;@Name&quot;</span><span class="p">,</span><span class="n">TRUE</span><span class="p">);</span>
+
+<span class="n">oStyleTable</span><span class="o">-&gt;</span><span class="n">SaveStyleTable</span><span class="p">(</span><span class="s">&quot;ttt.tbl&quot;</span><span class="p">);</span>
+
+
+<span class="c1">// Create a new style in the style table using the style tool helper classes</span>
+
+<span class="n">OGRStyleTool</span> <span class="o">*</span><span class="n">poStylePen</span> <span class="o">=</span> <span class="k">new</span> <span class="n">OGRStylePen</span><span class="p">;</span>
+
+<span class="n">poStylePen</span><span class="o">-&gt;</span><span class="n">SetColor</span><span class="p">(</span><span class="s">&quot;#123456&quot;</span><span class="p">);</span>
+<span class="n">poStylePen</span><span class="o">-&gt;</span><span class="n">SetUnit</span><span class="p">(</span><span class="n">OGRSTUPixel</span><span class="p">);</span>
+<span class="n">poStylePen</span><span class="o">-&gt;</span><span class="n">SetWidth</span><span class="p">(</span><span class="mf">10.0</span><span class="p">);</span>
+<span class="n">poStyleMgr</span><span class="o">-&gt;</span><span class="n">AddPart</span><span class="p">(</span><span class="n">poStylePen</span><span class="p">);</span>
+
+<span class="k">delete</span> <span class="n">poStylePen</span><span class="p">;</span>
+
+
+<span class="c1">// Reading a style</span>
+
+<span class="n">OGRStyleTool</span> <span class="o">*</span><span class="n">poStyleTool</span><span class="p">;</span>
+
+<span class="n">poStyleMgr</span><span class="o">-&gt;</span><span class="n">GetStyleString</span><span class="p">(</span><span class="n">poFeature</span><span class="p">);</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">iPart</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">iPart</span> <span class="o">&lt;</span> <span class="n">poStyleMgr</span><span class="o">-&gt;</span><span class="n">GetPartCount</span><span class="p">();</span> <span class="n">iPart</span><span class="o">++</span><span class="p">)</span>
+<span class="p">{</span>
+   <span class="n">poStyleTool</span> <span class="o">=</span> <span class="n">GetPart</span><span class="p">(</span><span class="n">iPart</span><span class="p">);</span>
+   <span class="k">switch</span> <span class="p">(</span><span class="n">poStyleTool</span><span class="o">-&gt;</span><span class="n">GetType</span><span class="p">())</span>
+   <span class="p">{</span>
+      <span class="k">case</span> <span class="nl">OGRSTCPen</span><span class="p">:</span>
+         <span class="n">poStylePen</span> <span class="o">=</span> <span class="p">(</span><span class="n">OGRStylePen</span> <span class="o">*</span><span class="p">)</span><span class="n">poStyleTool</span><span class="p">;</span>
+         <span class="n">pszColor</span> <span class="o">=</span> <span class="n">poStylePen</span><span class="o">-&gt;</span><span class="n">Color</span><span class="p">(</span><span class="n">bDefault</span><span class="p">);</span>
+         <span class="k">if</span> <span class="p">(</span><span class="n">bDefault</span> <span class="o">==</span> <span class="n">FALSE</span><span class="p">)</span>
+           <span class="n">poStylePen</span><span class="o">-&gt;</span><span class="n">GetRGBFromString</span><span class="p">(</span><span class="n">pszColor</span><span class="p">,</span> <span class="n">nRed</span><span class="p">,</span> <span class="n">nGreen</span><span class="p">,</span>
+                                    <span class="n">nBlue</span><span class="p">,</span> <span class="n">nTrans</span><span class="p">);</span>
+         <span class="k">else</span>
+           <span class="c1">// Color not defined</span>
+
+         <span class="n">dfWidth</span> <span class="o">=</span> <span class="n">poStylePen</span><span class="o">-&gt;</span><span class="n">Width</span><span class="p">(</span><span class="n">bDefault</span><span class="p">);</span>
+         <span class="k">if</span> <span class="p">(</span><span class="n">bDefault</span> <span class="o">==</span> <span class="n">FALSE</span><span class="p">)</span>
+           <span class="c1">// Use dfWidth</span>
+         <span class="k">else</span>
+           <span class="c1">// dfWidth not defined</span>
+
+        <span class="o">:</span>
+        <span class="o">:</span>
+    <span class="p">}</span>
+ <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="revision-history">
+<h2>Revision history<a class="headerlink" href="#revision-history" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Version 0.016 - 2018-12-03 - Andrew Sudorgin</strong>
+Restored and documented font property for point symbols</p></li>
+<li><p><strong>Version 0.015 - 2018-01-08 - Alan Thomas</strong>
+Update outdated material; minor changes to BRUSH ‘id’ and LABEL ‘t’,
+‘bo’, ‘it’, ‘un’, ‘st’; clarify BRUSH ‘fc’, ‘bc’, SYMBOL ‘o’ and
+LABEL ‘s’, ‘w’, ‘p’</p></li>
+<li><p><strong>Version 0.014 - 2011-07-24 - Even Rouault</strong>
+Mention the escaping of double-quote characters in the text string of
+a LABEL (ticket #3675)</p></li>
+<li><p><strong>Version 0.013 - 2008-07-29 - Daniel Morissette</strong>
+Added ‘o:’ for font point symbol outline color (ticket #2509)</p></li>
+<li><p><strong>Version 0.012 - 2008-07-21 - Daniel Morissette</strong>
+Added ‘o:’ for text outline color and updated ‘b:’ to be specifically
+a filled label background box (ticket #2480)</p></li>
+<li><p><strong>Version 0.011 - 2008-02-28 - Tamas Szekeres</strong>
+Note about OGR SQL to transfer the style between the data sources</p></li>
+<li><p><strong>Version 0.010 - 2006-09-23- Andrey Kiselev</strong>
+Added label styles ‘w’, ‘st’, ‘h’, ‘m:h’, ‘m:a’, ‘p:{10,11,12}’</p></li>
+<li><p><strong>Version 0.009 - 2005-03-11- Frank Warmerdam</strong>
+Remove reference to OGRWin, move into ogr distribution</p></li>
+<li><p><strong>Version 0.008 - 2001-03-21- Frank Warmerdam</strong>
+Fix minor typos (h:12pt instead of s:12pt in examples)</p></li>
+<li><p><strong>Version 0.008 - 2000-07-15 - Stephane Villeneuve</strong>
+Remove style table in Layer. Add forecolor and backcolor to brush.</p></li>
+<li><p><strong>Version 0.007 - 2000-06-22 - Daniel Morissette</strong>
+Fixed typo and added offset param for PEN.</p></li>
+<li><p><strong>Version 0.006 - 2000-06-20 - Daniel Morissette</strong>
+Added the OGR-Win idea and made small changes here and there.</p></li>
+<li><p><strong>Version 0.005 - 2000-06-12 - Daniel Morissette</strong>
+Allow passing of comma-delimited list of names in PEN’s “id”
+parameter.
+Defined system-independent pen style names.</p></li>
+<li><p><strong>Version 0.004 - 2000-06-09 - Stephane Villeneuve</strong>
+Added PEN cap and join parameters
+More clearly defined the API</p></li>
+<li><p><strong>Version 0.003 - 2000-02-15 - Daniel Morissette</strong>
+First kind-of-complete version.</p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="configoptions.html" class="btn btn-neutral float-right" title="Configuration options" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="virtual_file_systems.html" class="btn btn-neutral float-left" title="GDAL Virtual File Systems (compressed, network hosted, etc…): /vsimem, /vsizip, /vsitar, /vsicurl, …" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2021 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

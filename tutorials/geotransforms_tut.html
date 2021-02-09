@@ -1,0 +1,298 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Geotransform Tutorial &mdash; GDAL  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+  
+  
+  
+    <link rel="canonical" href="https://gdal.orgtutorials/geotransforms_tut.html"/>
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Multidimensional raster API tutorial" href="multidimensional_api_tut.html" />
+    <link rel="prev" title="GDAL Grid Tutorial" href="gdal_grid_tut.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorials</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#raster">Raster</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="raster_api_tut.html">Raster API tutorial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="raster_driver_tut.html">Raster driver implementation tutorial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="warp_tut.html">GDAL Warp API tutorial (Reprojection, …)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_grid_tut.html">GDAL Grid Tutorial</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Geotransform Tutorial</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#introduction-to-geotransforms">Introduction to Geotransforms:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#transformation-from-image-coordinate-space-to-georeferenced-coordinate-space">Transformation from image coordinate space to georeferenced coordinate space:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#in-case-of-north-up-images">In case of north up images:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#multidimensional-raster">Multidimensional raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#vector">Vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#geographic-network-model">Geographic Network Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#projections-and-spatial-reference-systems-tutorial-osr-ogrspatialreference">Projections and Spatial Reference Systems tutorial (OSR - OGRSpatialReference)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Tutorials</a> &raquo;</li>
+      
+      <li>Geotransform Tutorial</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/tutorials/geotransforms_tut.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="multidimensional_api_tut.html" class="btn btn-neutral float-right" title="Multidimensional raster API tutorial" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gdal_grid_tut.html" class="btn btn-neutral float-left" title="GDAL Grid Tutorial" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="geotransform-tutorial">
+<span id="geotransforms-tut"></span><h1>Geotransform Tutorial<a class="headerlink" href="#geotransform-tutorial" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction-to-geotransforms">
+<h2>Introduction to Geotransforms:<a class="headerlink" href="#introduction-to-geotransforms" title="Permalink to this headline">¶</a></h2>
+<p>A geotransform is an affine transformation from the image coordinate space (row, column),
+also known as (pixel, line)
+to the georeferenced coordinate space (projected or geographic coordinates).</p>
+<p>A geotransform consists in a set of 6 coefficients:</p>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">GT(0)</span></code> x-coordinate of the upper-left corner of the upper-left pixel.</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">GT(1)</span></code> w-e pixel resolution / pixel width.</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">GT(2)</span></code> row rotation (typically zero).</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">GT(3)</span></code> y-coordinate of the upper-left corner of the upper-left pixel.</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">GT(4)</span></code> column rotation (typically zero).</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">GT(5)</span></code> n-s pixel resolution / pixel height (negative value for a north-up image).</div>
+</div>
+</div>
+<div class="section" id="transformation-from-image-coordinate-space-to-georeferenced-coordinate-space">
+<h2>Transformation from image coordinate space to georeferenced coordinate space:<a class="headerlink" href="#transformation-from-image-coordinate-space-to-georeferenced-coordinate-space" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">X_geo</span> <span class="o">=</span> <span class="n">GT</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">X_pixel</span> <span class="o">*</span> <span class="n">GT</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">Y_line</span> <span class="o">*</span> <span class="n">GT</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">Y_geo</span> <span class="o">=</span> <span class="n">GT</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">+</span> <span class="n">X_pixel</span> <span class="o">*</span> <span class="n">GT</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="o">+</span> <span class="n">Y_line</span> <span class="o">*</span> <span class="n">GT</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that the pixel/line coordinates in the above are from (0.0,0.0) at the top left corner of the top left pixel
+to (width_in_pixels,height_in_pixels) at the bottom right corner of the bottom right pixel.
+The pixel/line location of the center of the top left pixel would therefore be (0.5,0.5).</p>
+</div>
+<div class="section" id="in-case-of-north-up-images">
+<h2>In case of north up images:<a class="headerlink" href="#in-case-of-north-up-images" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">GT(2)</span></code>, <code class="docutils literal notranslate"><span class="pre">GT(4)</span></code> coefficients are zero.</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">GT(1)</span></code>, <code class="docutils literal notranslate"><span class="pre">GT(5)</span></code> is the pixel size.</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">GT(0)</span></code>, <code class="docutils literal notranslate"><span class="pre">GT(3)</span></code> position is the top left corner of the top left pixel of the raster.</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="multidimensional_api_tut.html" class="btn btn-neutral float-right" title="Multidimensional raster API tutorial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gdal_grid_tut.html" class="btn btn-neutral float-left" title="GDAL Grid Tutorial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2021 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
