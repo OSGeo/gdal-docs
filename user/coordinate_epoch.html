@@ -1,0 +1,435 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Coordinate epoch support &mdash; GDAL  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/gdal.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../_static/../images/favicon.png"/>
+  
+
+  
+  
+    <link rel="canonical" href="https://gdal.org/user/coordinate_epoch.html"/>
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Configuration options" href="configoptions.html" />
+    <link rel="prev" title="Feature Style Specification" href="ogr_feature_style.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/../images/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">User</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="raster_data_model.html">Raster Data Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multidim_raster_data_model.html">Multidimensional Raster Data Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vector_data_model.html">Vector Data Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gnm_data_model.html">Geographic Networks Data Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ogr_sql_sqlite_dialect.html">OGR SQL dialect and SQLITE SQL dialect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="virtual_file_systems.html">GDAL Virtual File Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ogr_feature_style.html">Feature Style Specification</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Coordinate epoch support</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dynamic-crs-and-coordinate-epoch">Dynamic CRS and coordinate epoch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#support-in-raster-and-vector-formats">Support in raster and vector formats</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#flatgeobuf">FlatGeoBuf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#geopackage-vector-raster">GeoPackage vector/raster</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#geotiff">GeoTIFF</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#jpeg2000">JPEG2000</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#persistent-auxiliary-metadata-aux-xml">Persistent Auxiliary Metadata (.aux.xml)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gdal-vrt">GDAL VRT</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#support-in-utilities">Support in utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#support-in-coordinate-transformation">Support in coordinate transformation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="configoptions.html">Configuration options</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sponsors/index.html">Sponsors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">User oriented documentation</a> &raquo;</li>
+      
+      <li>Coordinate epoch support</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/user/coordinate_epoch.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="configoptions.html" class="btn btn-neutral float-right" title="Configuration options" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ogr_feature_style.html" class="btn btn-neutral float-left" title="Feature Style Specification" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="coordinate-epoch-support">
+<span id="coordinate-epoch"></span><h1>Coordinate epoch support<a class="headerlink" href="#coordinate-epoch-support" title="Permalink to this headline">¶</a></h1>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 3.4.</span></p>
+</div>
+<div class="section" id="dynamic-crs-and-coordinate-epoch">
+<h2>Dynamic CRS and coordinate epoch<a class="headerlink" href="#dynamic-crs-and-coordinate-epoch" title="Permalink to this headline">¶</a></h2>
+<p>This document is intended to document the support for coordinate epoch, linked
+to dynamic CRS.</p>
+<p>In a dynamic CRS, coordinates of a point on the surface of the Earth may
+change with time. To be unambiguous the coordinates must always be qualified
+with the epoch at which they are valid. The coordinate epoch is not necessarily
+the epoch at which the observation was collected.</p>
+<p>Examples of dynamic CRS are <code class="docutils literal notranslate"><span class="pre">WGS</span> <span class="pre">84</span> <span class="pre">(G1762)</span></code>, <code class="docutils literal notranslate"><span class="pre">ITRF2014</span></code>, <code class="docutils literal notranslate"><span class="pre">ATRF2014</span></code>.</p>
+<p>The generic EPSG:4326 WGS 84 CRS is also considered dynamic, although it is
+not recommended to use it due to being based on a datum ensemble whose positional
+accuracy is 2 metres, but prefer one of its realizations, such as WGS 84 (G1762)</p>
+<p>The <a class="reference internal" href="../api/ogrspatialref.html#_CPPv4NK19OGRSpatialReference9IsDynamicEv" title="OGRSpatialReference::IsDynamic"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRSpatialReference::IsDynamic()</span></code></a> method can be used to test if
+a CRS is a dynamic one.</p>
+<p>The <a class="reference internal" href="../api/ogrspatialref.html#_CPPv4N19OGRSpatialReference18SetCoordinateEpochEd" title="OGRSpatialReference::SetCoordinateEpoch"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRSpatialReference::SetCoordinateEpoch()</span></code></a> and
+<a class="reference internal" href="../api/ogrspatialref.html#_CPPv4NK19OGRSpatialReference18GetCoordinateEpochEv" title="OGRSpatialReference::GetCoordinateEpoch"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRSpatialReference::GetCoordinateEpoch()</span></code></a> methods can be used to
+set/retrieve a coordinate epoch associated with a CRS. The coordinate epoch is
+expressed as a decimal year (e.g. 2021.3).</p>
+<p>Formally, the coordinate epoch of an observation belongs to the
+observation.  However, almost all formats do not allow for storing
+per-observation epoch, and typical usage is a set of observations with
+the same epoch.  Therefore we store the epoch as property of the CRS,
+and the meaning of this is as if that epoch value were part of every
+observation.  This choice eases processing, storage and format
+complexity for most usage.  For now, this means that a dataset where
+points have different epochs cannot be handled.</p>
+<p>For vector formats, per-geometry coordinate epoch could also make sense, but as
+most formats only support a per-layer CRS, we also for now limit support of
+coordinate epoch at the layer level. The coordinate transformation mechanics
+itself can support per-vertex coordinate epoch.</p>
+</div>
+<div class="section" id="support-in-raster-and-vector-formats">
+<h2>Support in raster and vector formats<a class="headerlink" href="#support-in-raster-and-vector-formats" title="Permalink to this headline">¶</a></h2>
+<p>At time of writing, no formats handled by GDAL/OGR have a standardized way of
+encoding a coordinate epoch. We consequently have made choices how to encode it,
+with the aim of being as much as possible backward compatible with existing
+readers. Those encodings might change if corresponding official specifications
+evolve to take this concept into account.
+The coordinate epoch is only written when attached to the SRS of the layer/dataset
+that is created.</p>
+<div class="section" id="flatgeobuf">
+<h3>FlatGeoBuf<a class="headerlink" href="#flatgeobuf" title="Permalink to this headline">¶</a></h3>
+<p>The coordinate epoch is encoded as a WKT:2019 string using the <code class="docutils literal notranslate"><span class="pre">EPOCH</span></code> subnode of the
+<a class="reference external" href="http://docs.opengeospatial.org/is/18-010r7/18-010r7.html#130">COORDINATEMETADATA</a>
+construct, set in the <code class="docutils literal notranslate"><span class="pre">Crs.wkt</span></code> header field of the FlatGeoBuf file.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">COORDINATEMETADATA</span><span class="p">[</span>
+    <span class="n">GEOGCRS</span><span class="p">[</span><span class="s2">&quot;WGS 84 (G1762)&quot;</span><span class="p">,</span>
+        <span class="n">DYNAMIC</span><span class="p">[</span><span class="n">FRAMEEPOCH</span><span class="p">[</span><span class="mf">2005.0</span><span class="p">]],</span>
+        <span class="n">DATUM</span><span class="p">[</span><span class="s2">&quot;World Geodetic System 1984 (G1762)&quot;</span><span class="p">,</span>
+          <span class="n">ELLIPSOID</span><span class="p">[</span><span class="s2">&quot;WGS 84&quot;</span><span class="p">,</span><span class="mi">6378137</span><span class="p">,</span><span class="mf">298.257223563</span><span class="p">,</span><span class="n">LENGTHUNIT</span><span class="p">[</span><span class="s2">&quot;metre&quot;</span><span class="p">,</span><span class="mf">1.0</span><span class="p">]]</span>
+        <span class="p">],</span>
+        <span class="n">CS</span><span class="p">[</span><span class="n">ellipsoidal</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>
+          <span class="n">AXIS</span><span class="p">[</span><span class="s2">&quot;(lat)&quot;</span><span class="p">,</span><span class="n">north</span><span class="p">,</span><span class="n">ANGLEUNIT</span><span class="p">[</span><span class="s2">&quot;degree&quot;</span><span class="p">,</span><span class="mf">0.0174532925199433</span><span class="p">]],</span>
+          <span class="n">AXIS</span><span class="p">[</span><span class="s2">&quot;(lon)&quot;</span><span class="p">,</span><span class="n">east</span><span class="p">,</span><span class="n">ANGLEUNIT</span><span class="p">[</span><span class="s2">&quot;degree&quot;</span><span class="p">,</span><span class="mf">0.0174532925199433</span><span class="p">]],</span>
+          <span class="n">AXIS</span><span class="p">[</span><span class="s2">&quot;ellipsoidal height (h)&quot;</span><span class="p">,</span><span class="n">up</span><span class="p">,</span><span class="n">LENGTHUNIT</span><span class="p">[</span><span class="s2">&quot;metre&quot;</span><span class="p">,</span><span class="mf">1.0</span><span class="p">]]</span>
+    <span class="p">],</span>
+    <span class="n">EPOCH</span><span class="p">[</span><span class="mf">2016.47</span><span class="p">]</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Such construct will not be understood by GDAL &lt; 3.4, but if the CRS has
+an associated EPSG code, this will not cause issues in those older
+GDAL versions.</p>
+</div>
+</div>
+<div class="section" id="geopackage-vector-raster">
+<h3>GeoPackage vector/raster<a class="headerlink" href="#geopackage-vector-raster" title="Permalink to this headline">¶</a></h3>
+<p>Each vector/raster table which has an associated coordinate epoch encodes it
+in the <code class="docutils literal notranslate"><span class="pre">epoch</span></code> column of the <code class="docutils literal notranslate"><span class="pre">gpkg_spatial_ref_sys</span></code> table, using an extended
+version of the CRS WKT extension (<a class="reference external" href="https://github.com/opengeospatial/geopackage/pull/600">https://github.com/opengeospatial/geopackage/pull/600</a>).</p>
+</div>
+<div class="section" id="geotiff">
+<h3>GeoTIFF<a class="headerlink" href="#geotiff" title="Permalink to this headline">¶</a></h3>
+<p>The coordinate epoch is encoded as a new GeoTIFF GeoKey, <code class="docutils literal notranslate"><span class="pre">CoordinateEpochGeoKey</span></code>
+of code 5120 and type DOUBLE.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Geotiff_Information</span><span class="p">:</span>
+   <span class="n">Version</span><span class="p">:</span> <span class="mi">1</span>
+   <span class="n">Key_Revision</span><span class="p">:</span> <span class="mf">1.0</span>
+   <span class="n">Tagged_Information</span><span class="p">:</span>
+      <span class="n">ModelTiepointTag</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">):</span>
+         <span class="mi">0</span>                 <span class="mi">0</span>                 <span class="mi">0</span>
+         <span class="mi">440720</span>            <span class="mi">3751320</span>           <span class="mi">0</span>
+      <span class="n">ModelPixelScaleTag</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">):</span>
+         <span class="mi">60</span>                <span class="mi">60</span>                <span class="mi">0</span>
+      <span class="n">End_Of_Tags</span><span class="o">.</span>
+   <span class="n">Keyed_Information</span><span class="p">:</span>
+      <span class="n">GTModelTypeGeoKey</span> <span class="p">(</span><span class="n">Short</span><span class="p">,</span><span class="mi">1</span><span class="p">):</span> <span class="n">ModelTypeProjected</span>
+      <span class="n">GTRasterTypeGeoKey</span> <span class="p">(</span><span class="n">Short</span><span class="p">,</span><span class="mi">1</span><span class="p">):</span> <span class="n">RasterPixelIsArea</span>
+      <span class="n">GTCitationGeoKey</span> <span class="p">(</span><span class="n">Ascii</span><span class="p">,</span><span class="mi">22</span><span class="p">):</span> <span class="s2">&quot;WGS 84 / UTM zone 11N&quot;</span>
+      <span class="n">GeogCitationGeoKey</span> <span class="p">(</span><span class="n">Ascii</span><span class="p">,</span><span class="mi">7</span><span class="p">):</span> <span class="s2">&quot;WGS 84&quot;</span>
+      <span class="n">GeogAngularUnitsGeoKey</span> <span class="p">(</span><span class="n">Short</span><span class="p">,</span><span class="mi">1</span><span class="p">):</span> <span class="n">Angular_Degree</span>
+      <span class="n">ProjectedCSTypeGeoKey</span> <span class="p">(</span><span class="n">Short</span><span class="p">,</span><span class="mi">1</span><span class="p">):</span> <span class="n">PCS_WGS84_UTM_zone_11N</span>
+      <span class="n">ProjLinearUnitsGeoKey</span> <span class="p">(</span><span class="n">Short</span><span class="p">,</span><span class="mi">1</span><span class="p">):</span> <span class="n">Linear_Meter</span>
+      <span class="n">CoordinateEpochGeoKey</span> <span class="p">(</span><span class="n">Double</span><span class="p">,</span><span class="mi">1</span><span class="p">):</span> <span class="mf">2021.3</span>
+      <span class="n">End_Of_Keys</span><span class="o">.</span>
+   <span class="n">End_Of_Geotiff</span><span class="o">.</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="jpeg2000">
+<h3>JPEG2000<a class="headerlink" href="#jpeg2000" title="Permalink to this headline">¶</a></h3>
+<p>GeoJP2 boxes use the above mentioned GeoTIFF encoding.</p>
+</div>
+<div class="section" id="persistent-auxiliary-metadata-aux-xml">
+<h3>Persistent Auxiliary Metadata (.aux.xml)<a class="headerlink" href="#persistent-auxiliary-metadata-aux-xml" title="Permalink to this headline">¶</a></h3>
+<p>The coordinate epoch is encoded as <code class="docutils literal notranslate"><span class="pre">coordinateEpoch</span></code> attribute of the <code class="docutils literal notranslate"><span class="pre">SRS</span></code>
+element.</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;PAMDataset&gt;</span>
+  <span class="nt">&lt;SRS</span> <span class="na">dataAxisToSRSAxisMapping=</span><span class="s">&quot;1,2&quot;</span> <span class="na">coordinateEpoch=</span><span class="s">&quot;2021.3&quot;</span><span class="nt">&gt;</span>PROJCS[&quot;WGS 84 / UTM zone 11N&quot;,GEOGCS[&quot;WGS 84&quot;,DATUM[&quot;WGS_1984&quot;,SPHEROID[&quot;WGS 84&quot;,6378137,298.257223563,AUTHORITY[&quot;EPSG&quot;,&quot;7030&quot;]],AUTHORITY[&quot;EPSG&quot;,&quot;6326&quot;]],PRIMEM[&quot;Greenwich&quot;,0,AUTHORITY[&quot;EPSG&quot;,&quot;8901&quot;]],UNIT[&quot;degree&quot;,0.0174532925199433,AUTHORITY[&quot;EPSG&quot;,&quot;9122&quot;]],AUTHORITY[&quot;EPSG&quot;,&quot;4326&quot;]],PROJECTION[&quot;Transverse_Mercator&quot;],PARAMETER[&quot;latitude_of_origin&quot;,0],PARAMETER[&quot;central_meridian&quot;,-117],PARAMETER[&quot;scale_factor&quot;,0.9996],PARAMETER[&quot;false_easting&quot;,500000],PARAMETER[&quot;false_northing&quot;,0],UNIT[&quot;metre&quot;,1,AUTHORITY[&quot;EPSG&quot;,&quot;9001&quot;]],AXIS[&quot;Easting&quot;,EAST],AXIS[&quot;Northing&quot;,NORTH],AUTHORITY[&quot;EPSG&quot;,&quot;32611&quot;]]<span class="nt">&lt;/SRS&gt;</span>
+  <span class="c">&lt;!-- snip --&gt;</span>
+<span class="nt">&lt;/PAMDataset&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="gdal-vrt">
+<h3>GDAL VRT<a class="headerlink" href="#gdal-vrt" title="Permalink to this headline">¶</a></h3>
+<p>The coordinate epoch is encoded as <code class="docutils literal notranslate"><span class="pre">coordinateEpoch</span></code> attribute of the <code class="docutils literal notranslate"><span class="pre">SRS</span></code>
+element.</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;VRTDataset</span> <span class="na">rasterXSize=</span><span class="s">&quot;20&quot;</span> <span class="na">rasterYSize=</span><span class="s">&quot;20&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;SRS</span> <span class="na">dataAxisToSRSAxisMapping=</span><span class="s">&quot;1,2&quot;</span> <span class="na">coordinateEpoch=</span><span class="s">&quot;2021.3&quot;</span><span class="nt">&gt;</span>PROJCS[&quot;WGS 84 / UTM zone 11N&quot;,GEOGCS[&quot;WGS 84&quot;,DATUM[&quot;WGS_1984&quot;,SPHEROID[&quot;WGS 84&quot;,6378137,298.257223563,AUTHORITY[&quot;EPSG&quot;,&quot;7030&quot;]],AUTHORITY[&quot;EPSG&quot;,&quot;6326&quot;]],PRIMEM[&quot;Greenwich&quot;,0,AUTHORITY[&quot;EPSG&quot;,&quot;8901&quot;]],UNIT[&quot;degree&quot;,0.0174532925199433,AUTHORITY[&quot;EPSG&quot;,&quot;9122&quot;]],AUTHORITY[&quot;EPSG&quot;,&quot;4326&quot;]],PROJECTION[&quot;Transverse_Mercator&quot;],PARAMETER[&quot;latitude_of_origin&quot;,0],PARAMETER[&quot;central_meridian&quot;,-117],PARAMETER[&quot;scale_factor&quot;,0.9996],PARAMETER[&quot;false_easting&quot;,500000],PARAMETER[&quot;false_northing&quot;,0],UNIT[&quot;metre&quot;,1,AUTHORITY[&quot;EPSG&quot;,&quot;9001&quot;]],AXIS[&quot;Easting&quot;,EAST],AXIS[&quot;Northing&quot;,NORTH],AUTHORITY[&quot;EPSG&quot;,&quot;32611&quot;]]<span class="nt">&lt;/SRS&gt;</span>
+  <span class="c">&lt;!-- snip --&gt;</span>
+<span class="nt">&lt;/VRTDataset&gt;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="support-in-utilities">
+<h2>Support in utilities<a class="headerlink" href="#support-in-utilities" title="Permalink to this headline">¶</a></h2>
+<p><strong class="program">gdalinfo</strong> and <strong class="program">ogrinfo</strong> report the coordinate epoch, when
+attached to a dataset/layer SRS.</p>
+<p><strong class="program">gdal_translate</strong> and <strong class="program">ogr2ogr</strong> have a <code class="docutils literal notranslate"><span class="pre">-a_coord_epoch</span></code> option to be used
+together with <code class="docutils literal notranslate"><span class="pre">-a_srs</span></code>, and otherwise preserve the coordinate epoch in the output SRS
+from the source SRS when no SRS related options are specified.</p>
+<p><strong class="program">gdalwarp</strong> and <strong class="program">ogr2ogr</strong> have a <code class="docutils literal notranslate"><span class="pre">-s_coord_epoch</span></code> option to be used together with <code class="docutils literal notranslate"><span class="pre">-s_srs</span></code>
+(resp. <code class="docutils literal notranslate"><span class="pre">-t_coord_epoch</span></code> option to be used together with <code class="docutils literal notranslate"><span class="pre">-t_srs</span></code>) to override/set the
+coordinate epoch of the source (resp. target) CRS. <code class="docutils literal notranslate"><span class="pre">-s_coord_epoch</span></code> and
+<code class="docutils literal notranslate"><span class="pre">-t_coord_epoch</span></code> are currently mutually exclusive, due to lack of support for
+transformations between two dynamic CRS.</p>
+<p><strong class="program">gdalwarp</strong> preserves the coordinate epoch in the output SRS when appropriate.</p>
+</div>
+<div class="section" id="support-in-coordinate-transformation">
+<h2>Support in coordinate transformation<a class="headerlink" href="#support-in-coordinate-transformation" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="../api/ogrspatialref.html#_CPPv427OGRCoordinateTransformation" title="OGRCoordinateTransformation"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRCoordinateTransformation</span></code></a> class can perform time-dependent
+transformations between a static and dynamic CRS based on the coordinate epoch
+passed per vertex.</p>
+<p>It can also take into account the coordinate epoch associated with a dynamic
+CRS, when doing time-dependent transformations between a static and dynamic CRS.
+The <code class="decl_configoption docutils literal notranslate"><span class="pre">OGR_CT_USE_SRS_COORDINATE_EPOCH</span></code> configuration option
+can be set to <code class="docutils literal notranslate"><span class="pre">NO</span></code> to disable using the coordinate epoch associated with the
+source or target CRS.</p>
+<p>If a per-vertex time is specified, it overrides the one associated with the CRS.</p>
+<p>Note that dynamic CRS to dynamic CRS transformations are not supported currently.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="configoptions.html" class="btn btn-neutral float-right" title="Configuration options" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ogr_feature_style.html" class="btn btn-neutral float-left" title="Feature Style Specification" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2021 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+  </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,492 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Python bindings &mdash; GDAL  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/gdal.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/gdal.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../_static/../images/favicon.png"/>
+  
+
+  
+  
+    <link rel="canonical" href="https://gdal.org/api/python.html"/>
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Python API reference" href="python_api_ref.html" />
+    <link rel="prev" title="Geographic Network C++ API" href="gnm_cpp.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/../images/gdalicon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#id2">Full Doxygen output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#c-api">C API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id3">C++ API</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#python-api">Python API</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Python bindings</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#tutorials">Tutorials</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gotchas">Gotchas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dependencies">Dependencies</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#building-as-part-of-the-gdal-library-source-tree">Building as part of the GDAL library source tree</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#swig">SWIG</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#usage">Usage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#numpy">Numpy</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="python_api_ref.html">Python API reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="python_gotchas.html">Python Gotchas in the GDAL and OGR Python Bindings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="python_samples.html">Python Sample scripts</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id4">Java API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#gdal-ogr-in-other-languages">GDAL/OGR In Other Languages</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sponsors/index.html">Sponsors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">API</a> &raquo;</li>
+      
+      <li>Python bindings</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit//master/gdal/doc/source/api/python.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="python_api_ref.html" class="btn btn-neutral float-right" title="Python API reference" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gnm_cpp.html" class="btn btn-neutral float-left" title="Geographic Network C++ API" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="python-bindings">
+<span id="python"></span><h1>Python bindings<a class="headerlink" href="#python-bindings" title="Permalink to this headline">¶</a></h1>
+<p>This Python package and extensions are a number of tools for programming and manipulating the <a class="reference external" href="http://www.gdal.org/">GDAL</a> Geospatial Data Abstraction Library.
+Actually, it is two libraries – GDAL for manipulating geospatial raster data and OGR for manipulating geospatial vector data – but we’ll refer to the entire package as the GDAL library for the purposes of this document.</p>
+<p>The GDAL project (primarily Even Rouault) maintains SWIG generated Python
+bindings for GDAL and OGR. Generally speaking the classes and methods mostly
+match those of the GDAL and OGR C++ classes. There is no Python specific
+reference documentation, but the <a class="reference internal" href="../tutorials/index.html#tutorials"><span class="std std-ref">tutorials</span></a> includes Python examples.</p>
+<div class="section" id="tutorials">
+<h2>Tutorials<a class="headerlink" href="#tutorials" title="Permalink to this headline">¶</a></h2>
+<p>Chris Garrard has given courses at Utah State University on “Geoprocessing with Python using Open Source GIS” (<a class="reference external" href="http://www.gis.usu.edu/~chrisg/python">http://www.gis.usu.edu/~chrisg/python</a>). There are many slides, examples, test data… and homework ;-) that can
+be greatly helpful for beginners with GDAL/OGR in Python.</p>
+<p>Greg Petrie has an OGR related tutorial available at <a class="reference external" href="http://cosmicproject.org/OGR">http://cosmicproject.org/OGR</a>.</p>
+<p>A cookbook full of recipes for using the Python GDAL/OGR bindings : <a class="reference external" href="http://pcjericks.github.io/py-gdalogr-cookbook/index.html">http://pcjericks.github.io/py-gdalogr-cookbook/index.html</a></p>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>An assortment of other samples are available in the Python github samples directory at
+<a class="reference external" href="https://github.com/OSGeo/gdal/tree/master/gdal/swig/python/gdal-utils/osgeo_utils/samples">https://github.com/OSGeo/gdal/tree/master/gdal/swig/python/gdal-utils/osgeo_utils/samples</a>
+with some description in the <a class="reference internal" href="python_samples.html#python-samples"><span class="std std-ref">Python Sample scripts</span></a>.</p></li>
+<li><p>Several <a class="reference external" href="https://github.com/OSGeo/gdal/tree/master/gdal/swig/python/gdal-utils/osgeo_utils/">GDAL utilities</a>
+are implemented in Python and can be useful examples.</p></li>
+<li><p>The majority of GDAL regression tests are written in Python. They are available at
+<a class="reference external" href="https://github.com/OSGeo/gdal/tree/master/autotest">https://github.com/OSGeo/gdal/tree/master/autotest</a></p></li>
+<li><p>Some examples of GDAL/numpy integration can be found is found in the following scripts:
+- <cite>gdal_calc.py</cite>
+- <cite>val_repl.py</cite>
+- <cite>gdal_merge.py</cite>
+- <cite>gdal2tiles.py</cite>
+- <cite>gdal2xyz.py</cite>
+- <cite>pct2rgb.py</cite>
+- <cite>gdallocationinfo.py</cite></p></li>
+</ul>
+</div>
+<div class="section" id="gotchas">
+<h2>Gotchas<a class="headerlink" href="#gotchas" title="Permalink to this headline">¶</a></h2>
+<p>Although GDAL’s and OGR’s Python bindings provide a fairly “Pythonic” wrapper around the underlying C++ code, there are several ways in which the Python bindings differ from typical Python libraries.
+These differences can catch Python programmers by surprise and lead to unexpected results. These differences result from the complexity of developing a large, long-lived library while continuing to maintain
+backward compatibility. They are being addressed over time, but until they are all gone, please review this list of <a class="reference internal" href="python_gotchas.html#python-gotchas"><span class="std std-ref">Python Gotchas in the GDAL and OGR Python Bindings</span></a>.</p>
+</div>
+<div class="section" id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><p>libgdal (3.2.0 or greater) and header files (gdal-devel)</p></li>
+<li><p>numpy (1.0.0 or greater) and header files (numpy-devel) (not explicitly
+required, but many examples and utilities will not work without it)</p></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="unix">
+<h3>Unix<a class="headerlink" href="#unix" title="Permalink to this headline">¶</a></h3>
+<p>The GDAL Python bindings support both distutils and setuptools, with a
+preference for using setuptools.  If setuptools can be imported, setup will
+use that to build an egg by default.  If setuptools cannot be imported, a
+simple distutils root install of the GDAL package (and no dependency
+chaining for numpy) will be made.</p>
+</div>
+<div class="section" id="easy-install">
+<h3>easy_install<a class="headerlink" href="#easy-install" title="Permalink to this headline">¶</a></h3>
+<p>GDAL can be installed from the Python CheeseShop:</p>
+<div class="highlight-Bash notranslate"><div class="highlight"><pre><span></span>$ sudo easy_install GDAL
+</pre></div>
+</div>
+<p>It may be necessary to have libgdal and its development headers installed
+if easy_install is expected to do a source build because no egg is available
+for your specified platform and Python version.</p>
+</div>
+<div class="section" id="setup-py">
+<h3>setup.py<a class="headerlink" href="#setup-py" title="Permalink to this headline">¶</a></h3>
+<p>Most of setup.py’s important variables are controlled with the setup.cfg
+file.  In setup.cfg, you can modify pointers to include files and libraries.
+The most important option that will likely need to be modified is the
+gdal_config parameter.  If you installed GDAL from a package, the location
+of this program is likely /usr/bin/gdal-config, but it may be in another place
+depending on how your packager arranged things.</p>
+<p>After modifying the location of gdal-config, you can build and install with the setup script:</p>
+<div class="highlight-Bash notranslate"><div class="highlight"><pre><span></span>$ python setup.py build
+$ python setup.py install
+</pre></div>
+</div>
+<p>If you have setuptools installed, you can also generate an egg:</p>
+<div class="highlight-Bash notranslate"><div class="highlight"><pre><span></span>$ python setup.py bdist_egg
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="building-as-part-of-the-gdal-library-source-tree">
+<h2>Building as part of the GDAL library source tree<a class="headerlink" href="#building-as-part-of-the-gdal-library-source-tree" title="Permalink to this headline">¶</a></h2>
+<p>You can also have the GDAL Python bindings built as part of a source
+build by specifying –with-python as part of your configure line:</p>
+<div class="highlight-Bash notranslate"><div class="highlight"><pre><span></span>$ ./configure --with-python
+</pre></div>
+</div>
+<p>Use the typical make and make install commands to complete the installation:</p>
+<div class="highlight-Bash notranslate"><div class="highlight"><pre><span></span>$ make
+$ make install
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>./configure attempts to detect if you have setuptools installed in the tree
+of the Python binary it was given (or detected on the execution path), and it
+will use an egg build by default in that instance.  If you have a need to
+use a distutils-only install, you will have to edit setup.py to ensure that
+the HAVE_SETUPTOOLS variable is ultimately set to False and proceed with a
+typical ‘python setup.py install’ command.</p>
+</div>
+<div class="section" id="windows">
+<h3>Windows<a class="headerlink" href="#windows" title="Permalink to this headline">¶</a></h3>
+<p>You will need the following items to complete an install of the GDAL Python bindings on Windows:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="http://download.osgeo.org/gdal/win32/1.6/">GDAL Windows Binaries</a> The basic install requires the gdalwin32exe160.zip distribution file. Other files you see in the directory are for various optional plugins and development headers/include files. After downloading the zip file, extract it to the directory of your choosing.</p></li>
+</ul>
+<p>As explained in the README_EXE.txt file, after unzipping the GDAL binaries you will need to modify your system path and variables. If you’re not sure how to do this, read the <a class="reference external" href="http://support.microsoft.com/kb/310519">Microsoft KnowledgeBase doc</a></p>
+<ol class="arabic simple">
+<li><p>Add the installation directory bin folder to your system PATH, remember to put a semicolon in front of it before you add to the existing path.</p></li>
+</ol>
+<div class="highlight-bat notranslate"><div class="highlight"><pre><span></span>C<span class="p">:</span><span class="nl">\gdalwin32-1.7\bin</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Create a new user or system variable with the data folder from your installation.</p></li>
+</ol>
+<div class="highlight-bat notranslate"><div class="highlight"><pre><span></span>Name : GDAL_DATA
+<span class="k">Path</span> : C:\gdalwin32-1.7\data
+</pre></div>
+</div>
+<p>Skip down to the <a class="reference external" href="https://trac.osgeo.org/gdal/wiki/GdalOgrInPython#usage">Usage</a> section to test your install. Note, a reboot may be required.</p>
+</div>
+</div>
+<div class="section" id="swig">
+<h2>SWIG<a class="headerlink" href="#swig" title="Permalink to this headline">¶</a></h2>
+<p>The GDAL Python package is built using <a class="reference external" href="http://www.swig.org/">SWIG</a>. The earliest version of <a class="reference external" href="http://www.swig.org/">SWIG</a>
+that is supported to generate the wrapper code is 1.3.40.  It is possible
+that usable bindings will build with a version earlier than 1.3.40, but no
+development efforts are targeted at versions below it.  You should not have
+to run SWIG in your development tree to generate the binding code, as it
+is usually included with the source.  However, if you do need to regenerate,
+you can do so with the following make command from within the ./swig/python
+directory:</p>
+<div class="highlight-Bash notranslate"><div class="highlight"><pre><span></span>$ make generate
+</pre></div>
+</div>
+<p>To ensure that all of the bindings are regenerated, you can clean the
+bindings code out before the generate command by issuing:</p>
+<div class="highlight-Bash notranslate"><div class="highlight"><pre><span></span>$ make veryclean
+</pre></div>
+</div>
+</div>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="imports">
+<h3>Imports<a class="headerlink" href="#imports" title="Permalink to this headline">¶</a></h3>
+<p>There are five major modules that are included with the <a class="reference external" href="http://www.gdal.org/">GDAL</a> Python bindings.:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">osgeo</span> <span class="kn">import</span> <span class="n">gdal</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">osgeo</span> <span class="kn">import</span> <span class="n">ogr</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">osgeo</span> <span class="kn">import</span> <span class="n">osr</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">osgeo</span> <span class="kn">import</span> <span class="n">gdal_array</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">osgeo</span> <span class="kn">import</span> <span class="n">gdalconst</span>
+</pre></div>
+</div>
+<p>Additionally, there are five compatibility modules that are included but
+provide notices to state that they are deprecated and will be going away.
+If you are using GDAL 1.7 bindings, you should update your imports to utilize
+the usage above, but the following will work until GDAL 3.1.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">gdal</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">ogr</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">osr</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">gdalnumeric</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">gdalconst</span>
+</pre></div>
+</div>
+<p>If you have previous code that imported the global module and still need to
+support the old import, a simple try…except import can silence the
+deprecation warning and keep things named essentially the same as before:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="kn">from</span> <span class="nn">osgeo</span> <span class="kn">import</span> <span class="n">gdal</span>
+<span class="gp">... </span><span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="kn">import</span> <span class="nn">gdal</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="docstrings">
+<h3>Docstrings<a class="headerlink" href="#docstrings" title="Permalink to this headline">¶</a></h3>
+<p>Currently, only the OGR module has docstrings which are generated from the
+C/C++ API doxygen materials.  Some of the arguments and types might not
+match up exactly with what you are seeing from Python, but they should be
+enough to get you going.  Docstrings for GDAL and OSR are planned for a future
+release.</p>
+</div>
+</div>
+<div class="section" id="numpy">
+<h2>Numpy<a class="headerlink" href="#numpy" title="Permalink to this headline">¶</a></h2>
+<p>One advanced feature of the GDAL Python bindings not found in the other
+language bindings (C#, Perl) is integration with the Python numerical array
+facilities. The gdal.Dataset.ReadAsArray() method can be used to read raster
+data as numerical arrays, ready to use with the Python numerical array
+capabilities.</p>
+<p>These facilities have evolved somewhat over time. In the past the package was known as “Numeric” and imported using “import Numeric”. A new generation is imported using “import numpy”. Currently the old
+generation bindings only support the older Numeric package, and the new generation bindings only support the new generation numpy package. They are mostly compatible, and by importing gdalnumeric (or osgeo.gdal_array)
+you will get whichever is appropriate to the current bindings type.</p>
+<div class="section" id="id1">
+<h3>Examples<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>One example of GDAL/numpy integration is found in the <a class="reference external" href="https://github.com/OSGeo/gdal/blob/master/gdal/swig/python/gdal-utils/osgeo_utils/samples/val_repl.py">val_repl.py</a> script.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Performance Notes</strong></p>
+<p>ReadAsArray expects to make an entire copy of a raster band or dataset
+unless the data are explicitly subsetted as part of the function call. For
+large data, this approach is expected to be prohibitively memory intensive.</p>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="python_api_ref.html" class="btn btn-neutral float-right" title="Python API reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gnm_cpp.html" class="btn btn-neutral float-left" title="Geographic Network C++ API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2021 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+  </div>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
