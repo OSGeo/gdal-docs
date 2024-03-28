@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SQLite / Spatialite RDBMS &mdash; GDAL  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/gdal.css" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://gdal.org/drivers/vector/sqlite.html"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="SVG - Scalable Vector Graphics" href="svg.html" />
+    <link rel="prev" title="Norwegian SOSI Standard" href="sosi.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Vector drivers</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="amigocloud.html">AmigoCloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arrow.html">(Geo)Arrow IPC File Format / Stream</a></li>
+<li class="toctree-l2"><a class="reference internal" href="avcbin.html">Arc/Info Binary Coverage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="avce00.html">Arc/Info E00 (ASCII) Coverage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cad.html">CAD -- AutoCAD DWG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="carto.html">Carto</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csv.html">Comma Separated Value (.csv)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csw.html">CSW - OGC CSW (Catalog Service for the Web)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dgn.html">Microstation DGN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dgnv8.html">Microstation DGN v8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dwg.html">AutoCAD DWG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dxf.html">AutoCAD DXF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eeda.html">Google Earth Engine Data API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="edigeo.html">EDIGEO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elasticsearch.html">Elasticsearch: Geographically Encoded Objects for Elasticsearch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="esrijson.html">ESRIJSON / FeatureService driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filegdb.html">ESRI File Geodatabase (FileGDB)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flatgeobuf.html">FlatGeobuf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoconcept.html">GeoConcept text export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geojson.html">GeoJSON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geojsonseq.html">GeoJSONSeq: sequence of GeoJSON features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="georss.html">GeoRSS : Geographically Encoded Objects for RSS feeds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gml.html">GML - Geography Markup Language</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gmlas.html">GMLAS - Geography Markup Language (GML) driven by application schemas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gmt.html">GMT ASCII Vectors (.gmt)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpkg.html">GPKG -- GeoPackage vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpsbabel.html">GPSBabel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpx.html">GPX - GPS Exchange Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grass.html">GRASS Vector Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gtfs.html">GTFS - General Transit Feed Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hana.html">SAP HANA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="idb.html">IDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="idrisi.html">Idrisi Vector (.VCT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ili.html">&quot;INTERLIS 1&quot; and &quot;INTERLIS 2&quot; drivers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jml.html">JML: OpenJUMP JML format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jsonfg.html">JSONFG -- OGC Features and Geometries JSON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kml.html">KML - Keyhole Markup Language</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libkml.html">LIBKML Driver (.kml .kmz)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lvbag.html">Dutch Kadaster LV BAG 2.0 Extract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mapml.html">MapML</a></li>
+<li class="toctree-l2"><a class="reference internal" href="memory.html">Memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mitab.html">MapInfo TAB and MIF/MID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mongodbv3.html">MongoDBv3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mssqlspatial.html">MSSQLSpatial - Microsoft SQL Server Spatial Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mvt.html">MVT: Mapbox Vector Tiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mysql.html">MySQL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nas.html">NAS - ALKIS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="netcdf.html">NetCDF: Network Common Data Form - Vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ngw.html">NGW -- NextGIS Web</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ntf.html">UK .NTF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="oapif.html">OGC API - Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="oci.html">Oracle Spatial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="odbc.html">ODBC RDBMS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ods.html">ODS - Open Document Spreadsheet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ogdi.html">OGDI Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="openfilegdb.html">ESRI File Geodatabase vector (OpenFileGDB)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="osm.html">OSM - OpenStreetMap XML and PBF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parquet.html">(Geo)Parquet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pdf.html">PDF -- Geospatial PDF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pds.html">PDS - Planetary Data Systems TABLE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pgdump.html">PostgreSQL SQL Dump</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pgeo.html">ESRI Personal GeoDatabase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pg.html">PostgreSQL / PostGIS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plscenes.html">PLScenes (Planet Labs Scenes/Catalog API)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pmtiles.html">PMTiles -- ProtoMaps Tiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s57.html">IHO S-57 (ENC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sdts.html">SDTS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="selafin.html">Selafin files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shapefile.html">ESRI Shapefile / DBF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sosi.html">Norwegian SOSI Standard</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">SQLite / Spatialite RDBMS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#driver-capabilities">Driver capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#regular-sqlite-databases">&quot;Regular&quot; SQLite databases</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tables-with-multiple-geometry-columns">Tables with multiple geometry columns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#regexp-operator">REGEXP operator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#using-the-spatialite-library-spatial-extension-for-sqlite">Using the SpatiaLite library (Spatial extension for SQLite)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#opening-with-virtualshape">Opening with 'VirtualShape:'</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-sqlite-sql-dialect">The SQLite SQL dialect</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-virtualogr-sqlite-extension">The VirtualOGR SQLite extension</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#creation-issues">Creation Issues</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#transaction-support">Transaction support</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#relationships">Relationships</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dataset-open-options">Dataset open options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#database-creation-options">Database creation options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#layer-creation-options">Layer creation options</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#configuration-options">Configuration options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#performance-hints">Performance hints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example">Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#credits">Credits</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#links">Links</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="svg.html">SVG - Scalable Vector Graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sxf.html">Storage and eXchange Format - SXF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiger.html">U.S. Census TIGER/Line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.html">TileDB -- TileDB vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="topojson.html">TopoJSON driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vdv.html">VDV - VDV-451/VDV-452/INTREST Data Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vfk.html">VFK - Czech Cadastral Exchange Data Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vrt.html">VRT -- Virtual Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wasp.html">WAsP - WAsP .map format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wfs.html">WFS - OGC WFS service</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xls.html">XLS - MS Excel format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xlsx.html">XLSX - MS Office Open XML spreadsheet</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sponsors/index.html">Sponsors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Vector drivers</a> &raquo;</li>
+      
+      <li>SQLite / Spatialite RDBMS</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit/master/doc/source/drivers/vector/sqlite.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="svg.html" class="btn btn-neutral float-right" title="SVG - Scalable Vector Graphics" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="sosi.html" class="btn btn-neutral float-left" title="Norwegian SOSI Standard" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="sqlite-spatialite-rdbms">
+<span id="vector-sqlite"></span><h1>SQLite / Spatialite RDBMS<a class="headerlink" href="#sqlite-spatialite-rdbms" title="Permalink to this heading"></a></h1>
+<div class="admonition shortname" id="shortname-0">
+<p class="admonition-title">Driver short name</p>
+<p>SQLite</p>
+</div>
+<div class="admonition build_dependencies" id="build_dependencies-0">
+<p class="admonition-title">Build dependencies</p>
+<p>libsqlite3 or libspatialite</p>
+</div>
+<p>OGR optionally supports spatial and non-spatial tables stored in SQLite
+3.x database files. SQLite is a &quot;light weight&quot; single file based RDBMS
+engine with fairly complete SQL semantics and respectable performance.</p>
+<p>The driver can handle &quot;regular&quot; SQLite databases, as well as Spatialite
+databases (spatial enabled SQLite databases). The type of an existing
+database can be checked from the SQLITE debug info value &quot;OGR style
+SQLite DB found/ SpatiaLite DB found/SpatiaLite v4 DB found&quot; obtained by
+running <code class="docutils literal notranslate"><span class="pre">ogrinfo</span> <span class="pre">db.sqlite</span> <span class="pre">--debug</span> <span class="pre">on</span></code></p>
+<p>Starting with GDAL 2.2, the SQLite driver can also read databases with
+<a class="reference internal" href="../raster/rasterlite2.html#raster-rasterlite2"><span class="std std-ref">RasterLite2 raster coverages</span></a>.</p>
+<p>The SQLite database is essentially typeless, but the SQLite driver will
+attempt to classify attributes field as text, integer or floating point
+based on the contents of the first record in a table. Datetime field types
+are also handled.</p>
+<p>Starting with GDAL 2.2, the &quot;JSonStringList&quot;, &quot;JSonIntegerList&quot;,
+&quot;JSonInteger64List&quot; and &quot;JSonRealList&quot; SQLite declaration types are used
+to map the corresponding OGR StringList, IntegerList, Integer64List and
+RealList types. The field values are then encoded as JSon arrays, with
+proper CSV escaping.</p>
+<p>SQLite databases often do not work well over NFS, or some other
+networked file system protocols due to the poor support for locking. It
+is safest to operate only on SQLite files on a physical disk of the
+local system.</p>
+<p>SQLite is an optionally compiled in driver. It is not compiled in by
+default.</p>
+<p>By default, SQL statements are passed directly to the SQLite database
+engine. It's also possible to request the driver to handle SQL commands
+with <a class="reference internal" href="../../user/ogr_sql_dialect.html#ogr-sql-dialect"><span class="std std-ref">OGR SQL</span></a> engine, by passing <strong>&quot;OGRSQL&quot;</strong> string
+to the ExecuteSQL() method, as name of the SQL dialect.</p>
+<p>The <a class="reference internal" href="#config-OGR_SQLITE_SYNCHRONOUS"><code class="docutils literal notranslate"><span class="pre">OGR_SQLITE_SYNCHRONOUS</span></code></a> configuration option
+has been added. When set to OFF, this issues a 'PRAGMA synchronous =
+OFF' command to the SQLite database. This has the advantage of
+speeding-up some write operations (e.g. on EXT4 filesystems), but at the
+expense of data safety w.r.t system/OS crashes. So use it carefully in
+production environments and read the SQLite <a class="reference external" href="http://www.sqlite.org/pragma.html#pragma_synchronous">related
+documentation</a>.</p>
+<p>Any SQLite
+<a class="reference external" href="http://www.sqlite.org/pragma.html">pragma</a> can be specified with the
+<a class="reference internal" href="#config-OGR_SQLITE_PRAGMA"><code class="docutils literal notranslate"><span class="pre">OGR_SQLITE_PRAGMA</span></code></a> configuration option. The syntax is
+<code class="docutils literal notranslate"><span class="pre">OGR_SQLITE_PRAGMA</span> <span class="pre">=</span> <span class="pre">&quot;pragma_name=pragma_value[,pragma_name2=pragma_value2]*&quot;</span></code>.</p>
+<section id="driver-capabilities">
+<h2>Driver capabilities<a class="headerlink" href="#driver-capabilities" title="Permalink to this heading"></a></h2>
+<div class="admonition supports_create" id="supports_create-0">
+<p class="admonition-title">Supports Create()</p>
+<p>This driver supports the <a class="reference internal" href="../../api/gdaldriver_cpp.html#_CPPv4N10GDALDriver6CreateEPKciii12GDALDataType12CSLConstList" title="GDALDriver::Create"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDriver::Create()</span></code></a> operation</p>
+</div>
+<div class="admonition supports_georeferencing" id="supports_georeferencing-0">
+<p class="admonition-title">Supports Georeferencing</p>
+<p>This driver supports georeferencing</p>
+</div>
+<div class="admonition supports_virtualio" id="supports_virtualio-0">
+<p class="admonition-title">Supports VirtualIO</p>
+<p>This driver supports <a class="reference internal" href="../../user/virtual_file_systems.html#virtual-file-systems"><span class="std std-ref">virtual I/O operations (/vsimem/, etc.)</span></a></p>
+</div>
+</section>
+<section id="regular-sqlite-databases">
+<h2>&quot;Regular&quot; SQLite databases<a class="headerlink" href="#regular-sqlite-databases" title="Permalink to this heading"></a></h2>
+<p>The driver looks for a geometry_columns table laid out as defined
+loosely according to OGC Simple Features standards, particularly as
+defined in <a class="reference external" href="http://trac.osgeo.org/fdo/wiki/FDORfc16">FDO RFC 16</a>. If
+found it is used to map tables to layers.</p>
+<p>If geometry_columns is not found, each table is treated as a layer.
+Layers with a WKT_GEOMETRY field will be treated as spatial tables, and
+the WKT_GEOMETRY column will be read as Well Known Text geometry.</p>
+<p>If geometry_columns is found, it will be used to lookup spatial
+reference systems in the spatial_ref_sys table.</p>
+<p>While the SQLite driver supports reading spatial data from records,
+there is no support for spatial indexing, so spatial queries will tend
+to be slow (use Spatialite for that). Attributes queries may be fast,
+especially if indexes are built for appropriate attribute columns using
+the &quot;CREATE INDEX ON ( )&quot; SQL command.</p>
+<p>The driver also supports reading and writing the
+following non-linear geometry types :CIRCULARSTRING, COMPOUNDCURVE,
+CURVEPOLYGON, MULTICURVE and MULTISURFACE. Note: this is not true for
+Spatialite databases, since those geometry types are not supported by
+current Spatialite versions.</p>
+</section>
+<section id="tables-with-multiple-geometry-columns">
+<h2>Tables with multiple geometry columns<a class="headerlink" href="#tables-with-multiple-geometry-columns" title="Permalink to this heading"></a></h2>
+<p>Layers with multiple geometry columns can be
+created, modified or read, following new API described in <a class="reference internal" href="../../development/rfc/rfc41_multiple_geometry_fields.html#rfc-41"><span class="std std-ref">RFC 41 : Support for multiple geometry fields in OGR</span></a></p>
+</section>
+<section id="regexp-operator">
+<h2>REGEXP operator<a class="headerlink" href="#regexp-operator" title="Permalink to this heading"></a></h2>
+<p>By default, the REGEXP operator has no implementation in SQLite. With
+OGRbuilt against the PCRE library, the REGEXP operator is
+available in SQL statements run by OGR.</p>
+</section>
+<section id="using-the-spatialite-library-spatial-extension-for-sqlite">
+<h2>Using the SpatiaLite library (Spatial extension for SQLite)<a class="headerlink" href="#using-the-spatialite-library-spatial-extension-for-sqlite" title="Permalink to this heading"></a></h2>
+<p>The SQLite driver can read and write SpatiaLite databases. Creating or
+updating a spatialite database requires explicit linking against
+SpatiaLite library (version &gt;= 2.3.1). Explicit linking against
+SpatiaLite library also provides access to functions provided by this
+library, such as spatial indexes, spatial functions, etc...</p>
+<p>A few examples :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Duplicate the sample database provided with SpatiaLite</span>
+<span class="n">ogr2ogr</span> <span class="o">-</span><span class="n">f</span> <span class="n">SQLite</span> <span class="n">testspatialite</span><span class="o">.</span><span class="n">sqlite</span> <span class="n">test</span><span class="o">-</span><span class="mf">2.3</span><span class="o">.</span><span class="n">sqlite</span>  <span class="o">-</span><span class="n">dsco</span> <span class="n">SPATIALITE</span><span class="o">=</span><span class="n">YES</span>
+
+<span class="c1"># Make a request with a spatial filter. Will work faster if spatial index has</span>
+<span class="c1"># been created and explicit linking against SpatiaLite library.</span>
+<span class="n">ogrinfo</span> <span class="n">testspatialite</span><span class="o">.</span><span class="n">sqlite</span> <span class="n">Towns</span> <span class="o">-</span><span class="n">spat</span> <span class="mi">754000</span> <span class="mi">4692000</span> <span class="mi">770000</span> <span class="mi">4924000</span>
+</pre></div>
+</div>
+</section>
+<section id="opening-with-virtualshape">
+<h2>Opening with 'VirtualShape:'<a class="headerlink" href="#opening-with-virtualshape" title="Permalink to this heading"></a></h2>
+<p>(Require Spatialite support)</p>
+<p>It is possible to open on-the-fly a shapefile as a VirtualShape with
+Spatialite. The syntax to use for the datasource is
+&quot;VirtualShape:/path/to/shapefile.shp&quot; (the shapefile must be a &quot;real&quot;
+file).</p>
+<p>This gives the capability to use the spatial operations of Spatialite
+(note that spatial indexes on virtual tables are not available).</p>
+</section>
+<section id="the-sqlite-sql-dialect">
+<h2>The SQLite SQL dialect<a class="headerlink" href="#the-sqlite-sql-dialect" title="Permalink to this heading"></a></h2>
+<p>The SQLite SQL engine can be used to run SQL
+queries on any OGR datasource if using the <a class="reference internal" href="../../user/sql_sqlite_dialect.html#sql-sqlite-dialect"><span class="std std-ref">SQL SQLite dialect</span></a>.</p>
+</section>
+<section id="the-virtualogr-sqlite-extension">
+<h2>The VirtualOGR SQLite extension<a class="headerlink" href="#the-virtualogr-sqlite-extension" title="Permalink to this heading"></a></h2>
+<p>The GDAL/OGR library can be loaded as a <a class="reference external" href="http://www.sqlite.org/lang_corefunc.html#load_extension">SQLite
+extension</a>.
+The extension is loaded with the load_extension(gdal_library_name) SQL
+function, where gdal_library_name is typically libgdal.so on Unix/Linux,
+gdal110.dll on Windows, etc..</p>
+<p>After the extension is loaded, a virtual table, corresponding to a OGR
+layer, can be created with one of the following SQL statement :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">VIRTUAL</span> <span class="n">TABLE</span> <span class="n">table_name</span> <span class="n">USING</span> <span class="n">VirtualOGR</span><span class="p">(</span><span class="n">datasource_name</span><span class="p">);</span>
+<span class="n">CREATE</span> <span class="n">VIRTUAL</span> <span class="n">TABLE</span> <span class="n">table_name</span> <span class="n">USING</span> <span class="n">VirtualOGR</span><span class="p">(</span><span class="n">datasource_name</span><span class="p">,</span> <span class="n">update_mode</span><span class="p">);</span>
+<span class="n">CREATE</span> <span class="n">VIRTUAL</span> <span class="n">TABLE</span> <span class="n">table_name</span> <span class="n">USING</span> <span class="n">VirtualOGR</span><span class="p">(</span><span class="n">datasource_name</span><span class="p">,</span> <span class="n">update_mode</span><span class="p">,</span> <span class="n">layer_name</span><span class="p">);</span>
+<span class="n">CREATE</span> <span class="n">VIRTUAL</span> <span class="n">TABLE</span> <span class="n">table_name</span> <span class="n">USING</span> <span class="n">VirtualOGR</span><span class="p">(</span><span class="n">datasource_name</span><span class="p">,</span> <span class="n">update_mode</span><span class="p">,</span> <span class="n">layer_name</span><span class="p">,</span> <span class="n">expose_ogr_style</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>where :</p>
+<ul class="simple">
+<li><p><em>datasource_name</em> is the connection string to any OGR datasource.</p></li>
+<li><p><em>update_mode</em> = 0 for read-only mode (default value) or 1 for update
+mode.</p></li>
+<li><p><em>layer_name</em> = the name of a layer of the opened datasource.</p></li>
+<li><p><em>expose_ogr_style</em> = 0 to prevent the OGR_STYLE special from being
+displayed (default value) or 1 to expose it.</p></li>
+</ul>
+<p>Note: <em>layer_name</em> does not need to be specified if the datasource has
+only one single layer.</p>
+<p>From the sqlite3 console, a typical use case is :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sqlite</span><span class="o">&gt;</span> <span class="n">SELECT</span> <span class="n">load_extension</span><span class="p">(</span><span class="s1">&#39;libgdal.so&#39;</span><span class="p">);</span>
+
+<span class="n">sqlite</span><span class="o">&gt;</span> <span class="n">SELECT</span> <span class="n">load_extension</span><span class="p">(</span><span class="s1">&#39;mod_spatialite.so&#39;</span><span class="p">);</span>
+
+<span class="n">sqlite</span><span class="o">&gt;</span> <span class="n">CREATE</span> <span class="n">VIRTUAL</span> <span class="n">TABLE</span> <span class="n">poly</span> <span class="n">USING</span> <span class="n">VirtualOGR</span><span class="p">(</span><span class="s1">&#39;poly.shp&#39;</span><span class="p">);</span>
+
+<span class="n">sqlite</span><span class="o">&gt;</span> <span class="n">SELECT</span> <span class="o">*</span><span class="p">,</span> <span class="n">ST_Area</span><span class="p">(</span><span class="n">GEOMETRY</span><span class="p">)</span> <span class="n">FROM</span> <span class="n">POLY</span><span class="p">;</span>
+<span class="mf">215229.266</span><span class="o">|</span><span class="mf">168.0</span><span class="o">|</span><span class="mi">35043411</span><span class="o">||</span><span class="mf">215229.265625</span>
+<span class="mf">247328.172</span><span class="o">|</span><span class="mf">179.0</span><span class="o">|</span><span class="mi">35043423</span><span class="o">||</span><span class="mf">247328.171875</span>
+<span class="mf">261752.781</span><span class="o">|</span><span class="mf">171.0</span><span class="o">|</span><span class="mi">35043414</span><span class="o">||</span><span class="mf">261752.78125</span>
+<span class="mf">547597.188</span><span class="o">|</span><span class="mf">173.0</span><span class="o">|</span><span class="mi">35043416</span><span class="o">||</span><span class="mf">547597.2109375</span>
+<span class="mf">15775.758</span><span class="o">|</span><span class="mf">172.0</span><span class="o">|</span><span class="mi">35043415</span><span class="o">||</span><span class="mf">15775.7578125</span>
+<span class="mf">101429.977</span><span class="o">|</span><span class="mf">169.0</span><span class="o">|</span><span class="mi">35043412</span><span class="o">||</span><span class="mf">101429.9765625</span>
+<span class="mf">268597.625</span><span class="o">|</span><span class="mf">166.0</span><span class="o">|</span><span class="mi">35043409</span><span class="o">||</span><span class="mf">268597.625</span>
+<span class="mf">1634833.375</span><span class="o">|</span><span class="mf">158.0</span><span class="o">|</span><span class="mi">35043369</span><span class="o">||</span><span class="mf">1634833.390625</span>
+<span class="mf">596610.313</span><span class="o">|</span><span class="mf">165.0</span><span class="o">|</span><span class="mi">35043408</span><span class="o">||</span><span class="mf">596610.3359375</span>
+<span class="mf">5268.813</span><span class="o">|</span><span class="mf">170.0</span><span class="o">|</span><span class="mi">35043413</span><span class="o">||</span><span class="mf">5268.8125</span>
+</pre></div>
+</div>
+<p>Alternatively, you can use the
+<em>ogr_datasource_load_layers(datasource_name[, update_mode[, prefix]])</em>
+function to automatically load all the layers of a datasource.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sqlite</span><span class="o">&gt;</span> <span class="n">SELECT</span> <span class="n">load_extension</span><span class="p">(</span><span class="s1">&#39;libgdal.so&#39;</span><span class="p">);</span>
+
+<span class="n">sqlite</span><span class="o">&gt;</span> <span class="n">SELECT</span> <span class="n">load_extension</span><span class="p">(</span><span class="s1">&#39;mod_spatialite.so&#39;</span><span class="p">);</span>
+
+<span class="n">sqlite</span><span class="o">&gt;</span> <span class="n">SELECT</span> <span class="n">ogr_datasource_load_layers</span><span class="p">(</span><span class="s1">&#39;poly.shp&#39;</span><span class="p">);</span>
+<span class="mi">1</span>
+<span class="n">sqlite</span><span class="o">&gt;</span> <span class="n">SELECT</span> <span class="o">*</span> <span class="n">FROM</span> <span class="n">sqlite_master</span><span class="p">;</span>
+<span class="n">table</span><span class="o">|</span><span class="n">poly</span><span class="o">|</span><span class="n">poly</span><span class="o">|</span><span class="mi">0</span><span class="o">|</span><span class="n">CREATE</span> <span class="n">VIRTUAL</span> <span class="n">TABLE</span> <span class="s2">&quot;poly&quot;</span> <span class="n">USING</span> <span class="n">VirtualOGR</span><span class="p">(</span><span class="s1">&#39;poly.shp&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;poly&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Refer to the <a class="reference internal" href="../../user/sql_sqlite_dialect.html#sql-sqlite-dialect"><span class="std std-ref">SQL SQLite dialect</span></a> for an
+overview of the capabilities of VirtualOGR tables.</p>
+</section>
+<section id="creation-issues">
+<h2>Creation Issues<a class="headerlink" href="#creation-issues" title="Permalink to this heading"></a></h2>
+<p>The SQLite driver supports creating new SQLite database files, or adding
+tables to existing ones.</p>
+<section id="transaction-support">
+<h3>Transaction support<a class="headerlink" href="#transaction-support" title="Permalink to this heading"></a></h3>
+<p>The driver implements transactions at the database level, per <a class="reference internal" href="../../development/rfc/rfc54_dataset_transactions.html#rfc-54"><span class="std std-ref">RFC 54: Dataset transactions</span></a></p>
+</section>
+</section>
+<section id="relationships">
+<h2>Relationships<a class="headerlink" href="#relationships" title="Permalink to this heading"></a></h2>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 3.6.</span></p>
+</div>
+<p>Relationship retrieval is supported. Relationships will be reported for tables which utilize FOREIGN KEY
+constraints.</p>
+<p>Relationship creation is supported since GDAL 3.7, for one-to-many relationships only.</p>
+<section id="dataset-open-options">
+<h3>Dataset open options<a class="headerlink" href="#dataset-open-options" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p id="drivers/vector/sqlite-oo-LIST_ALL_TABLES"><strong>LIST_ALL_TABLES=[YES/NO]: </strong>This may be &quot;YES&quot; to force all tables,
+including non-spatial ones, to be listed.</p>
+</li>
+<li><p id="drivers/vector/sqlite-oo-LIST_VIRTUAL_OGR"><strong>LIST_VIRTUAL_OGR=[YES/NO]: </strong>This may be &quot;YES&quot; to force VirtualOGR
+virtual tables to be listed. This should only be enabled on trusted
+datasources to avoid potential safety issues.</p>
+</li>
+<li><p id="drivers/vector/sqlite-oo-PRELUDE_STATEMENTS"><strong>PRELUDE_STATEMENTS=value: </strong> (GDAL &gt;= 3.2) SQL statement(s) to
+send on the SQLite3 connection before any other ones. In
+case of several statements, they must be separated with the
+semi-column (;) sign. This option may be useful
+to <a class="reference external" href="https://www.sqlite.org/lang_attach.html">attach another database</a>
+to the current one and issue cross-database requests.<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The other database must be of a type recognized by this driver, so
+its geometry blobs are properly recognized (so typically not a GeoPackage one)</p>
+</div>
+</p>
+</li>
+</ul>
+</section>
+<section id="database-creation-options">
+<h3>Database creation options<a class="headerlink" href="#database-creation-options" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p id="drivers/vector/sqlite-dsco-METADATA"><strong>METADATA=[YES/NO]: </strong>This can be used to avoid creating the
+geometry_columns and spatial_ref_sys tables in a new database. By
+default these metadata tables are created when a new database is
+created.</p>
+</li>
+<li><p id="drivers/vector/sqlite-dsco-SPATIALITE"><strong>SPATIALITE=[YES/NO]: </strong>Create the
+SpatiaLite flavor of the metadata tables, which are a bit differ
+from the metadata used by this OGR driver and from OGC
+specifications. Implies <a class="reference internal" href="#drivers/vector/sqlite-dsco-METADATA"><code class="docutils literal notranslate"><span class="pre">METADATA=YES</span></code></a>.<p>Please note: OGR must be linked against
+<em>libspatialite</em> in order to support insert/write on SpatiaLite; if
+not, <em>read-only</em> mode is enforced.</p>
+<p>Attempting to perform any insert/write on SpatiaLite skipping the
+appropriate library support simply produces broken (corrupted)
+DB-files.</p>
+<p>Important notice: when the underlying <em>libspatialite</em> is v.2.3.1
+(or any previous version) any Geometry will be casted to 2D [XY],
+because earlier versions of this library are simply able to support
+2D [XY] dimensions. Version 2.4.0 (or any subsequent) is required
+in order to support 2.5D [XYZ].</p>
+</p>
+</li>
+<li><p id="drivers/vector/sqlite-dsco-INIT_WITH_EPSG"><strong>INIT_WITH_EPSG=[YES/NO]: </strong>Insert the
+content of the EPSG CSV files into the spatial_ref_sys table.
+Defaults to NO for regular SQLite databases.
+Please note: if <a class="reference internal" href="#drivers/vector/sqlite-dsco-SPATIALITE"><code class="docutils literal notranslate"><span class="pre">SPATIALITE=YES</span></code></a> and the underlying
+<em>libspatialite</em> is v2.4 or v3.X, <a class="reference internal" href="#drivers/vector/sqlite-dsco-INIT_WITH_EPSG"><code class="docutils literal notranslate"><span class="pre">INIT_WITH_EPSG</span></code></a> is ignored;
+those library versions will unconditionally load the EPSG dataset
+into the spatial_ref_sys table when creating a new DB
+(<em>self-initialization</em>). Starting with libspatialite 4.0,
+<a class="reference internal" href="#drivers/vector/sqlite-dsco-INIT_WITH_EPSG"><code class="docutils literal notranslate"><span class="pre">INIT_WITH_EPSG</span></code></a> defaults to YES, but can be set to NO.</p>
+</li>
+</ul>
+</section>
+<section id="layer-creation-options">
+<h3>Layer creation options<a class="headerlink" href="#layer-creation-options" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p id="drivers/vector/sqlite-lco-FORMAT"><strong>FORMAT=[WKB/WKT/SPATIALITE]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">WKB</span></code>. Controls the format used for the
+geometry column. By default WKB (Well Known Binary) is used. This is
+generally more space and processing efficient, but harder to inspect
+or use in simple applications than WKT (Well Known Text). SpatiaLite
+extension uses its own binary format to store geometries and you can
+choose it as well. It will be selected automatically when SpatiaLite
+database is opened or created with <a class="reference internal" href="#drivers/vector/sqlite-dsco-SPATIALITE"><code class="docutils literal notranslate"><span class="pre">SPATIALITE=YES</span></code></a> option.
+SPATIALITE value is available.</p>
+</li>
+<li><p id="drivers/vector/sqlite-lco-GEOMETRY_NAME"><strong>GEOMETRY_NAME=value: </strong>By default OGR creates
+new tables with the geometry column named GEOMETRY (or WKT_GEOMETRY
+if <a class="reference internal" href="#drivers/vector/sqlite-lco-FORMAT"><code class="docutils literal notranslate"><span class="pre">FORMAT=WKT</span></code></a>). If you wish to use a different name, it can be
+supplied with the <a class="reference internal" href="#drivers/vector/sqlite-lco-GEOMETRY_NAME"><code class="docutils literal notranslate"><span class="pre">GEOMETRY_NAME</span></code></a> layer creation option.</p>
+</li>
+<li><p id="drivers/vector/sqlite-lco-LAUNDER"><strong>LAUNDER=[YES/NO]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">YES</span></code>. Controls whether layer and field names will be
+laundered for easier use in SQLite. Laundered names will be converted
+to lower case and some special characters(' - #) will be changed to
+underscores.</p>
+</li>
+<li><p id="drivers/vector/sqlite-lco-SPATIAL_INDEX"><strong>SPATIAL_INDEX=[YES/NO]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">YES</span></code>. If the database
+is of the SpatiaLite flavor, and if OGR is linked against
+libspatialite, this option can be used to control if a spatial index
+must be created.</p>
+</li>
+<li><p id="drivers/vector/sqlite-lco-COMPRESS_GEOM"><strong>COMPRESS_GEOM=[YES/NO]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">NO</span></code>. If the format of
+the geometry BLOB is of the SpatiaLite flavor, this option can be
+used to control if the compressed format for geometries (LINESTRINGs,
+POLYGONs) must be used. This format is understood by Spatialite v2.4
+(or any subsequent version). Default to NO. Note: when updating an
+existing Spatialite DB, the <a class="reference internal" href="#config-COMPRESS_GEOM"><code class="docutils literal notranslate"><span class="pre">COMPRESS_GEOM</span></code></a> configuration option
+can be set to produce similar results for appended/overwritten features.</p>
+</li>
+<li><p id="drivers/vector/sqlite-lco-SRID"><strong>SRID=value: </strong>Used to force the SRID
+number of the SRS associated with the layer. When this option isn't
+specified and that a SRS is associated with the layer, a search is
+made in the spatial_ref_sys to find a match for the SRS, and, if
+there is no match, a new entry is inserted for the SRS in the
+spatial_ref_sys table. When the SRID option is specified, this search
+(and the eventual insertion of a new entry) will not be done : the
+specified SRID is used as such.</p>
+</li>
+<li><p id="drivers/vector/sqlite-lco-COMPRESS_COLUMNS"><strong>COMPRESS_COLUMNS=&lt;column_name1[,column_name2, ...]&gt;: </strong>A list of (String) columns that must be compressed with
+ZLib DEFLATE algorithm. This might be beneficial for databases that
+have big string blobs. However, use with care, since the value of
+such columns will be seen as compressed binary content with other
+SQLite utilities (or previous OGR versions). With OGR, when
+inserting, modifying or querying compressed columns,
+compression/decompression is done transparently. However, such
+columns cannot be (easily) queried with an attribute filter or WHERE
+clause. Note: in table definition, such columns have the
+&quot;VARCHAR_deflate&quot; declaration type.</p>
+</li>
+<li><p id="drivers/vector/sqlite-lco-FID"><strong>FID=value: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">OGC_FID</span></code>. Name of the FID column to create.</p>
+</li>
+<li><p id="drivers/vector/sqlite-lco-STRICT"><strong>STRICT=[YES/NO]: </strong> (GDAL &gt;= 3.3.5)  Defaults to <code class="docutils literal notranslate"><span class="pre">NO</span></code>. (SQLite &gt;= 3.37)
+Whether the table should be created as a <a class="reference external" href="https://sqlite.org/stricttables.html">strict table</a>,
+that is strong column type checking. This normally has little influence when
+operating only through OGR, since it has typed columns, but can help to
+strengthen database integrity when the database might be edited by external
+tools.
+Note that databases that contain STRICT tables can only be read by SQLite &gt;= 3.37.
+The set of column data types supported in STRICT mode is: Integer, Integer64, Real,
+String, DateTime, Date and Time. The <a class="reference internal" href="#drivers/vector/sqlite-lco-COMPRESS_COLUMNS"><code class="docutils literal notranslate"><span class="pre">COMPRESS_COLUMNS</span></code></a> option is ignored in
+strict mode.</p>
+</li>
+</ul>
+</section>
+</section>
+<section id="configuration-options">
+<h2>Configuration options<a class="headerlink" href="#configuration-options" title="Permalink to this heading"></a></h2>
+<p>The following <a class="reference internal" href="../../user/configoptions.html#configoptions"><span class="std std-ref">configuration options</span></a> are
+available:</p>
+<ul class="simple">
+<li><p id="config-SQLITE_LIST_ALL_TABLES"><strong>SQLITE_LIST_ALL_TABLES=[YES/NO]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">NO</span></code>. Set to &quot;YES&quot; to list
+all tables (not just the tables listed in the geometry_columns table). This
+can also be done using the <a class="reference internal" href="#drivers/vector/sqlite-oo-LIST_ALL_TABLES"><code class="docutils literal notranslate"><span class="pre">LIST_ALL_TABLES</span></code></a> open option.</p>
+</li>
+<li><p id="config-OGR_PROMOTE_TO_INTEGER64"><strong>OGR_PROMOTE_TO_INTEGER64=[YES/NO]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">NO</span></code>. Whether to read fields with type <code class="docutils literal notranslate"><span class="pre">INTEGER</span></code> as 64-bit integers.</p>
+</li>
+<li><p id="config-OGR_SQLITE_LIST_VIRTUAL_OGR"><strong>OGR_SQLITE_LIST_VIRTUAL_OGR=[YES/NO]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">NO</span></code>. Set to &quot;YES&quot; to
+list VirtualOGR layers. Defaults to &quot;NO&quot; as there might be some security
+implications if a user is provided with a file and doesn't know that there
+are virtual OGR tables in it.</p>
+</li>
+<li><p id="config-OGR_SQLITE_JOURNAL"><strong>OGR_SQLITE_JOURNAL=value: </strong>can be used to set the journal mode of the SQLite file, see also
+<a class="reference external" href="https://www.sqlite.org/pragma.html#pragma_journal_mode">https://www.sqlite.org/pragma.html#pragma_journal_mode</a>.</p>
+</li>
+<li><p id="config-OGR_SQLITE_CACHE"><strong>OGR_SQLITE_CACHE=value: </strong>see <a class="reference internal" href="#target-drivers-vector-sqlite-performance-hints"><span class="std std-ref">Performance hints</span></a>.</p>
+</li>
+<li><p id="config-OGR_SQLITE_SYNCHRONOUS"><strong>OGR_SQLITE_SYNCHRONOUS=value: </strong>see <a class="reference internal" href="#target-drivers-vector-sqlite-performance-hints"><span class="std std-ref">Performance hints</span></a>.</p>
+</li>
+<li><p id="config-OGR_SQLITE_LOAD_EXTENSIONS"><strong>OGR_SQLITE_LOAD_EXTENSIONS=[&lt;extension1,...,extensionN&gt;/ENABLE_SQL_LOAD_EXTENSION]: </strong> (GDAL &gt;= 3.5.0) Comma separated list of names of shared libraries containing
+extensions to load at database opening.
+If a file cannot be loaded directly, attempts are made to load with various
+operating-system specific extensions added. So
+for example, if &quot;samplelib&quot; cannot be loaded, then names like &quot;samplelib.so&quot;
+or &quot;samplelib.dylib&quot; or &quot;samplelib.dll&quot; might be tried also.
+The special value <code class="docutils literal notranslate"><span class="pre">ENABLE_SQL_LOAD_EXTENSION</span></code> can be used to enable the use of
+the SQL <code class="docutils literal notranslate"><span class="pre">load_extension()</span></code> function, which is normally disabled in standard
+builds of sqlite3.
+Loading extensions as a potential security impact if they are untrusted.</p>
+</li>
+<li><p id="config-OGR_SQLITE_PRAGMA"><strong>OGR_SQLITE_PRAGMA=value: </strong>with this option any SQLite
+<a class="reference external" href="http://www.sqlite.org/pragma.html">pragma</a> can be specified. The syntax is
+<code class="docutils literal notranslate"><span class="pre">OGR_SQLITE_PRAGMA</span> <span class="pre">=</span> <span class="pre">&quot;pragma_name=pragma_value[,pragma_name2=pragma_value2]*&quot;</span></code>.</p>
+</li>
+<li><p id="config-SQLITE_USE_OGR_VFS"><strong>SQLITE_USE_OGR_VFS=[YES/NO]: </strong>YES enables extra buffering/caching
+by the GDAL/OGR I/O layer and can speed up I/O. More information
+<a class="reference internal" href="../../user/virtual_file_systems.html#vsicached"><span class="std std-ref">here</span></a>.
+Be aware that no file locking will occur if this option is activated, so
+concurrent edits may lead to database corruption.</p>
+</li>
+<li><p id="config-COMPRESS_GEOM"><strong>COMPRESS_GEOM=[YES/NO]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">NO</span></code>. Equivalent of <a class="reference internal" href="#drivers/vector/sqlite-lco-COMPRESS_GEOM"><code class="docutils literal notranslate"><span class="pre">COMPRESS_GEOM</span></code></a> layer creation option for use when
+updating or appending to an existing layer.</p>
+</li>
+</ul>
+</section>
+<section id="performance-hints">
+<span id="target-drivers-vector-sqlite-performance-hints"></span><h2>Performance hints<a class="headerlink" href="#performance-hints" title="Permalink to this heading"></a></h2>
+<p>SQLite is a Transactional DBMS; while many INSERT statements are
+executed in close sequence, BEGIN TRANSACTION and COMMIT TRANSACTION
+statements have to be invoked appropriately (with the
+OGR_L_StartTransaction() / OGR_L_CommitTransaction()) in order to get
+optimal performance. By default, if no transaction is explicitly
+started, SQLite will autocommit on every statement, which will be slow.
+If using ogr2ogr, its default behavior is to COMMIT a transaction every
+100000 inserted rows. The <strong>-gt</strong> argument allows explicitly setting the
+number of rows for each transaction.</p>
+<p>SQLite usually has a very minimal memory foot-print; just about 20MB of
+RAM are reserved to store the internal Page Cache [merely 2000 pages].
+This value too may well be inappropriate under many circumstances, most
+notably when accessing some really huge DB-file containing many tables
+related to a corresponding Spatial Index. Explicitly setting a much more
+generously dimensioned internal Page Cache may often help to get a
+noticeably better performance. You can
+explicitly set the internal Page Cache size using the configuration
+option <a class="reference internal" href="#config-OGR_SQLITE_CACHE"><code class="docutils literal notranslate"><span class="pre">OGR_SQLITE_CACHE</span></code></a> <em>value</em> [<em>value</em> being
+measured in MB]; if your HW has enough available RAM, defining a Cache
+size as big as 512MB (or even 1024MB) may sometimes help a lot in order
+to get better performance.</p>
+<p>Setting the <a class="reference internal" href="#config-OGR_SQLITE_SYNCHRONOUS"><code class="docutils literal notranslate"><span class="pre">OGR_SQLITE_SYNCHRONOUS</span></code></a> configuration
+option to <em>OFF</em> might also increase performance when creating SQLite
+databases (although at the expense of integrity in case of
+interruption/crash ).</p>
+<p>If many source files will be collected into the same Spatialite table,
+it can be much faster to initialize the table without a spatial index by
+using -lco <a class="reference internal" href="#drivers/vector/sqlite-lco-SPATIAL_INDEX"><code class="docutils literal notranslate"><span class="pre">SPATIAL_INDEX=NO</span></code></a> and to create spatial index with a separate
+command after all the data are appended. Spatial index can be created
+with ogrinfo command</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogr2ogr</span> <span class="o">-</span><span class="n">f</span> <span class="n">SQLite</span> <span class="o">-</span><span class="n">dsco</span> <span class="n">SPATIALITE</span><span class="o">=</span><span class="n">YES</span> <span class="n">db</span><span class="o">.</span><span class="n">sqlite</span> <span class="n">first</span><span class="o">.</span><span class="n">shp</span> <span class="o">-</span><span class="n">nln</span> <span class="n">the_table</span> <span class="o">-</span><span class="n">lco</span> <span class="n">SPATIAL_INDEX</span><span class="o">=</span><span class="n">NO</span>
+<span class="n">ogr2ogr</span> <span class="o">-</span><span class="n">append</span> <span class="n">db</span><span class="o">.</span><span class="n">sqlite</span> <span class="n">second</span><span class="o">.</span><span class="n">shp</span> <span class="o">-</span><span class="n">nln</span> <span class="n">the_table</span>
+<span class="o">...</span>
+<span class="n">ogr2ogr</span> <span class="o">-</span><span class="n">append</span> <span class="n">db</span><span class="o">.</span><span class="n">sqlite</span> <span class="n">last</span><span class="o">.</span><span class="n">shp</span> <span class="o">-</span><span class="n">nln</span> <span class="n">the_table</span>
+<span class="n">ogrinfo</span> <span class="n">db</span><span class="o">.</span><span class="n">sqlite</span> <span class="o">-</span><span class="n">sql</span> <span class="s2">&quot;SELECT CreateSpatialIndex(&#39;the_table&#39;,&#39;GEOMETRY&#39;)&quot;</span>
+</pre></div>
+</div>
+<p>If a database has gone through editing operations, it might be useful to
+run a <a class="reference external" href="https://sqlite.org/lang_vacuum.html">VACUUM</a> query to compact
+and optimize it.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogrinfo</span> <span class="n">db</span><span class="o">.</span><span class="n">sqlite</span> <span class="o">-</span><span class="n">sql</span> <span class="s2">&quot;VACUUM&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>Convert a non-spatial SQLite table into a GeoPackage:</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogr2ogr</span> \
+  <span class="o">-</span><span class="n">f</span> <span class="s2">&quot;GPKG&quot;</span> <span class="n">output</span><span class="o">.</span><span class="n">gpkg</span> \
+  <span class="nb">input</span><span class="o">.</span><span class="n">sqlite</span> \
+  <span class="o">-</span><span class="n">sql</span> \
+  <span class="s2">&quot;SELECT</span>
+     <span class="o">*</span><span class="p">,</span>
+     <span class="n">MakePoint</span><span class="p">(</span><span class="n">longitude</span><span class="p">,</span> <span class="n">latitude</span><span class="p">,</span> <span class="mi">4326</span><span class="p">)</span> <span class="n">AS</span> <span class="n">geometry</span>
+   <span class="n">FROM</span>
+     <span class="n">my_table</span><span class="s2">&quot; </span><span class="se">\</span>
+<span class="s2">  -nln &quot;</span><span class="n">location</span><span class="s2">&quot; </span><span class="se">\</span>
+<span class="s2">  -s_srs &quot;</span><span class="n">EPSG</span><span class="p">:</span><span class="mi">4326</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Perform a join between 2 SQLite/Spatialite databases:</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogrinfo</span> <span class="n">my_spatial</span><span class="o">.</span><span class="n">db</span> \
+    <span class="o">-</span><span class="n">sql</span> <span class="s2">&quot;SELECT poly.id, other.foo FROM poly JOIN other_schema.other USING (id)&quot;</span> \
+    <span class="o">-</span><span class="n">oo</span> <span class="n">PRELUDE_STATEMENTS</span><span class="o">=</span><span class="s2">&quot;ATTACH DATABASE &#39;other.db&#39; AS other_schema&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="credits">
+<h2>Credits<a class="headerlink" href="#credits" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>Development of the OGR SQLite driver was supported by <a class="reference external" href="http://www.dmsolutions.ca/">DM Solutions
+Group</a> and
+<a class="reference external" href="http://www.gomoos.org/">GoMOOS</a>.</p></li>
+<li><p>Full support for SpatiaLite was contributed by A.Furieri, with
+funding from <a class="reference external" href="http://www.regione.toscana.it/">Regione Toscana</a></p></li>
+</ul>
+</section>
+<section id="links">
+<h2>Links<a class="headerlink" href="#links" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="http://www.sqlite.org/">http://www.sqlite.org</a>: Main SQLite page.</p></li>
+<li><p><a class="reference external" href="https://www.gaia-gis.it/fossil/libspatialite/index">https://www.gaia-gis.it/fossil/libspatialite/index</a>: SpatiaLite extension to SQLite.</p></li>
+<li><p><a class="reference external" href="http://trac.osgeo.org/fdo/wiki/FDORfc16">FDO RFC 16</a>: FDO
+Provider for SQLite</p></li>
+<li><p><a class="reference internal" href="../raster/rasterlite2.html#raster-rasterlite2"><span class="std std-ref">RasterLite2 driver</span></a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="svg.html" class="btn btn-neutral float-right" title="SVG - Scalable Vector Graphics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="sosi.html" class="btn btn-neutral float-left" title="Norwegian SOSI Standard" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2024 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+  </div>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gdal_translate &mdash; GDAL  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/gdal.css" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="canonical" href="https://gdal.org/programs/gdal_translate.html"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="gdal_viewshed" href="gdal_viewshed.html" />
+    <link rel="prev" title="gdal_sieve.py" href="gdal_sieve.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Programs</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#general">General</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#raster-programs">Raster programs</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="raster_common_options.html">Common options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal-config.html">gdal-config (Unix)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal2tiles.html">gdal2tiles.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal2xyz.html">gdal2xyz.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_calc.html">gdal_calc.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_contour.html">gdal_contour</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_create.html">gdal_create</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_edit.html">gdal_edit.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_fillnodata.html">gdal_fillnodata.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_footprint.html">gdal_footprint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_grid.html">gdal_grid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_merge.html">gdal_merge.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_pansharpen.html">gdal_pansharpen.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_polygonize.html">gdal_polygonize.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_proximity.html">gdal_proximity.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_rasterize.html">gdal_rasterize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_retile.html">gdal_retile.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_sieve.html">gdal_sieve.py</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">gdal_translate</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#synopsis">Synopsis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#description">Description</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nodata-source-validity-mask-handling-during-resampling">Nodata / source validity mask handling during resampling</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#c-api">C API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_viewshed.html">gdal_viewshed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaladdo.html">gdaladdo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalattachpct.html">gdalattachpct.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalbuildvrt.html">gdalbuildvrt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalcompare.html">gdalcompare.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaldem.html">gdaldem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalinfo.html">gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdallocationinfo.html">gdallocationinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalmanage.html">gdalmanage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalmove.html">gdalmove.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalsrsinfo.html">gdalsrsinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaltindex.html">gdaltindex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaltransform.html">gdaltransform</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalwarp.html">gdalwarp</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nearblack.html">nearblack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pct2rgb.html">pct2rgb.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rgb2pct.html">rgb2pct.py</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#multidimensional-raster-programs">Multidimensional Raster programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#vector-programs">Vector programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#geographic-network-programs">Geographic network programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#other-utilities">Other utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sponsors/index.html">Sponsors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Programs</a> &raquo;</li>
+      
+      <li>gdal_translate</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit/master/doc/source/programs/gdal_translate.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="gdal_viewshed.html" class="btn btn-neutral float-right" title="gdal_viewshed" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gdal_sieve.html" class="btn btn-neutral float-left" title="gdal_sieve.py" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gdal-translate">
+<span id="id1"></span><h1>gdal_translate<a class="headerlink" href="#gdal-translate" title="Permalink to this heading"></a></h1>
+<p>Converts raster data between different formats.</p>
+<section id="synopsis">
+<span id="index-0"></span><h2>Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdal_translate</span> <span class="p">[</span><span class="o">--</span><span class="n">help</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">help</span><span class="o">-</span><span class="n">general</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">long</span><span class="o">-</span><span class="n">usage</span><span class="p">]</span>
+   <span class="p">[</span><span class="o">-</span><span class="n">ot</span> <span class="p">{</span><span class="n">Byte</span><span class="o">/</span><span class="n">Int8</span><span class="o">/</span><span class="n">Int16</span><span class="o">/</span><span class="n">UInt16</span><span class="o">/</span><span class="n">UInt32</span><span class="o">/</span><span class="n">Int32</span><span class="o">/</span><span class="n">UInt64</span><span class="o">/</span><span class="n">Int64</span><span class="o">/</span><span class="n">Float32</span><span class="o">/</span><span class="n">Float64</span><span class="o">/</span>
+         <span class="n">CInt16</span><span class="o">/</span><span class="n">CInt32</span><span class="o">/</span><span class="n">CFloat32</span><span class="o">/</span><span class="n">CFloat64</span><span class="p">}]</span> <span class="p">[</span><span class="o">-</span><span class="n">strict</span><span class="p">]</span>
+   <span class="p">[</span><span class="o">-</span><span class="k">if</span> <span class="o">&lt;</span><span class="nb">format</span><span class="o">&gt;</span><span class="p">]</span><span class="o">...</span> <span class="p">[</span><span class="o">-</span><span class="n">of</span> <span class="o">&lt;</span><span class="nb">format</span><span class="o">&gt;</span><span class="p">]</span>
+   <span class="p">[</span><span class="o">-</span><span class="n">b</span> <span class="o">&lt;</span><span class="n">band</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">mask</span> <span class="o">&lt;</span><span class="n">band</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">expand</span> <span class="p">{</span><span class="n">gray</span><span class="o">|</span><span class="n">rgb</span><span class="o">|</span><span class="n">rgba</span><span class="p">}]</span>
+   <span class="p">[</span><span class="o">-</span><span class="n">outsize</span> <span class="o">&lt;</span><span class="n">xsize</span><span class="o">&gt;</span><span class="p">[</span><span class="o">%</span><span class="p">]</span><span class="o">|</span><span class="mi">0</span> <span class="o">&lt;</span><span class="n">ysize</span><span class="o">&gt;</span><span class="p">[</span><span class="o">%</span><span class="p">]</span><span class="o">|</span><span class="mi">0</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">tr</span> <span class="o">&lt;</span><span class="n">xres</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">yres</span><span class="o">&gt;</span><span class="p">]</span>
+   <span class="p">[</span><span class="o">-</span><span class="n">ovr</span> <span class="o">&lt;</span><span class="n">level</span><span class="o">&gt;|</span><span class="n">AUTO</span><span class="o">|</span><span class="n">AUTO</span><span class="o">-&lt;</span><span class="n">n</span><span class="o">&gt;|</span><span class="n">NONE</span><span class="p">]</span>
+   <span class="p">[</span><span class="o">-</span><span class="n">r</span> <span class="p">{</span><span class="n">nearest</span><span class="p">,</span><span class="n">bilinear</span><span class="p">,</span><span class="n">cubic</span><span class="p">,</span><span class="n">cubicspline</span><span class="p">,</span><span class="n">lanczos</span><span class="p">,</span><span class="n">average</span><span class="p">,</span><span class="n">mode</span><span class="p">}]</span>
+   <span class="p">[</span><span class="o">-</span><span class="n">unscale</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">scale</span><span class="p">[</span><span class="n">_bn</span><span class="p">]</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">src_min</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">src_max</span><span class="o">&gt;</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">dst_min</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">dst_max</span><span class="o">&gt;</span><span class="p">]]]</span><span class="o">...</span> <span class="p">[</span><span class="o">-</span><span class="n">exponent</span><span class="p">[</span><span class="n">_bn</span><span class="p">]</span> <span class="o">&lt;</span><span class="n">exp_val</span><span class="o">&gt;</span><span class="p">]</span><span class="o">...</span>
+   <span class="p">[</span><span class="o">-</span><span class="n">srcwin</span> <span class="o">&lt;</span><span class="n">xoff</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">yoff</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">xsize</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">ysize</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">epo</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">eco</span><span class="p">]</span>
+   <span class="p">[</span><span class="o">-</span><span class="n">projwin</span> <span class="o">&lt;</span><span class="n">ulx</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">uly</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">lrx</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">lry</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">projwin_srs</span> <span class="o">&lt;</span><span class="n">srs_def</span><span class="o">&gt;</span><span class="p">]</span>
+   <span class="p">[</span><span class="o">-</span><span class="n">a_srs</span> <span class="o">&lt;</span><span class="n">srs_def</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">a_coord_epoch</span> <span class="o">&lt;</span><span class="n">epoch</span><span class="o">&gt;</span><span class="p">]</span>
+   <span class="p">[</span><span class="o">-</span><span class="n">a_ullr</span> <span class="o">&lt;</span><span class="n">ulx</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">uly</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">lrx</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">lry</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">a_nodata</span> <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span><span class="p">]</span>
+   <span class="p">[</span><span class="o">-</span><span class="n">a_gt</span> <span class="o">&lt;</span><span class="n">gt0</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">gt1</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">gt2</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">gt3</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">gt4</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">gt5</span><span class="o">&gt;</span><span class="p">]</span>
+   <span class="p">[</span><span class="o">-</span><span class="n">a_scale</span> <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">a_offset</span> <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span><span class="p">]</span>
+   <span class="p">[</span><span class="o">-</span><span class="n">nogcp</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">gcp</span> <span class="o">&lt;</span><span class="n">pixel</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">line</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">easting</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">northing</span><span class="o">&gt;</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">elevation</span><span class="o">&gt;</span><span class="p">]]</span><span class="o">...</span>
+   <span class="o">|-</span><span class="n">colorinterp</span><span class="p">{</span><span class="n">_bn</span><span class="p">}</span> <span class="p">{</span><span class="n">red</span><span class="o">|</span><span class="n">green</span><span class="o">|</span><span class="n">blue</span><span class="o">|</span><span class="n">alpha</span><span class="o">|</span><span class="n">gray</span><span class="o">|</span><span class="n">undefined</span><span class="p">}]</span>
+   <span class="o">|-</span><span class="n">colorinterp</span> <span class="p">{</span><span class="n">red</span><span class="o">|</span><span class="n">green</span><span class="o">|</span><span class="n">blue</span><span class="o">|</span><span class="n">alpha</span><span class="o">|</span><span class="n">gray</span><span class="o">|</span><span class="n">undefined</span><span class="p">},</span><span class="o">...</span><span class="p">]</span>
+   <span class="p">[</span><span class="o">-</span><span class="n">mo</span> <span class="o">&lt;</span><span class="n">META</span><span class="o">-</span><span class="n">TAG</span><span class="o">&gt;=&lt;</span><span class="n">VALUE</span><span class="o">&gt;</span><span class="p">]</span><span class="o">...</span> <span class="p">[</span><span class="o">-</span><span class="n">dmo</span> <span class="s2">&quot;DOMAIN:META-TAG=VALUE&quot;</span><span class="p">]</span><span class="o">...</span> <span class="p">[</span><span class="o">-</span><span class="n">q</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">sds</span><span class="p">]</span>
+   <span class="p">[</span><span class="o">-</span><span class="n">co</span> <span class="o">&lt;</span><span class="n">NAME</span><span class="o">&gt;=&lt;</span><span class="n">VALUE</span><span class="o">&gt;</span><span class="p">]</span><span class="o">...</span> <span class="p">[</span><span class="o">-</span><span class="n">stats</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">norat</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">noxmp</span><span class="p">]</span>
+   <span class="p">[</span><span class="o">-</span><span class="n">oo</span> <span class="o">&lt;</span><span class="n">NAME</span><span class="o">&gt;=&lt;</span><span class="n">VALUE</span><span class="o">&gt;</span><span class="p">]</span><span class="o">...</span>
+   <span class="o">&lt;</span><span class="n">src_dataset</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">dst_dataset</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this heading"></a></h2>
+<p>The <strong class="program">gdal_translate</strong> utility can be used to convert raster data between
+different formats, potentially performing some operations like subsettings,
+resampling, and rescaling pixels in the process.</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-help">
+<span id="cmdoption-gdal-translate-help"></span><span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal_translate-help" title="Permalink to this definition"></a></dt>
+<dd><p>Show this help message and exit</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-help-general">
+<span id="cmdoption-gdal-translate-help-general"></span><span class="sig-name descname"><span class="pre">--help-general</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal_translate-help-general" title="Permalink to this definition"></a></dt>
+<dd><p>Gives a brief usage message for the generic GDAL commandline options and exit.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-ot">
+<span id="cmdoption-gdal-translate-ot"></span><span class="sig-name descname"><span class="pre">-ot</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;type&gt;</span></span><a class="headerlink" href="#cmdoption-gdal_translate-ot" title="Permalink to this definition"></a></dt>
+<dd><p>Force the output image bands to have a specific data type supported by the
+driver, which may be one of the following: <code class="docutils literal notranslate"><span class="pre">Byte</span></code>, <code class="docutils literal notranslate"><span class="pre">Int8</span></code>, <code class="docutils literal notranslate"><span class="pre">UInt16</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Int16</span></code>, <code class="docutils literal notranslate"><span class="pre">UInt32</span></code>, <code class="docutils literal notranslate"><span class="pre">Int32</span></code>, <code class="docutils literal notranslate"><span class="pre">UInt64</span></code>, <code class="docutils literal notranslate"><span class="pre">Int64</span></code>, <code class="docutils literal notranslate"><span class="pre">Float32</span></code>, <code class="docutils literal notranslate"><span class="pre">Float64</span></code>, <code class="docutils literal notranslate"><span class="pre">CInt16</span></code>,
+<code class="docutils literal notranslate"><span class="pre">CInt32</span></code>, <code class="docutils literal notranslate"><span class="pre">CFloat32</span></code> or <code class="docutils literal notranslate"><span class="pre">CFloat64</span></code>.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-strict">
+<span id="cmdoption-gdal-translate-strict"></span><span class="sig-name descname"><span class="pre">-strict</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal_translate-strict" title="Permalink to this definition"></a></dt>
+<dd><p>Don't be forgiving of mismatches and lost data when translating to the
+output format.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-if">
+<span id="cmdoption-gdal-translate-if"></span><span class="sig-name descname"><span class="pre">-if</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;format&gt;</span></span><a class="headerlink" href="#cmdoption-gdal_translate-if" title="Permalink to this definition"></a></dt>
+<dd><p>Format/driver name to be attempted to open the input file(s). It is generally
+not necessary to specify it, but it can be used to skip automatic driver
+detection, when it fails to select the appropriate driver.
+This option can be repeated several times to specify several candidate drivers.
+Note that it does not force those drivers to open the dataset. In particular,
+some drivers have requirements on file extensions.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 3.2.</span></p>
+</div>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-of">
+<span id="cmdoption-gdal-translate-of"></span><span class="sig-name descname"><span class="pre">-of</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;format&gt;</span></span><a class="headerlink" href="#cmdoption-gdal_translate-of" title="Permalink to this definition"></a></dt>
+<dd><p>Select the output format. Starting with GDAL 2.3, if not specified, the
+format is guessed from the extension (previously was GTiff). Use the short
+format name.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-b">
+<span id="cmdoption-gdal-translate-b"></span><span class="sig-name descname"><span class="pre">-b</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;band&gt;</span></span><a class="headerlink" href="#cmdoption-gdal_translate-b" title="Permalink to this definition"></a></dt>
+<dd><p>Select an input band <strong>band</strong> for output. Bands are numbered from 1.
+Multiple <a class="reference internal" href="#cmdoption-gdal_translate-b"><code class="xref std std-option docutils literal notranslate"><span class="pre">-b</span></code></a> switches may be used to select a set of input bands
+to write to the output file, or to reorder bands. <strong>band</strong> can also be set
+to &quot;mask,1&quot; (or just &quot;mask&quot;) to mean the mask band of the first band of the
+input dataset.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-mask">
+<span id="cmdoption-gdal-translate-mask"></span><span class="sig-name descname"><span class="pre">-mask</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;band&gt;</span></span><a class="headerlink" href="#cmdoption-gdal_translate-mask" title="Permalink to this definition"></a></dt>
+<dd><p>Select an input band <strong>band</strong> to create output dataset mask band. Bands are
+numbered from 1. <strong>band</strong> can be set to &quot;none&quot; to avoid copying the global
+mask of the input dataset if it exists. Otherwise it is copied by default
+(&quot;auto&quot;), unless the mask is an alpha channel, or if it is explicitly used
+to be a regular band of the output dataset (&quot;-b mask&quot;). <strong>band</strong> can also
+be set to &quot;mask,1&quot; (or just &quot;mask&quot;) to mean the mask band of the 1st band
+of the input dataset.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-expand">
+<span id="cmdoption-gdal-translate-expand"></span><span class="sig-name descname"><span class="pre">-expand</span></span><span class="sig-prename descclassname"> <span class="pre">gray|rgb|rgba</span></span><a class="headerlink" href="#cmdoption-gdal_translate-expand" title="Permalink to this definition"></a></dt>
+<dd><p>To expose a dataset with 1 band with a color table as a dataset with
+3 (RGB) or 4 (RGBA) bands. Useful for output drivers such as JPEG,
+JPEG2000, MrSID, ECW that don't support color indexed datasets. The 'gray'
+value enables to expand a dataset with a color table that only contains
+gray levels to a gray indexed dataset.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-outsize">
+<span id="cmdoption-gdal-translate-outsize"></span><span class="sig-name descname"><span class="pre">-outsize</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;xsize&gt;[%]|0</span> <span class="pre">&lt;ysize&gt;[%]|0</span></span><a class="headerlink" href="#cmdoption-gdal_translate-outsize" title="Permalink to this definition"></a></dt>
+<dd><p>Set the size of the output file.  Outsize is in pixels and lines unless '%'
+is attached in which case it is as a fraction of the input image size.
+If one of the 2 values is set to 0, its value will be determined from the
+other one, while maintaining the aspect ratio of the source dataset.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-tr">
+<span id="cmdoption-gdal-translate-tr"></span><span class="sig-name descname"><span class="pre">-tr</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;xres&gt;</span> <span class="pre">&lt;yres&gt;</span></span><a class="headerlink" href="#cmdoption-gdal_translate-tr" title="Permalink to this definition"></a></dt>
+<dd><p>set target resolution. The values must be expressed in georeferenced units.
+Both must be positive values. This is mutually exclusive with
+<a class="reference internal" href="#cmdoption-gdal_translate-outsize"><code class="xref std std-option docutils literal notranslate"><span class="pre">-outsize</span></code></a>, <a class="reference internal" href="#cmdoption-gdal_translate-a_ullr"><code class="xref std std-option docutils literal notranslate"><span class="pre">-a_ullr</span></code></a>, and <a class="reference internal" href="#cmdoption-gdal_translate-a_gt"><code class="xref std std-option docutils literal notranslate"><span class="pre">-a_gt</span></code></a>.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-ovr">
+<span id="cmdoption-gdal-translate-ovr"></span><span class="sig-name descname"><span class="pre">-ovr</span></span><span class="sig-prename descclassname"> <span class="pre">{&lt;level&gt;|AUTO|AUTO-&lt;n&gt;|NONE}</span></span><a class="headerlink" href="#cmdoption-gdal_translate-ovr" title="Permalink to this definition"></a></dt>
+<dd><div class="versionadded">
+<p><span class="versionmodified added">New in version 3.6.</span></p>
+</div>
+<p>To specify which overview level of source file must be used. The default choice,
+AUTO, will select the overview level whose resolution is the closest to the
+target resolution. Specify an integer value (0-based, i.e. 0=1st overview level)
+to select a particular level. Specify AUTO-n where n is an integer greater or
+equal to 1, to select an overview level below the AUTO one. Or specify NONE to
+force the base resolution to be used (can be useful if overviews have been
+generated with a low quality resampling method, and a higher quality resampling method
+is specified with <a class="reference internal" href="#cmdoption-gdal_translate-r"><code class="xref std std-option docutils literal notranslate"><span class="pre">-r</span></code></a>.</p>
+<p>When <a class="reference internal" href="#cmdoption-gdal_translate-ovr"><code class="xref std std-option docutils literal notranslate"><span class="pre">-ovr</span></code></a> is specified to an integer value,
+and none of <a class="reference internal" href="#cmdoption-gdal_translate-outsize"><code class="xref std std-option docutils literal notranslate"><span class="pre">-outsize</span></code></a> and <a class="reference internal" href="#cmdoption-gdal_translate-tr"><code class="xref std std-option docutils literal notranslate"><span class="pre">-tr</span></code></a> is specified, the size of
+the overview will be used as the output size.</p>
+<p>When <a class="reference internal" href="#cmdoption-gdal_translate-ovr"><code class="xref std std-option docutils literal notranslate"><span class="pre">-ovr</span></code></a> is specified, values of <a class="reference internal" href="#cmdoption-gdal_translate-srcwin"><code class="xref std std-option docutils literal notranslate"><span class="pre">-srcwin</span></code></a>, when specified,
+should be expressed as pixel offset and size of the full resolution source dataset.
+Similarly when using <a class="reference internal" href="#cmdoption-gdal_translate-outsize"><code class="xref std std-option docutils literal notranslate"><span class="pre">-outsize</span></code></a> with percentage values, they refer to the size
+of the full resolution source dataset.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-r">
+<span id="cmdoption-gdal-translate-r"></span><span class="sig-name descname"><span class="pre">-r</span></span><span class="sig-prename descclassname"> <span class="pre">{nearest|bilinear|cubic|cubicspline|lanczos|average|rms|mode}</span></span><a class="headerlink" href="#cmdoption-gdal_translate-r" title="Permalink to this definition"></a></dt>
+<dd><p>Select a resampling algorithm.</p>
+<p><code class="docutils literal notranslate"><span class="pre">nearest</span></code> (default) applies a nearest neighbour (simple sampling) resampler</p>
+<p><code class="docutils literal notranslate"><span class="pre">average</span></code> computes the average of all non-NODATA contributing pixels. Starting with GDAL 3.1, this is a weighted average taking into account properly the weight of source pixels not contributing fully to the target pixel.</p>
+<p><code class="docutils literal notranslate"><span class="pre">rms</span></code> computes the root mean squared / quadratic mean of all non-NODATA contributing pixels (GDAL &gt;= 3.3)</p>
+<p><code class="docutils literal notranslate"><span class="pre">bilinear</span></code> applies a bilinear convolution kernel.</p>
+<p><code class="docutils literal notranslate"><span class="pre">cubic</span></code> applies a cubic convolution kernel.</p>
+<p><code class="docutils literal notranslate"><span class="pre">cubicspline</span></code> applies a B-Spline convolution kernel.</p>
+<p><code class="docutils literal notranslate"><span class="pre">lanczos</span></code> applies a Lanczos windowed sinc convolution kernel.</p>
+<p><code class="docutils literal notranslate"><span class="pre">mode</span></code> selects the value which appears most often of all the sampled points.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-scale">
+<span id="cmdoption-gdal-translate-scale"></span><span class="sig-name descname"><span class="pre">-scale</span></span><span class="sig-prename descclassname"> <span class="pre">[&lt;src_min&gt;</span> <span class="pre">&lt;src_max&gt;</span> <span class="pre">[&lt;dst_min&gt;</span> <span class="pre">&lt;dst_max&gt;]]</span></span><a class="headerlink" href="#cmdoption-gdal_translate-scale" title="Permalink to this definition"></a></dt>
+<dd><p>Rescale the input pixels values from the range <strong>src_min</strong> to <strong>src_max</strong>
+to the range <strong>dst_min</strong> to <strong>dst_max</strong>.
+If omitted the output range is 0 to 255.
+If omitted the input range is automatically computed from the
+source dataset, in its whole (not just the window of interest potentially
+specified with <a class="reference internal" href="#cmdoption-gdal_translate-srcwin"><code class="xref std std-option docutils literal notranslate"><span class="pre">-srcwin</span></code></a> or <a class="reference internal" href="#cmdoption-gdal_translate-projwin"><code class="xref std std-option docutils literal notranslate"><span class="pre">-projwin</span></code></a>). This may be a
+slow operation on a large source dataset, and if using it multiple times
+for several gdal_translate invocation, it might be beneficial to call
+<code class="docutils literal notranslate"><span class="pre">gdalinfo</span> <span class="pre">-stats</span> <span class="pre">{source_dataset}</span></code> priorly to precompute statistics, for
+formats that support serializing statistics computations (GeoTIFF, VRT...)
+Note that the values specified after <a class="reference internal" href="#cmdoption-gdal_translate-scale"><code class="xref std std-option docutils literal notranslate"><span class="pre">-scale</span></code></a> are only used to compute a scale and
+offset to apply to the input raster values. In particular, <code class="docutils literal notranslate"><span class="pre">src_min</span></code> and
+<code class="docutils literal notranslate"><span class="pre">src_max</span></code> are not used to clip input values.
+<a class="reference internal" href="#cmdoption-gdal_translate-scale"><code class="xref std std-option docutils literal notranslate"><span class="pre">-scale</span></code></a> can be repeated several times (if specified only once,
+it also applies to all bands of the output dataset), so as to specify per
+band parameters. It is also possible to use the &quot;-scale_bn&quot; syntax where bn
+is a band number (e.g. &quot;-scale_2&quot; for the 2nd band of the output dataset)
+to specify the parameters of one or several specific bands.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-exponent">
+<span id="cmdoption-gdal-translate-exponent"></span><span class="sig-name descname"><span class="pre">-exponent</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;exp_val&gt;</span></span><a class="headerlink" href="#cmdoption-gdal_translate-exponent" title="Permalink to this definition"></a></dt>
+<dd><p>To apply non-linear scaling with a power function. exp_val is the exponent
+of the power function (must be positive). This option must be used with the
+-scale option. If specified only once, -exponent applies to all bands of
+the output image. It can be repeated several times so as to specify per
+band parameters. It is also possible to use the &quot;-exponent_bn&quot; syntax where
+bn is a band number (e.g. &quot;-exponent_2&quot; for the 2nd band of the output
+dataset) to specify the parameters of one or several specific bands.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-unscale">
+<span id="cmdoption-gdal-translate-unscale"></span><span class="sig-name descname"><span class="pre">-unscale</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal_translate-unscale" title="Permalink to this definition"></a></dt>
+<dd><p>Apply the scale/offset metadata for the bands to convert scaled values to
+unscaled values.  It is also often necessary to reset the output datatype
+with the <a class="reference internal" href="#cmdoption-gdal_translate-ot"><code class="xref std std-option docutils literal notranslate"><span class="pre">-ot</span></code></a> switch.
+The unscaled value is computed from the scaled raw value with the following
+formula:</p>
+<div class="math notranslate nohighlight">
+\[{unscaled\_value} = {scaled\_value} * {scale} + {offset}\]</div>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-srcwin">
+<span id="cmdoption-gdal-translate-srcwin"></span><span class="sig-name descname"><span class="pre">-srcwin</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;xoff&gt;</span> <span class="pre">&lt;yoff&gt;</span> <span class="pre">&lt;xsize&gt;</span> <span class="pre">&lt;ysize&gt;</span></span><a class="headerlink" href="#cmdoption-gdal_translate-srcwin" title="Permalink to this definition"></a></dt>
+<dd><p>Selects a subwindow from the source image for copying based on pixel/line location.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-projwin">
+<span id="cmdoption-gdal-translate-projwin"></span><span class="sig-name descname"><span class="pre">-projwin</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;ulx&gt;</span> <span class="pre">&lt;uly&gt;</span> <span class="pre">&lt;lrx&gt;</span> <span class="pre">&lt;lry&gt;</span></span><a class="headerlink" href="#cmdoption-gdal_translate-projwin" title="Permalink to this definition"></a></dt>
+<dd><p>Selects a subwindow from the source image for copying
+(like <a class="reference internal" href="#cmdoption-gdal_translate-srcwin"><code class="xref std std-option docutils literal notranslate"><span class="pre">-srcwin</span></code></a>) but with the corners given in georeferenced
+coordinates (by default expressed in the SRS of the dataset. Can be
+changed with <a class="reference internal" href="#cmdoption-gdal_translate-projwin_srs"><code class="xref std std-option docutils literal notranslate"><span class="pre">-projwin_srs</span></code></a>).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In GDAL 2.1.0 and 2.1.1, using -projwin with coordinates not aligned
+with pixels will result in a sub-pixel shift. This has been corrected
+in later versions. When selecting non-nearest neighbour resampling,
+starting with GDAL 2.1.0, sub-pixel accuracy is however used to get
+better results.</p>
+</div>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-projwin_srs">
+<span id="cmdoption-gdal-translate-projwin-srs"></span><span class="sig-name descname"><span class="pre">-projwin_srs</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;srs_def&gt;</span></span><a class="headerlink" href="#cmdoption-gdal_translate-projwin_srs" title="Permalink to this definition"></a></dt>
+<dd><p>Specifies the SRS in which to interpret the coordinates given with
+<a class="reference internal" href="#cmdoption-gdal_translate-projwin"><code class="xref std std-option docutils literal notranslate"><span class="pre">-projwin</span></code></a>. The &lt;srs_def&gt; may be any of the usual GDAL/OGR forms,
+complete WKT, PROJ.4, EPSG:n or a file containing the WKT.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This does not cause reprojection of the dataset to the specified SRS.</p>
+</div>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-epo">
+<span id="cmdoption-gdal-translate-epo"></span><span class="sig-name descname"><span class="pre">-epo</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal_translate-epo" title="Permalink to this definition"></a></dt>
+<dd><p>(Error when Partially Outside) If this option is set, <a class="reference internal" href="#cmdoption-gdal_translate-srcwin"><code class="xref std std-option docutils literal notranslate"><span class="pre">-srcwin</span></code></a> or
+<a class="reference internal" href="#cmdoption-gdal_translate-projwin"><code class="xref std std-option docutils literal notranslate"><span class="pre">-projwin</span></code></a> values that falls partially outside the source raster
+extent will be considered as an error. The default behavior is to accept
+such requests, when they were considered as an error before.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-eco">
+<span id="cmdoption-gdal-translate-eco"></span><span class="sig-name descname"><span class="pre">-eco</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal_translate-eco" title="Permalink to this definition"></a></dt>
+<dd><p>(Error when Completely Outside) Same as <a class="reference internal" href="#cmdoption-gdal_translate-epo"><code class="xref std std-option docutils literal notranslate"><span class="pre">-epo</span></code></a>, except that the
+criterion for erroring out is when the request falls completely outside
+the source raster extent.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-a_srs">
+<span id="cmdoption-gdal-translate-a-srs"></span><span class="sig-name descname"><span class="pre">-a_srs</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;srs_def&gt;</span></span><a class="headerlink" href="#cmdoption-gdal_translate-a_srs" title="Permalink to this definition"></a></dt>
+<dd><p>Override the projection for the output file. Can be used with
+<a class="reference internal" href="#cmdoption-gdal_translate-a_ullr"><code class="xref std std-option docutils literal notranslate"><span class="pre">-a_ullr</span></code></a> or <a class="reference internal" href="#cmdoption-gdal_translate-a_gt"><code class="xref std std-option docutils literal notranslate"><span class="pre">-a_gt</span></code></a> to specify the extent in this projection.</p>
+<p>The coordinate reference systems that can be passed are anything supported by the
+<a class="reference internal" href="../api/ogrspatialref.html#_CPPv4N19OGRSpatialReference16SetFromUserInputEPKc" title="OGRSpatialReference::SetFromUserInput"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRSpatialReference::SetFromUserInput()</span></code></a> call, which includes EPSG Projected,
+Geographic or Compound CRS (i.e. EPSG:4296), a well known text (WKT) CRS definition,
+PROJ.4 declarations, or the name of a .prj file containing a WKT CRS definition.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>No reprojection is done.</p>
+</div>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-a_coord_epoch">
+<span id="cmdoption-gdal-translate-a-coord-epoch"></span><span class="sig-name descname"><span class="pre">-a_coord_epoch</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;epoch&gt;</span></span><a class="headerlink" href="#cmdoption-gdal_translate-a_coord_epoch" title="Permalink to this definition"></a></dt>
+<dd><div class="versionadded">
+<p><span class="versionmodified added">New in version 3.4.</span></p>
+</div>
+<p>Assign a coordinate epoch, linked with the output SRS. Useful when the
+output SRS is a dynamic CRS.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-a_scale">
+<span id="cmdoption-gdal-translate-a-scale"></span><span class="sig-name descname"><span class="pre">-a_scale</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;value&gt;</span></span><a class="headerlink" href="#cmdoption-gdal_translate-a_scale" title="Permalink to this definition"></a></dt>
+<dd><p>Set band scaling value. No modification of pixel values is done.
+Note that the <a class="reference internal" href="#cmdoption-gdal_translate-unscale"><code class="xref std std-option docutils literal notranslate"><span class="pre">-unscale</span></code></a> does not take into account <a class="reference internal" href="#cmdoption-gdal_translate-a_scale"><code class="xref std std-option docutils literal notranslate"><span class="pre">-a_scale</span></code></a>.
+You may for example specify <code class="docutils literal notranslate"><span class="pre">-scale</span> <span class="pre">0</span> <span class="pre">1</span> <span class="pre">&lt;offset&gt;</span> <span class="pre">&lt;offset+scale&gt;</span></code> to
+apply a (offset, scale) tuple, for the equivalent of the 2 steps:
+<code class="docutils literal notranslate"><span class="pre">gdal_translate</span> <span class="pre">input.tif</span> <span class="pre">tmp.vrt</span> <span class="pre">-a_scale</span> <span class="pre">scale</span> <span class="pre">-a_offset</span> <span class="pre">offset</span></code> followed by
+<code class="docutils literal notranslate"><span class="pre">gdal_translate</span> <span class="pre">tmp.vrt</span> <span class="pre">output.tif</span> <span class="pre">-unscale</span></code></p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.3.</span></p>
+</div>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-a_offset">
+<span id="cmdoption-gdal-translate-a-offset"></span><span class="sig-name descname"><span class="pre">-a_offset</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;value&gt;</span></span><a class="headerlink" href="#cmdoption-gdal_translate-a_offset" title="Permalink to this definition"></a></dt>
+<dd><p>Set band offset value. No modification of pixel values is done.
+Note that the <a class="reference internal" href="#cmdoption-gdal_translate-unscale"><code class="xref std std-option docutils literal notranslate"><span class="pre">-unscale</span></code></a> does not take into account <a class="reference internal" href="#cmdoption-gdal_translate-a_offset"><code class="xref std std-option docutils literal notranslate"><span class="pre">-a_offset</span></code></a>.
+You may for example specify <code class="docutils literal notranslate"><span class="pre">-scale</span> <span class="pre">0</span> <span class="pre">1</span> <span class="pre">&lt;offset&gt;</span> <span class="pre">&lt;offset+scale&gt;</span></code> to
+apply a (offset, scale) tuple, for the equivalent of the 2 steps:
+<code class="docutils literal notranslate"><span class="pre">gdal_translate</span> <span class="pre">input.tif</span> <span class="pre">tmp.vrt</span> <span class="pre">-a_scale</span> <span class="pre">scale</span> <span class="pre">-a_offset</span> <span class="pre">offset</span></code> followed by
+<code class="docutils literal notranslate"><span class="pre">gdal_translate</span> <span class="pre">tmp.vrt</span> <span class="pre">output.tif</span> <span class="pre">-unscale</span></code></p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.3.</span></p>
+</div>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-a_ullr">
+<span id="cmdoption-gdal-translate-a-ullr"></span><span class="sig-name descname"><span class="pre">-a_ullr</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;ulx&gt;</span> <span class="pre">&lt;uly&gt;</span> <span class="pre">&lt;lrx&gt;</span> <span class="pre">&lt;lry&gt;</span></span><a class="headerlink" href="#cmdoption-gdal_translate-a_ullr" title="Permalink to this definition"></a></dt>
+<dd><p>Assign/override the georeferenced bounds of the output file.  This assigns
+georeferenced bounds to the output file, ignoring what would have been
+derived from the source file. So this does not cause reprojection to the
+specified SRS.
+This is mutually exclusive with <a class="reference internal" href="#cmdoption-gdal_translate-a_gt"><code class="xref std std-option docutils literal notranslate"><span class="pre">-a_gt</span></code></a></p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-a_gt">
+<span id="cmdoption-gdal-translate-a-gt"></span><span class="sig-name descname"><span class="pre">-a_gt</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;gt(0)&gt;</span> <span class="pre">&lt;gt(1)&gt;</span> <span class="pre">&lt;gt(2)&gt;</span> <span class="pre">&lt;gt(3)&gt;</span> <span class="pre">&lt;gt(4)&gt;</span> <span class="pre">&lt;gt(5)&gt;</span></span><a class="headerlink" href="#cmdoption-gdal_translate-a_gt" title="Permalink to this definition"></a></dt>
+<dd><p>Assign/override the geotransform of the output file.
+This assigns the geotransform to the output file, ignoring what would have been
+derived from the source file. So this does not cause reprojection to the
+specified SRS. See <a class="reference internal" href="../tutorials/geotransforms_tut.html#geotransforms-tut"><span class="std std-ref">Geotransform Tutorial</span></a>.
+This is mutually exclusive with <a class="reference internal" href="#cmdoption-gdal_translate-a_ullr"><code class="xref std std-option docutils literal notranslate"><span class="pre">-a_ullr</span></code></a></p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 3.8.</span></p>
+</div>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-a_nodata">
+<span id="cmdoption-gdal-translate-a-nodata"></span><span class="sig-name descname"><span class="pre">-a_nodata</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;value&gt;</span></span><a class="headerlink" href="#cmdoption-gdal_translate-a_nodata" title="Permalink to this definition"></a></dt>
+<dd><p>Assign a specified nodata value to output bands. It can
+be set to <code class="docutils literal notranslate"><span class="pre">none</span></code> to avoid setting a nodata value to the output file if
+one exists for the source file. Note that, if the input dataset has a
+nodata value, this does not cause pixel values that are equal to that nodata
+value to be changed to the value specified with this option.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-colorinterp_X">
+<span id="cmdoption-gdal-translate-colorinterp-x"></span><span class="sig-name descname"><span class="pre">-colorinterp_X</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;red|green|blue|alpha|gray|undefined&gt;</span></span><a class="headerlink" href="#cmdoption-gdal_translate-colorinterp_X" title="Permalink to this definition"></a></dt>
+<dd><p>Override the color interpretation of band X (where X is a valid band number,
+starting at 1)</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.3.</span></p>
+</div>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-colorinterp">
+<span id="cmdoption-gdal-translate-colorinterp"></span><span class="sig-name descname"><span class="pre">-colorinterp</span></span><span class="sig-prename descclassname"> <span class="pre">{red|green|blue|alpha|gray|undefined},...</span></span><a class="headerlink" href="#cmdoption-gdal_translate-colorinterp" title="Permalink to this definition"></a></dt>
+<dd><p>Override the color interpretation of all specified bands. For
+example -colorinterp red,green,blue,alpha for a 4 band output dataset.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.3.</span></p>
+</div>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-mo">
+<span id="cmdoption-gdal-translate-mo"></span><span class="sig-name descname"><span class="pre">-mo</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;META-TAG&gt;=&lt;VALUE&gt;</span></span><a class="headerlink" href="#cmdoption-gdal_translate-mo" title="Permalink to this definition"></a></dt>
+<dd><p>Passes a metadata key and value to set on the output dataset if possible.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-dmo">
+<span id="cmdoption-gdal-translate-dmo"></span><span class="sig-name descname"><span class="pre">-dmo</span></span><span class="sig-prename descclassname"> <span class="pre">DOMAIN:META-TAG=VALUE</span></span><a class="headerlink" href="#cmdoption-gdal_translate-dmo" title="Permalink to this definition"></a></dt>
+<dd><p>Passes a metadata key and value in specified domain to set on the output dataset if possible.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 3.9.</span></p>
+</div>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-co">
+<span id="cmdoption-gdal-translate-co"></span><span class="sig-name descname"><span class="pre">-co</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;NAME&gt;=&lt;VALUE&gt;</span></span><a class="headerlink" href="#cmdoption-gdal_translate-co" title="Permalink to this definition"></a></dt>
+<dd><p>Many formats have one or more optional creation options that can be
+used to control particulars about the file created. For instance,
+the GeoTIFF driver supports creation options to control compression,
+and whether the file should be tiled.</p>
+<p>The creation options available vary by format driver, and some
+simple formats have no creation options at all. A list of options
+supported for a format can be listed with the
+<a class="reference internal" href="raster_common_options.html#raster-common-options-formats"><span class="std std-ref">--formats</span></a>
+command line option but the documentation for the format is the
+definitive source of information on driver creation options.
+See <a class="reference internal" href="../drivers/raster/index.html#raster-drivers"><span class="std std-ref">Raster drivers</span></a> format
+specific documentation for legal creation options for each format.</p>
+<p>In addition to the driver-specific creation options, gdal_translate
+(and <a class="reference internal" href="../api/gdal_utils.html#_CPPv413GDALTranslatePKc12GDALDatasetHPK20GDALTranslateOptionsPi" title="GDALTranslate"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALTranslate()</span></code></a> and <a class="reference internal" href="../api/raster_c_api.html#_CPPv414GDALCreateCopy11GDALDriverHPKc12GDALDatasetHi12CSLConstList16GDALProgressFuncPv" title="GDALCreateCopy"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALCreateCopy()</span></code></a>) recognize
+the following options:</p>
+<ul>
+<li><p id="programs/gdal_translate-co-APPEND_SUBDATASET"><strong>APPEND_SUBDATASET=[YES/NO]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">NO</span></code>. </p>
+<p>Can be specified to YES to avoid prior destruction of existing dataset,
+for drivers that support adding several subdatasets (e.g. GTIFF, NITF)</p>
+</li>
+<li><p id="programs/gdal_translate-co-COPY_SRC_MDD"><strong>COPY_SRC_MDD=[AUTO/YES/NO]: </strong> (GDAL &gt;= 3.8)  Defaults to <code class="docutils literal notranslate"><span class="pre">AUTO</span></code>. </p>
+<p>Defines if metadata domains of the source dataset should be copied to the
+destination dataset.
+In the default AUTO mode, only &quot;safe&quot; domains will be copied, which
+include the default metadata domain (some drivers may include other
+domains such as IMD, RPC, GEOLOCATION).
+When setting YES, all domains will be copied (but a few reserved ones like
+IMAGE_STRUCTURE or DERIVED_SUBDATASETS).
+Currently only recognized by the GTiff, COG, VRT, PNG and JPEG drivers.</p>
+<p>When setting NO, no source metadata will be copied.</p>
+</li>
+<li><p id="programs/gdal_translate-co-SRC_MDD"><strong>SRC_MDD=&lt;domain_name&gt;: </strong> (GDAL &gt;= 3.8) </p>
+<p>Defines which source metadata domain should be copied.
+This option restricts the list of source metadata domains to be copied
+(it implies COPY_SRC_MDD=YES if it is not set). This option may be specified
+as many times as they are source domains. The default metadata domain is the
+empty string &quot;&quot; (&quot;_DEFAULT_&quot;) may also be used when empty string is not practical).
+Currently only recognized by the GTiff, COG, VRT, PNG and JPEG drivers.</p>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-nogcp">
+<span id="cmdoption-gdal-translate-nogcp"></span><span class="sig-name descname"><span class="pre">-nogcp</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal_translate-nogcp" title="Permalink to this definition"></a></dt>
+<dd><p>Do not copy the GCPs in the source dataset to the output dataset.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-gcp">
+<span id="cmdoption-gdal-translate-gcp"></span><span class="sig-name descname"><span class="pre">-gcp</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;pixel&gt;</span> <span class="pre">&lt;line&gt;</span> <span class="pre">&lt;easting&gt;</span> <span class="pre">&lt;northing&gt;</span> <span class="pre">[&lt;elevation&gt;]</span></span><a class="headerlink" href="#cmdoption-gdal_translate-gcp" title="Permalink to this definition"></a></dt>
+<dd><p>Add the indicated ground control point to the output dataset.  This option
+may be provided multiple times to provide a set of GCPs.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-q">
+<span id="cmdoption-gdal-translate-q"></span><span class="sig-name descname"><span class="pre">-q</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal_translate-q" title="Permalink to this definition"></a></dt>
+<dd><p>Suppress progress monitor and other non-error output.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-sds">
+<span id="cmdoption-gdal-translate-sds"></span><span class="sig-name descname"><span class="pre">-sds</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal_translate-sds" title="Permalink to this definition"></a></dt>
+<dd><p>Copy all subdatasets of this file to individual output files.  Use with
+formats like HDF that have subdatasets.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-stats">
+<span id="cmdoption-gdal-translate-stats"></span><span class="sig-name descname"><span class="pre">-stats</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal_translate-stats" title="Permalink to this definition"></a></dt>
+<dd><p>Force (re)computation of statistics.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-norat">
+<span id="cmdoption-gdal-translate-norat"></span><span class="sig-name descname"><span class="pre">-norat</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal_translate-norat" title="Permalink to this definition"></a></dt>
+<dd><p>Do not copy source RAT into destination dataset.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-noxmp">
+<span id="cmdoption-gdal-translate-noxmp"></span><span class="sig-name descname"><span class="pre">-noxmp</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal_translate-noxmp" title="Permalink to this definition"></a></dt>
+<dd><p>Do not copy the XMP metadata in the source dataset to the output dataset when driver is able to copy it.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 3.2.</span></p>
+</div>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-oo">
+<span id="cmdoption-gdal-translate-oo"></span><span class="sig-name descname"><span class="pre">-oo</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;NAME&gt;=&lt;VALUE&gt;</span></span><a class="headerlink" href="#cmdoption-gdal_translate-oo" title="Permalink to this definition"></a></dt>
+<dd><p>Dataset open option (format specific)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-arg-src_dataset">
+<span id="cmdoption-gdal-translate-arg-src-dataset"></span><span class="sig-name descname"><span class="pre">&lt;src_dataset&gt;</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal_translate-arg-src_dataset" title="Permalink to this definition"></a></dt>
+<dd><p>The source dataset name. It can be either file name, URL of data source or
+subdataset name for multi-dataset files.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_translate-arg-dst_dataset">
+<span id="cmdoption-gdal-translate-arg-dst-dataset"></span><span class="sig-name descname"><span class="pre">&lt;dst_dataset&gt;</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal_translate-arg-dst_dataset" title="Permalink to this definition"></a></dt>
+<dd><p>The destination file name.</p>
+</dd></dl>
+
+</section>
+<section id="nodata-source-validity-mask-handling-during-resampling">
+<h2>Nodata / source validity mask handling during resampling<a class="headerlink" href="#nodata-source-validity-mask-handling-during-resampling" title="Permalink to this heading"></a></h2>
+<p>Masked values, either identified through a nodata value metadata set on the
+source band, a mask band, an alpha band will not be used during resampling
+(when using <a class="reference internal" href="#cmdoption-gdal_translate-outsize"><code class="xref std std-option docutils literal notranslate"><span class="pre">-outsize</span></code></a> or <a class="reference internal" href="#cmdoption-gdal_translate-tr"><code class="xref std std-option docutils literal notranslate"><span class="pre">-tr</span></code></a>).</p>
+<p>The details of how it is taken into account depends on the resampling kernel:</p>
+<ul class="simple">
+<li><p>for nearest resampling, for each target pixel, one of the potential contributing
+source pixels is selected (in an implementation specific way). Its value is used
+as it, be it valid or invalid.</p></li>
+<li><p>for bilinear, cubic, cubicspline and lanczos, for each target pixel, the weights
+of contributing source pixels is set to zero to ignore them when they are masked.
+There is an extra specificity for cubic: given that some of the weights in the
+kernel are negative, such strategy could lead to strong overshoot/undershoot
+when there is an alternance of valid and invalid pixels. Consequently, if any
+of the horizontal or vertical direction, if the maximum number of valid source
+pixels in each dimension is less than the radius of the resampling kernel,
+the target pixel is considered as nodata.</p></li>
+<li><p>for the other resampling methods, source pixels contributing to the target pixel
+are ignored if masked. Only the valid ones are taken into account. If there are
+none, the target pixel is considered as nodata.</p></li>
+</ul>
+</section>
+<section id="c-api">
+<h2>C API<a class="headerlink" href="#c-api" title="Permalink to this heading"></a></h2>
+<p>This utility is also callable from C with <a class="reference internal" href="../api/gdal_utils.html#_CPPv413GDALTranslatePKc12GDALDatasetHPK20GDALTranslateOptionsPi" title="GDALTranslate"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALTranslate()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 2.1.</span></p>
+</div>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdal_translate</span> <span class="o">-</span><span class="n">of</span> <span class="n">GTiff</span> <span class="o">-</span><span class="n">co</span> <span class="s2">&quot;TILED=YES&quot;</span> <span class="n">utm</span><span class="o">.</span><span class="n">tif</span> <span class="n">utm_tiled</span><span class="o">.</span><span class="n">tif</span>
+</pre></div>
+</div>
+<p>To create a JPEG-compressed TIFF with internal mask from a RGBA dataset</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdal_translate</span> <span class="n">rgba</span><span class="o">.</span><span class="n">tif</span> <span class="n">withmask</span><span class="o">.</span><span class="n">tif</span> <span class="o">-</span><span class="n">b</span> <span class="mi">1</span> <span class="o">-</span><span class="n">b</span> <span class="mi">2</span> <span class="o">-</span><span class="n">b</span> <span class="mi">3</span> <span class="o">-</span><span class="n">mask</span> <span class="mi">4</span> <span class="o">-</span><span class="n">co</span> <span class="n">COMPRESS</span><span class="o">=</span><span class="n">JPEG</span> \
+  <span class="o">-</span><span class="n">co</span> <span class="n">PHOTOMETRIC</span><span class="o">=</span><span class="n">YCBCR</span> <span class="o">--</span><span class="n">config</span> <span class="n">GDAL_TIFF_INTERNAL_MASK</span> <span class="n">YES</span>
+</pre></div>
+</div>
+<p>To create a RGBA dataset from a RGB dataset with a mask</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdal_translate</span> <span class="n">withmask</span><span class="o">.</span><span class="n">tif</span> <span class="n">rgba</span><span class="o">.</span><span class="n">tif</span> <span class="o">-</span><span class="n">b</span> <span class="mi">1</span> <span class="o">-</span><span class="n">b</span> <span class="mi">2</span> <span class="o">-</span><span class="n">b</span> <span class="mi">3</span> <span class="o">-</span><span class="n">b</span> <span class="n">mask</span>
+</pre></div>
+</div>
+<p>Subsetting using <a class="reference internal" href="#cmdoption-gdal_translate-projwin"><code class="xref std std-option docutils literal notranslate"><span class="pre">-projwin</span></code></a> and <a class="reference internal" href="#cmdoption-gdal_translate-outsize"><code class="xref std std-option docutils literal notranslate"><span class="pre">-outsize</span></code></a>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gdal_translate<span class="w"> </span>-projwin<span class="w"> </span>-20037500<span class="w"> </span><span class="m">10037500</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">0</span><span class="w"> </span>-outsize<span class="w"> </span><span class="m">100</span><span class="w"> </span><span class="m">100</span><span class="w"> </span>frmt_wms_googlemaps_tms.xml<span class="w"> </span>junk.png
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="gdal_viewshed.html" class="btn btn-neutral float-right" title="gdal_viewshed" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gdal_sieve.html" class="btn btn-neutral float-left" title="gdal_sieve.py" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2024 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+  </div>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

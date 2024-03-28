@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RFC 99: Geometry coordinate precision &mdash; GDAL  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/gdal.css" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://gdal.org/development/rfc/rfc99_geometry_coordinate_precision.html"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Community" href="../../community/index.html" />
+    <link rel="prev" title="RFC 98: Build requirements for GDAL 3.9" href="rfc98_build_requirements_gdal_3_9.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../dev_environment.html">Setting up a development environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../building_from_source.html">Building GDAL from source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../testing.html">Automated testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev_practices.html">Development practices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev_documentation.html">Building documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cmake.html">Using GDAL in CMake projects</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters (not implemented)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open (withdrawn)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open (withdrawn)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading (not implemented)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc77_drop_python2_support.html">RFC 77: Drop Python 2 support in favour of Python 3.6</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc78_gdal_utils_package.html">RFC 78: gdal-utils package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc79_listing_service_providers.html">RFC 79: Listing of Service Providers on GDAL website</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc80_numfocus_relationship.html">RFC 80: NumFOCUS relationship and sponsorship program</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc81_coordinate_epoch.html">RFC 81: Support for coordinate epochs in geospatial formats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc83_use_of_project_sponsorship.html">RFC 83: guidelines for the use of GDAL project sponsorship</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc84_cmake.html">RFC 84: Migrating build systems to CMake</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc85_policy_code_additions.html">RFC 85: Policy regarding substantial code additions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc86_column_oriented_api.html">RFC 86: Column-oriented read API for vector layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc87_signed_int8.html">RFC 87: Signed int8 data type for raster</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc88_googletest.html">RFC 88: Use GoogleTest framework for C/C++ unit tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc89_sql_logging_callback.html">RFC 89: SQL logging callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc90_read_compressed_data.html">RFC 90: Direct access to compressed raster data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc91_dataset_close.html">RFC 91: GDALDataset::Close() method</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc92_wkb_only_geometries.html">RFC 92: WKB Only geometries (on hold)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc93_update_feature.html">RFC 93: OGRLayer::UpdateFeature() method</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc94_field_precision_width_metadata.html">RFC 94: Numeric fields width/precision metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc95_standard_int_types.html">RFC 95: Use standard C/C++ integer types (proposed, <em>NOT</em> adopted)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc96_deferred_plugin_loading.html">RFC 96: Deferred C++ plugin loading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc97_feature_and_fielddefn_sealing.html">RFC 97: OGRFeatureDefn, OGRFieldDefn and OGRGeomFieldDefn &quot;sealing&quot;</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc98_build_requirements_gdal_3_9.html">RFC 98: Build requirements for GDAL 3.9</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 99: Geometry coordinate precision</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motivation">Motivation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#c-and-c-api-extensions-and-changes">C and C++ API extensions and changes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#driver-changes">Driver changes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#utilities">Utilities</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#out-of-scope">Out of scope</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#swig-bindings">SWIG bindings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#testing">Testing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#backward-compatibility">Backward compatibility</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#design-discussion">Design discussion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#related-issues-and-prs">Related issues and PRs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voting-history">Voting history</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sponsors/index.html">Sponsors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 99: Geometry coordinate precision</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit/master/doc/source/development/rfc/rfc99_geometry_coordinate_precision.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="../../community/index.html" class="btn btn-neutral float-right" title="Community" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc98_build_requirements_gdal_3_9.html" class="btn btn-neutral float-left" title="RFC 98: Build requirements for GDAL 3.9" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="rfc-99-geometry-coordinate-precision">
+<span id="rfc-99"></span><h1>RFC 99: Geometry coordinate precision<a class="headerlink" href="#rfc-99-geometry-coordinate-precision" title="Permalink to this heading"></a></h1>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Author:</p></td>
+<td><p>Even Rouault</p></td>
+</tr>
+<tr class="row-even"><td><p>Contact:</p></td>
+<td><p>even.rouault &#64; spatialys.com</p></td>
+</tr>
+<tr class="row-odd"><td><p>Started:</p></td>
+<td><p>2024-Feb-24</p></td>
+</tr>
+<tr class="row-even"><td><p>Status:</p></td>
+<td><p>Adopted, implemented in GDAL 3.9</p></td>
+</tr>
+<tr class="row-odd"><td><p>Target:</p></td>
+<td><p>GDAL 3.9</p></td>
+</tr>
+</tbody>
+</table>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this heading"></a></h2>
+<p>This RFC aims at introducing optional metadata to specify the coordinate
+precision of geometries, to be able to round appropriately coordinates and limit
+the number of decimals when exporting to text-based formats or nullify
+least-significant bits for binary formats. That metadata will be stored into
+and read from formats that can support it.</p>
+</section>
+<section id="motivation">
+<h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this heading"></a></h2>
+<p>The aim is multiple:</p>
+<ul class="simple">
+<li><p>reducing file size. For text-based formats, rounding and truncating to the
+specified precision directly reduce file size. For binary formats, using that
+information to zero least-significant bits can increase the potential when
+applying afterwards lossless compression methods (typically zipping a file).</p></li>
+<li><p>presenting the user with hints on the precision of the data he/she accesses.
+This can be used by user interfaces build on top of GDAL to display geometry
+coordinates with an appropriate number of decimals.</p></li>
+<li><p>a few drivers (GeoJSON, JSONFG, OpenFileGDB) have layer creation options to
+specify coordinate precision, but there is currently no driver agnostic way
+of specifying it.</p></li>
+</ul>
+<p>For example, currently, when exporting a file to GML, 15 significant decimal
+digits (ie the total of digits for the integral and decimal parts) are used,
+which corresponds to a 0.1 micrometer precision for geography coordinates.
+The same holds for regular GeoJSON export, unless the RFC 7946 variant is
+selected, in which case only 7 decimal digits after decimal separators are used.
+However this is a layer creation option, which means that it is no longer
+remembered when data is edited/appended to an existing layer
+(see <a class="reference external" href="https://github.com/qgis/QGIS/issues/56335">https://github.com/qgis/QGIS/issues/56335</a>).</p>
+<p>For binary formats using IEEE-754 double-precision encoding of real numbers,
+one can show that at least the last 16 least-significants bits (ie the last
+2 bytes of 8) of a coordinate can be set to zero while keeping a 1 mm precision
+(which corresponds to about 8.9e-9 degree).
+On a test dataset, setting a 1 mm precision reduced the size of the .zip of the
+.gpkg file from 766 MB to 667 MB (13% size decrease).
+If only a 1 meter precision is wished, this increases to 26 useless least-significant bits.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">math</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">earth_radius_in_meter</span> <span class="o">=</span> <span class="mi">6378137</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">one_degree_in_meter</span> <span class="o">=</span> <span class="n">earth_radius_in_meter</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mm_prec_in_degree</span> <span class="o">=</span> <span class="mf">1e-3</span> <span class="o">/</span> <span class="n">one_degree_in_meter</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">mm_prec_in_degree</span><span class="p">)</span>
+<span class="go">8.983152841195215e-09</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">max_integer_part</span> <span class="o">=</span> <span class="mi">180</span>  <span class="c1"># for coordinates in range [-180,180]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">significant_bits_needed</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">max_integer_part</span><span class="p">))</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">mm_prec_in_degree</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mantissa_bit_size</span> <span class="o">=</span> <span class="mi">52</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">unused_bits</span> <span class="o">=</span> <span class="n">mantissa_bit_size</span> <span class="o">-</span> <span class="n">significant_bits_needed</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">unused_bits</span><span class="p">)</span>
+<span class="go">16</span>
+</pre></div>
+</div>
+</section>
+<section id="c-and-c-api-extensions-and-changes">
+<h2>C and C++ API extensions and changes<a class="headerlink" href="#c-and-c-api-extensions-and-changes" title="Permalink to this heading"></a></h2>
+<section id="ogrgeomcoordinateprecision-class">
+<h3>OGRGeomCoordinatePrecision class<a class="headerlink" href="#ogrgeomcoordinateprecision-class" title="Permalink to this heading"></a></h3>
+<p>A new <code class="docutils literal notranslate"><span class="pre">OGRGeomCoordinatePrecision</span></code> class is introduced in the
+<code class="docutils literal notranslate"><span class="pre">ogr_geomcoordinateprecision.h</span></code> file:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cm">/** Geometry coordinate precision.</span>
+<span class="cm"> *</span>
+<span class="cm"> * This may affect how many decimal digits (for text-based output) or bits</span>
+<span class="cm"> * (for binary encodings) are used to encode geometries.</span>
+<span class="cm"> *</span>
+<span class="cm"> * It is important to note that the coordinate precision has no direct</span>
+<span class="cm"> * relationship with the &quot;physical&quot; accuracy. It is generally advised that</span>
+<span class="cm"> * the resolution (precision) be at least 10 times smaller than the accuracy.</span>
+<span class="cm"> */</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">CPL_DLL</span><span class="w"> </span><span class="n">OGRGeomCoordinatePrecision</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">UNKNOWN</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">    </span><span class="cm">/** Resolution for the coordinate precision of the X and Y coordinates.</span>
+<span class="cm">     * Expressed in the units of the X and Y axis of the SRS.</span>
+<span class="cm">     * For example for a projected SRS with X,Y axis unit in meter, a value</span>
+<span class="cm">     * of 1e-3 corresponds to a 1 mm precision.</span>
+<span class="cm">     * For a geographic SRS (on Earth) with axis unit in degree, a value</span>
+<span class="cm">     * of 8.9e-9 (degree) also corresponds to a 1 mm precision.</span>
+<span class="cm">     * Set to 0 if unknown.</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">dfXYResolution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UNKNOWN</span><span class="p">;</span>
+
+<span class="w">    </span><span class="cm">/** Resolution for the coordinate precision of the Z coordinate.</span>
+<span class="cm">     * Expressed in the units of the Z axis of the SRS.</span>
+<span class="cm">     * Set to 0 if unknown.</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">dfZResolution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UNKNOWN</span><span class="p">;</span>
+
+<span class="w">    </span><span class="cm">/** Resolution for the coordinate precision of the M coordinate.</span>
+<span class="cm">     * Set to 0 if unknown.</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">dfMResolution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UNKNOWN</span><span class="p">;</span>
+
+<span class="w">    </span><span class="cm">/** Map from a format name to a list of format specific options.</span>
+<span class="cm">     *</span>
+<span class="cm">     * This can be for example used to store FileGeodatabase</span>
+<span class="cm">     * xytolerance, xorigin, yorigin, etc. coordinate precision grids</span>
+<span class="cm">     * options, which can be help to maximize preservation of coordinates in</span>
+<span class="cm">     * FileGDB -&gt; FileGDB conversion processes.</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="w"> </span><span class="n">CPLStringList</span><span class="o">&gt;</span><span class="w"> </span><span class="n">oFormatSpecificOptions</span><span class="p">{};</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * \brief Set the resolution of the geometry coordinate components.</span>
+<span class="cm">     *</span>
+<span class="cm">     * For the X, Y and Z ordinates, the precision should be expressed in meter,</span>
+<span class="cm">     * e.g 1e-3 for millimetric precision.</span>
+<span class="cm">     *</span>
+<span class="cm">     * Resolution should be stricty positive, or set to</span>
+<span class="cm">     * OGRGeomCoordinatePrecision::UNKNOWN when unknown.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @param poSRS Spatial reference system, used for metric to SRS unit conversion</span>
+<span class="cm">     *              (must not be null)</span>
+<span class="cm">     * @param dfXYMeterResolution Resolution for for X and Y coordinates, in meter.</span>
+<span class="cm">     * @param dfZMeterResolution Resolution for for Z coordinates, in meter.</span>
+<span class="cm">     * @param dfMResolutionIn Resolution for for M coordinates.</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">SetFromMeter</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">OGRSpatialReference</span><span class="w"> </span><span class="o">*</span><span class="n">poSRS</span><span class="p">,</span>
+<span class="w">                      </span><span class="kt">double</span><span class="w"> </span><span class="n">dfXYMeterResolution</span><span class="p">,</span>
+<span class="w">                      </span><span class="kt">double</span><span class="w"> </span><span class="n">dfZMeterResolution</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">dfMResolution</span><span class="p">);</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * \brief Return equivalent coordinate precision setting taking into account</span>
+<span class="cm">     * a change of SRS.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @param poSRSSrc Spatial reference system of the current instance</span>
+<span class="cm">     *                 (if null, meter unit is assumed)</span>
+<span class="cm">     * @param poSRSDst Spatial reference system of the returned instance</span>
+<span class="cm">     *                 (if null, meter unit is assumed)</span>
+<span class="cm">     * @return a new OGRGeomCoordinatePrecision instance, with a poSRSDst SRS.</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="n">OGRGeomCoordinatePrecision</span>
+<span class="w">    </span><span class="nf">ConvertToOtherSRS</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">OGRSpatialReference</span><span class="w"> </span><span class="o">*</span><span class="n">poSRSSrc</span><span class="p">,</span>
+<span class="w">                      </span><span class="k">const</span><span class="w"> </span><span class="n">OGRSpatialReference</span><span class="w"> </span><span class="o">*</span><span class="n">poSRSDst</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * \brief Return the number of decimal digits after the decimal point to</span>
+<span class="cm">     * get the specified resolution.</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">ResolutionToPrecision</span><span class="p">(</span><span class="kt">double</span><span class="w"> </span><span class="n">dfResolution</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Corresponding additions at the C API level:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/** Value for a unknown coordinate precision. */</span>
+<span class="cp">#define OGR_GEOM_COORD_PRECISION_UNKNOWN 0</span>
+
+<span class="cm">/** Opaque type for OGRGeomCoordinatePrecision */</span>
+<span class="k">typedef</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">OGRGeomCoordinatePrecision</span><span class="w"> </span><span class="o">*</span><span class="n">OGRGeomCoordinatePrecisionH</span><span class="p">;</span>
+
+<span class="n">OGRGeomCoordinatePrecisionH</span><span class="w"> </span><span class="n">CPL_DLL</span><span class="w"> </span><span class="n">OGRGeomCoordinatePrecisionCreate</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="n">CPL_DLL</span><span class="w"> </span><span class="nf">OGRGeomCoordinatePrecisionDestroy</span><span class="p">(</span><span class="n">OGRGeomCoordinatePrecisionH</span><span class="p">);</span>
+<span class="kt">double</span><span class="w"> </span><span class="n">CPL_DLL</span>
+<span class="w">    </span><span class="nf">OGRGeomCoordinatePrecisionGetXYResolution</span><span class="p">(</span><span class="n">OGRGeomCoordinatePrecisionH</span><span class="p">);</span>
+<span class="kt">double</span><span class="w"> </span><span class="n">CPL_DLL</span>
+<span class="w">    </span><span class="nf">OGRGeomCoordinatePrecisionGetZResolution</span><span class="p">(</span><span class="n">OGRGeomCoordinatePrecisionH</span><span class="p">);</span>
+<span class="kt">double</span><span class="w"> </span><span class="n">CPL_DLL</span>
+<span class="w">    </span><span class="nf">OGRGeomCoordinatePrecisionGetMResolution</span><span class="p">(</span><span class="n">OGRGeomCoordinatePrecisionH</span><span class="p">);</span>
+<span class="kt">char</span><span class="w"> </span><span class="n">CPL_DLL</span><span class="w"> </span><span class="o">**</span>
+<span class="w">    </span><span class="nf">OGRGeomCoordinatePrecisionGetFormats</span><span class="p">(</span><span class="n">OGRGeomCoordinatePrecisionH</span><span class="p">);</span>
+<span class="n">CSLConstList</span><span class="w"> </span><span class="n">CPL_DLL</span><span class="w"> </span><span class="n">OGRGeomCoordinatePrecisionGetFormatSpecificOptions</span><span class="p">(</span>
+<span class="w">    </span><span class="n">OGRGeomCoordinatePrecisionH</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">pszFormatName</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="n">CPL_DLL</span><span class="w"> </span><span class="nf">OGRGeomCoordinatePrecisionSet</span><span class="p">(</span><span class="n">OGRGeomCoordinatePrecisionH</span><span class="p">,</span>
+<span class="w">                                           </span><span class="kt">double</span><span class="w"> </span><span class="n">dfXYResolution</span><span class="p">,</span>
+<span class="w">                                           </span><span class="kt">double</span><span class="w"> </span><span class="n">dfZResolution</span><span class="p">,</span>
+<span class="w">                                           </span><span class="kt">double</span><span class="w"> </span><span class="n">dfMResolution</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="n">CPL_DLL</span><span class="w"> </span><span class="nf">OGRGeomCoordinatePrecisionSetFromMeter</span><span class="p">(</span><span class="n">OGRGeomCoordinatePrecisionH</span><span class="p">,</span>
+<span class="w">                                                    </span><span class="n">OGRSpatialReferenceH</span><span class="w"> </span><span class="n">hSRS</span><span class="p">,</span>
+<span class="w">                                                    </span><span class="kt">double</span><span class="w"> </span><span class="n">dfXYMeterResolution</span><span class="p">,</span>
+<span class="w">                                                    </span><span class="kt">double</span><span class="w"> </span><span class="n">dfZMeterResolution</span><span class="p">,</span>
+<span class="w">                                                    </span><span class="kt">double</span><span class="w"> </span><span class="n">dfMResolution</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="n">CPL_DLL</span><span class="w"> </span><span class="nf">OGRGeomCoordinatePrecisionSetFormatSpecificOptions</span><span class="p">(</span>
+<span class="w">    </span><span class="n">OGRGeomCoordinatePrecisionH</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">pszFormatName</span><span class="p">,</span>
+<span class="w">    </span><span class="n">CSLConstList</span><span class="w"> </span><span class="n">papszOptions</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="ogrgeomfielddefn-class">
+<h3>OGRGeomFieldDefn class<a class="headerlink" href="#ogrgeomfielddefn-class" title="Permalink to this heading"></a></h3>
+<p>The existing <a class="reference internal" href="../../api/ogrfeature_cpp.html#_CPPv416OGRGeomFieldDefn" title="OGRGeomFieldDefn"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRGeomFieldDefn</span></code></a> is extended with a new
+OGRGeomCoordinatePrecision member, and associated getter and setter methods.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">OGRGeomFieldDefn</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="n">OGRGeomCoordinatePrecision</span><span class="o">&amp;</span><span class="w"> </span><span class="n">GetCoordinatePrecision</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">SetCoordinatePrecision</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">OGRGeomCoordinatePrecision</span><span class="o">&amp;</span><span class="w"> </span><span class="n">prec</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="n">OGRGeomCoordinatePrecision</span><span class="w"> </span><span class="n">m_oCoordPrecision</span><span class="p">{};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>New corresponding C API:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">OGRGeomCoordinatePrecisionH</span>
+<span class="w">    </span><span class="n">CPL_DLL</span><span class="w"> </span><span class="n">OGR_GFld_GetCoordinatePrecision</span><span class="p">(</span><span class="n">OGRGeomFieldDefnH</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="n">CPL_DLL</span><span class="w"> </span><span class="nf">OGR_GFld_SetCoordinatePrecision</span><span class="p">(</span><span class="n">OGRGeomFieldDefnH</span><span class="p">,</span>
+<span class="w">                                             </span><span class="n">OGRGeomCoordinatePrecisionH</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="ogrgeometry-class">
+<h3>OGRGeometry class<a class="headerlink" href="#ogrgeometry-class" title="Permalink to this heading"></a></h3>
+<p>The existing <a class="reference internal" href="../../api/ogrgeometry_cpp.html#_CPPv411OGRGeometry" title="OGRGeometry"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRGeometry</span></code></a> is extended with the following new
+<code class="docutils literal notranslate"><span class="pre">SetPrecision</span></code> method which is a wrapper of the <code class="docutils literal notranslate"><span class="pre">GEOSGeom_setPrecision_r</span></code> function:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cm">/** Set the geometry&#39;s precision, rounding all its coordinates to the precision</span>
+<span class="cm"> * grid, and making sure the geometry is still valid.</span>
+<span class="cm"> *</span>
+<span class="cm"> * This is a stronger version of roundCoordinates().</span>
+<span class="cm"> *</span>
+<span class="cm"> * Note that at time of writing GEOS does no supported curve geometries. So</span>
+<span class="cm"> * currently if this function is called on such a geometry, OGR will first call</span>
+<span class="cm"> * getLinearGeometry() on the input and getCurveGeometry() on the output, but</span>
+<span class="cm"> * that it is unlikely to yield to the expected result.</span>
+<span class="cm"> *</span>
+<span class="cm"> * @param dfGridSize size of the precision grid, or 0 for FLOATING</span>
+<span class="cm"> *                 precision.</span>
+<span class="cm"> * @param nFlags The bitwise OR of zero, one or several of OGR_GEOS_PREC_NO_TOPO</span>
+<span class="cm"> *               and OGR_GEOS_PREC_KEEP_COLLAPSED</span>
+<span class="cm"> *</span>
+<span class="cm"> * @return a new geometry or NULL if an error occurs.</span>
+<span class="cm"> */</span>
+
+<span class="n">OGRGeometry</span><span class="w"> </span><span class="o">*</span><span class="nf">OGRGeometry::SetPrecision</span><span class="p">(</span><span class="kt">double</span><span class="w"> </span><span class="n">dfGridSize</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">nFlags</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>New corresponding C API:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/** This option causes OGR_G_SetPrecision()</span>
+<span class="cm">  * to not attempt at preserving the topology */</span>
+<span class="cp">#define OGR_GEOS_PREC_NO_TOPO (1 &lt;&lt; 0)</span>
+
+<span class="cm">/** This option causes OGR_G_SetPrecision()</span>
+<span class="cm">  * to retain collapsed elements */</span>
+<span class="cp">#define OGR_GEOS_PREC_KEEP_COLLAPSED (1 &lt;&lt; 1)</span>
+
+<span class="n">OGRGeometryH</span><span class="w"> </span><span class="nf">OGR_G_SetPrecision</span><span class="p">(</span><span class="n">OGRGeometryH</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">dfGridSize</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">nFlags</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Note that this method is not automatically run by the writing side of drivers,
+which assume that the passed geometries are valid once rounded with the specified
+coordinate precision metadata.</p>
+<p>However it is invoked when the <cite>-xyRes</cite> switch of ogr2ogr is passed.</p>
+<p>It may also be triggered by setting the new <code class="docutils literal notranslate"><span class="pre">OGR_APPLY_GEOM_SET_PRECISION</span></code>
+configuration option to <code class="docutils literal notranslate"><span class="pre">YES</span></code>, for geometries passed to
+<a class="reference internal" href="../../api/ogrlayer_cpp.html#_CPPv4N8OGRLayer13CreateFeatureEP10OGRFeature" title="OGRLayer::CreateFeature"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRLayer::CreateFeature()</span></code></a> and <a class="reference internal" href="../../api/ogrlayer_cpp.html#_CPPv4N8OGRLayer10SetFeatureEP10OGRFeature" title="OGRLayer::SetFeature"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRLayer::SetFeature()</span></code></a> before
+they are passed to the driver.</p>
+<p>A closely related <code class="docutils literal notranslate"><span class="pre">roundCoordinates</span></code> method is also introduced:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cm">/** Round coordinates of the geometry to the specified precision.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Note that this is not the same as OGRGeometry::SetPrecision(). The later</span>
+<span class="cm"> * will return valid geometries, whereas roundCoordinates() does not make</span>
+<span class="cm"> * such guarantee and may return geometries with invalidities, if they are</span>
+<span class="cm"> * not compatible of the specified precision. roundCoordinates() supports</span>
+<span class="cm"> * curve geometries, whereas SetPrecision() does not currently.</span>
+<span class="cm"> *</span>
+<span class="cm"> * One use case for roundCoordinates() is to undo the effect of</span>
+<span class="cm"> * quantizeCoordinates().</span>
+<span class="cm"> *</span>
+<span class="cm"> * @param sPrecision Contains the precision requirements.</span>
+<span class="cm"> * @since GDAL 3.9</span>
+<span class="cm"> */</span>
+<span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">roundCoordinates</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">OGRGeomCoordinatePrecision</span><span class="w"> </span><span class="o">&amp;</span><span class="n">sPrecision</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="wkb-export">
+<h3>WKB export<a class="headerlink" href="#wkb-export" title="Permalink to this heading"></a></h3>
+<p>WKB export methods will be modified in a similar way as in the prototype
+<a class="reference external" href="https://github.com/OSGeo/gdal/pull/6974">https://github.com/OSGeo/gdal/pull/6974</a> to nullify least significant bits from
+the precision specifications.</p>
+<p>More specifically the following 2 new classes are added:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cm">/** Geometry coordinate precision for a binary representation.</span>
+<span class="cm"> */</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">CPL_DLL</span><span class="w"> </span><span class="n">OGRGeomCoordinateBinaryPrecision</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">nXYBitPrecision</span><span class="w"> </span><span class="o">=</span>
+<span class="w">        </span><span class="n">INT_MIN</span><span class="p">;</span><span class="w"> </span><span class="cm">/**&lt; Number of bits needed to achieved XY precision. Typically</span>
+<span class="cm">                    computed with SetFromResolution() */</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">nZBitPrecision</span><span class="w"> </span><span class="o">=</span>
+<span class="w">        </span><span class="n">INT_MIN</span><span class="p">;</span><span class="w"> </span><span class="cm">/**&lt; Number of bits needed to achieved Z precision. Typically</span>
+<span class="cm">                    computed with SetFromResolution() */</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">nMBitPrecision</span><span class="w"> </span><span class="o">=</span>
+<span class="w">        </span><span class="n">INT_MIN</span><span class="p">;</span><span class="w"> </span><span class="cm">/**&lt; Number of bits needed to achieved M precision. Typically</span>
+<span class="cm">                    computed with SetFromResolution() */</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">SetFrom</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">OGRGeomCoordinatePrecision</span><span class="w"> </span><span class="o">&amp;</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="cm">/** WKB export options.</span>
+<span class="cm"> */</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">CPL_DLL</span><span class="w"> </span><span class="n">OGRwkbExportOptions</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">OGRwkbByteOrder</span><span class="w"> </span><span class="n">eByteOrder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">wkbNDR</span><span class="p">;</span><span class="w">           </span><span class="cm">/**&lt; Byte order */</span>
+<span class="w">    </span><span class="n">OGRwkbVariant</span><span class="w"> </span><span class="n">eWkbVariant</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">wkbVariantOldOgc</span><span class="p">;</span><span class="w">  </span><span class="cm">/**&lt; WKB variant. */</span>
+<span class="w">    </span><span class="n">OGRGeomCoordinateBinaryPrecision</span><span class="w"> </span><span class="n">sPrecision</span><span class="p">{};</span><span class="w"> </span><span class="cm">/**&lt; Binary precision. */</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>And the C++ OGRGeometry <code class="docutils literal notranslate"><span class="pre">exportToWkb</span></code> virtual method is modified to have the
+following prototype:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">virtual</span><span class="w"> </span><span class="n">OGRErr</span><span class="w"> </span><span class="nf">exportToWkb</span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="p">,</span>
+<span class="w">                           </span><span class="k">const</span><span class="w"> </span><span class="n">OGRwkbExportOptions</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The existing method with signature <code class="docutils literal notranslate"><span class="pre">OGRErr</span> <span class="pre">exportToWkb(OGRwkbByteOrder,</span> <span class="pre">unsigned</span> <span class="pre">char</span> <span class="pre">*,</span> <span class="pre">OGRwkbVariant</span> <span class="pre">=</span> <span class="pre">wkbVariantOldOgc)</span> <span class="pre">const</span></code>
+is kept and call the new virtual method.</p>
+<p>New corresponding C API:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/** Opaque type for WKB export options */</span>
+<span class="k">typedef</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">OGRwkbExportOptions</span><span class="w"> </span><span class="n">OGRwkbExportOptions</span><span class="p">;</span>
+
+<span class="n">OGRwkbExportOptions</span><span class="w"> </span><span class="n">CPL_DLL</span><span class="w"> </span><span class="o">*</span><span class="n">OGRwkbExportOptionsCreate</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="n">CPL_DLL</span><span class="w"> </span><span class="nf">OGRwkbExportOptionsDestroy</span><span class="p">(</span><span class="n">OGRwkbExportOptions</span><span class="w"> </span><span class="o">*</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="n">CPL_DLL</span><span class="w"> </span><span class="nf">OGRwkbExportOptionsSetByteOrder</span><span class="p">(</span><span class="n">OGRwkbExportOptions</span><span class="w"> </span><span class="o">*</span><span class="p">,</span>
+<span class="w">                                             </span><span class="n">OGRwkbByteOrder</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="n">CPL_DLL</span><span class="w"> </span><span class="nf">OGRwkbExportOptionsSetVariant</span><span class="p">(</span><span class="n">OGRwkbExportOptions</span><span class="w"> </span><span class="o">*</span><span class="p">,</span>
+<span class="w">                                           </span><span class="n">OGRwkbVariant</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="n">CPL_DLL</span><span class="w"> </span><span class="nf">OGRwkbExportOptionsSetPrecision</span><span class="p">(</span><span class="n">OGRwkbExportOptions</span><span class="w"> </span><span class="o">*</span><span class="p">,</span>
+<span class="w">                                             </span><span class="n">OGRGeomCoordinatePrecisionH</span><span class="p">);</span>
+<span class="n">OGRErr</span><span class="w"> </span><span class="n">CPL_DLL</span><span class="w"> </span><span class="n">OGR_G_ExportToWkbEx</span><span class="p">(</span><span class="n">OGRGeometryH</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="p">,</span>
+<span class="w">                                   </span><span class="k">const</span><span class="w"> </span><span class="n">OGRwkbExportOptions</span><span class="w"> </span><span class="o">*</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="ogrlayer-createlayer-icreatelayer-changes">
+<h3>OGRLayer CreateLayer()/ICreateLayer() changes<a class="headerlink" href="#ogrlayer-createlayer-icreatelayer-changes" title="Permalink to this heading"></a></h3>
+<p>The signature of the current <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRLayer::ICreateLayer()</span></code> protected
+method (implemented by drivers) will be changed from</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">virtual</span><span class="w"> </span><span class="n">OGRLayer</span><span class="w"> </span><span class="o">*</span><span class="nf">ICreateLayer</span><span class="p">(</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">pszName</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">OGRSpatialReference</span><span class="w"> </span><span class="o">*</span><span class="n">poSpatialRef</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span>
+<span class="w">        </span><span class="n">OGRwkbGeometryType</span><span class="w"> </span><span class="n">eGType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">wkbUnknown</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">**</span><span class="n">papszOptions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>to</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">virtual</span><span class="w"> </span><span class="n">OGRLayer</span><span class="w"> </span><span class="o">*</span><span class="nf">ICreateLayer</span><span class="p">(</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">pszName</span><span class="p">,</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="n">OGRGeomFieldDefn</span><span class="o">*</span><span class="w"> </span><span class="n">poGeomFieldDefn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span>
+<span class="w">        </span><span class="n">CSLConstList</span><span class="w"> </span><span class="n">papszOptions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>This will require changes to out-of-tree drivers that implement it.</p>
+<p>A corresponding non-virtual public method will also be added:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">OGRLayer</span><span class="w"> </span><span class="o">*</span><span class="nf">CreateLayer</span><span class="p">(</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">pszName</span><span class="p">,</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="n">OGRGeomFieldDefn</span><span class="o">*</span><span class="w"> </span><span class="n">poGeomFieldDefn</span><span class="p">,</span>
+<span class="w">        </span><span class="n">CSLConstList</span><span class="w"> </span><span class="n">papszOptions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>And the current CreateLayer() signature will be adapted to call the modified
+ICreateLayer().</p>
+<p>And for the C API:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">OGRLayerH</span><span class="w"> </span><span class="n">CPL_DLL</span><span class="w"> </span><span class="n">GDALDatasetCreateLayerFromGeomFieldDefn</span><span class="p">(</span>
+<span class="w">                                           </span><span class="n">GDALDatasetH</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="p">,</span>
+<span class="w">                                           </span><span class="n">OGRGeomFieldDefnH</span><span class="w"> </span><span class="n">hGeomFieldDefn</span><span class="p">,</span>
+<span class="w">                                           </span><span class="n">CSLConstList</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>A new <code class="docutils literal notranslate"><span class="pre">GDAL_DCAP_HONOR_GEOM_COORDINATE_PRECISION</span></code> driver capability will be added
+to advertise that a driver honours OGRGeomFieldDefn::GetCoordinatePrecision()
+when writing geometries. This may be useul for user interfaces that could offer
+an option to the user to specify the coordinate precision. Note however that
+the driver may not be able to store that precision in the dataset metadata.</p>
+<p>There will be <em>no</em> provision to modify the coordinate precision of an
+existing layer geometry field with <a class="reference internal" href="../../api/ogrlayer_cpp.html#_CPPv4N8OGRLayer14AlterFieldDefnEiP12OGRFieldDefni" title="OGRLayer::AlterFieldDefn"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRLayer::AlterFieldDefn()</span></code></a>.</p>
+</section>
+</section>
+<section id="driver-changes">
+<h2>Driver changes<a class="headerlink" href="#driver-changes" title="Permalink to this heading"></a></h2>
+<p>The following drivers will be modified to honour <code class="docutils literal notranslate"><span class="pre">GDAL_DCAP_HONOR_GEOM_COORDINATE_PRECISION</span></code></p>
+<section id="geojson">
+<h3>GeoJSON<a class="headerlink" href="#geojson" title="Permalink to this heading"></a></h3>
+<p>The driver will compute the number of decimal digits after the decimal point
+to write as <code class="docutils literal notranslate"><span class="pre">ceil(1.</span> <span class="pre">/</span> <span class="pre">log10(resolution))</span></code></p>
+<p>The driver will be able to store and retrieve the coordinate precision metadata
+in the files it generates, by adding <code class="docutils literal notranslate"><span class="pre">xy_coordinate_resolution</span></code> and
+<code class="docutils literal notranslate"><span class="pre">z_coordinate_resolution</span></code> members at the FeatureCollection level.</p>
+<p>The existing COORDINATE_PRECISION layer creation option, if specified, will
+take precedence over the settings coming from OGRGeomFieldDefn::GetCoordinatePrecision().</p>
+</section>
+<section id="geojsonseq">
+<h3>GeoJSONSeq<a class="headerlink" href="#geojsonseq" title="Permalink to this heading"></a></h3>
+<p>The driver will compute the number of decimal digits after the decimal point
+to write as <code class="docutils literal notranslate"><span class="pre">ceil(1.</span> <span class="pre">/</span> <span class="pre">log10(resolution))</span></code></p>
+<p>It will <em>not</em> be able to store it in its metadata.</p>
+</section>
+<section id="jsonfg">
+<h3>JSONFG<a class="headerlink" href="#jsonfg" title="Permalink to this heading"></a></h3>
+<p>Similar to GeoJSON. One subtelty is that this driver may write both the &quot;place&quot;
+geometry (generally in a non-WGS84 CRS) and the GeoJSON RFC7946 WGS84 &quot;geometry&quot;.</p>
+<p>The OGRGeomFieldDefn::GetCoordinatePrecision() will qualify the &quot;place&quot; geometry.
+The coordinate precision of the WGS84 &quot;geometry&quot; will be derived from the one
+of the &quot;place&quot; geometry with appropriate geographic/projected CRS and axis unit
+changes.</p>
+<p>The coordinate precision metadata of the &quot;place&quot; member will be stored in
+<code class="docutils literal notranslate"><span class="pre">xy_coordinate_resolution_place</span></code> and <code class="docutils literal notranslate"><span class="pre">z_coordinate_resolution_place</span></code>
+members at the FeatureCollection level.</p>
+<p>For the &quot;geometry&quot; member, the same <code class="docutils literal notranslate"><span class="pre">xy_coordinate_resolution</span></code> and
+<code class="docutils literal notranslate"><span class="pre">z_coordinate_resolution</span></code> members as the GeoJSON driver will be used.</p>
+<p>The existing COORDINATE_PRECISION_PLACE or COORDINATE_PRECISION_GEOMETRY layer
+creation option, if specified, will take precedence over the settings coming
+from OGRGeomFieldDefn::GetCoordinatePrecision().</p>
+</section>
+<section id="gml">
+<h3>GML<a class="headerlink" href="#gml" title="Permalink to this heading"></a></h3>
+<p>The driver will compute the number of decimal digits after the decimal point
+to write as <code class="docutils literal notranslate"><span class="pre">ceil(1.</span> <span class="pre">/</span> <span class="pre">log10(resolution))</span></code></p>
+<p>The driver will be able to store the coordinate precision metadata in the XML
+schema it generates by adding a <code class="docutils literal notranslate"><span class="pre">xs:annotation/xs:appinfo</span></code> element in the
+declaration of the geometry property, and with <code class="docutils literal notranslate"><span class="pre">ogr:xy_coordinate_resolution</span></code>
+and <code class="docutils literal notranslate"><span class="pre">ogr:z_coordinate_resolution</span></code> sub-elements.
+This should hopefully be ignored by readers that don't recognize
+that metadata (this will be the case of GDAL &lt; 3.9)</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;xs:element</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;wkb_geometry&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;gml:SurfacePropertyType&quot;</span><span class="w"> </span><span class="na">nillable=</span><span class="s">&quot;true&quot;</span><span class="w"> </span><span class="na">minOccurs=</span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="na">maxOccurs=</span><span class="s">&quot;1&quot;</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;xs:annotation&gt;</span>
+<span class="w">      </span><span class="nt">&lt;xs:appinfo</span><span class="w"> </span><span class="na">source=</span><span class="s">&quot;http://ogr.maptools.org/&quot;</span><span class="nt">&gt;</span>
+<span class="w">        </span><span class="nt">&lt;ogr:xy_coordinate_resolution&gt;</span>8.9e-9<span class="nt">&lt;/ogr:xy_coordinate_resolution&gt;</span>
+<span class="w">        </span><span class="nt">&lt;ogr:z_coordinate_resolution&gt;</span>1e-3<span class="nt">&lt;/ogr:z_coordinate_resolution&gt;</span>
+<span class="w">      </span><span class="nt">&lt;/xs:appinfo&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/xs:annotation&gt;</span>
+<span class="nt">&lt;/xs:element&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="csv">
+<h3>CSV<a class="headerlink" href="#csv" title="Permalink to this heading"></a></h3>
+<p>The driver will compute the number of decimal digits after the decimal point
+to write as <code class="docutils literal notranslate"><span class="pre">ceil(1.</span> <span class="pre">/</span> <span class="pre">log10(resolution))</span></code></p>
+<p>It will <em>not</em> be able to store it in its metadata. The possibility of storing
+the coordinate metadata in the .csvt side-car file has been considered, but it
+would not be backwards-compatible.</p>
+</section>
+<section id="geopackage">
+<h3>GeoPackage<a class="headerlink" href="#geopackage" title="Permalink to this heading"></a></h3>
+<p>The GeoPackage driver will support reading and writing the geometry coordinate
+precision. By default, the geometry coordinate precision
+will only noted in metadata, and does not cause geometries that are written to
+be modified to comply with this precision.</p>
+<p>Several settings may be combined to apply further processing:</p>
+<ul class="simple">
+<li><p>the <code class="docutils literal notranslate"><span class="pre">OGR_APPLY_GEOM_SET_PRECISION</span></code> configuration option as described
+previously.</p></li>
+<li><p>if the new <code class="docutils literal notranslate"><span class="pre">DISCARD_COORD_LSB</span></code> layer creation option is set to YES, the
+less-significant bits of the WKB geometry encoding which are not relevant for
+the requested precision are set to zero. This can improve further lossless
+compression stages, for example when putting a GeoPackage in an archive.
+Note however that when reading back such geometries and displaying them
+to the maximum precision, they will not &quot;exactly&quot; match the original
+OGRGeomCoordinatePrecision settings. However, they will round
+back to it.
+The value of the <code class="docutils literal notranslate"><span class="pre">DISCARD_COORD_LSB</span></code> layer creation option is written in
+the dataset metadata, and will be re-used for later edition sessions.</p></li>
+<li><p>if the new <code class="docutils literal notranslate"><span class="pre">UNDO_DISCARD_COORD_LSB_ON_READING</span></code> layer creation option is set to
+YES (only makes sense if the <code class="docutils literal notranslate"><span class="pre">DISCARD_COORD_LSB</span></code> layer creation option is
+also set to YES), when <em>reading</em> back geometries from a dataset, the
+<code class="docutils literal notranslate"><span class="pre">OGRGeometry::roundCoordinates</span></code> method will be applied so that
+the geometry coordinates exactly match the original specified coordinate
+precision. That option will only be honored by GDAL 3.9 or later.</p></li>
+</ul>
+<p>Implementation details: the coordinate precision is stored in a record in each
+of the <code class="docutils literal notranslate"><span class="pre">gpkg_metadata</span></code> and <code class="docutils literal notranslate"><span class="pre">gpkg_metadata_reference</span></code> table, with the
+following additional constraints on top of the ones imposed by the GeoPackage
+specification:</p>
+<ul class="simple">
+<li><p>gpkg_metadata.md_standard_uri = '<a class="reference external" href="http://gdal.org">http://gdal.org</a>'</p></li>
+<li><p>gpkg_metadata.mime_type = 'text/xml'</p></li>
+<li><p>gpkg_metadata.metadata = '&lt;CoordinatePrecision xy_resolution=&quot;{xy_resolution}&quot; z_resolution=&quot;{z_resolution}&quot; m_resolution=&quot;{m_resolution}&quot; discard_coord_lsb={true or false} undo_discard_coord_lsb_on_reading={true or false} /&gt;'</p></li>
+<li><p>gpkg_metadata_reference.reference_scope = 'column'</p></li>
+<li><p>gpkg_metadata_reference.table_name = '{table_name}'</p></li>
+<li><p>gpkg_metadata_reference.column_name = '{geometry_column_name}'</p></li>
+</ul>
+<p>Note that the xy_resolution, z_resolution or m_resolution attributes of the
+XML CoordinatePrecision element are optional. Their numeric value is expressed
+in the units of the SRS for xy_resolution and z_resolution.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">gpkg_metadata</span><span class="w"> </span><span class="k">VALUES</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="s1">&#39;dataset&#39;</span><span class="p">,</span><span class="s1">&#39;http://gdal.org&#39;</span><span class="p">,</span><span class="s1">&#39;text/xml&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="s1">&#39;&lt;CoordinatePrecision xy_resolution=&quot;8.9e-9&quot; z_resolution=&quot;1e-3&quot; m_resolution=&quot;1e-3&quot; discard_coord_lsb=&quot;false&quot; undo_discard_coord_lsb_on_reading=&quot;false&quot;&gt;&lt;/CoordinatePrecision&gt;&#39;</span><span class="p">);</span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">gpkg_metadata_reference</span><span class="w"> </span><span class="k">VALUES</span><span class="p">(</span><span class="s1">&#39;column&#39;</span><span class="p">,</span><span class="s1">&#39;poly&#39;</span><span class="p">,</span><span class="s1">&#39;geom&#39;</span><span class="p">,</span><span class="k">NULL</span><span class="p">,</span><span class="s1">&#39;2023-10-22T21:13:43.282Z&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="k">NULL</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="openfilegdb">
+<h3>OpenFileGDB<a class="headerlink" href="#openfilegdb" title="Permalink to this heading"></a></h3>
+<p>OGRGeomCoordinatePrecision::dfXYResolution (resp. dfZResolution, dfMResolution)
+directly map to 1. / xyscale (resp. 1 / zscale, 1 / mscale) in the declaration
+of the coordinate grid precision options of the FileGeodatabase format
+(cf https://help.arcgis.com/en/sdk/10.0/java_ao_adf/conceptualhelp/engine/index.html#//00010000037m000000).</p>
+<p>Consequently the OpenFileGDB driver can be modified in reading and writing to
+fully honour OGRGeomCoordinatePrecision.</p>
+<p>The driver will also get and set other coordinate grid precision options, such
+as the origin and tolerance, values in the <code class="docutils literal notranslate"><span class="pre">FileGeodatabase</span></code> key of the
+<code class="docutils literal notranslate"><span class="pre">OGRGeomCoordinatePrecision::oFormatSpecificOptions</span></code> member.</p>
+<p>The existing <code class="docutils literal notranslate"><span class="pre">XYSCALE</span></code>, <code class="docutils literal notranslate"><span class="pre">ZSCALE</span></code> and <code class="docutils literal notranslate"><span class="pre">MSCALE</span></code> layer creation options,
+if specified, will take precedence over the settings coming from
+OGRGeomFieldDefn::GetCoordinatePrecision().</p>
+</section>
+<section id="filegdb">
+<h3>FileGDB<a class="headerlink" href="#filegdb" title="Permalink to this heading"></a></h3>
+<p>Modified to have exactly the same behavior as OpenFileGDB.</p>
+</section>
+<section id="ogr-vrt">
+<h3>OGR VRT<a class="headerlink" href="#ogr-vrt" title="Permalink to this heading"></a></h3>
+<p>The driver will read the geometry coordinate precision from the source geometry
+field, or possibly overridden with the following elements in the XML VRT:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;GeometryField&gt;</span>
+<span class="w">    </span><span class="nt">&lt;XYResolution&gt;</span>{xy_resolution}<span class="nt">&lt;/XYResolution&gt;</span>
+<span class="w">    </span><span class="nt">&lt;ZResolution&gt;</span>{z_resolution}<span class="nt">&lt;/ZResolution&gt;</span>
+<span class="w">    </span><span class="nt">&lt;MResolution&gt;</span>{m_resolution}<span class="nt">&lt;/MResolution&gt;</span>
+<span class="nt">&lt;/GeometryField&gt;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="utilities">
+<h2>Utilities<a class="headerlink" href="#utilities" title="Permalink to this heading"></a></h2>
+<section id="ogrinfo">
+<h3>ogrinfo<a class="headerlink" href="#ogrinfo" title="Permalink to this heading"></a></h3>
+<p>ogrinfo will be modified to honour OGRGeomCoordinatePrecision when outputting
+WKT geometries (or GeoJSON geometries for the -json output)</p>
+</section>
+<section id="ogr2ogr">
+<h3>ogr2ogr<a class="headerlink" href="#ogr2ogr" title="Permalink to this heading"></a></h3>
+<p>ogr2ogr will forward by default the OGRGeomCoordinatePrecision of the input
+layer to the output layer, but of course it will only have effects for drivers
+honouring <code class="docutils literal notranslate"><span class="pre">GDAL_DCAP_HONOR_GEOM_COORDINATE_PRECISION</span></code>.</p>
+<p>When reprojection occurs, the coordinate precision will be adjusted to take into
+account geographic vs projected CRS changes and unit changes.</p>
+<p>The following options will be added:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-xyRes</span> <span class="pre">&lt;val&gt;</span></code>: XY coordinate resolution. Nominally in the unit of the X and
+Y SRS axis.
+Appending a <code class="docutils literal notranslate"><span class="pre">m</span></code>, <code class="docutils literal notranslate"><span class="pre">mm</span></code> or <code class="docutils literal notranslate"><span class="pre">deg</span></code> suffix will be also supported.
+A warning will be emitted if the user specifies this option when creating a
+new layer for a driver that does not advertise
+<code class="docutils literal notranslate"><span class="pre">GDAL_DCAP_HONOR_GEOM_COORDINATE_PRECISION</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-zRes</span> <span class="pre">&lt;val&gt;</span></code>: Z coordinate resolution. Nominally in the unit of the Z SRS
+axis. Appending a <code class="docutils literal notranslate"><span class="pre">m</span></code> or <code class="docutils literal notranslate"><span class="pre">mm</span></code> suffix will be also supported.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-mRes</span> <span class="pre">&lt;val&gt;</span></code>: M coordinate resolution.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-unsetCoordPrecision</span></code>: to disable automatic propagation of the input
+coordinate precision to the output.</p></li>
+</ul>
+</section>
+</section>
+<section id="out-of-scope">
+<h2>Out of scope<a class="headerlink" href="#out-of-scope" title="Permalink to this heading"></a></h2>
+<p>While there is an obvious logical connection with GEOS' PrecisionModel
+(<a class="reference external" href="https://libgeos.org/doxygen/classgeos_1_1geom_1_1PrecisionModel.html">https://libgeos.org/doxygen/classgeos_1_1geom_1_1PrecisionModel.html</a>),
+this RFC does not tie the introduced OGR coordinate precision metadata with it.
+Tying both would require either adding a reference to a
+OGRGeomCoordinatePrecision as a member of the OGRGeometry class (which would
+have some extra RAM usage implications), or as a parameter in OGRGeometry GEOS
+related methods.</p>
+<p>Quantization of raster pixel values (e.g. the <code class="docutils literal notranslate"><span class="pre">DISCARD_LSB</span></code> creation option
+of the GeoTIFF driver) is also slightly connected.</p>
+</section>
+<section id="swig-bindings">
+<h2>SWIG bindings<a class="headerlink" href="#swig-bindings" title="Permalink to this heading"></a></h2>
+<p>The new C functions are bound to SWIG.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ogr</span><span class="o">.</span><span class="n">GeomCoordinatePrecision</span><span class="p">:</span>
+
+  <span class="n">void</span> <span class="n">Set</span><span class="p">(</span><span class="n">double</span> <span class="n">xyResolution</span><span class="p">,</span> <span class="n">double</span> <span class="n">zResolution</span><span class="p">,</span> <span class="n">double</span> <span class="n">mResolution</span><span class="p">);</span>
+  <span class="n">void</span> <span class="n">SetFromMeter</span><span class="p">(</span><span class="n">osr</span><span class="o">.</span><span class="n">SpatialReference</span> <span class="n">srs</span><span class="p">,</span> <span class="n">double</span> <span class="n">xyMeterResolution</span><span class="p">,</span> <span class="n">double</span> <span class="n">zMeterResolution</span><span class="p">,</span> <span class="n">double</span> <span class="n">mResolution</span><span class="p">);</span>
+  <span class="n">double</span> <span class="n">GetXYResolution</span><span class="p">();</span>
+  <span class="n">double</span> <span class="n">GetZResolution</span><span class="p">();</span>
+  <span class="n">double</span> <span class="n">GetMResolution</span><span class="p">();</span>
+  <span class="n">char</span> <span class="o">**</span><span class="n">GetFormats</span><span class="p">();</span>  <span class="o">//</span> <span class="k">as</span> <span class="n">a</span> <span class="nb">list</span>
+  <span class="n">char</span> <span class="o">**</span> <span class="n">GetFormatSpecificOptions</span><span class="p">(</span><span class="n">const</span> <span class="n">char</span><span class="o">*</span> <span class="n">formatName</span><span class="p">);</span> <span class="o">//</span> <span class="k">as</span> <span class="n">a</span> <span class="n">dictionary</span>
+  <span class="n">void</span> <span class="n">SetFormatSpecificOptions</span><span class="p">(</span><span class="n">const</span> <span class="n">char</span><span class="o">*</span> <span class="n">formatName</span><span class="p">,</span> <span class="n">char</span> <span class="o">**</span><span class="n">formatSpecificOptions</span><span class="p">)</span> <span class="o">//</span> <span class="n">formatSpecificOptions</span> <span class="k">as</span> <span class="n">a</span> <span class="n">dictionary</span>
+
+<span class="n">ogr</span><span class="o">.</span><span class="n">GeomCoordinatePrecision</span> <span class="n">ogr</span><span class="o">.</span><span class="n">CreateGeomCoordinatePrecision</span><span class="p">();</span>
+
+<span class="k">class</span> <span class="nc">ogr</span><span class="o">.</span><span class="n">GeomFieldDefn</span><span class="p">:</span>
+    <span class="n">ogr</span><span class="o">.</span><span class="n">GeomCoordinatePrecision</span> <span class="n">GetCoordinatePrecision</span><span class="p">();</span>
+    <span class="n">void</span> <span class="n">SetCoordinatePrecision</span><span class="p">(</span><span class="n">ogr</span><span class="o">.</span><span class="n">GeomCoordinatePrecision</span> <span class="n">coordPrec</span><span class="p">);</span>
+
+<span class="k">class</span> <span class="nc">gdal</span><span class="o">.</span><span class="n">Dataset</span><span class="p">:</span>
+    <span class="n">Layer</span> <span class="n">CreateLayerFromGeomFieldDefn</span><span class="p">(</span><span class="n">const</span> <span class="n">char</span><span class="o">*</span> <span class="n">name</span><span class="p">,</span> <span class="n">ogr</span><span class="o">.</span><span class="n">GeomFieldDefn</span> <span class="n">geom_field</span><span class="p">,</span> <span class="n">char</span><span class="o">**</span> <span class="n">options</span><span class="o">=</span><span class="mi">0</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this heading"></a></h2>
+<p>Tests will be added for the new API and the modified drivers.</p>
+</section>
+<section id="backward-compatibility">
+<h2>Backward compatibility<a class="headerlink" href="#backward-compatibility" title="Permalink to this heading"></a></h2>
+<p>The C and C++ API are extended.</p>
+<p>The change of the ICreateLayer() virtual method is an ABI change, and will
+require source code changes to out-of-tree drivers implementing it.</p>
+<p>MIGRATION_GUIDE.TXT will mention that and point to this RFC.</p>
+</section>
+<section id="design-discussion">
+<h2>Design discussion<a class="headerlink" href="#design-discussion" title="Permalink to this heading"></a></h2>
+<p>This paragraph discusses a number of thoughts that arose during the writing of
+this RFC but were not kept.</p>
+<p>While changing ICreateLayer() prototype, which requires the tedious process of
+changing it in more than 50 drivers, I've also considered introducing
+an additional OGRLayerCreationContext argument, but I've decided against if,
+as it is unclear if it would be that useful. For example, in most ogr2ogr
+scenarios, the final extent and feature count is unknown at the start of the
+process.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">OGRLayerCreationContext</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">OGRExtent3D</span><span class="w"> </span><span class="n">sExtent</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int64_t</span><span class="w">     </span><span class="n">nFeatureCount</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">OGRLayer</span><span class="w"> </span><span class="o">*</span><span class="n">ICreateLayer</span><span class="p">(</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">pszName</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">OGRGeomFieldDefn</span><span class="o">*</span><span class="w"> </span><span class="n">poFieldDefn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="n">OGRLayerCreationContext</span><span class="o">&amp;</span><span class="w"> </span><span class="n">sContext</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">OGRLayerCreationContext</span><span class="p">(),</span>
+<span class="w">        </span><span class="n">CSLConstList</span><span class="w"> </span><span class="n">papszOptions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="related-issues-and-prs">
+<h2>Related issues and PRs<a class="headerlink" href="#related-issues-and-prs" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>Candidate implementation: <a class="reference external" href="https://github.com/OSGeo/gdal/pull/9378">https://github.com/OSGeo/gdal/pull/9378</a></p></li>
+<li><p>A prior implementation with a different and reduced scope was done last year
+in <a class="reference external" href="https://github.com/OSGeo/gdal/pull/6974">https://github.com/OSGeo/gdal/pull/6974</a>.
+The GeoPackage driver specific creation options of this pull request will no
+longer be needed in the implementation of this RFC.</p></li>
+<li><p>Related QGIS issue about coordinate precision not being preserved when appending
+to GeoJSON: <a class="reference external" href="https://github.com/qgis/QGIS/issues/56335">https://github.com/qgis/QGIS/issues/56335</a></p></li>
+</ul>
+</section>
+<section id="voting-history">
+<h2>Voting history<a class="headerlink" href="#voting-history" title="Permalink to this heading"></a></h2>
+<p>+1 from PSC members EvenR and HowardB. +0 from KurtS</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../../community/index.html" class="btn btn-neutral float-right" title="Community" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc98_build_requirements_gdal_3_9.html" class="btn btn-neutral float-left" title="RFC 98: Build requirements for GDAL 3.9" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2024 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+  </div>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

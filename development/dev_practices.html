@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Development practices &mdash; GDAL  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/gdal.css" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="canonical" href="https://gdal.org/development/dev_practices.html"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Building documentation" href="dev_documentation.html" />
+    <link rel="prev" title="Automated testing" href="testing.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Development</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="dev_environment.html">Setting up a development environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="building_from_source.html">Building GDAL from source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html">Automated testing</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Development practices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#making-changes-to-gdal">Making changes to GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#git-usage">Git usage</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#initiating-your-work-repository">Initiating your work repository</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#working-with-a-feature-branch">Working with a feature branch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#updating-your-local-master-against-upstream-master">Updating your local master against upstream master</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#commit-messages">Commit messages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#commit-hooks">Commit hooks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#blame-ignore-file">Blame ignore file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#backporting-bugfixes-from-master-to-a-stable-branch">Backporting bugfixes from master to a stable branch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#things-you-should-not-do">Things you should NOT do</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="dev_documentation.html">Building documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cmake.html">Using GDAL in CMake projects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rfc/index.html">RFC list</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sponsors/index.html">Sponsors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Development</a> &raquo;</li>
+      
+      <li>Development practices</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit/master/doc/source/development/dev_practices.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="dev_documentation.html" class="btn btn-neutral float-right" title="Building documentation" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="testing.html" class="btn btn-neutral float-left" title="Automated testing" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <span class="target" id="development-practices"></span><section id="id1">
+<h1>Development practices<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h1>
+<section id="making-changes-to-gdal">
+<h2>Making changes to GDAL<a class="headerlink" href="#making-changes-to-gdal" title="Permalink to this heading"></a></h2>
+<p>Minor changes to GDAL, such as bug fixes, may be made by opening a GitHub pull request.</p>
+<p>Major changes should be discussed on the <a class="reference external" href="https://lists.osgeo.org/mailman/listinfo/gdal-dev">gdal-dev</a> listserv and may require the drafting
+of a RFC (request for comment) document.</p>
+<p>GDAL's policy on substantial code additions is documented at <a class="reference internal" href="rfc/rfc85_policy_code_additions.html#rfc-85"><span class="std std-ref">RFC 85: Policy regarding substantial code additions</span></a>.</p>
+</section>
+<section id="git-usage">
+<h2>Git usage<a class="headerlink" href="#git-usage" title="Permalink to this heading"></a></h2>
+<p>This section collects a few best practices for git usage for GDAL development.</p>
+<section id="initiating-your-work-repository">
+<h3>Initiating your work repository<a class="headerlink" href="#initiating-your-work-repository" title="Permalink to this heading"></a></h3>
+<p>Fork <a class="reference external" href="https://github.com/OSGeo/gdal">OSGeo/gdal</a> from the GitHub UI, and then run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/OSGeo/gdal
+<span class="nb">cd</span><span class="w"> </span>gdal
+git<span class="w"> </span>remote<span class="w"> </span>add<span class="w"> </span>my_user_name<span class="w"> </span>git@github.com:my_user_name/gdal.git
+</pre></div>
+</div>
+</section>
+<section id="working-with-a-feature-branch">
+<h3>Working with a feature branch<a class="headerlink" href="#working-with-a-feature-branch" title="Permalink to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>checkout<span class="w"> </span>master
+<span class="c1"># potentially update your local master against upstream, as described above</span>
+git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>my_new_feature_branch
+
+<span class="c1"># do work. For example:</span>
+git<span class="w"> </span>add<span class="w"> </span>my_new_file
+git<span class="w"> </span>add<span class="w"> </span>my_modifid_message
+git<span class="w"> </span>rm<span class="w"> </span>old_file
+git<span class="w"> </span>commit<span class="w"> </span>-a
+
+<span class="c1"># you may need to resynchronize against master if you need some bugfix</span>
+<span class="c1"># or new capability that has been added since you created your branch</span>
+git<span class="w"> </span>fetch<span class="w"> </span>origin
+git<span class="w"> </span>rebase<span class="w"> </span>origin/master
+
+<span class="c1"># At end of your work, make sure history is reasonable by folding non</span>
+<span class="c1"># significant commits into a consistent set</span>
+git<span class="w"> </span>rebase<span class="w"> </span>-i<span class="w"> </span>master
+<span class="c1"># use &#39;fixup&#39; for example to merge several commits together,</span>
+<span class="c1"># and &#39;reword&#39; to modify commit messages</span>
+
+<span class="c1"># or alternatively, in case there is a big number of commits and marking</span>
+<span class="c1"># all them as &#39;fixup&#39; is tedious</span>
+git<span class="w"> </span>fetch<span class="w"> </span>origin
+git<span class="w"> </span>rebase<span class="w"> </span>origin/master
+git<span class="w"> </span>reset<span class="w"> </span>--soft<span class="w"> </span>origin/master
+git<span class="w"> </span>commit<span class="w"> </span>-a<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Put here the synthetic commit message&quot;</span>
+
+<span class="c1"># push your branch</span>
+git<span class="w"> </span>push<span class="w"> </span>my_user_name<span class="w"> </span>my_new_feature_branch
+</pre></div>
+</div>
+<p>From the GitHub UI, issue a pull request.</p>
+<p>If the pull request discussion or automated checks require changes, commit
+locally and push. To get a reasonable history, you may need to combine commits
+using <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">rebase</span> <span class="pre">-i</span> <span class="pre">master</span></code>, in which case you will have to force-push your
+branch with <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">push</span> <span class="pre">-f</span> <span class="pre">my_user_name</span> <span class="pre">my_new_feature_branch</span></code>.</p>
+</section>
+<section id="updating-your-local-master-against-upstream-master">
+<h3>Updating your local master against upstream master<a class="headerlink" href="#updating-your-local-master-against-upstream-master" title="Permalink to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>checkout<span class="w"> </span>master
+git<span class="w"> </span>fetch<span class="w"> </span>origin
+
+<span class="c1"># Be careful: this will lose all local changes you might have done now</span>
+git<span class="w"> </span>reset<span class="w"> </span>--hard<span class="w"> </span>origin/master
+</pre></div>
+</div>
+</section>
+<section id="commit-messages">
+<h3>Commit messages<a class="headerlink" href="#commit-messages" title="Permalink to this heading"></a></h3>
+<p>Commit messages should indicate a component name (eg a driver name), a short
+description, and when relevant, a reference to a issue (with 'fixes #' if it
+actually fixes it)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">COMPONENT_NAME</span><span class="p">:</span> <span class="n">fix</span> <span class="n">bla</span> <span class="n">bla</span> <span class="p">(</span><span class="n">fixes</span> <span class="c1">#1234)</span>
+
+<span class="n">Details</span> <span class="n">here</span><span class="o">...</span>
+</pre></div>
+</div>
+</section>
+<section id="commit-hooks">
+<h3>Commit hooks<a class="headerlink" href="#commit-hooks" title="Permalink to this heading"></a></h3>
+<p>GDAL provides pre-commit hooks to run code linters before a commit is made. The
+hooks are cloned with the repository and can be installed using
+<a class="reference external" href="https://pre-commit.com">pre-commit</a>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>pre-commit
+pre-commit<span class="w"> </span>install
+</pre></div>
+</div>
+<p>Once installed, the hooks can be run manually via <code class="docutils literal notranslate"><span class="pre">pre-commit</span> <span class="pre">run</span> <span class="pre">--all-files</span></code>.</p>
+</section>
+<section id="blame-ignore-file">
+<h3>Blame ignore file<a class="headerlink" href="#blame-ignore-file" title="Permalink to this heading"></a></h3>
+<p>Due to whole-tree code reformatting done during GDAL 3.7 development,
+<code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">blame</span></code> information might be misleading. To avoid that, you need
+to modify your git configuration as following to ignore the revision of
+the whole-tree reformatting:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>config<span class="w"> </span>blame.ignoreRevsFile<span class="w"> </span>.git-blame-ignore-revs
+</pre></div>
+</div>
+</section>
+<section id="backporting-bugfixes-from-master-to-a-stable-branch">
+<h3>Backporting bugfixes from master to a stable branch<a class="headerlink" href="#backporting-bugfixes-from-master-to-a-stable-branch" title="Permalink to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>checkout<span class="w"> </span>master
+With<span class="w"> </span>git<span class="w"> </span>log,<span class="w"> </span>identify<span class="w"> </span>the<span class="w"> </span>sha1sum<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>commit<span class="w"> </span>you<span class="w"> </span>want<span class="w"> </span>to<span class="w"> </span>backport
+git<span class="w"> </span>checkout<span class="w"> </span><span class="m">2</span>.2<span class="w"> </span><span class="c1"># if you want to backport to 2.2</span>
+git<span class="w"> </span>pull<span class="w"> </span>origin<span class="w"> </span><span class="m">2</span>.2
+<span class="c1"># git checkout -b branch_name  # if you intend to submit the backport as a pull request</span>
+git<span class="w"> </span>cherry-pick<span class="w"> </span>the_sha1_sum
+git<span class="w"> </span>push<span class="w"> </span>...
+</pre></div>
+</div>
+<p>If changes are needed, do them and <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">commit</span> <span class="pre">-a</span> <span class="pre">--amend</span></code></p>
+</section>
+<section id="things-you-should-not-do">
+<h3>Things you should NOT do<a class="headerlink" href="#things-you-should-not-do" title="Permalink to this heading"></a></h3>
+<p>(For anyone with push rights to <a class="reference external" href="https://github.com/OSGeo/gdal">OSGeo/gdal</a>) Never modify a commit or
+the history of anything that has been
+committed to <a class="reference external" href="https://github.com/OSGeo/gdal">https://github.com/OSGeo/gdal</a></p>
+<p>Committing symbolic links is allowed only under the .github directory in order to
+avoid potential problems on Windows.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="dev_documentation.html" class="btn btn-neutral float-right" title="Building documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="testing.html" class="btn btn-neutral float-left" title="Automated testing" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2024 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+  </div>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

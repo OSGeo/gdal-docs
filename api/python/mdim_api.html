@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python Multi-dimensional array API &mdash; GDAL  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/gdal.css" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://gdal.org/api/python/mdim_api.html"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Python Utilities" href="utilities.html" />
+    <link rel="prev" title="Python Spatial Reference System API" href="spatial_ref_api.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../index.html#id2">Full Doxygen output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#c-api">C API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#id3">C++ API</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#python-api">Python API</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../python_bindings.html">General information</a></li>
+<li class="toctree-l3"><a class="reference internal" href="raster_api.html">Python Raster API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vector_api.html">Python Vector API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spatial_ref_api.html">Python Spatial Reference System API</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Python Multi-dimensional array API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#osgeo.gdal.Group"><code class="docutils literal notranslate"><span class="pre">Group</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#osgeo.gdal.Dimension"><code class="docutils literal notranslate"><span class="pre">Dimension</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#osgeo.gdal.MDArray"><code class="docutils literal notranslate"><span class="pre">MDArray</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#osgeo.gdal.Attribute"><code class="docutils literal notranslate"><span class="pre">Attribute</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#osgeo.gdal.ExtendedDataType"><code class="docutils literal notranslate"><span class="pre">ExtendedDataType</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="utilities.html">Python Utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="general.html">Python General API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="osgeo.html">Miscellaneous Python API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_gotchas.html">Python Gotchas in the GDAL and OGR Python Bindings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_samples.html">Python Sample scripts</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#id4">Java API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#gdal-ogr-in-other-languages">GDAL/OGR In Other Languages</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sponsors/index.html">Sponsors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">API</a> &raquo;</li>
+      
+      <li>Python Multi-dimensional array API</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit/master/doc/source/api/python/mdim_api.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="utilities.html" class="btn btn-neutral float-right" title="Python Utilities" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="spatial_ref_api.html" class="btn btn-neutral float-left" title="Python Spatial Reference System API" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="python-multi-dimensional-array-api">
+<span id="python-mdim-api"></span><h1>Python Multi-dimensional array API<a class="headerlink" href="#python-multi-dimensional-array-api" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="osgeo.gdal.Group">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">osgeo.gdal.</span></span><span class="sig-name descname"><span class="pre">Group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#osgeo.gdal.Group" title="Permalink to this definition"></a></dt>
+<dd><p>Proxy of C++ GDALGroupHS class.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Group.CreateAttribute">
+<span class="sig-name descname"><span class="pre">CreateAttribute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Group</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span> <span class="pre">dimensions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ExtendedDataType</span> <span class="pre">data_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">options=None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#osgeo.gdal.Attribute" title="osgeo.gdal.Attribute"><span class="pre">Attribute</span></a></span></span><a class="headerlink" href="#osgeo.gdal.Group.CreateAttribute" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Group.CreateDimension">
+<span class="sig-name descname"><span class="pre">CreateDimension</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Group</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">direction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GUIntBig</span> <span class="pre">size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">options=None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#osgeo.gdal.Dimension" title="osgeo.gdal.Dimension"><span class="pre">Dimension</span></a></span></span><a class="headerlink" href="#osgeo.gdal.Group.CreateDimension" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Group.CreateGroup">
+<span class="sig-name descname"><span class="pre">CreateGroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Group</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">options=None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#osgeo.gdal.Group" title="osgeo.gdal.Group"><span class="pre">Group</span></a></span></span><a class="headerlink" href="#osgeo.gdal.Group.CreateGroup" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Group.CreateMDArray">
+<span class="sig-name descname"><span class="pre">CreateMDArray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Group</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span> <span class="pre">dimensions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ExtendedDataType</span> <span class="pre">data_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">options=None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#osgeo.gdal.MDArray" title="osgeo.gdal.MDArray"><span class="pre">MDArray</span></a></span></span><a class="headerlink" href="#osgeo.gdal.Group.CreateMDArray" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Group.DeleteAttribute">
+<span class="sig-name descname"><span class="pre">DeleteAttribute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Group</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">options=None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CPLErr</span></span></span><a class="headerlink" href="#osgeo.gdal.Group.DeleteAttribute" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Group.DeleteGroup">
+<span class="sig-name descname"><span class="pre">DeleteGroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Group</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">options=None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CPLErr</span></span></span><a class="headerlink" href="#osgeo.gdal.Group.DeleteGroup" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Group.DeleteMDArray">
+<span class="sig-name descname"><span class="pre">DeleteMDArray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Group</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">options=None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CPLErr</span></span></span><a class="headerlink" href="#osgeo.gdal.Group.DeleteMDArray" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Group.GetAttribute">
+<span class="sig-name descname"><span class="pre">GetAttribute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Group</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#osgeo.gdal.Attribute" title="osgeo.gdal.Attribute"><span class="pre">Attribute</span></a></span></span><a class="headerlink" href="#osgeo.gdal.Group.GetAttribute" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Group.GetAttributes">
+<span class="sig-name descname"><span class="pre">GetAttributes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Group</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">options=None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#osgeo.gdal.Group.GetAttributes" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Group.GetDimensions">
+<span class="sig-name descname"><span class="pre">GetDimensions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Group</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">options=None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#osgeo.gdal.Group.GetDimensions" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Group.GetFullName">
+<span class="sig-name descname"><span class="pre">GetFullName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Group</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span></span></span><a class="headerlink" href="#osgeo.gdal.Group.GetFullName" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Group.GetGroupNames">
+<span class="sig-name descname"><span class="pre">GetGroupNames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#osgeo.gdal.Group.GetGroupNames" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Group.GetMDArrayNames">
+<span class="sig-name descname"><span class="pre">GetMDArrayNames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#osgeo.gdal.Group.GetMDArrayNames" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Group.GetName">
+<span class="sig-name descname"><span class="pre">GetName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Group</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span></span></span><a class="headerlink" href="#osgeo.gdal.Group.GetName" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Group.GetStructuralInfo">
+<span class="sig-name descname"><span class="pre">GetStructuralInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Group</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">char</span> <span class="pre">**</span></span></span><a class="headerlink" href="#osgeo.gdal.Group.GetStructuralInfo" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Group.GetVectorLayerNames">
+<span class="sig-name descname"><span class="pre">GetVectorLayerNames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Group</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">options=None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">char</span> <span class="pre">**</span></span></span><a class="headerlink" href="#osgeo.gdal.Group.GetVectorLayerNames" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Group.OpenGroup">
+<span class="sig-name descname"><span class="pre">OpenGroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Group</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">options=None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#osgeo.gdal.Group" title="osgeo.gdal.Group"><span class="pre">Group</span></a></span></span><a class="headerlink" href="#osgeo.gdal.Group.OpenGroup" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Group.OpenGroupFromFullname">
+<span class="sig-name descname"><span class="pre">OpenGroupFromFullname</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Group</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">options=None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#osgeo.gdal.Group" title="osgeo.gdal.Group"><span class="pre">Group</span></a></span></span><a class="headerlink" href="#osgeo.gdal.Group.OpenGroupFromFullname" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Group.OpenMDArray">
+<span class="sig-name descname"><span class="pre">OpenMDArray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Group</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">options=None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#osgeo.gdal.MDArray" title="osgeo.gdal.MDArray"><span class="pre">MDArray</span></a></span></span><a class="headerlink" href="#osgeo.gdal.Group.OpenMDArray" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Group.OpenMDArrayFromFullname">
+<span class="sig-name descname"><span class="pre">OpenMDArrayFromFullname</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Group</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">options=None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#osgeo.gdal.MDArray" title="osgeo.gdal.MDArray"><span class="pre">MDArray</span></a></span></span><a class="headerlink" href="#osgeo.gdal.Group.OpenMDArrayFromFullname" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Group.OpenVectorLayer">
+<span class="sig-name descname"><span class="pre">OpenVectorLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Group</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">options=None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="vector_api.html#osgeo.ogr.Layer" title="osgeo.ogr.Layer"><span class="pre">Layer</span></a></span></span><a class="headerlink" href="#osgeo.gdal.Group.OpenVectorLayer" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Group.Rename">
+<span class="sig-name descname"><span class="pre">Rename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Group</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">newName</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CPLErr</span></span></span><a class="headerlink" href="#osgeo.gdal.Group.Rename" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Group.ResolveMDArray">
+<span class="sig-name descname"><span class="pre">ResolveMDArray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Group</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">starting_point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">options=None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#osgeo.gdal.MDArray" title="osgeo.gdal.MDArray"><span class="pre">MDArray</span></a></span></span><a class="headerlink" href="#osgeo.gdal.Group.ResolveMDArray" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Group.SubsetDimensionFromSelection">
+<span class="sig-name descname"><span class="pre">SubsetDimensionFromSelection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Group</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">selection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">options=None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#osgeo.gdal.Group" title="osgeo.gdal.Group"><span class="pre">Group</span></a></span></span><a class="headerlink" href="#osgeo.gdal.Group.SubsetDimensionFromSelection" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="osgeo.gdal.Dimension">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">osgeo.gdal.</span></span><span class="sig-name descname"><span class="pre">Dimension</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#osgeo.gdal.Dimension" title="Permalink to this definition"></a></dt>
+<dd><p>Proxy of C++ GDALDimensionHS class.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Dimension.GetDirection">
+<span class="sig-name descname"><span class="pre">GetDirection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Dimension</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span></span></span><a class="headerlink" href="#osgeo.gdal.Dimension.GetDirection" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Dimension.GetFullName">
+<span class="sig-name descname"><span class="pre">GetFullName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Dimension</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span></span></span><a class="headerlink" href="#osgeo.gdal.Dimension.GetFullName" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Dimension.GetIndexingVariable">
+<span class="sig-name descname"><span class="pre">GetIndexingVariable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Dimension</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#osgeo.gdal.MDArray" title="osgeo.gdal.MDArray"><span class="pre">MDArray</span></a></span></span><a class="headerlink" href="#osgeo.gdal.Dimension.GetIndexingVariable" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Dimension.GetName">
+<span class="sig-name descname"><span class="pre">GetName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Dimension</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span></span></span><a class="headerlink" href="#osgeo.gdal.Dimension.GetName" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Dimension.GetSize">
+<span class="sig-name descname"><span class="pre">GetSize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Dimension</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">GUIntBig</span></span></span><a class="headerlink" href="#osgeo.gdal.Dimension.GetSize" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Dimension.GetType">
+<span class="sig-name descname"><span class="pre">GetType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Dimension</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span></span></span><a class="headerlink" href="#osgeo.gdal.Dimension.GetType" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Dimension.Rename">
+<span class="sig-name descname"><span class="pre">Rename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Dimension</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">newName</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CPLErr</span></span></span><a class="headerlink" href="#osgeo.gdal.Dimension.Rename" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Dimension.SetIndexingVariable">
+<span class="sig-name descname"><span class="pre">SetIndexingVariable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Dimension</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">array</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#osgeo.gdal.Dimension.SetIndexingVariable" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">osgeo.gdal.</span></span><span class="sig-name descname"><span class="pre">MDArray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#osgeo.gdal.MDArray" title="Permalink to this definition"></a></dt>
+<dd><p>Proxy of C++ GDALMDArrayHS class.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.AdviseRead">
+<span class="sig-name descname"><span class="pre">AdviseRead</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array_start_idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#osgeo.gdal.MDArray.AdviseRead" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.AsClassicDataset">
+<span class="sig-name descname"><span class="pre">AsClassicDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size_t</span> <span class="pre">iXDim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size_t</span> <span class="pre">iYDim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Group</span> <span class="pre">hRootGroup=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">options=None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="raster_api.html#osgeo.gdal.Dataset" title="osgeo.gdal.Dataset"><span class="pre">Dataset</span></a></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.AsClassicDataset" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.Cache">
+<span class="sig-name descname"><span class="pre">Cache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">options=None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.Cache" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.ComputeStatistics">
+<span class="sig-name descname"><span class="pre">ComputeStatistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bool</span> <span class="pre">approx_ok=FALSE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GDALProgressFunc</span> <span class="pre">callback=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">callback_data=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">options=None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="osgeo.gdal.html#osgeo.gdal.Statistics" title="osgeo.gdal.Statistics"><span class="pre">Statistics</span></a></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.ComputeStatistics" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.CreateAttribute">
+<span class="sig-name descname"><span class="pre">CreateAttribute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span> <span class="pre">dimensions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ExtendedDataType</span> <span class="pre">data_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">options=None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#osgeo.gdal.Attribute" title="osgeo.gdal.Attribute"><span class="pre">Attribute</span></a></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.CreateAttribute" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.DeleteAttribute">
+<span class="sig-name descname"><span class="pre">DeleteAttribute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">options=None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CPLErr</span></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.DeleteAttribute" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.DeleteNoDataValue">
+<span class="sig-name descname"><span class="pre">DeleteNoDataValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CPLErr</span></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.DeleteNoDataValue" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.GetAttribute">
+<span class="sig-name descname"><span class="pre">GetAttribute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#osgeo.gdal.Attribute" title="osgeo.gdal.Attribute"><span class="pre">Attribute</span></a></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.GetAttribute" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.GetAttributes">
+<span class="sig-name descname"><span class="pre">GetAttributes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">options=None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#osgeo.gdal.MDArray.GetAttributes" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.GetBlockSize">
+<span class="sig-name descname"><span class="pre">GetBlockSize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#osgeo.gdal.MDArray.GetBlockSize" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.GetCoordinateVariables">
+<span class="sig-name descname"><span class="pre">GetCoordinateVariables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#osgeo.gdal.MDArray.GetCoordinateVariables" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.GetDataType">
+<span class="sig-name descname"><span class="pre">GetDataType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#osgeo.gdal.ExtendedDataType" title="osgeo.gdal.ExtendedDataType"><span class="pre">ExtendedDataType</span></a></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.GetDataType" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.GetDimensionCount">
+<span class="sig-name descname"><span class="pre">GetDimensionCount</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">size_t</span></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.GetDimensionCount" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.GetDimensions">
+<span class="sig-name descname"><span class="pre">GetDimensions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#osgeo.gdal.MDArray.GetDimensions" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.GetFullName">
+<span class="sig-name descname"><span class="pre">GetFullName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.GetFullName" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.GetGridded">
+<span class="sig-name descname"><span class="pre">GetGridded</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">pszGridOptions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">xArray=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">yArray=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">options=None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#osgeo.gdal.MDArray" title="osgeo.gdal.MDArray"><span class="pre">MDArray</span></a></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.GetGridded" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.GetMask">
+<span class="sig-name descname"><span class="pre">GetMask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">options=None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#osgeo.gdal.MDArray" title="osgeo.gdal.MDArray"><span class="pre">MDArray</span></a></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.GetMask" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.GetName">
+<span class="sig-name descname"><span class="pre">GetName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.GetName" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.GetNoDataValue">
+<span class="sig-name descname"><span class="pre">GetNoDataValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">value</span></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.GetNoDataValue" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.GetNoDataValueAsDouble">
+<span class="sig-name descname"><span class="pre">GetNoDataValueAsDouble</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#osgeo.gdal.MDArray.GetNoDataValueAsDouble" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.GetNoDataValueAsInt64">
+<span class="sig-name descname"><span class="pre">GetNoDataValueAsInt64</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#osgeo.gdal.MDArray.GetNoDataValueAsInt64" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.GetNoDataValueAsRaw">
+<span class="sig-name descname"><span class="pre">GetNoDataValueAsRaw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CPLErr</span></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.GetNoDataValueAsRaw" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.GetNoDataValueAsString">
+<span class="sig-name descname"><span class="pre">GetNoDataValueAsString</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">retStringAndCPLFree</span> <span class="pre">*</span></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.GetNoDataValueAsString" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.GetNoDataValueAsUInt64">
+<span class="sig-name descname"><span class="pre">GetNoDataValueAsUInt64</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#osgeo.gdal.MDArray.GetNoDataValueAsUInt64" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.GetOffset">
+<span class="sig-name descname"><span class="pre">GetOffset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#osgeo.gdal.MDArray.GetOffset" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.GetOffsetStorageType">
+<span class="sig-name descname"><span class="pre">GetOffsetStorageType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">GDALDataType</span></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.GetOffsetStorageType" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.GetProcessingChunkSize">
+<span class="sig-name descname"><span class="pre">GetProcessingChunkSize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size_t</span> <span class="pre">nMaxChunkMemory</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#osgeo.gdal.MDArray.GetProcessingChunkSize" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.GetResampled">
+<span class="sig-name descname"><span class="pre">GetResampled</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span> <span class="pre">nDimensions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GDALRIOResampleAlg</span> <span class="pre">resample_alg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">OSRSpatialReferenceShadow</span> <span class="pre">**</span> <span class="pre">srs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">options=None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#osgeo.gdal.MDArray" title="osgeo.gdal.MDArray"><span class="pre">MDArray</span></a></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.GetResampled" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.GetScale">
+<span class="sig-name descname"><span class="pre">GetScale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#osgeo.gdal.MDArray.GetScale" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.GetScaleStorageType">
+<span class="sig-name descname"><span class="pre">GetScaleStorageType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">GDALDataType</span></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.GetScaleStorageType" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.GetShape">
+<span class="sig-name descname"><span class="pre">GetShape</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#osgeo.gdal.MDArray.GetShape" title="Permalink to this definition"></a></dt>
+<dd><p>Return the shape of the array</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.GetSpatialRef">
+<span class="sig-name descname"><span class="pre">GetSpatialRef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="spatial_ref_api.html#osgeo.osr.SpatialReference" title="osgeo.osr.SpatialReference"><span class="pre">SpatialReference</span></a></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.GetSpatialRef" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.GetStatistics">
+<span class="sig-name descname"><span class="pre">GetStatistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bool</span> <span class="pre">approx_ok=FALSE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bool</span> <span class="pre">force=TRUE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GDALProgressFunc</span> <span class="pre">callback=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">callback_data=None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="osgeo.gdal.html#osgeo.gdal.Statistics" title="osgeo.gdal.Statistics"><span class="pre">Statistics</span></a></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.GetStatistics" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.GetStructuralInfo">
+<span class="sig-name descname"><span class="pre">GetStructuralInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">char</span> <span class="pre">**</span></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.GetStructuralInfo" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.GetTotalElementsCount">
+<span class="sig-name descname"><span class="pre">GetTotalElementsCount</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">GUIntBig</span></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.GetTotalElementsCount" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.GetUnit">
+<span class="sig-name descname"><span class="pre">GetUnit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.GetUnit" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.GetUnscaled">
+<span class="sig-name descname"><span class="pre">GetUnscaled</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#osgeo.gdal.MDArray" title="osgeo.gdal.MDArray"><span class="pre">MDArray</span></a></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.GetUnscaled" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.GetView">
+<span class="sig-name descname"><span class="pre">GetView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">viewExpr</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#osgeo.gdal.MDArray" title="osgeo.gdal.MDArray"><span class="pre">MDArray</span></a></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.GetView" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.Read">
+<span class="sig-name descname"><span class="pre">Read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array_start_idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array_step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buffer_stride</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buffer_datatype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#osgeo.gdal.MDArray.Read" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.ReadAsArray">
+<span class="sig-name descname"><span class="pre">ReadAsArray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array_start_idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array_step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buffer_datatype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buf_obj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#osgeo.gdal.MDArray.ReadAsArray" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.ReadAsMaskedArray">
+<span class="sig-name descname"><span class="pre">ReadAsMaskedArray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array_start_idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array_step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#osgeo.gdal.MDArray.ReadAsMaskedArray" title="Permalink to this definition"></a></dt>
+<dd><p>Return a numpy masked array of ReadAsArray() with GetMask()</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.Rename">
+<span class="sig-name descname"><span class="pre">Rename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">newName</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CPLErr</span></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.Rename" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.Resize">
+<span class="sig-name descname"><span class="pre">Resize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span> <span class="pre">newDimensions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">options=None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CPLErr</span></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.Resize" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.SetNoDataValue">
+<span class="sig-name descname"><span class="pre">SetNoDataValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CPLErr</span></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.SetNoDataValue" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.SetNoDataValueDouble">
+<span class="sig-name descname"><span class="pre">SetNoDataValueDouble</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">d</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CPLErr</span></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.SetNoDataValueDouble" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.SetNoDataValueInt64">
+<span class="sig-name descname"><span class="pre">SetNoDataValueInt64</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GIntBig</span> <span class="pre">v</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CPLErr</span></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.SetNoDataValueInt64" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.SetNoDataValueRaw">
+<span class="sig-name descname"><span class="pre">SetNoDataValueRaw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GIntBig</span> <span class="pre">nLen</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CPLErr</span></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.SetNoDataValueRaw" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.SetNoDataValueString">
+<span class="sig-name descname"><span class="pre">SetNoDataValueString</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">nodata</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CPLErr</span></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.SetNoDataValueString" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.SetNoDataValueUInt64">
+<span class="sig-name descname"><span class="pre">SetNoDataValueUInt64</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GUIntBig</span> <span class="pre">v</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CPLErr</span></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.SetNoDataValueUInt64" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.SetOffset">
+<span class="sig-name descname"><span class="pre">SetOffset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GDALDataType</span> <span class="pre">storageType=GDT_Unknown</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CPLErr</span></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.SetOffset" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.SetScale">
+<span class="sig-name descname"><span class="pre">SetScale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GDALDataType</span> <span class="pre">storageType=GDT_Unknown</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CPLErr</span></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.SetScale" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.SetSpatialRef">
+<span class="sig-name descname"><span class="pre">SetSpatialRef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">srs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.SetSpatialRef" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.SetUnit">
+<span class="sig-name descname"><span class="pre">SetUnit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">unit</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CPLErr</span></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.SetUnit" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.Transpose">
+<span class="sig-name descname"><span class="pre">Transpose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span> <span class="pre">axisMap</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#osgeo.gdal.MDArray" title="osgeo.gdal.MDArray"><span class="pre">MDArray</span></a></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.Transpose" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.Write">
+<span class="sig-name descname"><span class="pre">Write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">buffer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array_start_idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array_step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buffer_stride</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buffer_datatype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#osgeo.gdal.MDArray.Write" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.WriteArray">
+<span class="sig-name descname"><span class="pre">WriteArray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array_start_idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array_step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#osgeo.gdal.MDArray.WriteArray" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.WriteStringArray">
+<span class="sig-name descname"><span class="pre">WriteStringArray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MDArray</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span> <span class="pre">nDims1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span> <span class="pre">nDims2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span> <span class="pre">nDims3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ExtendedDataType</span> <span class="pre">buffer_datatype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">options</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CPLErr</span></span></span><a class="headerlink" href="#osgeo.gdal.MDArray.WriteStringArray" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="osgeo.gdal.MDArray.shape">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">shape</span></span><a class="headerlink" href="#osgeo.gdal.MDArray.shape" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the shape of the array.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="osgeo.gdal.Attribute">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">osgeo.gdal.</span></span><span class="sig-name descname"><span class="pre">Attribute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#osgeo.gdal.Attribute" title="Permalink to this definition"></a></dt>
+<dd><p>Proxy of C++ GDALAttributeHS class.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Attribute.GetDataType">
+<span class="sig-name descname"><span class="pre">GetDataType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Attribute</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#osgeo.gdal.ExtendedDataType" title="osgeo.gdal.ExtendedDataType"><span class="pre">ExtendedDataType</span></a></span></span><a class="headerlink" href="#osgeo.gdal.Attribute.GetDataType" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Attribute.GetDimensionCount">
+<span class="sig-name descname"><span class="pre">GetDimensionCount</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Attribute</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">size_t</span></span></span><a class="headerlink" href="#osgeo.gdal.Attribute.GetDimensionCount" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Attribute.GetDimensionsSize">
+<span class="sig-name descname"><span class="pre">GetDimensionsSize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Attribute</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#osgeo.gdal.Attribute.GetDimensionsSize" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Attribute.GetFullName">
+<span class="sig-name descname"><span class="pre">GetFullName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Attribute</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span></span></span><a class="headerlink" href="#osgeo.gdal.Attribute.GetFullName" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Attribute.GetName">
+<span class="sig-name descname"><span class="pre">GetName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Attribute</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span></span></span><a class="headerlink" href="#osgeo.gdal.Attribute.GetName" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Attribute.GetTotalElementsCount">
+<span class="sig-name descname"><span class="pre">GetTotalElementsCount</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Attribute</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">GUIntBig</span></span></span><a class="headerlink" href="#osgeo.gdal.Attribute.GetTotalElementsCount" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Attribute.Read">
+<span class="sig-name descname"><span class="pre">Read</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#osgeo.gdal.Attribute.Read" title="Permalink to this definition"></a></dt>
+<dd><p>Read an attribute and return it with the most appropriate type</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Attribute.ReadAsDouble">
+<span class="sig-name descname"><span class="pre">ReadAsDouble</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Attribute</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">double</span></span></span><a class="headerlink" href="#osgeo.gdal.Attribute.ReadAsDouble" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Attribute.ReadAsDoubleArray">
+<span class="sig-name descname"><span class="pre">ReadAsDoubleArray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Attribute</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#osgeo.gdal.Attribute.ReadAsDoubleArray" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Attribute.ReadAsInt">
+<span class="sig-name descname"><span class="pre">ReadAsInt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Attribute</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#osgeo.gdal.Attribute.ReadAsInt" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Attribute.ReadAsIntArray">
+<span class="sig-name descname"><span class="pre">ReadAsIntArray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Attribute</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#osgeo.gdal.Attribute.ReadAsIntArray" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Attribute.ReadAsRaw">
+<span class="sig-name descname"><span class="pre">ReadAsRaw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Attribute</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CPLErr</span></span></span><a class="headerlink" href="#osgeo.gdal.Attribute.ReadAsRaw" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Attribute.ReadAsString">
+<span class="sig-name descname"><span class="pre">ReadAsString</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Attribute</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span></span></span><a class="headerlink" href="#osgeo.gdal.Attribute.ReadAsString" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Attribute.ReadAsStringArray">
+<span class="sig-name descname"><span class="pre">ReadAsStringArray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Attribute</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">char</span> <span class="pre">**</span></span></span><a class="headerlink" href="#osgeo.gdal.Attribute.ReadAsStringArray" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Attribute.Rename">
+<span class="sig-name descname"><span class="pre">Rename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Attribute</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">newName</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CPLErr</span></span></span><a class="headerlink" href="#osgeo.gdal.Attribute.Rename" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Attribute.Write">
+<span class="sig-name descname"><span class="pre">Write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#osgeo.gdal.Attribute.Write" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Attribute.WriteDouble">
+<span class="sig-name descname"><span class="pre">WriteDouble</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Attribute</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">val</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CPLErr</span></span></span><a class="headerlink" href="#osgeo.gdal.Attribute.WriteDouble" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Attribute.WriteDoubleArray">
+<span class="sig-name descname"><span class="pre">WriteDoubleArray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Attribute</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span> <span class="pre">nList</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CPLErr</span></span></span><a class="headerlink" href="#osgeo.gdal.Attribute.WriteDoubleArray" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Attribute.WriteInt">
+<span class="sig-name descname"><span class="pre">WriteInt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Attribute</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span> <span class="pre">val</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CPLErr</span></span></span><a class="headerlink" href="#osgeo.gdal.Attribute.WriteInt" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Attribute.WriteRaw">
+<span class="sig-name descname"><span class="pre">WriteRaw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Attribute</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GIntBig</span> <span class="pre">nLen</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CPLErr</span></span></span><a class="headerlink" href="#osgeo.gdal.Attribute.WriteRaw" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Attribute.WriteString">
+<span class="sig-name descname"><span class="pre">WriteString</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Attribute</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">val</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CPLErr</span></span></span><a class="headerlink" href="#osgeo.gdal.Attribute.WriteString" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.Attribute.WriteStringArray">
+<span class="sig-name descname"><span class="pre">WriteStringArray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Attribute</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">vals</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CPLErr</span></span></span><a class="headerlink" href="#osgeo.gdal.Attribute.WriteStringArray" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="osgeo.gdal.ExtendedDataType">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">osgeo.gdal.</span></span><span class="sig-name descname"><span class="pre">ExtendedDataType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#osgeo.gdal.ExtendedDataType" title="Permalink to this definition"></a></dt>
+<dd><p>Proxy of C++ GDALExtendedDataTypeHS class.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.ExtendedDataType.CanConvertTo">
+<span class="sig-name descname"><span class="pre">CanConvertTo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ExtendedDataType</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ExtendedDataType</span> <span class="pre">other</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#osgeo.gdal.ExtendedDataType.CanConvertTo" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.ExtendedDataType.Create">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">GDALDataType</span> <span class="pre">dt</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#osgeo.gdal.ExtendedDataType" title="osgeo.gdal.ExtendedDataType"><span class="pre">ExtendedDataType</span></a></span></span><a class="headerlink" href="#osgeo.gdal.ExtendedDataType.Create" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.ExtendedDataType.CreateCompound">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CreateCompound</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size_t</span> <span class="pre">nTotalSize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span> <span class="pre">nComps</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#osgeo.gdal.ExtendedDataType" title="osgeo.gdal.ExtendedDataType"><span class="pre">ExtendedDataType</span></a></span></span><a class="headerlink" href="#osgeo.gdal.ExtendedDataType.CreateCompound" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.ExtendedDataType.CreateString">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CreateString</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">size_t</span> <span class="pre">nMaxStringLength=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">GDALExtendedDataTypeSubType</span> <span class="pre">eSubType=GEDTST_NONE</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#osgeo.gdal.ExtendedDataType" title="osgeo.gdal.ExtendedDataType"><span class="pre">ExtendedDataType</span></a></span></span><a class="headerlink" href="#osgeo.gdal.ExtendedDataType.CreateString" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.ExtendedDataType.Equals">
+<span class="sig-name descname"><span class="pre">Equals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ExtendedDataType</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ExtendedDataType</span> <span class="pre">other</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#osgeo.gdal.ExtendedDataType.Equals" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.ExtendedDataType.GetClass">
+<span class="sig-name descname"><span class="pre">GetClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ExtendedDataType</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">GDALExtendedDataTypeClass</span></span></span><a class="headerlink" href="#osgeo.gdal.ExtendedDataType.GetClass" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.ExtendedDataType.GetComponents">
+<span class="sig-name descname"><span class="pre">GetComponents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ExtendedDataType</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#osgeo.gdal.ExtendedDataType.GetComponents" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.ExtendedDataType.GetMaxStringLength">
+<span class="sig-name descname"><span class="pre">GetMaxStringLength</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ExtendedDataType</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">size_t</span></span></span><a class="headerlink" href="#osgeo.gdal.ExtendedDataType.GetMaxStringLength" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.ExtendedDataType.GetName">
+<span class="sig-name descname"><span class="pre">GetName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ExtendedDataType</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span></span></span><a class="headerlink" href="#osgeo.gdal.ExtendedDataType.GetName" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.ExtendedDataType.GetNumericDataType">
+<span class="sig-name descname"><span class="pre">GetNumericDataType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ExtendedDataType</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">GDALDataType</span></span></span><a class="headerlink" href="#osgeo.gdal.ExtendedDataType.GetNumericDataType" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.ExtendedDataType.GetSize">
+<span class="sig-name descname"><span class="pre">GetSize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ExtendedDataType</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">size_t</span></span></span><a class="headerlink" href="#osgeo.gdal.ExtendedDataType.GetSize" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.gdal.ExtendedDataType.GetSubType">
+<span class="sig-name descname"><span class="pre">GetSubType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ExtendedDataType</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">GDALExtendedDataTypeSubType</span></span></span><a class="headerlink" href="#osgeo.gdal.ExtendedDataType.GetSubType" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="utilities.html" class="btn btn-neutral float-right" title="Python Utilities" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="spatial_ref_api.html" class="btn btn-neutral float-left" title="Python Spatial Reference System API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2024 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+  </div>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

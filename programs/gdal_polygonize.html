@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gdal_polygonize.py &mdash; GDAL  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/gdal.css" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="canonical" href="https://gdal.org/programs/gdal_polygonize.html"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="gdal_proximity.py" href="gdal_proximity.html" />
+    <link rel="prev" title="gdal_pansharpen.py" href="gdal_pansharpen.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Programs</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#general">General</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#raster-programs">Raster programs</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="raster_common_options.html">Common options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal-config.html">gdal-config (Unix)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal2tiles.html">gdal2tiles.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal2xyz.html">gdal2xyz.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_calc.html">gdal_calc.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_contour.html">gdal_contour</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_create.html">gdal_create</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_edit.html">gdal_edit.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_fillnodata.html">gdal_fillnodata.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_footprint.html">gdal_footprint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_grid.html">gdal_grid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_merge.html">gdal_merge.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_pansharpen.html">gdal_pansharpen.py</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">gdal_polygonize.py</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#synopsis">Synopsis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#description">Description</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_proximity.html">gdal_proximity.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_rasterize.html">gdal_rasterize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_retile.html">gdal_retile.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_sieve.html">gdal_sieve.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_translate.html">gdal_translate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_viewshed.html">gdal_viewshed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaladdo.html">gdaladdo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalattachpct.html">gdalattachpct.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalbuildvrt.html">gdalbuildvrt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalcompare.html">gdalcompare.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaldem.html">gdaldem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalinfo.html">gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdallocationinfo.html">gdallocationinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalmanage.html">gdalmanage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalmove.html">gdalmove.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalsrsinfo.html">gdalsrsinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaltindex.html">gdaltindex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaltransform.html">gdaltransform</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalwarp.html">gdalwarp</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nearblack.html">nearblack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pct2rgb.html">pct2rgb.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rgb2pct.html">rgb2pct.py</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#multidimensional-raster-programs">Multidimensional Raster programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#vector-programs">Vector programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#geographic-network-programs">Geographic network programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#other-utilities">Other utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sponsors/index.html">Sponsors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Programs</a> &raquo;</li>
+      
+      <li>gdal_polygonize.py</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit/master/doc/source/programs/gdal_polygonize.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="gdal_proximity.html" class="btn btn-neutral float-right" title="gdal_proximity.py" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gdal_pansharpen.html" class="btn btn-neutral float-left" title="gdal_pansharpen.py" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gdal-polygonize-py">
+<span id="gdal-polygonize"></span><h1>gdal_polygonize.py<a class="headerlink" href="#gdal-polygonize-py" title="Permalink to this heading"></a></h1>
+<p>Produces a polygon feature layer from a raster.</p>
+<section id="synopsis">
+<span id="index-0"></span><h2>Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdal_polygonize</span><span class="o">.</span><span class="n">py</span> <span class="p">[</span><span class="o">--</span><span class="n">help</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">help</span><span class="o">-</span><span class="n">general</span><span class="p">]</span>
+                   <span class="p">[</span><span class="o">-</span><span class="mi">8</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;=&lt;</span><span class="n">value</span><span class="o">&gt;</span><span class="p">]</span><span class="o">...</span> <span class="p">[</span><span class="o">-</span><span class="n">nomask</span><span class="p">]</span>
+                   <span class="p">[</span><span class="o">-</span><span class="n">mask</span> <span class="o">&lt;</span><span class="n">filename</span><span class="o">&gt;</span><span class="p">]</span> <span class="o">&lt;</span><span class="n">raster_file</span><span class="o">&gt;</span> <span class="p">[</span><span class="o">-</span><span class="n">b</span> <span class="o">&lt;</span><span class="n">band</span><span class="o">&gt;</span><span class="p">]</span>
+                   <span class="p">[</span><span class="o">-</span><span class="n">q</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">f</span> <span class="o">&lt;</span><span class="n">ogr_format</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">lco</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;=&lt;</span><span class="n">value</span><span class="o">&gt;</span><span class="p">]</span><span class="o">...</span>
+                   <span class="p">[</span><span class="o">-</span><span class="n">overwrite</span><span class="p">]</span> <span class="o">&lt;</span><span class="n">out_file</span><span class="o">&gt;</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">layer</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">fieldname</span><span class="o">&gt;</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this heading"></a></h2>
+<p>This utility creates vector polygons for all connected regions of pixels in
+the raster sharing a common pixel value.  Each polygon is created with an
+attribute indicating the pixel value of that polygon.  A raster mask
+may also be provided to determine which pixels are eligible for processing.</p>
+<p>The utility will create the output vector datasource if it does not already exist,
+otherwise it will try to append to an existing one.</p>
+<p>The utility is based on the :<a class="reference internal" href="../api/gdal_alg.html#_CPPv414GDALPolygonize15GDALRasterBandH15GDALRasterBandH9OGRLayerHiPPc16GDALProgressFuncPv" title="GDALPolygonize"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALPolygonize()</span></code></a> function which has additional
+details on the algorithm.</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_polygonize-help">
+<span id="cmdoption-gdal-polygonize-help"></span><span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal_polygonize-help" title="Permalink to this definition"></a></dt>
+<dd><p>Show this help message and exit</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_polygonize-help-general">
+<span id="cmdoption-gdal-polygonize-help-general"></span><span class="sig-name descname"><span class="pre">--help-general</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal_polygonize-help-general" title="Permalink to this definition"></a></dt>
+<dd><p>Gives a brief usage message for the generic GDAL commandline options and exit.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_polygonize-8">
+<span id="cmdoption-gdal-polygonize-8"></span><span class="sig-name descname"><span class="pre">-8</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal_polygonize-8" title="Permalink to this definition"></a></dt>
+<dd><p>Use 8 connectedness. Default is 4 connectedness.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_polygonize-nomask">
+<span id="cmdoption-gdal-polygonize-nomask"></span><span class="sig-name descname"><span class="pre">-nomask</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal_polygonize-nomask" title="Permalink to this definition"></a></dt>
+<dd><p>Do not use the default validity mask for the input band (such as nodata, or
+alpha masks).</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_polygonize-mask">
+<span id="cmdoption-gdal-polygonize-mask"></span><span class="sig-name descname"><span class="pre">-mask</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;filename&gt;</span></span><a class="headerlink" href="#cmdoption-gdal_polygonize-mask" title="Permalink to this definition"></a></dt>
+<dd><p>Use the first band of the specified file as a validity mask (zero is invalid,
+non-zero is valid). If not specified, the default validity mask for the input
+band (such as nodata, or alpha masks) will be used (unless -nomask is specified)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_polygonize-arg-raster_file">
+<span id="cmdoption-gdal-polygonize-arg-raster-file"></span><span class="sig-name descname"><span class="pre">&lt;raster_file&gt;</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal_polygonize-arg-raster_file" title="Permalink to this definition"></a></dt>
+<dd><p>The source raster file from which polygons are derived.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_polygonize-b">
+<span id="cmdoption-gdal-polygonize-b"></span><span class="sig-name descname"><span class="pre">-b</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;band&gt;</span></span><a class="headerlink" href="#cmdoption-gdal_polygonize-b" title="Permalink to this definition"></a></dt>
+<dd><p>The band on &lt;raster_file&gt; to build
+the polygons from. Starting with GDAL 2.2, the value can also be set to &quot;mask&quot;,
+to indicate that the mask band of the first band must be used (or
+&quot;mask,band_number&quot; for the mask of a specified band)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_polygonize-f">
+<span id="cmdoption-gdal-polygonize-f"></span><span class="sig-name descname"><span class="pre">-f</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;ogr_format&gt;</span></span><a class="headerlink" href="#cmdoption-gdal_polygonize-f" title="Permalink to this definition"></a></dt>
+<dd><p>Select the output format. Starting with
+GDAL 2.3, if not specified, the format is guessed from the extension (previously
+was GML). Use the short format name</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_polygonize-o">
+<span id="cmdoption-gdal-polygonize-o"></span><span class="sig-name descname"><span class="pre">-o</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;NAME&gt;=&lt;VALUE&gt;</span></span><a class="headerlink" href="#cmdoption-gdal_polygonize-o" title="Permalink to this definition"></a></dt>
+<dd><div class="versionadded">
+<p><span class="versionmodified added">New in version 3.7.</span></p>
+</div>
+<p>Polygonize option. See :<a class="reference internal" href="../api/gdal_alg.html#_CPPv414GDALPolygonize15GDALRasterBandH15GDALRasterBandH9OGRLayerHiPPc16GDALProgressFuncPv" title="GDALPolygonize"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALPolygonize()</span></code></a> documentation.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_polygonize-lco">
+<span id="cmdoption-gdal-polygonize-lco"></span><span class="sig-name descname"><span class="pre">-lco</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;NAME&gt;=&lt;VALUE&gt;</span></span><a class="headerlink" href="#cmdoption-gdal_polygonize-lco" title="Permalink to this definition"></a></dt>
+<dd><div class="versionadded">
+<p><span class="versionmodified added">New in version 3.7.</span></p>
+</div>
+<p>Layer creation option (format specific)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_polygonize-overwrite">
+<span id="cmdoption-gdal-polygonize-overwrite"></span><span class="sig-name descname"><span class="pre">-overwrite</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal_polygonize-overwrite" title="Permalink to this definition"></a></dt>
+<dd><div class="versionadded">
+<p><span class="versionmodified added">New in version 3.8.</span></p>
+</div>
+<p>Overwrite the output layer if it already exists.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_polygonize-arg-out_file">
+<span id="cmdoption-gdal-polygonize-arg-out-file"></span><span class="sig-name descname"><span class="pre">&lt;out_file&gt;</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal_polygonize-arg-out_file" title="Permalink to this definition"></a></dt>
+<dd><p>The destination vector file to which the polygons will be written.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_polygonize-arg-layer">
+<span id="cmdoption-gdal-polygonize-arg-layer"></span><span class="sig-name descname"><span class="pre">&lt;layer&gt;</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal_polygonize-arg-layer" title="Permalink to this definition"></a></dt>
+<dd><p>The name of the layer created to hold the polygon features.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_polygonize-arg-fieldname">
+<span id="cmdoption-gdal-polygonize-arg-fieldname"></span><span class="sig-name descname"><span class="pre">&lt;fieldname&gt;</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal_polygonize-arg-fieldname" title="Permalink to this definition"></a></dt>
+<dd><p>The name of the field to create (defaults to &quot;DN&quot;).</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal_polygonize-q">
+<span id="cmdoption-gdal-polygonize-q"></span><span class="sig-name descname"><span class="pre">-q</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal_polygonize-q" title="Permalink to this definition"></a></dt>
+<dd><p>The script runs in quiet mode.  The progress monitor is suppressed and routine
+messages are not displayed.</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="gdal_proximity.html" class="btn btn-neutral float-right" title="gdal_proximity.py" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gdal_pansharpen.html" class="btn btn-neutral float-left" title="gdal_pansharpen.py" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2024 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+  </div>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RFC 93: OGRLayer::UpdateFeature() method &mdash; GDAL  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/gdal.css" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://gdal.org/development/rfc/rfc93_update_feature.html"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="RFC 94: Numeric fields width/precision metadata" href="rfc94_field_precision_width_metadata.html" />
+    <link rel="prev" title="RFC 92: WKB Only geometries (on hold)" href="rfc92_wkb_only_geometries.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../dev_environment.html">Setting up a development environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../building_from_source.html">Building GDAL from source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../testing.html">Automated testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev_practices.html">Development practices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev_documentation.html">Building documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cmake.html">Using GDAL in CMake projects</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters (not implemented)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open (withdrawn)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open (withdrawn)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading (not implemented)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc77_drop_python2_support.html">RFC 77: Drop Python 2 support in favour of Python 3.6</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc78_gdal_utils_package.html">RFC 78: gdal-utils package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc79_listing_service_providers.html">RFC 79: Listing of Service Providers on GDAL website</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc80_numfocus_relationship.html">RFC 80: NumFOCUS relationship and sponsorship program</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc81_coordinate_epoch.html">RFC 81: Support for coordinate epochs in geospatial formats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc83_use_of_project_sponsorship.html">RFC 83: guidelines for the use of GDAL project sponsorship</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc84_cmake.html">RFC 84: Migrating build systems to CMake</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc85_policy_code_additions.html">RFC 85: Policy regarding substantial code additions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc86_column_oriented_api.html">RFC 86: Column-oriented read API for vector layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc87_signed_int8.html">RFC 87: Signed int8 data type for raster</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc88_googletest.html">RFC 88: Use GoogleTest framework for C/C++ unit tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc89_sql_logging_callback.html">RFC 89: SQL logging callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc90_read_compressed_data.html">RFC 90: Direct access to compressed raster data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc91_dataset_close.html">RFC 91: GDALDataset::Close() method</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc92_wkb_only_geometries.html">RFC 92: WKB Only geometries (on hold)</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 93: OGRLayer::UpdateFeature() method</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motivation">Motivation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#details">Details</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#impacted-drivers">Impacted drivers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#design-choices">Design choices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bindings">Bindings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#benchmark">Benchmark</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#backward-compatibility">Backward compatibility</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#testing">Testing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#related-issues-and-prs">Related issues and PRs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voting-history">Voting history</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rfc94_field_precision_width_metadata.html">RFC 94: Numeric fields width/precision metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc95_standard_int_types.html">RFC 95: Use standard C/C++ integer types (proposed, <em>NOT</em> adopted)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc96_deferred_plugin_loading.html">RFC 96: Deferred C++ plugin loading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc97_feature_and_fielddefn_sealing.html">RFC 97: OGRFeatureDefn, OGRFieldDefn and OGRGeomFieldDefn &quot;sealing&quot;</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc98_build_requirements_gdal_3_9.html">RFC 98: Build requirements for GDAL 3.9</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc99_geometry_coordinate_precision.html">RFC 99: Geometry coordinate precision</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sponsors/index.html">Sponsors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 93: OGRLayer::UpdateFeature() method</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit/master/doc/source/development/rfc/rfc93_update_feature.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="rfc94_field_precision_width_metadata.html" class="btn btn-neutral float-right" title="RFC 94: Numeric fields width/precision metadata" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc92_wkb_only_geometries.html" class="btn btn-neutral float-left" title="RFC 92: WKB Only geometries (on hold)" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="rfc-93-ogrlayer-updatefeature-method">
+<span id="rfc-93"></span><h1>RFC 93: OGRLayer::UpdateFeature() method<a class="headerlink" href="#rfc-93-ogrlayer-updatefeature-method" title="Permalink to this heading"></a></h1>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Author:</p></td>
+<td><p>Even Rouault</p></td>
+</tr>
+<tr class="row-even"><td><p>Contact:</p></td>
+<td><p>even.rouault &#64; spatialys.com</p></td>
+</tr>
+<tr class="row-odd"><td><p>Started:</p></td>
+<td><p>2023-Feb-15</p></td>
+</tr>
+<tr class="row-even"><td><p>Status:</p></td>
+<td><p>Adopted, implemented</p></td>
+</tr>
+<tr class="row-odd"><td><p>Target:</p></td>
+<td><p>GDAL 3.7</p></td>
+</tr>
+</tbody>
+</table>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this heading"></a></h2>
+<p>This RFC adds a new method in the OGRLayer class, UpdateFeature(), to be
+able to update a subset of the attributes and geometry fields of a feature.</p>
+</section>
+<section id="motivation">
+<h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this heading"></a></h2>
+<p>There are currently 2 ways of updating (in a broad sense) existing features in
+drivers that support editing an existing feature:</p>
+<ul class="simple">
+<li><p>through the SetFeature() method, which has roughly a Replace semantics. All
+the fields of the passed feature are used to update the feature</p></li>
+<li><p>through the UpsertFeature() method. UpsertFeature() semantics is: &quot;if the
+passed feature doesn't exist, considering its feature id, then create it,
+otherwise replace it with the existing feature&quot;. So UpsertFeature() is
+conceptually CreateFeature() or UpdateFeature().</p></li>
+</ul>
+<p>However a number of use cases only involve updating a subset of the fields of
+a feature, and not a full replacement:</p>
+<ul class="simple">
+<li><p>Typically QGIS changeAttributeValues() and changeGeometryValues() currently
+have to call GetFeature() on features they want to edit, modify the desired
+fields and call SetFeature() to update the feature. This is suboptimal from
+a performance point of view. Similarly pgsql-ogr-fdw could potentially
+be enhanced to map its implementation of the UPDATE on a OGR foreign table to
+use UpdateFeature() instead of a full replacement with SetFeature().</p></li>
+<li><p>SQL based drivers implement SetFeature() through the SQL UPDATE statement,
+which does not require the full set of attributes to be provided. Consequently
+UpdateFeature() would be a better match with their native capability.
+SetFeature() updating all fields, even those not modified, may cause triggers
+to be unnecessarily run (for example the GeoPackage triggers related to
+updating the RTree of the spatial index)</p></li>
+<li><p>no-SQL based drivers such as MongoDB have separate API to replace, upsert or
+update features.</p></li>
+<li><p>The transactional profile of WFS 2 also distinguishes Update and Replace
+commands.</p></li>
+</ul>
+</section>
+<section id="details">
+<h2>Details<a class="headerlink" href="#details" title="Permalink to this heading"></a></h2>
+<p>Similarly to CreateFeature(), SetFeature() and UpsertFeature(), two methods are
+added in OGRLayer:</p>
+<ul class="simple">
+<li><p>UpdateFeature(), non-virtual, and aimed at being the one called by the end
+user. This method does a few sanity checks on the passed arguments (the
+arrays containing the indices of the attributes to updated) and convert
+curve geometries to linear ones if needed for layers that do not support
+curve geometries (similarly as CreateFeature(), SetFeature() and
+UpdateFeature())</p></li>
+<li><p>IUpdateFeature(), virtual method implemented by drivers. A default
+implementation is provided in the base OGRLayer class for drivers that
+expose the OLCRandomWrite capability. The default implementation calls
+GetFeature() to retrieve the current version of the feature, updates it
+with the feature passed as argument to IUpdateFeature() and calls
+ISetFeature() to replace the feature.</p></li>
+</ul>
+<p>The prototype of UpdateFeature() is the following one:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/**</span>
+<span class="cm">\brief Update (part of) an existing feature.</span>
+
+<span class="cm">This method will update the specified attribute and geometry fields of a</span>
+<span class="cm">feature to the layer, based on the feature id within the OGRFeature.</span>
+
+<span class="cm">Use OGRLayer::TestCapability(OLCRandomWrite) to establish if this layer</span>
+<span class="cm">supports random access writing via UpdateFeature(). And to know if the</span>
+<span class="cm">driver supports a dedicated/efficient UpdateFeature() method, test for the</span>
+<span class="cm">OLCUpdateFeature capability.</span>
+
+<span class="cm">The way unset fields in the provided poFeature are processed is driver dependent:</span>
+<span class="cm">&lt;ul&gt;</span>
+<span class="cm">&lt;li&gt;</span>
+<span class="cm">SQL based drivers which implement SetFeature() through SQL UPDATE will skip</span>
+<span class="cm">unset fields, and thus the content of the existing feature will be preserved.</span>
+<span class="cm">&lt;/li&gt;</span>
+<span class="cm">&lt;li&gt;</span>
+<span class="cm">The shapefile driver will write a NULL value in the DBF file.</span>
+<span class="cm">&lt;/li&gt;</span>
+<span class="cm">&lt;li&gt;</span>
+<span class="cm">The GeoJSON driver will take into account unset fields to remove the corresponding</span>
+<span class="cm">JSON member.</span>
+<span class="cm">&lt;/li&gt;</span>
+<span class="cm">&lt;/ul&gt;</span>
+
+<span class="cm">This method is the same as the C function OGR_L_UpdateFeature().</span>
+
+<span class="cm">To fully replace a feature, see OGRLayer::SetFeature().</span>
+
+<span class="cm">Note that after this call the content of hFeat might have changed, and will</span>
+<span class="cm">*not* reflect the content you would get with GetFeature().</span>
+<span class="cm">In particular for performance reasons, passed geometries might have been &quot;stolen&quot;,</span>
+<span class="cm">in particular for the default implementation of UpdateFeature() which relies</span>
+<span class="cm">on GetFeature() + SetFeature().</span>
+
+<span class="cm">@param poFeature the feature to update.</span>
+
+<span class="cm">@param nUpdatedFieldsCount number of attribute fields to update. May be 0</span>
+
+<span class="cm">@param panUpdatedFieldsIdx array of nUpdatedFieldsCount values, each between</span>
+<span class="cm">                           0 and GetLayerDefn()-&gt;GetFieldCount() - 1, indicating</span>
+<span class="cm">                           which fields of poFeature must be updated in the</span>
+<span class="cm">                           layer.</span>
+
+<span class="cm">@param nUpdatedGeomFieldsCount number of geometry fields to update. May be 0</span>
+
+<span class="cm">@param panUpdatedGeomFieldsIdx array of nUpdatedGeomFieldsCount values, each between</span>
+<span class="cm">                               0 and GetLayerDefn()-&gt;GetGeomFieldCount() - 1, indicating</span>
+<span class="cm">                               which geometry fields of poFeature must be updated in the</span>
+<span class="cm">                               layer.</span>
+
+<span class="cm">@param bUpdateStyleString whether the feature style string in the layer should</span>
+<span class="cm">                          be updated with the one of poFeature.</span>
+
+<span class="cm">@return OGRERR_NONE if the operation works, otherwise an appropriate error</span>
+<span class="cm">code (e.g OGRERR_NON_EXISTING_FEATURE if the feature does not exist).</span>
+<span class="cm">*/</span>
+
+<span class="n">OGRErr</span><span class="w"> </span><span class="nf">OGRLayer::UpdateFeature</span><span class="p">(</span><span class="w"> </span><span class="n">OGRFeature</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">poFeature</span><span class="p">,</span>
+<span class="w">                                </span><span class="kt">int</span><span class="w"> </span><span class="n">nUpdatedFieldsCount</span><span class="p">,</span>
+<span class="w">                                </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">panUpdatedFieldsIdx</span><span class="p">,</span>
+<span class="w">                                </span><span class="kt">int</span><span class="w"> </span><span class="n">nUpdatedGeomFieldsCount</span><span class="p">,</span>
+<span class="w">                                </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">panUpdatedGeomFieldsIdx</span><span class="p">,</span>
+<span class="w">                                </span><span class="kt">bool</span><span class="w"> </span><span class="n">bUpdateStyleString</span><span class="w"> </span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The corresponding C function <code class="docutils literal notranslate"><span class="pre">OGR_L_UpdateFeature</span></code> is added.</p>
+<p>The OGRLayerDecorator, OGRLayerPool, OGRMutexedLayer, OGRUnionLayer,
+OGRWarpedLayer and OGREditableLayer utility classes that wrap other layers
+are modified to take the new IUpdateFeature() virtual method into account.</p>
+</section>
+<section id="impacted-drivers">
+<h2>Impacted drivers<a class="headerlink" href="#impacted-drivers" title="Permalink to this heading"></a></h2>
+<p>The proposed implementation adds a dedicated implementation of IUpdateFeature()
+in the following drivers: memory driver, PostgreSQL, GPKG, MongoDB.</p>
+<p>Other drivers could potentially benefit from it, e.g Shapefile, where separate
+updates of the .shp (geometries) and .dbf (attributes) files. But not in scope
+of the initial implementation.</p>
+</section>
+<section id="design-choices">
+<h2>Design choices<a class="headerlink" href="#design-choices" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>Q: Why is it necessary to specify which fields of the feature passed to
+UpdateFeature() should be taken into account?</p></li>
+<li><p>A: For attributes, it could have been possible to rely on the set/unset status
+of the fields, but for drivers that distinguish unset from NULL (typically
+all JSON based drivers, or no-SQL driver which map to key/value documents with
+a non-fixed schema), this would have make it impossible to unset a field in
+the stored feature. And geometry fields don't have a unset status, so it would
+be otherwise be impossible to distinguish between setting the geometry to NULL
+or not modifying the existing geometry.</p></li>
+<li><p>Q: Why having a default implementation of IUpdateFeature() in the OGRLayer base
+class and not just returning OGRERR_UNSUPPORTED_OPERATION ?</p></li>
+<li><p>A: The rationale is to make it easier for code to use UpdateFeature(), even
+when the underlying driver does not have a specialized implementation. User
+code that needs to know if a specialized implementation is available (in particular
+if atomicity of changes is a requirement) can test the OLCUpdateFeature
+capability (UpdateFeature() is available as soon as the OLCRandomWrite
+capability is advertized).</p></li>
+<li><p>Q: Is it appropriate that IUpdateFeature() implementations may alter the
+feature passed to them ?</p></li>
+<li><p>A: given that the purpose of UpdateFeature() is to only require the modified
+fields to be specified, the feature generally cannot be used to reflect the
+full state of the corresponding stored object. Consequently modifying it
+has no anticipated drawbacks for intended use cases.</p></li>
+</ul>
+</section>
+<section id="bindings">
+<h2>Bindings<a class="headerlink" href="#bindings" title="Permalink to this heading"></a></h2>
+<p>OGR_L_UpdateFeature() is mapped to SWIG's ogr.Feature.UpdateFeature().</p>
+</section>
+<section id="benchmark">
+<h2>Benchmark<a class="headerlink" href="#benchmark" title="Permalink to this heading"></a></h2>
+<p>A benchmark using the below Python script has been run to compare updating
+a single field on a GeoPackage layer with 3.2 million features, each with 13
+attributes and small polygons, of a total size of 1.6 GB.</p>
+<p>The runtime using the new UpdateFeature() method is 38.5 seconds, versus 168
+seconds using GetFeature() + SetFeature(), hence a x4.4 speed-up.
+The speed-up should generally increase with the number of attributes per feature.</p>
+<p>This is a good simulation of the benefit QGIS changeAttributeValues() implementation
+could get by using UpdateFeature().</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">osgeo</span> <span class="kn">import</span> <span class="n">ogr</span>
+
+<span class="c1"># Set to False to use SetFeature()</span>
+<span class="n">use_update_feature</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="n">ds</span> <span class="o">=</span> <span class="n">ogr</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="s2">&quot;test.gpkg&quot;</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">lyr</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">GetLayer</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">field_idx</span> <span class="o">=</span> <span class="n">lyr</span><span class="o">.</span><span class="n">GetLayerDefn</span><span class="p">()</span><span class="o">.</span><span class="n">GetFieldIndex</span><span class="p">(</span><span class="s2">&quot;capture_source_id&quot;</span><span class="p">)</span>
+
+<span class="n">lyr</span><span class="o">.</span><span class="n">StartTransaction</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">use_update_feature</span><span class="p">:</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">ogr</span><span class="o">.</span><span class="n">Feature</span><span class="p">(</span><span class="n">lyr</span><span class="o">.</span><span class="n">GetLayerDefn</span><span class="p">())</span>
+    <span class="n">sql_lyr</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">ExecuteSQL</span><span class="p">(</span><span class="s2">&quot;SELECT </span><span class="si">%s</span><span class="s2"> FROM </span><span class="se">\&quot;</span><span class="si">%s</span><span class="se">\&quot;</span><span class="s2">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">lyr</span><span class="o">.</span><span class="n">GetFIDColumn</span><span class="p">(),</span> <span class="n">lyr</span><span class="o">.</span><span class="n">GetName</span><span class="p">()))</span>
+    <span class="n">fids</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">GetFID</span><span class="p">()</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">sql_lyr</span><span class="p">]</span>
+    <span class="n">ds</span><span class="o">.</span><span class="n">ReleaseResultSet</span><span class="p">(</span><span class="n">sql_lyr</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">fid</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fids</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">idx</span> <span class="o">%</span> <span class="mi">10000</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">SetFID</span><span class="p">(</span><span class="n">fid</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">SetField</span><span class="p">(</span><span class="n">field_idx</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">lyr</span><span class="o">.</span><span class="n">UpdateFeature</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="p">[</span><span class="n">field_idx</span><span class="p">],</span> <span class="p">[],</span> <span class="kc">False</span><span class="p">)</span> <span class="o">==</span> <span class="n">ogr</span><span class="o">.</span><span class="n">OGRERR_NONE</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lyr</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">idx</span> <span class="o">%</span> <span class="mi">10000</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">SetField</span><span class="p">(</span><span class="n">field_idx</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">lyr</span><span class="o">.</span><span class="n">SetFeature</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">==</span> <span class="n">ogr</span><span class="o">.</span><span class="n">OGRERR_NONE</span>
+<span class="n">lyr</span><span class="o">.</span><span class="n">CommitTransaction</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="backward-compatibility">
+<h2>Backward compatibility<a class="headerlink" href="#backward-compatibility" title="Permalink to this heading"></a></h2>
+<p>None, new functionality.</p>
+<p>C++ ABI breakage due to a new virtual method, typical of functionality introduced
+in GDAL minor versions.</p>
+</section>
+<section id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this heading"></a></h2>
+<p>The new functions and methods are documented.</p>
+</section>
+<section id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this heading"></a></h2>
+<p>The API, base implementation and dedicated UpdateFeature() are tested by
+new autotest checks.</p>
+</section>
+<section id="related-issues-and-prs">
+<h2>Related issues and PRs<a class="headerlink" href="#related-issues-and-prs" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/OSGeo/gdal/issues/6544">https://github.com/OSGeo/gdal/issues/6544</a>: Extend OGR API SetFeature to
+control Replace vs Update behavior</p></li>
+<li><p><a class="reference external" href="https://github.com/qgis/QGIS/issues/46355">https://github.com/qgis/QGIS/issues/46355</a>: Saving a large edited point layer
+takes far too long</p></li>
+<li><p>Proposed implementation in
+<a class="reference external" href="https://github.com/OSGeo/gdal/compare/master...rouault:gdal:update_feature?expand=1">https://github.com/OSGeo/gdal/compare/master...rouault:gdal:update_feature?expand=1</a></p></li>
+</ul>
+</section>
+<section id="voting-history">
+<h2>Voting history<a class="headerlink" href="#voting-history" title="Permalink to this heading"></a></h2>
+<p>+1 from PSC members Jukka, MateuszL and EvenR</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rfc94_field_precision_width_metadata.html" class="btn btn-neutral float-right" title="RFC 94: Numeric fields width/precision metadata" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc92_wkb_only_geometries.html" class="btn btn-neutral float-left" title="RFC 92: WKB Only geometries (on hold)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2024 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+  </div>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

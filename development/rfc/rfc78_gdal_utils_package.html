@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RFC 78: gdal-utils package &mdash; GDAL  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/gdal.css" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://gdal.org/development/rfc/rfc78_gdal_utils_package.html"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="RFC 79: Listing of Service Providers on GDAL website" href="rfc79_listing_service_providers.html" />
+    <link rel="prev" title="RFC 77: Drop Python 2 support in favour of Python 3.6" href="rfc77_drop_python2_support.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../dev_environment.html">Setting up a development environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../building_from_source.html">Building GDAL from source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../testing.html">Automated testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev_practices.html">Development practices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev_documentation.html">Building documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cmake.html">Using GDAL in CMake projects</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters (not implemented)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open (withdrawn)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open (withdrawn)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading (not implemented)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc77_drop_python2_support.html">RFC 77: Drop Python 2 support in favour of Python 3.6</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 78: gdal-utils package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motivation">Motivation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#package-names-and-pypi-release">Package Names and PyPi release:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#how-to-upgrade-the-utils-without-upgrading-the-bindings">How to upgrade the utils without upgrading the bindings:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#limitations-and-scope">Limitations and scope</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gdal-and-gdal-utils-compatibility"><cite>gdal</cite> and <cite>gdal-utils</cite> Compatibility</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#versioning">Versioning</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#backward-compatibility-issues">Backward compatibility issues:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#folder-structure-change">Folder structure change</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ci-impacts">CI Impacts:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#impacts-on-gdal-core">Impacts on GDAL core</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#swig-binding-changes">SWIG binding changes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#security-implications">Security implications</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#performance-impact">Performance impact</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#testing">Testing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#previous-discussions">Previous discussions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#related-prs">Related PRs:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voting-history">Voting history</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#credits">Credits</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rfc79_listing_service_providers.html">RFC 79: Listing of Service Providers on GDAL website</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc80_numfocus_relationship.html">RFC 80: NumFOCUS relationship and sponsorship program</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc81_coordinate_epoch.html">RFC 81: Support for coordinate epochs in geospatial formats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc83_use_of_project_sponsorship.html">RFC 83: guidelines for the use of GDAL project sponsorship</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc84_cmake.html">RFC 84: Migrating build systems to CMake</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc85_policy_code_additions.html">RFC 85: Policy regarding substantial code additions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc86_column_oriented_api.html">RFC 86: Column-oriented read API for vector layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc87_signed_int8.html">RFC 87: Signed int8 data type for raster</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc88_googletest.html">RFC 88: Use GoogleTest framework for C/C++ unit tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc89_sql_logging_callback.html">RFC 89: SQL logging callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc90_read_compressed_data.html">RFC 90: Direct access to compressed raster data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc91_dataset_close.html">RFC 91: GDALDataset::Close() method</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc92_wkb_only_geometries.html">RFC 92: WKB Only geometries (on hold)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc93_update_feature.html">RFC 93: OGRLayer::UpdateFeature() method</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc94_field_precision_width_metadata.html">RFC 94: Numeric fields width/precision metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc95_standard_int_types.html">RFC 95: Use standard C/C++ integer types (proposed, <em>NOT</em> adopted)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc96_deferred_plugin_loading.html">RFC 96: Deferred C++ plugin loading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc97_feature_and_fielddefn_sealing.html">RFC 97: OGRFeatureDefn, OGRFieldDefn and OGRGeomFieldDefn &quot;sealing&quot;</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc98_build_requirements_gdal_3_9.html">RFC 98: Build requirements for GDAL 3.9</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc99_geometry_coordinate_precision.html">RFC 99: Geometry coordinate precision</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sponsors/index.html">Sponsors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 78: gdal-utils package</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit/master/doc/source/development/rfc/rfc78_gdal_utils_package.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="rfc79_listing_service_providers.html" class="btn btn-neutral float-right" title="RFC 79: Listing of Service Providers on GDAL website" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc77_drop_python2_support.html" class="btn btn-neutral float-left" title="RFC 77: Drop Python 2 support in favour of Python 3.6" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="rfc-78-gdal-utils-package">
+<span id="rfc-78"></span><h1>RFC 78: gdal-utils package<a class="headerlink" href="#rfc-78-gdal-utils-package" title="Permalink to this heading"></a></h1>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Author:</p></td>
+<td><p>Idan Miara</p></td>
+</tr>
+<tr class="row-even"><td><p>Contact:</p></td>
+<td><p><a class="reference external" href="mailto:idan&#37;&#52;&#48;miara&#46;com">idan<span>&#64;</span>miara<span>&#46;</span>com</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Started:</p></td>
+<td><p>2020-Dec-3</p></td>
+</tr>
+<tr class="row-even"><td><p>Last updated:</p></td>
+<td><p>2021-March-26</p></td>
+</tr>
+<tr class="row-odd"><td><p>Status:</p></td>
+<td><p>Adopted, implemented in GDAL 3.3</p></td>
+</tr>
+</tbody>
+</table>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this heading"></a></h2>
+<p>This RFC suggests to put all the GDAL python modules (formly scripts), except from the GDAL core SWIG bindings,
+into their own distribution on pypi.
+The GDAL python sub-package <cite>osgeo.utils</cite> (introduced in GDAL 3.2) would be renamed into a package named <cite>osgeo_utils</cite>.</p>
+<p>The standalone python scripts from GDAL &lt;= 3.1 were transformed to <cite>osgeo.utils</cite> in GDAL 3.2.
+For backwards compatibility these scripts still exist and function as tiny wrappers around the python modules.
+Users of these scripts would not be effected from this RFC as the scripts would continue to function in GDAL 3.3
+in the same way as in GDAL &lt;= 3.2.</p>
+<p>To allow maximum backwards compatibility, The <cite>osgeo</cite> package (which includes the GDAL core SWIG bindings)
+and the <cite>osgeo_utils</cite> package will continue to be distributed in a single <cite>sdist</cite> named <cite>gdal</cite> in <cite>pypi</cite>.</p>
+<p>In addition, a new pure python <cite>wheel</cite> distribution named <cite>gdal-utils</cite> will be available in <cite>pypi</cite> under the name
+<cite>gdal-utils</cite>.</p>
+<p>This will allow users who wish to upgrade the utils without upgrading the bindings to do so with
+<cite>pip install --upgrade gdal-utils</cite> (see more details in the following sections).</p>
+</section>
+<section id="motivation">
+<h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this heading"></a></h2>
+<dl>
+<dt>Making gdal Python developers life easier on Windows (and maybe other platforms):</dt><dd><p>The straightforward way of cloning <cite>gdal</cite> and adding <cite>gdal/swig/python</cite> to Python path
+(In PyCharm: marking the it as a <cite>Source Root</cite>) won't work because the <cite>pyc</cite> files are missing from
+<cite>gdal/swig/python/osgeo</cite>, thus by adding <cite>osgeo</cite> to Python path we would be masking a binary installation of gdal
+that might be already installed (i.e. <cite>osgeo4w</cite> or Christoph Gohlke's binary Windows wheels).
+Workarounds, like copying the <cite>pyc</cite> files to the <cite>osgeo</cite> dir, cause their own problems, like:
+* Switching interpreters that have different versions of <cite>gdal</cite> causes more problems.
+* Non clean git working tree so committing the changes to git is harder.
+By moving the <cite>gdal-utils</cite> into another root this problem is completely avoid.</p>
+</dd>
+<dt>Allow mixing <cite>gdal</cite> and <cite>gdal-utils</cite> versions</dt><dd><p>As the Python code evolves semi-independently of the GDAL core and is not directly dependent on a specific
+GDAL version, one might want use the latest <cite>gdal-utils</cite> package with an older version of <cite>gdal</cite> core bindings,
+or vice versa. Currently, One would need to mix the contents different <cite>gdal</cite> packages to do so.</p>
+<p>As the <cite>gdal</cite> package is platform specific, and requires compilation, In some distributions upgrading
+to a new GDAL version might take more time, so one could upgrade the <cite>gdal-utils</cite> package easily
+and independently of upgrading the <cite>gdal</cite> package, using <cite>pip install --upgrade gdal-utils</cite>.</p>
+<p>On the other hand, if we drop another Python version, like we just did with Python 2.7,
+One might be still be able to use newer gdal core bindings (which might still support an older version of Python)
+with an older <cite>gdal-utils</cite>, Which might drop Python versions sooner.</p>
+<p>Reasons why users wouldn't be able to upgrade to recent GDAL:</p>
+<ul class="simple">
+<li><p>They use some LTS distribution (like Debian), or application (like QGIS LTS).</p></li>
+<li><p>Recent GDAL is not available for their platform or distribution (even if not LTS).</p></li>
+<li><p>Their code dependents on some binary gdal-plugin which is available for a specific GDAL version.</p></li>
+</ul>
+<p>A concrete example would be someone who uses QGIS (or QGIS LTS) that currently comes with GDAL 3.1,
+and wants to use the neat stuff added to <cite>gdal_calc</cite>, With this RFC he could just <cite>pip install --upgrade gdal-utils</cite>.
+Because this package package is Pure Python, upgrades should be easy.</p>
+<p>Although each version of <cite>gdal-utils</cite> would only be tested against the equivalent version of <cite>gdal</cite>,
+In most cases different versions would still be compatible, but without guarantee.</p>
+<p>This RFC would make further testing the compatibility between different versions of these packages easier and
+could be considered the first step into making the <cite>gdal-utils</cite> package completely independent of the <cite>gdal</cite> package.
+It would also potentially allow forward compatibility in case we ever decide to remove the utils from the <cite>gdal</cite> wheel
+and keep them only in the <cite>gdal-utils</cite> wheel.</p>
+</dd>
+</dl>
+</section>
+<section id="package-names-and-pypi-release">
+<h2>Package Names and PyPi release:<a class="headerlink" href="#package-names-and-pypi-release" title="Permalink to this heading"></a></h2>
+<p>This RFC suggests to keep the all-in-one package and in addition to distribute a utils only package,
+In order to keep the required changes from users to a minimum and at the same time allow mixing versions:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://pypi.org/project/GDAL/">https://pypi.org/project/GDAL/</a></p></li>
+</ul>
+<p>Distribution of a single <cite>pypi.org</cite> wheel named <cite>gdal</cite> will be retained and will includes both packages.
+This will insure smooth transition and maximum backwards compatibility.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://pypi.org/project/gdal-utils/">https://pypi.org/project/gdal-utils/</a></p></li>
+</ul>
+<p>A new <cite>pypi.org</cite> package is introduced to include with just the <cite>osgeo_utils</cite> package, which will allow
+upgrading the utils without upgrading the bindings.</p>
+<p>To be consistent with the <cite>gdal</cite> <cite>pypi</cite> package name, the utils <cite>pypi</cite> package is named <cite>gdal-utils</cite>.</p>
+<p>the name <cite>osgeo_utils</cite> is consistent with the <cite>osgeo</cite> namespace and module names.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">gdal</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="n">gdal</span><span class="o">-</span><span class="n">utils</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">osgeo</span> <span class="kn">import</span> <span class="n">gdal</span>
+<span class="kn">from</span> <span class="nn">osgeo_utils</span> <span class="kn">import</span> <span class="n">gdal_calc</span><span class="p">,</span> <span class="n">ogr_foo</span><span class="p">,</span> <span class="n">osr_bar</span>
+</pre></div>
+</div>
+</section>
+<section id="how-to-upgrade-the-utils-without-upgrading-the-bindings">
+<h2>How to upgrade the utils without upgrading the bindings:<a class="headerlink" href="#how-to-upgrade-the-utils-without-upgrading-the-bindings" title="Permalink to this heading"></a></h2>
+<p>&gt; If someone installs the &quot;gdal&quot; all-in-one package and the &quot;gdal-utils&quot; one. Wouldn't that conflict ?</p>
+<p><cite>pip install</cite> a wheel overwrites whichever files already exist (even if installed by a different package)
+If you <cite>pip install gdal</cite> then <cite>pip install gdal-utils</cite> you'd get the utils from <cite>gdal-utils</cite>.
+If later you do again <cite>pip install gdal</cite> with a different version then you'd get the utils from <cite>gdal</cite> again, and so on.
+(it doesn't seem that it matters which version is a bigger number, just which one you installed later)</p>
+<p>If you <cite>pip install gdal</cite> then <cite>pip install gdal-utils</cite> and then <cite>pip uninstall gdal-utils</cite> then the
+utils would be uninstalled and you'd be left with gdal without utils.
+Then you could <cite>pip install gdal-utils</cite> or <cite>pip install gdal --ignore-installed</cite> to get them back again
+(<cite>--ignore-installed</cite> is not required if you install a different version)</p>
+</section>
+<section id="limitations-and-scope">
+<h2>Limitations and scope<a class="headerlink" href="#limitations-and-scope" title="Permalink to this heading"></a></h2>
+<p>The scope of this RFC is the GDAL Python code, except for the SWIG bindings.
+There is no effect on any other language supported by GDAL.
+Because gdal core is tested using the Python SWIG bindings - this RFC does not suggest changing them in any way.
+Binary wheel distribution - discussed in the past and related to ideas in this RFC.</p>
+</section>
+<section id="gdal-and-gdal-utils-compatibility">
+<h2><cite>gdal</cite> and <cite>gdal-utils</cite> Compatibility<a class="headerlink" href="#gdal-and-gdal-utils-compatibility" title="Permalink to this heading"></a></h2>
+<p>This RFC suggests that <cite>gdal-utils</cite> would continue to be only tested against the same version of <cite>gdal</cite>.
+In most cases different versions would still be compatible, but without guarantee.</p>
+<p>A minimum energy approach might keep <cite>gdal-utils</cite> compatible with some <cite>gdal</cite> versions != <cite>x.y</cite>.
+<cite>gdal-utils</cite> might officially drop support of some too old version of GDAL
+by specifying a newer minimum version of GDAL in the <cite>setup.py</cite> of <cite>gdal-utils</cite>.</p>
+<p>For maximum backwards compatibility and because we would only test <cite>gdal</cite> against the same version of <cite>gdal-utils</cite> -
+<cite>osgeo</cite> and <cite>osgeo_utils</cite> will continue to be distributed inside a single wheel in addition
+to the new separate wheel for the utils only.</p>
+<p>In cases were an <cite>gdal-utils</cite> module or function actually does need a minimum specific version of <cite>gdal</cite>
+(i.e. dependence on a new GDAL C API) Compatibility could be checked at runtime by comparing to <cite>osgeo.__version__</cite>.</p>
+</section>
+<section id="versioning">
+<h2>Versioning<a class="headerlink" href="#versioning" title="Permalink to this heading"></a></h2>
+<p>As development of <cite>gdal-utils</cite> will be still tied with the development of GDAL and will be
+released together with the same <cite>x.y.z</cite> version number.
+In case a hotfix to <cite>gdal-utils</cite> is required for some reason, a <cite>x.y.z.p</cite> version might be used,
+Which will not effect the distribution of version <cite>z+1</cite>, i.e. <cite>3.3.0</cite> &lt; <cite>3.3.0.1</cite> &lt; <cite>3.3.1</cite>.</p>
+</section>
+<section id="backward-compatibility-issues">
+<h2>Backward compatibility issues:<a class="headerlink" href="#backward-compatibility-issues" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><dl class="simple">
+<dt><cite>osgeo.utils</cite> will need be replaced with <cite>osgeo_utils</cite></dt><dd><p>This is the only breaking change, only for GDAL=3.2, and only a single character.</p>
+</dd>
+</dl>
+</li>
+<li><p><cite>swig/python/scripts</cite> - users of the gdal scripts (which are thin wrappers around the utils) wouldn't be effected.</p></li>
+</ul>
+</section>
+<section id="folder-structure-change">
+<h2>Folder structure change<a class="headerlink" href="#folder-structure-change" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p><cite>gdal/swig/python/osgeo/utils</cite> -&gt; <cite>gdal/swig/python/gdal-utils/osgeo_utils</cite></p></li>
+<li><p><cite>gdal/swig/python/osgeo/setup.py</cite> - was updated to include the utils from the new location under the <cite>gdal-utils</cite> folder.</p></li>
+<li><p><cite>gdal/swig/python/gdal-utils/setup.py</cite> - additional setup was added for <cite>gdal-utils</cite>.</p></li>
+</ul>
+</section>
+<section id="ci-impacts">
+<h2>CI Impacts:<a class="headerlink" href="#ci-impacts" title="Permalink to this heading"></a></h2>
+<p><cite>gdal-utils</cite> wheel building could be added to the CI, i.e. like in <a class="reference external" href="https://github.com/OSGeo/gdal/pull/3579">https://github.com/OSGeo/gdal/pull/3579</a>
+No other CI Impacts.</p>
+</section>
+<section id="impacts-on-gdal-core">
+<h2>Impacts on GDAL core<a class="headerlink" href="#impacts-on-gdal-core" title="Permalink to this heading"></a></h2>
+<p>None.</p>
+</section>
+<section id="swig-binding-changes">
+<h2>SWIG binding changes<a class="headerlink" href="#swig-binding-changes" title="Permalink to this heading"></a></h2>
+<p>None.</p>
+</section>
+<section id="security-implications">
+<h2>Security implications<a class="headerlink" href="#security-implications" title="Permalink to this heading"></a></h2>
+<p>None.</p>
+</section>
+<section id="performance-impact">
+<h2>Performance impact<a class="headerlink" href="#performance-impact" title="Permalink to this heading"></a></h2>
+<p>None.</p>
+</section>
+<section id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this heading"></a></h2>
+<p>Implications of this change shell documented in the README.</p>
+</section>
+<section id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this heading"></a></h2>
+<p>Minor changes were made to pytest.</p>
+</section>
+<section id="previous-discussions">
+<h2>Previous discussions<a class="headerlink" href="#previous-discussions" title="Permalink to this heading"></a></h2>
+<p>This topic has been discussed in the past in :</p>
+<ul class="simple">
+<li><p><a class="reference external" href="http://osgeo-org.1560.x6.nabble.com/gdal-dev-Call-for-discussion-on-RFC77-Drop-Python-2-support-td5449659.html">http://osgeo-org.1560.x6.nabble.com/gdal-dev-Call-for-discussion-on-RFC77-Drop-Python-2-support-td5449659.html</a></p></li>
+</ul>
+</section>
+<section id="related-prs">
+<h2>Related PRs:<a class="headerlink" href="#related-prs" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://gdal.org/development/rfc/rfc77_drop_python2_support.html">https://gdal.org/development/rfc/rfc77_drop_python2_support.html</a></p></li>
+<li><p><a class="reference external" href="https://github.com/OSGeo/gdal/pull/3131">https://github.com/OSGeo/gdal/pull/3131</a></p></li>
+<li><p><a class="reference external" href="https://github.com/OSGeo/gdal/pull/3117">https://github.com/OSGeo/gdal/pull/3117</a></p></li>
+<li><p><a class="reference external" href="https://github.com/OSGeo/gdal/pull/3247">https://github.com/OSGeo/gdal/pull/3247</a></p></li>
+</ul>
+</section>
+<section id="voting-history">
+<h2>Voting history<a class="headerlink" href="#voting-history" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="http://osgeo-org.1560.x6.nabble.com/gdal-dev-Motion-RFC-78-gdal-utils-package-td5482707.html">http://osgeo-org.1560.x6.nabble.com/gdal-dev-Motion-RFC-78-gdal-utils-package-td5482707.html</a></p></li>
+</ul>
+<ul class="simple">
+<li><p>+1 from EvenR, HowardB</p></li>
+<li><p>+0 from KurtS, JukkaR</p></li>
+<li><p>-0 from SeanG</p></li>
+</ul>
+</section>
+<section id="credits">
+<h2>Credits<a class="headerlink" href="#credits" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>Implemented by the author of this RFC, Idan Miara.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rfc79_listing_service_providers.html" class="btn btn-neutral float-right" title="RFC 79: Listing of Service Providers on GDAL website" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc77_drop_python2_support.html" class="btn btn-neutral float-left" title="RFC 77: Drop Python 2 support in favour of Python 3.6" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2024 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+  </div>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

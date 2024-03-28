@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python Spatial Reference System API &mdash; GDAL  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/gdal.css" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://gdal.org/api/python/spatial_ref_api.html"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Python Multi-dimensional array API" href="mdim_api.html" />
+    <link rel="prev" title="Python Vector API" href="vector_api.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../index.html#id2">Full Doxygen output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#c-api">C API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#id3">C++ API</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#python-api">Python API</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../python_bindings.html">General information</a></li>
+<li class="toctree-l3"><a class="reference internal" href="raster_api.html">Python Raster API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vector_api.html">Python Vector API</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Python Spatial Reference System API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#osgeo.osr.SpatialReference"><code class="docutils literal notranslate"><span class="pre">SpatialReference</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mdim_api.html">Python Multi-dimensional array API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="utilities.html">Python Utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="general.html">Python General API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="osgeo.html">Miscellaneous Python API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_gotchas.html">Python Gotchas in the GDAL and OGR Python Bindings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_samples.html">Python Sample scripts</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#id4">Java API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#gdal-ogr-in-other-languages">GDAL/OGR In Other Languages</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sponsors/index.html">Sponsors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">API</a> &raquo;</li>
+      
+      <li>Python Spatial Reference System API</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit/master/doc/source/api/python/spatial_ref_api.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="mdim_api.html" class="btn btn-neutral float-right" title="Python Multi-dimensional array API" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="vector_api.html" class="btn btn-neutral float-left" title="Python Vector API" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="python-spatial-reference-system-api">
+<span id="python-spatial-ref-api"></span><h1>Python Spatial Reference System API<a class="headerlink" href="#python-spatial-reference-system-api" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">osgeo.osr.</span></span><span class="sig-name descname"><span class="pre">SpatialReference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#osgeo.osr.SpatialReference" title="Permalink to this definition"></a></dt>
+<dd><p>Proxy of C++ OSRSpatialReferenceShadow class.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.AddGuessedTOWGS84">
+<span class="sig-name descname"><span class="pre">AddGuessedTOWGS84</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.AddGuessedTOWGS84" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.AutoIdentifyEPSG">
+<span class="sig-name descname"><span class="pre">AutoIdentifyEPSG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.AutoIdentifyEPSG" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.Clone">
+<span class="sig-name descname"><span class="pre">Clone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#osgeo.osr.SpatialReference" title="osgeo.osr.SpatialReference"><span class="pre">SpatialReference</span></a></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.Clone" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.CloneGeogCS">
+<span class="sig-name descname"><span class="pre">CloneGeogCS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#osgeo.osr.SpatialReference" title="osgeo.osr.SpatialReference"><span class="pre">SpatialReference</span></a></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.CloneGeogCS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.ConvertToOtherProjection">
+<span class="sig-name descname"><span class="pre">ConvertToOtherProjection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">other_projection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">options=None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#osgeo.osr.SpatialReference" title="osgeo.osr.SpatialReference"><span class="pre">SpatialReference</span></a></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.ConvertToOtherProjection" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.CopyGeogCSFrom">
+<span class="sig-name descname"><span class="pre">CopyGeogCSFrom</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">rhs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.CopyGeogCSFrom" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.DemoteTo2D">
+<span class="sig-name descname"><span class="pre">DemoteTo2D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name=None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.DemoteTo2D" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.EPSGTreatsAsLatLong">
+<span class="sig-name descname"><span class="pre">EPSGTreatsAsLatLong</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.EPSGTreatsAsLatLong" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.EPSGTreatsAsNorthingEasting">
+<span class="sig-name descname"><span class="pre">EPSGTreatsAsNorthingEasting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.EPSGTreatsAsNorthingEasting" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.ExportToCF1">
+<span class="sig-name descname"><span class="pre">ExportToCF1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#osgeo.osr.SpatialReference.ExportToCF1" title="Permalink to this definition"></a></dt>
+<dd><p>Export a CRS to netCDF CF-1 definitions.</p>
+<p><a class="reference external" href="http://cfconventions.org/cf-conventions/cf-conventions.html#appendix-grid-mappings">http://cfconventions.org/cf-conventions/cf-conventions.html#appendix-grid-mappings</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.ExportToCF1Units">
+<span class="sig-name descname"><span class="pre">ExportToCF1Units</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">options=None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">retStringAndCPLFree</span> <span class="pre">*</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.ExportToCF1Units" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.ExportToERM">
+<span class="sig-name descname"><span class="pre">ExportToERM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.ExportToERM" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.ExportToMICoordSys">
+<span class="sig-name descname"><span class="pre">ExportToMICoordSys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.ExportToMICoordSys" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.ExportToPCI">
+<span class="sig-name descname"><span class="pre">ExportToPCI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.ExportToPCI" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.ExportToPROJJSON">
+<span class="sig-name descname"><span class="pre">ExportToPROJJSON</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">options=None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.ExportToPROJJSON" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.ExportToPrettyWkt">
+<span class="sig-name descname"><span class="pre">ExportToPrettyWkt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span> <span class="pre">simplify=0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.ExportToPrettyWkt" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.ExportToProj4">
+<span class="sig-name descname"><span class="pre">ExportToProj4</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.ExportToProj4" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.ExportToUSGS">
+<span class="sig-name descname"><span class="pre">ExportToUSGS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.ExportToUSGS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.ExportToWkt">
+<span class="sig-name descname"><span class="pre">ExportToWkt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">options=None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.ExportToWkt" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.ExportToXML">
+<span class="sig-name descname"><span class="pre">ExportToXML</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">dialect=&quot;&quot;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.ExportToXML" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.FindMatches">
+<span class="sig-name descname"><span class="pre">FindMatches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">options=None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#osgeo.osr.SpatialReference.FindMatches" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.GetAngularUnits">
+<span class="sig-name descname"><span class="pre">GetAngularUnits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">double</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.GetAngularUnits" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.GetAngularUnitsName">
+<span class="sig-name descname"><span class="pre">GetAngularUnitsName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.GetAngularUnitsName" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.GetAreaOfUse">
+<span class="sig-name descname"><span class="pre">GetAreaOfUse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="osgeo.osr.html#osgeo.osr.AreaOfUse" title="osgeo.osr.AreaOfUse"><span class="pre">AreaOfUse</span></a></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.GetAreaOfUse" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.GetAttrValue">
+<span class="sig-name descname"><span class="pre">GetAttrValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span> <span class="pre">child=0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.GetAttrValue" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.GetAuthorityCode">
+<span class="sig-name descname"><span class="pre">GetAuthorityCode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">target_key</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.GetAuthorityCode" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.GetAuthorityName">
+<span class="sig-name descname"><span class="pre">GetAuthorityName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">target_key</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.GetAuthorityName" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.GetAxesCount">
+<span class="sig-name descname"><span class="pre">GetAxesCount</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.GetAxesCount" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.GetAxisMappingStrategy">
+<span class="sig-name descname"><span class="pre">GetAxisMappingStrategy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OSRAxisMappingStrategy</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.GetAxisMappingStrategy" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.GetAxisName">
+<span class="sig-name descname"><span class="pre">GetAxisName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">target_key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span> <span class="pre">iAxis</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.GetAxisName" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.GetAxisOrientation">
+<span class="sig-name descname"><span class="pre">GetAxisOrientation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">target_key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span> <span class="pre">iAxis</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRAxisOrientation</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.GetAxisOrientation" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.GetCoordinateEpoch">
+<span class="sig-name descname"><span class="pre">GetCoordinateEpoch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">double</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.GetCoordinateEpoch" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.GetDataAxisToSRSAxisMapping">
+<span class="sig-name descname"><span class="pre">GetDataAxisToSRSAxisMapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#osgeo.osr.SpatialReference.GetDataAxisToSRSAxisMapping" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.GetInvFlattening">
+<span class="sig-name descname"><span class="pre">GetInvFlattening</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">double</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.GetInvFlattening" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.GetLinearUnits">
+<span class="sig-name descname"><span class="pre">GetLinearUnits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">double</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.GetLinearUnits" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.GetLinearUnitsName">
+<span class="sig-name descname"><span class="pre">GetLinearUnitsName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.GetLinearUnitsName" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.GetName">
+<span class="sig-name descname"><span class="pre">GetName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.GetName" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.GetNormProjParm">
+<span class="sig-name descname"><span class="pre">GetNormProjParm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">default_val=0.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">double</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.GetNormProjParm" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.GetProjParm">
+<span class="sig-name descname"><span class="pre">GetProjParm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">default_val=0.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">double</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.GetProjParm" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.GetSemiMajor">
+<span class="sig-name descname"><span class="pre">GetSemiMajor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">double</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.GetSemiMajor" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.GetSemiMinor">
+<span class="sig-name descname"><span class="pre">GetSemiMinor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">double</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.GetSemiMinor" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.GetTOWGS84">
+<span class="sig-name descname"><span class="pre">GetTOWGS84</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.GetTOWGS84" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.GetTargetLinearUnits">
+<span class="sig-name descname"><span class="pre">GetTargetLinearUnits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">target_key</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">double</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.GetTargetLinearUnits" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.GetUTMZone">
+<span class="sig-name descname"><span class="pre">GetUTMZone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.GetUTMZone" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.HasPointMotionOperation">
+<span class="sig-name descname"><span class="pre">HasPointMotionOperation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.HasPointMotionOperation" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.HasTOWGS84">
+<span class="sig-name descname"><span class="pre">HasTOWGS84</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.HasTOWGS84" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.ImportFromCF1">
+<span class="sig-name descname"><span class="pre">ImportFromCF1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keyValues</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#osgeo.osr.SpatialReference.ImportFromCF1" title="Permalink to this definition"></a></dt>
+<dd><p>Import a CRS from netCDF CF-1 definitions.</p>
+<p><a class="reference external" href="http://cfconventions.org/cf-conventions/cf-conventions.html#appendix-grid-mappings">http://cfconventions.org/cf-conventions/cf-conventions.html#appendix-grid-mappings</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.ImportFromEPSG">
+<span class="sig-name descname"><span class="pre">ImportFromEPSG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span> <span class="pre">arg</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.ImportFromEPSG" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.ImportFromEPSGA">
+<span class="sig-name descname"><span class="pre">ImportFromEPSGA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span> <span class="pre">arg</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.ImportFromEPSGA" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.ImportFromERM">
+<span class="sig-name descname"><span class="pre">ImportFromERM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">proj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">datum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">units</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.ImportFromERM" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.ImportFromESRI">
+<span class="sig-name descname"><span class="pre">ImportFromESRI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">ppszInput</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.ImportFromESRI" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.ImportFromMICoordSys">
+<span class="sig-name descname"><span class="pre">ImportFromMICoordSys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">pszCoordSys</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.ImportFromMICoordSys" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.ImportFromOzi">
+<span class="sig-name descname"><span class="pre">ImportFromOzi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*const</span> <span class="pre">*</span> <span class="pre">papszLines</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.ImportFromOzi" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.ImportFromPCI">
+<span class="sig-name descname"><span class="pre">ImportFromPCI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">proj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">units=&quot;METRE&quot;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">[17]</span> <span class="pre">argin=0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.ImportFromPCI" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.ImportFromProj4">
+<span class="sig-name descname"><span class="pre">ImportFromProj4</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">*</span> <span class="pre">ppszInput</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.ImportFromProj4" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.ImportFromUSGS">
+<span class="sig-name descname"><span class="pre">ImportFromUSGS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long</span> <span class="pre">proj_code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long</span> <span class="pre">zone=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">[15]</span> <span class="pre">argin=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long</span> <span class="pre">datum_code=0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.ImportFromUSGS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.ImportFromUrl">
+<span class="sig-name descname"><span class="pre">ImportFromUrl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">*</span> <span class="pre">url</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.ImportFromUrl" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.ImportFromWkt">
+<span class="sig-name descname"><span class="pre">ImportFromWkt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">ppszInput</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.ImportFromWkt" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.ImportFromXML">
+<span class="sig-name descname"><span class="pre">ImportFromXML</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">xmlString</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.ImportFromXML" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.IsCompound">
+<span class="sig-name descname"><span class="pre">IsCompound</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.IsCompound" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.IsDerivedGeographic">
+<span class="sig-name descname"><span class="pre">IsDerivedGeographic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.IsDerivedGeographic" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.IsDynamic">
+<span class="sig-name descname"><span class="pre">IsDynamic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.IsDynamic" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.IsGeocentric">
+<span class="sig-name descname"><span class="pre">IsGeocentric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.IsGeocentric" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.IsGeographic">
+<span class="sig-name descname"><span class="pre">IsGeographic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.IsGeographic" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.IsLocal">
+<span class="sig-name descname"><span class="pre">IsLocal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.IsLocal" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.IsProjected">
+<span class="sig-name descname"><span class="pre">IsProjected</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.IsProjected" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.IsSame">
+<span class="sig-name descname"><span class="pre">IsSame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">rhs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">options=None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.IsSame" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.IsSameGeogCS">
+<span class="sig-name descname"><span class="pre">IsSameGeogCS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">rhs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.IsSameGeogCS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.IsSameVertCS">
+<span class="sig-name descname"><span class="pre">IsSameVertCS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">rhs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.IsSameVertCS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.IsVertical">
+<span class="sig-name descname"><span class="pre">IsVertical</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.IsVertical" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.MorphFromESRI">
+<span class="sig-name descname"><span class="pre">MorphFromESRI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.MorphFromESRI" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.MorphToESRI">
+<span class="sig-name descname"><span class="pre">MorphToESRI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.MorphToESRI" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.PromoteTo3D">
+<span class="sig-name descname"><span class="pre">PromoteTo3D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name=None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.PromoteTo3D" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetACEA">
+<span class="sig-name descname"><span class="pre">SetACEA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">stdp1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">stdp2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clong</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetACEA" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetAE">
+<span class="sig-name descname"><span class="pre">SetAE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clong</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetAE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetAngularUnits">
+<span class="sig-name descname"><span class="pre">SetAngularUnits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">to_radians</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetAngularUnits" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetAttrValue">
+<span class="sig-name descname"><span class="pre">SetAttrValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">value</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetAttrValue" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetAuthority">
+<span class="sig-name descname"><span class="pre">SetAuthority</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">pszTargetKey</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">pszAuthority</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span> <span class="pre">nCode</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetAuthority" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetAxisMappingStrategy">
+<span class="sig-name descname"><span class="pre">SetAxisMappingStrategy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">OSRAxisMappingStrategy</span> <span class="pre">strategy</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetAxisMappingStrategy" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetBonne">
+<span class="sig-name descname"><span class="pre">SetBonne</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">stdp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetBonne" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetCEA">
+<span class="sig-name descname"><span class="pre">SetCEA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">stdp1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetCEA" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetCS">
+<span class="sig-name descname"><span class="pre">SetCS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clong</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetCS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetCompoundCS">
+<span class="sig-name descname"><span class="pre">SetCompoundCS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">horizcs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">vertcs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetCompoundCS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetCoordinateEpoch">
+<span class="sig-name descname"><span class="pre">SetCoordinateEpoch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">coordinateEpoch</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetCoordinateEpoch" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetDataAxisToSRSAxisMapping">
+<span class="sig-name descname"><span class="pre">SetDataAxisToSRSAxisMapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span> <span class="pre">nList</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetDataAxisToSRSAxisMapping" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetEC">
+<span class="sig-name descname"><span class="pre">SetEC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">stdp1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">stdp2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clong</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetEC" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetEckertIV">
+<span class="sig-name descname"><span class="pre">SetEckertIV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetEckertIV" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetEckertVI">
+<span class="sig-name descname"><span class="pre">SetEckertVI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetEckertVI" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetEquirectangular">
+<span class="sig-name descname"><span class="pre">SetEquirectangular</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clong</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetEquirectangular" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetEquirectangular2">
+<span class="sig-name descname"><span class="pre">SetEquirectangular2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clong</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">pseudostdparallellat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetEquirectangular2" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetFromUserInput">
+<span class="sig-name descname"><span class="pre">SetFromUserInput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">options=None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetFromUserInput" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetGEOS">
+<span class="sig-name descname"><span class="pre">SetGEOS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">satelliteheight</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetGEOS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetGH">
+<span class="sig-name descname"><span class="pre">SetGH</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetGH" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetGS">
+<span class="sig-name descname"><span class="pre">SetGS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetGS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetGaussSchreiberTMercator">
+<span class="sig-name descname"><span class="pre">SetGaussSchreiberTMercator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clong</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">sc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetGaussSchreiberTMercator" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetGeocCS">
+<span class="sig-name descname"><span class="pre">SetGeocCS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name=&quot;unnamed&quot;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetGeocCS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetGeogCS">
+<span class="sig-name descname"><span class="pre">SetGeogCS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">pszGeogName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">pszDatumName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">pszEllipsoidName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">dfSemiMajor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">dfInvFlattening</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">pszPMName=&quot;Greenwich&quot;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">dfPMOffset=0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">pszUnits=&quot;degree&quot;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">dfConvertToRadians=0.0174532925199433</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetGeogCS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetGnomonic">
+<span class="sig-name descname"><span class="pre">SetGnomonic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clong</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetGnomonic" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetHOM">
+<span class="sig-name descname"><span class="pre">SetHOM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clong</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">azimuth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">recttoskew</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetHOM" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetHOM2PNO">
+<span class="sig-name descname"><span class="pre">SetHOM2PNO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">dfLat1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">dfLong1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">dfLat2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">dfLong2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetHOM2PNO" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetIGH">
+<span class="sig-name descname"><span class="pre">SetIGH</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetIGH" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetKrovak">
+<span class="sig-name descname"><span class="pre">SetKrovak</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clong</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">azimuth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">pseudostdparallellat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetKrovak" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetLAEA">
+<span class="sig-name descname"><span class="pre">SetLAEA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clong</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetLAEA" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetLCC">
+<span class="sig-name descname"><span class="pre">SetLCC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">stdp1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">stdp2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clong</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetLCC" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetLCC1SP">
+<span class="sig-name descname"><span class="pre">SetLCC1SP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clong</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetLCC1SP" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetLCCB">
+<span class="sig-name descname"><span class="pre">SetLCCB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">stdp1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">stdp2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clong</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetLCCB" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetLinearUnits">
+<span class="sig-name descname"><span class="pre">SetLinearUnits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">to_meters</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetLinearUnits" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetLinearUnitsAndUpdateParameters">
+<span class="sig-name descname"><span class="pre">SetLinearUnitsAndUpdateParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">to_meters</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetLinearUnitsAndUpdateParameters" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetLocalCS">
+<span class="sig-name descname"><span class="pre">SetLocalCS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">pszName</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetLocalCS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetMC">
+<span class="sig-name descname"><span class="pre">SetMC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clong</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetMC" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetMercator">
+<span class="sig-name descname"><span class="pre">SetMercator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clong</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetMercator" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetMercator2SP">
+<span class="sig-name descname"><span class="pre">SetMercator2SP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">stdp1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clong</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetMercator2SP" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetMollweide">
+<span class="sig-name descname"><span class="pre">SetMollweide</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetMollweide" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetNZMG">
+<span class="sig-name descname"><span class="pre">SetNZMG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clong</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetNZMG" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetNormProjParm">
+<span class="sig-name descname"><span class="pre">SetNormProjParm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">val</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetNormProjParm" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetOS">
+<span class="sig-name descname"><span class="pre">SetOS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">dfOriginLat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">dfCMeridian</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetOS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetOrthographic">
+<span class="sig-name descname"><span class="pre">SetOrthographic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clong</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetOrthographic" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetPS">
+<span class="sig-name descname"><span class="pre">SetPS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clong</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetPS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetPolyconic">
+<span class="sig-name descname"><span class="pre">SetPolyconic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clong</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetPolyconic" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetProjCS">
+<span class="sig-name descname"><span class="pre">SetProjCS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name=&quot;unnamed&quot;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetProjCS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetProjParm">
+<span class="sig-name descname"><span class="pre">SetProjParm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">val</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetProjParm" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetProjection">
+<span class="sig-name descname"><span class="pre">SetProjection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">arg</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetProjection" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetRobinson">
+<span class="sig-name descname"><span class="pre">SetRobinson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clong</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetRobinson" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetSOC">
+<span class="sig-name descname"><span class="pre">SetSOC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">latitudeoforigin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetSOC" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetSinusoidal">
+<span class="sig-name descname"><span class="pre">SetSinusoidal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clong</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetSinusoidal" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetStatePlane">
+<span class="sig-name descname"><span class="pre">SetStatePlane</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span> <span class="pre">zone</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span> <span class="pre">is_nad83=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">unitsname=&quot;&quot;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">units=0.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetStatePlane" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetStereographic">
+<span class="sig-name descname"><span class="pre">SetStereographic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clong</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetStereographic" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetTM">
+<span class="sig-name descname"><span class="pre">SetTM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clong</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetTM" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetTMG">
+<span class="sig-name descname"><span class="pre">SetTMG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clong</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetTMG" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetTMSO">
+<span class="sig-name descname"><span class="pre">SetTMSO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clong</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetTMSO" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetTMVariant">
+<span class="sig-name descname"><span class="pre">SetTMVariant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">pszVariantName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clong</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetTMVariant" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetTOWGS84">
+<span class="sig-name descname"><span class="pre">SetTOWGS84</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">p1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">p2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">p3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">p4=0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">p5=0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">p6=0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">p7=0.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetTOWGS84" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetTargetLinearUnits">
+<span class="sig-name descname"><span class="pre">SetTargetLinearUnits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">to_meters</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetTargetLinearUnits" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetUTM">
+<span class="sig-name descname"><span class="pre">SetUTM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span> <span class="pre">zone</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span> <span class="pre">north=1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetUTM" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetVDG">
+<span class="sig-name descname"><span class="pre">SetVDG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">clong</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetVDG" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetVertCS">
+<span class="sig-name descname"><span class="pre">SetVertCS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">VertCSName=&quot;unnamed&quot;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">VertDatumName=&quot;unnamed&quot;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span> <span class="pre">VertDatumType=0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetVertCS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetVerticalPerspective">
+<span class="sig-name descname"><span class="pre">SetVerticalPerspective</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">topoOriginLat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">topoOriginLon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">topoOriginHeight</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">viewPointHeight</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double</span> <span class="pre">fn</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetVerticalPerspective" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.SetWellKnownGeogCS">
+<span class="sig-name descname"><span class="pre">SetWellKnownGeogCS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">char</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">name</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.SetWellKnownGeogCS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.StripVertical">
+<span class="sig-name descname"><span class="pre">StripVertical</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.StripVertical" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osgeo.osr.SpatialReference.Validate">
+<span class="sig-name descname"><span class="pre">Validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SpatialReference</span> <span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OGRErr</span></span></span><a class="headerlink" href="#osgeo.osr.SpatialReference.Validate" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="mdim_api.html" class="btn btn-neutral float-right" title="Python Multi-dimensional array API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="vector_api.html" class="btn btn-neutral float-left" title="Python Vector API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2024 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+  </div>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
