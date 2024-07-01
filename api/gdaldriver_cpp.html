@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GDALDriver C++ API &mdash; GDAL  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d10597a4" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/gdal.css?v=e152ac3b" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="canonical" href="https://gdal.org/api/gdaldriver_cpp.html"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="GDALDataset C++ API" href="gdaldataset_cpp.html" />
+    <link rel="prev" title="gdal_utils.h: GDAL Algorithms C API" href="gdal_utils.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sponsors/index.html">Sponsors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">API</a> &raquo;</li>
+      
+      <li>GDALDriver C++ API</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit/master/doc/source/api/gdaldriver_cpp.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="gdaldataset_cpp.html" class="btn btn-neutral float-right" title="GDALDataset C++ API" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gdal_utils.html" class="btn btn-neutral float-left" title="gdal_utils.h: GDAL Algorithms C API" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gdaldriver-c-api">
+<span id="gdaldriver-cpp"></span><h1>GDALDriver C++ API<a class="headerlink" href="#gdaldriver-c-api" title="Link to this heading"></a></h1>
+<section id="gdaldriver-class">
+<h2>GDALDriver class<a class="headerlink" href="#gdaldriver-class" title="Link to this heading"></a></h2>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv410GDALDriver">
+<span id="_CPPv310GDALDriver"></span><span id="_CPPv210GDALDriver"></span><span id="GDALDriver"></span><span class="target" id="classGDALDriver"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GDALDriver</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">GDALMajorObject</span></span><a class="headerlink" href="#_CPPv410GDALDriver" title="Link to this definition"></a><br /></dt>
+<dd><p>Format specific driver. </p>
+<p>An instance of this class is created for each supported format, and manages information about the format.</p>
+<p>This roughly corresponds to a file format, though some drivers may be gateways to many formats through a secondary multi-library. </p>
+<p>Subclassed by GDALPluginDriverProxy, OGRSFDriver, PythonPluginDriver</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N10GDALDriver15SetMetadataItemEPKcPKcPKc">
+<span id="_CPPv3N10GDALDriver15SetMetadataItemEPKcPKcPKc"></span><span id="_CPPv2N10GDALDriver15SetMetadataItemEPKcPKcPKc"></span><span id="GDALDriver::SetMetadataItem__cCP.cCP.cCP"></span><span class="target" id="classGDALDriver_1a65130ea5fe7ea188b9c666080ea4ad30"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><a class="reference internal" href="cpl.html#_CPPv46CPLErr" title="CPLErr"><span class="n"><span class="pre">CPLErr</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SetMetadataItem</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">pszName</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">pszValue</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">pszDomain</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;&quot;</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N10GDALDriver15SetMetadataItemEPKcPKcPKc" title="Link to this definition"></a><br /></dt>
+<dd><p>Set single metadata item. </p>
+<p>The C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a55f0b4c5192d18deb4dcf1a89ed59bbe"><span class="std std-ref">GDALSetMetadataItem()</span></a> does the same thing as this method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pszName</strong> -- the key for the metadata item to fetch. </p></li>
+<li><p><strong>pszValue</strong> -- the value to assign to the key. </p></li>
+<li><p><strong>pszDomain</strong> -- the domain to set within, use NULL for the default domain.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>CE_None on success, or an error code on failure. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N10GDALDriver6CreateEPKciii12GDALDataType12CSLConstList">
+<span id="_CPPv3N10GDALDriver6CreateEPKciii12GDALDataType12CSLConstList"></span><span id="_CPPv2N10GDALDriver6CreateEPKciii12GDALDataType12CSLConstList"></span><span id="GDALDriver::Create__cCP.i.i.i.GDALDataType.CSLConstList"></span><span class="target" id="classGDALDriver_1a0d76971b6a3571f1e79d7874d61e22f2"></span><a class="reference internal" href="gdaldataset_cpp.html#_CPPv411GDALDataset" title="GDALDataset"><span class="n"><span class="pre">GDALDataset</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">Create</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">pszName</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">nXSize</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">nYSize</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">nBands</span></span>, <a class="reference internal" href="raster_c_api.html#_CPPv412GDALDataType" title="GDALDataType"><span class="n"><span class="pre">GDALDataType</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">eType</span></span>, <a class="reference internal" href="cpl.html#_CPPv412CSLConstList" title="CSLConstList"><span class="n"><span class="pre">CSLConstList</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">papszOptions</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10GDALDriver6CreateEPKciii12GDALDataType12CSLConstList" title="Link to this definition"></a><br /></dt>
+<dd><p>Create a new dataset with this driver. </p>
+<p>What argument values are legal for particular drivers is driver specific, and there is no way to query in advance to establish legal values.</p>
+<p>That function will try to validate the creation option list passed to the driver with the <a class="reference internal" href="raster_c_api.html#gdal_8h_1a4b4b0c3edeb9deffd4e006a0e818e9fc"><span class="std std-ref">GDALValidateCreationOptions()</span></a> method. This check can be disabled by defining the configuration option GDAL_VALIDATE_CREATION_OPTIONS=NO.</p>
+<p>After you have finished working with the returned dataset, it is <strong>required</strong> to close it with <a class="reference internal" href="raster_c_api.html#gdal_8h_1a7c728fbbef87fe4929e6dd418f4035fa"><span class="std std-ref">GDALClose()</span></a>. This does not only close the file handle, but also ensures that all the data and metadata has been written to the dataset (<a class="reference internal" href="raster_c_api.html#gdal_8h_1ad950554d036296b31cd67a6c84dbb747"><span class="std std-ref">GDALFlushCache()</span></a> is not sufficient for that purpose).</p>
+<p>In GDAL 2, the arguments nXSize, nYSize and nBands can be passed to 0 when creating a vector-only dataset for a compatible driver.</p>
+<p>Equivalent of the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a0862461cd6c073c1ec978a25d6c80325"><span class="std std-ref">GDALCreate()</span></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pszFilename</strong> -- the name of the dataset to create. UTF-8 encoded. </p></li>
+<li><p><strong>nXSize</strong> -- width of created raster in pixels. </p></li>
+<li><p><strong>nYSize</strong> -- height of created raster in pixels. </p></li>
+<li><p><strong>nBands</strong> -- number of bands. </p></li>
+<li><p><strong>eType</strong> -- type of raster. </p></li>
+<li><p><strong>papszOptions</strong> -- list of driver specific control parameters. The APPEND_SUBDATASET=YES option can be specified to avoid prior destruction of existing dataset.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>NULL on failure, or a new <a class="reference internal" href="gdaldataset_cpp.html#classGDALDataset"><span class="std std-ref">GDALDataset</span></a>. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N10GDALDriver22CreateMultiDimensionalEPKc12CSLConstList12CSLConstList">
+<span id="_CPPv3N10GDALDriver22CreateMultiDimensionalEPKc12CSLConstList12CSLConstList"></span><span id="_CPPv2N10GDALDriver22CreateMultiDimensionalEPKc12CSLConstList12CSLConstList"></span><span id="GDALDriver::CreateMultiDimensional__cCP.CSLConstList.CSLConstList"></span><span class="target" id="classGDALDriver_1a7c3be66a46f778db4de7a55cb93f8129"></span><a class="reference internal" href="gdaldataset_cpp.html#_CPPv411GDALDataset" title="GDALDataset"><span class="n"><span class="pre">GDALDataset</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">CreateMultiDimensional</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">pszName</span></span>, <a class="reference internal" href="cpl.html#_CPPv412CSLConstList" title="CSLConstList"><span class="n"><span class="pre">CSLConstList</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">papszRootGroupOptions</span></span>, <a class="reference internal" href="cpl.html#_CPPv412CSLConstList" title="CSLConstList"><span class="n"><span class="pre">CSLConstList</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">papszOptions</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10GDALDriver22CreateMultiDimensionalEPKc12CSLConstList12CSLConstList" title="Link to this definition"></a><br /></dt>
+<dd><p>Create a new multidimensional dataset with this driver. </p>
+<p>Only drivers that advertise the GDAL_DCAP_MULTIDIM_RASTER capability and implement the pfnCreateMultiDimensional method might return a non nullptr <a class="reference internal" href="gdaldataset_cpp.html#classGDALDataset"><span class="std std-ref">GDALDataset</span></a>.</p>
+<p>This is the same as the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1ae47e7814e184ae4c8751cd4af5a25a5f"><span class="std std-ref">GDALCreateMultiDimensional()</span></a>.</p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 3.1 </p>
+</dd>
+</dl>
+</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pszFilename</strong> -- the name of the dataset to create. UTF-8 encoded. </p></li>
+<li><p><strong>papszRootGroupOptions</strong> -- driver specific options regarding the creation of the root group. Might be nullptr. </p></li>
+<li><p><strong>papszOptions</strong> -- driver specific options regarding the creation of the dataset. Might be nullptr. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a new dataset, or nullptr in case of failure.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N10GDALDriver6DeleteEPKc">
+<span id="_CPPv3N10GDALDriver6DeleteEPKc"></span><span id="_CPPv2N10GDALDriver6DeleteEPKc"></span><span id="GDALDriver::Delete__cCP"></span><span class="target" id="classGDALDriver_1ad40d369db18eb0af6fbe7e46dd112aed"></span><a class="reference internal" href="cpl.html#_CPPv46CPLErr" title="CPLErr"><span class="n"><span class="pre">CPLErr</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Delete</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">pszName</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10GDALDriver6DeleteEPKc" title="Link to this definition"></a><br /></dt>
+<dd><p>Delete named dataset. </p>
+<p>The driver will attempt to delete the named dataset in a driver specific fashion. Full featured drivers will delete all associated files, database objects, or whatever is appropriate. The default behavior when no driver specific behavior is provided is to attempt to delete all the files that are returned by <a class="reference internal" href="raster_c_api.html#gdal_8h_1a8ae74c491b632ac5c16dfb9503515b64"><span class="std std-ref">GDALGetFileList()</span></a> on the dataset handle.</p>
+<p>It is unwise to have open dataset handles on this dataset when it is deleted.</p>
+<p>Equivalent of the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a97939d588e2b350b9ec7a440f3e06a7c"><span class="std std-ref">GDALDeleteDataset()</span></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pszFilename</strong> -- name of dataset to delete.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>CE_None on success, or CE_Failure if the operation fails. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N10GDALDriver6RenameEPKcPKc">
+<span id="_CPPv3N10GDALDriver6RenameEPKcPKc"></span><span id="_CPPv2N10GDALDriver6RenameEPKcPKc"></span><span id="GDALDriver::Rename__cCP.cCP"></span><span class="target" id="classGDALDriver_1aeb17ea2e1131187f352b4aa212a8fc27"></span><a class="reference internal" href="cpl.html#_CPPv46CPLErr" title="CPLErr"><span class="n"><span class="pre">CPLErr</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Rename</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">pszNewName</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">pszOldName</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10GDALDriver6RenameEPKcPKc" title="Link to this definition"></a><br /></dt>
+<dd><p>Rename a dataset. </p>
+<p>Rename a dataset. This may including moving the dataset to a new directory or even a new filesystem.</p>
+<p>It is unwise to have open dataset handles on this dataset when it is being renamed.</p>
+<p>Equivalent of the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a4c77c428f220c76df83165b041259316"><span class="std std-ref">GDALRenameDataset()</span></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pszNewName</strong> -- new name for the dataset. </p></li>
+<li><p><strong>pszOldName</strong> -- old name for the dataset.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>CE_None on success, or CE_Failure if the operation fails. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N10GDALDriver9CopyFilesEPKcPKc">
+<span id="_CPPv3N10GDALDriver9CopyFilesEPKcPKc"></span><span id="_CPPv2N10GDALDriver9CopyFilesEPKcPKc"></span><span id="GDALDriver::CopyFiles__cCP.cCP"></span><span class="target" id="classGDALDriver_1a4be070a452d99dde5196fa8e3ecc2e1a"></span><a class="reference internal" href="cpl.html#_CPPv46CPLErr" title="CPLErr"><span class="n"><span class="pre">CPLErr</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CopyFiles</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">pszNewName</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">pszOldName</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10GDALDriver9CopyFilesEPKcPKc" title="Link to this definition"></a><br /></dt>
+<dd><p>Copy the files of a dataset. </p>
+<p>Copy all the files associated with a dataset.</p>
+<p>Equivalent of the C function <a class="reference internal" href="raster_c_api.html#gdal_8h_1a789ddd4943f61e83b279ef73ed4363bd"><span class="std std-ref">GDALCopyDatasetFiles()</span></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pszNewName</strong> -- new name for the dataset. </p></li>
+<li><p><strong>pszOldName</strong> -- old name for the dataset.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>CE_None on success, or CE_Failure if the operation fails. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N10GDALDriver10CreateCopyEPKcP11GDALDataseti12CSLConstList16GDALProgressFuncPv">
+<span id="_CPPv3N10GDALDriver10CreateCopyEPKcP11GDALDataseti12CSLConstList16GDALProgressFuncPv"></span><span id="_CPPv2N10GDALDriver10CreateCopyEPKcP11GDALDataseti12CSLConstList16GDALProgressFuncPv"></span><span id="GDALDriver::CreateCopy__cCP.GDALDatasetP.i.CSLConstList.GDALProgressFunc.voidP"></span><span class="target" id="classGDALDriver_1a00516dd36aa547771d316608237d9b52"></span><a class="reference internal" href="gdaldataset_cpp.html#_CPPv411GDALDataset" title="GDALDataset"><span class="n"><span class="pre">GDALDataset</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">CreateCopy</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="p"><span class="pre">*</span></span>, <a class="reference internal" href="gdaldataset_cpp.html#_CPPv411GDALDataset" title="GDALDataset"><span class="n"><span class="pre">GDALDataset</span></span></a><span class="p"><span class="pre">*</span></span>, <span class="kt"><span class="pre">int</span></span>, <a class="reference internal" href="cpl.html#_CPPv412CSLConstList" title="CSLConstList"><span class="n"><span class="pre">CSLConstList</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">papszOptions</span></span>, <a class="reference internal" href="cpl.html#_CPPv416GDALProgressFunc" title="GDALProgressFunc"><span class="n"><span class="pre">GDALProgressFunc</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">pfnProgress</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">pProgressData</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10GDALDriver10CreateCopyEPKcP11GDALDataseti12CSLConstList16GDALProgressFuncPv" title="Link to this definition"></a><br /></dt>
+<dd><p>Create a copy of a dataset. </p>
+<p>This method will attempt to create a copy of a raster dataset with the indicated filename, and in this drivers format. Band number, size, type, projection, geotransform and so forth are all to be copied from the provided template dataset.</p>
+<p>Note that many sequential write once formats (such as JPEG and PNG) don't implement the <a class="reference internal" href="#classGDALDriver_1a0d76971b6a3571f1e79d7874d61e22f2"><span class="std std-ref">Create()</span></a> method but do implement this <a class="reference internal" href="#classGDALDriver_1a00516dd36aa547771d316608237d9b52"><span class="std std-ref">CreateCopy()</span></a> method. If the driver doesn't implement <a class="reference internal" href="#classGDALDriver_1a00516dd36aa547771d316608237d9b52"><span class="std std-ref">CreateCopy()</span></a>, but does implement <a class="reference internal" href="#classGDALDriver_1a0d76971b6a3571f1e79d7874d61e22f2"><span class="std std-ref">Create()</span></a> then the default <a class="reference internal" href="#classGDALDriver_1a00516dd36aa547771d316608237d9b52"><span class="std std-ref">CreateCopy()</span></a> mechanism built on calling <a class="reference internal" href="#classGDALDriver_1a0d76971b6a3571f1e79d7874d61e22f2"><span class="std std-ref">Create()</span></a> will be used. So to test if <a class="reference internal" href="#classGDALDriver_1a00516dd36aa547771d316608237d9b52"><span class="std std-ref">CreateCopy()</span></a> is available, you can test if GDAL_DCAP_CREATECOPY or GDAL_DCAP_CREATE is set in the GDAL metadata.</p>
+<p>It is intended that <a class="reference internal" href="#classGDALDriver_1a00516dd36aa547771d316608237d9b52"><span class="std std-ref">CreateCopy()</span></a> will often be used with a source dataset which is a virtual dataset allowing configuration of band types, and other information without actually duplicating raster data (see the VRT driver). This is what is done by the gdal_translate utility for example.</p>
+<p>That function will try to validate the creation option list passed to the driver with the <a class="reference internal" href="raster_c_api.html#gdal_8h_1a4b4b0c3edeb9deffd4e006a0e818e9fc"><span class="std std-ref">GDALValidateCreationOptions()</span></a> method. This check can be disabled by defining the configuration option GDAL_VALIDATE_CREATION_OPTIONS=NO.</p>
+<p>This function copy all metadata from the default domain (&quot;&quot;)</p>
+<p>Even is bStrict is TRUE, only the <strong>value</strong> of the data is equivalent, but the data layout (INTERLEAVE as PIXEL/LINE/BAND) of the dst dataset is controlled by the papszOptions creation options, and may differ from the poSrcDS src dataset. Starting from GDAL 3.5, if no INTERLEAVE and COMPRESS creation option has been specified in papszOptions, and if the driver supports equivalent interleaving as the src dataset, the <a class="reference internal" href="#classGDALDriver_1a00516dd36aa547771d316608237d9b52"><span class="std std-ref">CreateCopy()</span></a> will internally add the proper creation option to get the same data interleaving.</p>
+<p>After you have finished working with the returned dataset, it is <strong>required</strong> to close it with <a class="reference internal" href="raster_c_api.html#gdal_8h_1a7c728fbbef87fe4929e6dd418f4035fa"><span class="std std-ref">GDALClose()</span></a>. This does not only close the file handle, but also ensures that all the data and metadata has been written to the dataset (<a class="reference internal" href="raster_c_api.html#gdal_8h_1ad950554d036296b31cd67a6c84dbb747"><span class="std std-ref">GDALFlushCache()</span></a> is not sufficient for that purpose).</p>
+<p>For multidimensional datasets, papszOptions can contain array creation options, if they are prefixed with &quot;ARRAY:&quot;. <div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="gdalgroup_cpp.html#classGDALGroup_1a28324579902842d7dbd1f93e9698b1ec"><span class="std std-ref">GDALGroup::CopyFrom()</span></a> documentation for further details regarding such options.</p>
+</div>
+</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pszFilename</strong> -- the name for the new dataset. UTF-8 encoded. </p></li>
+<li><p><strong>poSrcDS</strong> -- the dataset being duplicated. </p></li>
+<li><p><strong>bStrict</strong> -- TRUE if the copy must be strictly equivalent, or more normally FALSE indicating that the copy may adapt as needed for the output format. </p></li>
+<li><p><strong>papszOptions</strong> -- additional format dependent options controlling creation of the output file. The APPEND_SUBDATASET=YES option can be specified to avoid prior destruction of existing dataset. Starting with GDAL 3.8.0, the following options are recognized by the GTiff, COG, VRT, PNG au JPEG drivers: <ul>
+<li><p>COPY_SRC_MDD=AUTO/YES/NO: whether metadata domains of the source dataset should be copied to the destination dataset. In the default AUTO mode, only &quot;safe&quot; domains will be copied, which include the default metadata domain (some drivers may include other domains such as IMD, RPC, GEOLOCATION). When setting YES, all domains will be copied (but a few reserved ones like IMAGE_STRUCTURE or DERIVED_SUBDATASETS). When setting NO, no source metadata will be copied.  </p></li>
+<li><p>SRC_MDD=domain_name: which source metadata domain should be copied. This option restricts the list of source metadata domains to be copied (it implies COPY_SRC_MDD=YES if it is not set). This option may be specified as many times as they are source domains. The default metadata domain is the empty string &quot;&quot; (&quot;_DEFAULT_&quot;) may also be used when empty string is not practical)  </p></li>
+</ul>
+</p></li>
+<li><p><strong>pfnProgress</strong> -- a function to be used to report progress of the copy. </p></li>
+<li><p><strong>pProgressData</strong> -- application data passed into progress function.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a pointer to the newly created dataset (may be read-only access). </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N10GDALDriver22CanVectorTranslateFromEPKcP11GDALDataset12CSLConstListPPPc">
+<span id="_CPPv3N10GDALDriver22CanVectorTranslateFromEPKcP11GDALDataset12CSLConstListPPPc"></span><span id="_CPPv2N10GDALDriver22CanVectorTranslateFromEPKcP11GDALDataset12CSLConstListPPPc"></span><span id="GDALDriver::CanVectorTranslateFrom__cCP.GDALDatasetP.CSLConstList.cPPP"></span><span class="target" id="classGDALDriver_1aee57cc0acf1ade77b75cee86b6197671"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CanVectorTranslateFrom</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">pszDestName</span></span>, <a class="reference internal" href="gdaldataset_cpp.html#_CPPv411GDALDataset" title="GDALDataset"><span class="n"><span class="pre">GDALDataset</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">poSourceDS</span></span>, <a class="reference internal" href="cpl.html#_CPPv412CSLConstList" title="CSLConstList"><span class="n"><span class="pre">CSLConstList</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">papszVectorTranslateArguments</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">ppapszFailureReasons</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10GDALDriver22CanVectorTranslateFromEPKcP11GDALDataset12CSLConstListPPPc" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns whether the driver can translate from a vector dataset, using the arguments passed to <a class="reference internal" href="gdal_utils.html#gdal__utils_8h_1aa176ae667bc857ab9c6016dbe62166eb"><span class="std std-ref">GDALVectorTranslate()</span></a> stored in papszVectorTranslateArguments. </p>
+<p>This is used to determine if the driver supports the <a class="reference internal" href="#classGDALDriver_1a3f6942cdb7c7f53b0f7ee2c8667524ed"><span class="std std-ref">VectorTranslateFrom()</span></a> operation.</p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 3.8 </p>
+</dd>
+</dl>
+</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pszDestName</strong> -- Target dataset name </p></li>
+<li><p><strong>poSourceDS</strong> -- Source dataset </p></li>
+<li><p><strong>papszVectorTranslateArguments</strong> -- Non-positional arguments passed to <a class="reference internal" href="gdal_utils.html#gdal__utils_8h_1aa176ae667bc857ab9c6016dbe62166eb"><span class="std std-ref">GDALVectorTranslate()</span></a> (may be nullptr) </p></li>
+<li><p><strong>ppapszFailureReasons</strong> -- <strong>[out]</strong> nullptr, or a pointer to an null-terminated array of strings to record the reason(s) for the impossibility. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>true if <a class="reference internal" href="#classGDALDriver_1a3f6942cdb7c7f53b0f7ee2c8667524ed"><span class="std std-ref">VectorTranslateFrom()</span></a> can be called with the same arguments. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N10GDALDriver19VectorTranslateFromEPKcP11GDALDataset12CSLConstList16GDALProgressFuncPv">
+<span id="_CPPv3N10GDALDriver19VectorTranslateFromEPKcP11GDALDataset12CSLConstList16GDALProgressFuncPv"></span><span id="_CPPv2N10GDALDriver19VectorTranslateFromEPKcP11GDALDataset12CSLConstList16GDALProgressFuncPv"></span><span id="GDALDriver::VectorTranslateFrom__cCP.GDALDatasetP.CSLConstList.GDALProgressFunc.voidP"></span><span class="target" id="classGDALDriver_1a3f6942cdb7c7f53b0f7ee2c8667524ed"></span><a class="reference internal" href="gdaldataset_cpp.html#_CPPv411GDALDataset" title="GDALDataset"><span class="n"><span class="pre">GDALDataset</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">VectorTranslateFrom</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">pszDestName</span></span>, <a class="reference internal" href="gdaldataset_cpp.html#_CPPv411GDALDataset" title="GDALDataset"><span class="n"><span class="pre">GDALDataset</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">poSourceDS</span></span>, <a class="reference internal" href="cpl.html#_CPPv412CSLConstList" title="CSLConstList"><span class="n"><span class="pre">CSLConstList</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">papszVectorTranslateArguments</span></span>, <a class="reference internal" href="cpl.html#_CPPv416GDALProgressFunc" title="GDALProgressFunc"><span class="n"><span class="pre">GDALProgressFunc</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">pfnProgress</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">pProgressData</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10GDALDriver19VectorTranslateFromEPKcP11GDALDataset12CSLConstList16GDALProgressFuncPv" title="Link to this definition"></a><br /></dt>
+<dd><p>Create a copy of a vector dataset, using the arguments passed to <a class="reference internal" href="gdal_utils.html#gdal__utils_8h_1aa176ae667bc857ab9c6016dbe62166eb"><span class="std std-ref">GDALVectorTranslate()</span></a> stored in papszVectorTranslateArguments. </p>
+<p>This may be implemented by some drivers that can convert from an existing dataset in an optimized way.</p>
+<p>This is for example used by the PMTiles to convert from MBTiles.</p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 3.8 </p>
+</dd>
+</dl>
+</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pszDestName</strong> -- Target dataset name </p></li>
+<li><p><strong>poSourceDS</strong> -- Source dataset </p></li>
+<li><p><strong>papszVectorTranslateArguments</strong> -- Non-positional arguments passed to <a class="reference internal" href="gdal_utils.html#gdal__utils_8h_1aa176ae667bc857ab9c6016dbe62166eb"><span class="std std-ref">GDALVectorTranslate()</span></a> (may be nullptr) </p></li>
+<li><p><strong>pfnProgress</strong> -- a function to be used to report progress of the copy. </p></li>
+<li><p><strong>pProgressData</strong> -- application data passed into progress function. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a new dataset in case of success, or nullptr in case of error. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-static-functions">Public Static Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N10GDALDriver11QuietDeleteEPKc12CSLConstList">
+<span id="_CPPv3N10GDALDriver11QuietDeleteEPKc12CSLConstList"></span><span id="_CPPv2N10GDALDriver11QuietDeleteEPKc12CSLConstList"></span><span id="GDALDriver::QuietDelete__cCP.CSLConstList"></span><span class="target" id="classGDALDriver_1ad7a58acf269e104eb77642cf50e8affa"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><a class="reference internal" href="cpl.html#_CPPv46CPLErr" title="CPLErr"><span class="n"><span class="pre">CPLErr</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">QuietDelete</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">pszName</span></span>, <a class="reference internal" href="cpl.html#_CPPv412CSLConstList" title="CSLConstList"><span class="n"><span class="pre">CSLConstList</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">papszAllowedDrivers</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">nullptr</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10GDALDriver11QuietDeleteEPKc12CSLConstList" title="Link to this definition"></a><br /></dt>
+<dd><p>Delete dataset if found. </p>
+<p>This is a helper method primarily used by <a class="reference internal" href="#classGDALDriver_1a0d76971b6a3571f1e79d7874d61e22f2"><span class="std std-ref">Create()</span></a> and <a class="reference internal" href="#classGDALDriver_1a00516dd36aa547771d316608237d9b52"><span class="std std-ref">CreateCopy()</span></a> to predelete any dataset of the name soon to be created. It will attempt to delete the named dataset if one is found, otherwise it does nothing. An error is only returned if the dataset is found but the delete fails.</p>
+<p>This is a static method and it doesn't matter what driver instance it is invoked on. It will attempt to discover the correct driver using Identify().</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pszName</strong> -- the dataset name to try and delete. </p></li>
+<li><p><strong>papszAllowedDrivers</strong> -- NULL to consider all candidate drivers, or a NULL terminated list of strings with the driver short names that must be considered. (Note: implemented only starting with GDAL 3.4.1) </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>CE_None if the dataset does not exist, or is deleted without issues. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N10GDALDriver8ToHandleEP10GDALDriver">
+<span id="_CPPv3N10GDALDriver8ToHandleEP10GDALDriver"></span><span id="_CPPv2N10GDALDriver8ToHandleEP10GDALDriver"></span><span id="GDALDriver::ToHandle__GDALDriverP"></span><span class="target" id="classGDALDriver_1af9764bd8514f9e76621f1be23b9e3204"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="raster_c_api.html#_CPPv411GDALDriverH" title="GDALDriverH"><span class="n"><span class="pre">GDALDriverH</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ToHandle</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv410GDALDriver" title="GDALDriver"><span class="n"><span class="pre">GDALDriver</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">poDriver</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10GDALDriver8ToHandleEP10GDALDriver" title="Link to this definition"></a><br /></dt>
+<dd><p>Convert a GDALDriver* to a GDALDriverH. </p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.3 </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N10GDALDriver10FromHandleE11GDALDriverH">
+<span id="_CPPv3N10GDALDriver10FromHandleE11GDALDriverH"></span><span id="_CPPv2N10GDALDriver10FromHandleE11GDALDriverH"></span><span id="GDALDriver::FromHandle__GDALDriverH"></span><span class="target" id="classGDALDriver_1a2635ea1e3a56776421e9f3305960e15b"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv410GDALDriver" title="GDALDriver"><span class="n"><span class="pre">GDALDriver</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">FromHandle</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="raster_c_api.html#_CPPv411GDALDriverH" title="GDALDriverH"><span class="n"><span class="pre">GDALDriverH</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">hDriver</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N10GDALDriver10FromHandleE11GDALDriverH" title="Link to this definition"></a><br /></dt>
+<dd><p>Convert a GDALDriverH to a GDALDriver*. </p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 2.3 </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+<section id="gdaldrivermanager-class">
+<h2>GDALDriverManager class<a class="headerlink" href="#gdaldrivermanager-class" title="Link to this heading"></a></h2>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv417GDALDriverManager">
+<span id="_CPPv317GDALDriverManager"></span><span id="_CPPv217GDALDriverManager"></span><span id="GDALDriverManager"></span><span class="target" id="classGDALDriverManager"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GDALDriverManager</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">GDALMajorObject</span></span><a class="headerlink" href="#_CPPv417GDALDriverManager" title="Link to this definition"></a><br /></dt>
+<dd><p>Class for managing the registration of file format drivers. </p>
+<p>Use GetGDALDriverManager() to fetch the global singleton instance of this class. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK17GDALDriverManager14GetDriverCountEv">
+<span id="_CPPv3NK17GDALDriverManager14GetDriverCountEv"></span><span id="_CPPv2NK17GDALDriverManager14GetDriverCountEv"></span><span id="GDALDriverManager::GetDriverCount__voidC"></span><span class="target" id="classGDALDriverManager_1a36fdc3ad05622438aaa94c21ee2f1b5e"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GetDriverCount</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK17GDALDriverManager14GetDriverCountEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Fetch the number of registered drivers. </p>
+<p>This C analog to this is <a class="reference internal" href="raster_c_api.html#gdal_8h_1aa506c0cdcb923528f3e7d4f1dec9b4b5"><span class="std std-ref">GDALGetDriverCount()</span></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the number of registered drivers. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N17GDALDriverManager9GetDriverEi">
+<span id="_CPPv3N17GDALDriverManager9GetDriverEi"></span><span id="_CPPv2N17GDALDriverManager9GetDriverEi"></span><span id="GDALDriverManager::GetDriver__i"></span><span class="target" id="classGDALDriverManager_1ae087f34a50d5cec4f9bc8de81a193d7e"></span><a class="reference internal" href="#_CPPv410GDALDriver" title="GDALDriver"><span class="n"><span class="pre">GDALDriver</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">GetDriver</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">int</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N17GDALDriverManager9GetDriverEi" title="Link to this definition"></a><br /></dt>
+<dd><p>Fetch driver by index. </p>
+<p>This C analog to this is <a class="reference internal" href="raster_c_api.html#gdal_8h_1a391569a2a964a17ca4d77d32da150dc6"><span class="std std-ref">GDALGetDriver()</span></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>iDriver</strong> -- the driver index from 0 to <a class="reference internal" href="#classGDALDriverManager_1a36fdc3ad05622438aaa94c21ee2f1b5e"><span class="std std-ref">GetDriverCount()</span></a>-1.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the driver identified by the index or NULL if the index is invalid </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N17GDALDriverManager15GetDriverByNameEPKc">
+<span id="_CPPv3N17GDALDriverManager15GetDriverByNameEPKc"></span><span id="_CPPv2N17GDALDriverManager15GetDriverByNameEPKc"></span><span id="GDALDriverManager::GetDriverByName__cCP"></span><span class="target" id="classGDALDriverManager_1ac26308c182440c8abd584040fa89bd4f"></span><a class="reference internal" href="#_CPPv410GDALDriver" title="GDALDriver"><span class="n"><span class="pre">GDALDriver</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">GetDriverByName</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="p"><span class="pre">*</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N17GDALDriverManager15GetDriverByNameEPKc" title="Link to this definition"></a><br /></dt>
+<dd><p>Fetch a driver based on the short name. </p>
+<p>The C analog is the <a class="reference internal" href="raster_c_api.html#gdal_8h_1ae8ae868eef1e4773283d137b0a1adfc4"><span class="std std-ref">GDALGetDriverByName()</span></a> function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pszName</strong> -- the short name, such as GTiff, being searched for.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the identified driver, or NULL if no match is found. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N17GDALDriverManager14RegisterDriverEP10GDALDriver">
+<span id="_CPPv3N17GDALDriverManager14RegisterDriverEP10GDALDriver"></span><span id="_CPPv2N17GDALDriverManager14RegisterDriverEP10GDALDriver"></span><span id="GDALDriverManager::RegisterDriver__GDALDriverP"></span><span class="target" id="classGDALDriverManager_1aa33cc86affa255ac37b463c129fbe49f"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">RegisterDriver</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv410GDALDriver" title="GDALDriver"><span class="n"><span class="pre">GDALDriver</span></span></a><span class="p"><span class="pre">*</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N17GDALDriverManager14RegisterDriverEP10GDALDriver" title="Link to this definition"></a><br /></dt>
+<dd><p>Register a driver for use. </p>
+<p>The C analog is <a class="reference internal" href="raster_c_api.html#gdal_8h_1ac60b5a281173845cb9cd934803157f6f"><span class="std std-ref">GDALRegisterDriver()</span></a>.</p>
+<p>Normally this method is used by format specific C callable registration entry points such as GDALRegister_GTiff() rather than being called directly by application level code.</p>
+<p>If this driver (based on the object pointer, not short name) is already registered, then no change is made, and the index of the existing driver is returned. Otherwise the driver list is extended, and the new driver is added at the end.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>poDriver</strong> -- the driver to register.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the index of the new installed driver. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N17GDALDriverManager16DeregisterDriverEP10GDALDriver">
+<span id="_CPPv3N17GDALDriverManager16DeregisterDriverEP10GDALDriver"></span><span id="_CPPv2N17GDALDriverManager16DeregisterDriverEP10GDALDriver"></span><span id="GDALDriverManager::DeregisterDriver__GDALDriverP"></span><span class="target" id="classGDALDriverManager_1a0ff23c4834b1543712df8f9b9883e6dd"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DeregisterDriver</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv410GDALDriver" title="GDALDriver"><span class="n"><span class="pre">GDALDriver</span></span></a><span class="p"><span class="pre">*</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N17GDALDriverManager16DeregisterDriverEP10GDALDriver" title="Link to this definition"></a><br /></dt>
+<dd><p>Deregister the passed driver. </p>
+<p>If the driver isn't found no change is made.</p>
+<p>The C analog is <a class="reference internal" href="raster_c_api.html#gdal_8h_1a787695435ad8b31f8861d52b5ba156f2"><span class="std std-ref">GDALDeregisterDriver()</span></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>poDriver</strong> -- the driver to deregister. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N17GDALDriverManager15AutoLoadDriversEv">
+<span id="_CPPv3N17GDALDriverManager15AutoLoadDriversEv"></span><span id="_CPPv2N17GDALDriverManager15AutoLoadDriversEv"></span><span id="GDALDriverManager::AutoLoadDrivers"></span><span class="target" id="classGDALDriverManager_1a77417ede570b33695e5b318fbbdb1968"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AutoLoadDrivers</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N17GDALDriverManager15AutoLoadDriversEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Auto-load GDAL drivers from shared libraries. </p>
+<p>This function will automatically load drivers from shared libraries. It searches the &quot;driver path&quot; for .so (or .dll) files that start with the prefix &quot;gdal_X.so&quot;. It then tries to load them and then tries to call a function within them called GDALRegister_X() where the 'X' is the same as the remainder of the shared library basename ('X' is case sensitive), or failing that to call GDALRegisterMe().</p>
+<p>There are a few rules for the driver path. If the GDAL_DRIVER_PATH environment variable it set, it is taken to be a list of directories to search separated by colons on UNIX, or semi-colons on Windows. Otherwise the /usr/local/lib/gdalplugins directory, and (if known) the lib/gdalplugins subdirectory of the gdal home directory are searched on UNIX and \gdalplugins on Windows.</p>
+<p>Auto loading can be completely disabled by setting the GDAL_DRIVER_PATH config option to &quot;disable&quot;.</p>
+<p>Starting with gdal 3.5, the default search path /lib/gdalplugins can be overridden at compile time by passing -DINSTALL_PLUGIN_DIR=/another/path to cmake. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N17GDALDriverManager15AutoSkipDriversEv">
+<span id="_CPPv3N17GDALDriverManager15AutoSkipDriversEv"></span><span id="_CPPv2N17GDALDriverManager15AutoSkipDriversEv"></span><span id="GDALDriverManager::AutoSkipDrivers"></span><span class="target" id="classGDALDriverManager_1a6b571113d0ee5ac074a572bc4ae3df74"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AutoSkipDrivers</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N17GDALDriverManager15AutoSkipDriversEv" title="Link to this definition"></a><br /></dt>
+<dd><p>This method unload undesirable drivers. </p>
+<p>All drivers specified in the comma delimited list in the GDAL_SKIP environment variable) will be deregistered and destroyed. This method should normally be called after registration of standard drivers to allow the user a way of unloading undesired drivers. The <a class="reference internal" href="raster_c_api.html#gdal_8h_1a9d40bc998bd6ed07ccde96028e85ae26"><span class="std std-ref">GDALAllRegister()</span></a> function already invokes <a class="reference internal" href="#classGDALDriverManager_1a6b571113d0ee5ac074a572bc4ae3df74"><span class="std std-ref">AutoSkipDrivers()</span></a> at the end, so if that functions is called, it should not be necessary to call this method from application code.</p>
+<p>Note: space separator is also accepted for backward compatibility, but some vector formats have spaces in their names, so it is encouraged to use comma to avoid issues. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N17GDALDriverManager14ReorderDriversEv">
+<span id="_CPPv3N17GDALDriverManager14ReorderDriversEv"></span><span id="_CPPv2N17GDALDriverManager14ReorderDriversEv"></span><span id="GDALDriverManager::ReorderDrivers"></span><span class="target" id="classGDALDriverManager_1aef8aef4bf7874cc84e016a3d2bd3103e"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ReorderDrivers</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N17GDALDriverManager14ReorderDriversEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Reorder drivers according to the order of the drivers.ini file. </p>
+<p>This function is called by <a class="reference internal" href="raster_c_api.html#gdal_8h_1a9d40bc998bd6ed07ccde96028e85ae26"><span class="std std-ref">GDALAllRegister()</span></a>, at the end of driver loading, in particular after plugin loading. It will load the drivers.ini configuration file located next to plugins and will use it to reorder the registration order of drivers. This can be important in some situations where multiple drivers could open the same dataset. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N17GDALDriverManager27DeclareDeferredPluginDriverEP21GDALPluginDriverProxy">
+<span id="_CPPv3N17GDALDriverManager27DeclareDeferredPluginDriverEP21GDALPluginDriverProxy"></span><span id="_CPPv2N17GDALDriverManager27DeclareDeferredPluginDriverEP21GDALPluginDriverProxy"></span><span id="GDALDriverManager::DeclareDeferredPluginDriver__GDALPluginDriverProxyP"></span><span class="target" id="classGDALDriverManager_1a840f674b7ca7e375b48ac9b4d56af5f5"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DeclareDeferredPluginDriver</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">GDALPluginDriverProxy</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">poProxyDriver</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N17GDALDriverManager27DeclareDeferredPluginDriverEP21GDALPluginDriverProxy" title="Link to this definition"></a><br /></dt>
+<dd><p>Declare a driver that will be loaded as a plugin, when actually needed. </p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>3.9 </p>
+</dd>
+</dl>
+</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>poProxyDriver</strong> -- Plugin driver proxy</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-static-functions">Public Static Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N17GDALDriverManager10LoadPluginEPKc">
+<span id="_CPPv3N17GDALDriverManager10LoadPluginEPKc"></span><span id="_CPPv2N17GDALDriverManager10LoadPluginEPKc"></span><span id="GDALDriverManager::LoadPlugin__cCP"></span><span class="target" id="classGDALDriverManager_1a41fdc70b168a2cf5679603ab7d6a776d"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><a class="reference internal" href="cpl.html#_CPPv46CPLErr" title="CPLErr"><span class="n"><span class="pre">CPLErr</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">LoadPlugin</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">name</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N17GDALDriverManager10LoadPluginEPKc" title="Link to this definition"></a><br /></dt>
+<dd><p>Load a single GDAL driver/plugin from shared libraries. </p>
+<p>This function will load a single named driver/plugin from shared libraries. It searches the &quot;driver path&quot; for .so (or .dll) files named &quot;gdal_{name}.[so|dll|dylib]&quot; or &quot;ogr_{name}.[so|dll|dylib]&quot;, then tries to call a function within them called GDALRegister_{name}(), or failing that called GDALRegisterMe().</p>
+<p><div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#classGDALDriverManager_1a77417ede570b33695e5b318fbbdb1968"><span class="std std-ref">GDALDriverManager::AutoLoadDrivers()</span></a> for the rules used to determine which paths are searched for plugin library files. </p>
+</div>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N17GDALDriverManager21AutoLoadPythonDriversEv">
+<span id="_CPPv3N17GDALDriverManager21AutoLoadPythonDriversEv"></span><span id="_CPPv2N17GDALDriverManager21AutoLoadPythonDriversEv"></span><span id="GDALDriverManager::AutoLoadPythonDrivers"></span><span class="target" id="classGDALDriverManager_1a469f89c52da87edb2f8c49bd46d28a31"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AutoLoadPythonDrivers</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N17GDALDriverManager21AutoLoadPythonDriversEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Auto-load GDAL drivers from Python scripts. </p>
+<p>This function will automatically load drivers from Python scripts. It searches them first from the directory pointed by the GDAL_PYTHON_DRIVER_PATH configuration option. If not defined, it will use GDAL_DRIVER_PATH. If not defined, it will use the path for drivers hardcoded at build time. Scripts must begin with gdal_ or ogr_ and end up with .py</p>
+<p><dl class="simple">
+<dt><strong>Since</strong></dt><dd><p>GDAL 3.1 </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="gdaldataset_cpp.html" class="btn btn-neutral float-right" title="GDALDataset C++ API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gdal_utils.html" class="btn btn-neutral float-left" title="gdal_utils.h: GDAL Algorithms C API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2024 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+  </div>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

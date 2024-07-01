@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OSM - OpenStreetMap XML and PBF &mdash; GDAL  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d10597a4" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/gdal.css?v=e152ac3b" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://gdal.org/drivers/vector/osm.html"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="(Geo)Parquet" href="parquet.html" />
+    <link rel="prev" title="ESRI File Geodatabase vector (OpenFileGDB)" href="openfilegdb.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Vector drivers</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="amigocloud.html">AmigoCloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arrow.html">(Geo)Arrow IPC File Format / Stream</a></li>
+<li class="toctree-l2"><a class="reference internal" href="avcbin.html">Arc/Info Binary Coverage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="avce00.html">Arc/Info E00 (ASCII) Coverage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cad.html">CAD -- AutoCAD DWG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="carto.html">Carto</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csv.html">Comma Separated Value (.csv)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csw.html">CSW - OGC CSW (Catalog Service for the Web)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dgn.html">Microstation DGN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dgnv8.html">Microstation DGN v8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dwg.html">AutoCAD DWG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dxf.html">AutoCAD DXF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eeda.html">Google Earth Engine Data API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="edigeo.html">EDIGEO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elasticsearch.html">Elasticsearch: Geographically Encoded Objects for Elasticsearch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="esrijson.html">ESRIJSON / FeatureService driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filegdb.html">ESRI File Geodatabase (FileGDB)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flatgeobuf.html">FlatGeobuf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoconcept.html">GeoConcept text export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geojson.html">GeoJSON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geojsonseq.html">GeoJSONSeq: sequence of GeoJSON features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="georss.html">GeoRSS : Geographically Encoded Objects for RSS feeds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gml.html">GML - Geography Markup Language</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gmlas.html">GMLAS - Geography Markup Language (GML) driven by application schemas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gmt.html">GMT ASCII Vectors (.gmt)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpkg.html">GPKG -- GeoPackage vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpsbabel.html">GPSBabel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpx.html">GPX - GPS Exchange Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grass.html">GRASS Vector Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gtfs.html">GTFS - General Transit Feed Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hana.html">SAP HANA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="idb.html">IDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="idrisi.html">Idrisi Vector (.VCT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ili.html">&quot;INTERLIS 1&quot; and &quot;INTERLIS 2&quot; drivers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jml.html">JML: OpenJUMP JML format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jsonfg.html">JSONFG -- OGC Features and Geometries JSON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kml.html">KML - Keyhole Markup Language</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libkml.html">LIBKML Driver (.kml .kmz)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lvbag.html">Dutch Kadaster LV BAG 2.0 Extract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mapml.html">MapML</a></li>
+<li class="toctree-l2"><a class="reference internal" href="memory.html">Memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="miramon.html">MiraMon Vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mitab.html">MapInfo TAB and MIF/MID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mongodbv3.html">MongoDBv3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mssqlspatial.html">MSSQLSpatial - Microsoft SQL Server Spatial Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mvt.html">MVT: Mapbox Vector Tiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mysql.html">MySQL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nas.html">NAS - ALKIS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="netcdf.html">NetCDF: Network Common Data Form - Vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ngw.html">NGW -- NextGIS Web</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ntf.html">UK .NTF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="oapif.html">OGC API - Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="oci.html">Oracle Spatial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="odbc.html">ODBC RDBMS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ods.html">ODS - Open Document Spreadsheet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ogdi.html">OGDI Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="openfilegdb.html">ESRI File Geodatabase vector (OpenFileGDB)</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">OSM - OpenStreetMap XML and PBF</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#driver-capabilities">Driver capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configuration">Configuration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#other-tags-field">&quot;other_tags&quot; field</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#all-tags-field">&quot;all_tags&quot; field</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#configuration-options">Configuration options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#interleaved-reading">Interleaved reading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#spatial-filtering">Spatial filtering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reading-osm-bz2-files-and-or-online-files">Reading .osm.bz2 files and/or online files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#open-options">Open options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#see-also">See Also</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="parquet.html">(Geo)Parquet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pdf.html">PDF -- Geospatial PDF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pds.html">PDS - Planetary Data Systems TABLE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pgdump.html">PostgreSQL SQL Dump</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pgeo.html">ESRI Personal GeoDatabase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pg.html">PostgreSQL / PostGIS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plscenes.html">PLScenes (Planet Labs Scenes/Catalog API)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pmtiles.html">PMTiles -- ProtoMaps Tiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s57.html">IHO S-57 (ENC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sdts.html">SDTS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="selafin.html">Selafin files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shapefile.html">ESRI Shapefile / DBF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sosi.html">Norwegian SOSI Standard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sqlite.html">SQLite / Spatialite RDBMS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="svg.html">SVG - Scalable Vector Graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sxf.html">Storage and eXchange Format - SXF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiger.html">U.S. Census TIGER/Line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.html">TileDB -- TileDB vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="topojson.html">TopoJSON driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vdv.html">VDV - VDV-451/VDV-452/INTREST Data Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vfk.html">VFK - Czech Cadastral Exchange Data Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vrt.html">VRT -- Virtual Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wasp.html">WAsP - WAsP .map format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wfs.html">WFS - OGC WFS service</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xls.html">XLS - MS Excel format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xlsx.html">XLSX - MS Office Open XML spreadsheet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xodr.html">XODR -- OpenDRIVE Road Description Format</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sponsors/index.html">Sponsors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Vector drivers</a> &raquo;</li>
+      
+      <li>OSM - OpenStreetMap XML and PBF</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit/master/doc/source/drivers/vector/osm.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="parquet.html" class="btn btn-neutral float-right" title="(Geo)Parquet" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="openfilegdb.html" class="btn btn-neutral float-left" title="ESRI File Geodatabase vector (OpenFileGDB)" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="osm-openstreetmap-xml-and-pbf">
+<span id="vector-osm"></span><h1>OSM - OpenStreetMap XML and PBF<a class="headerlink" href="#osm-openstreetmap-xml-and-pbf" title="Link to this heading"></a></h1>
+<div class="admonition shortname" id="shortname-0">
+<p class="admonition-title">Driver short name</p>
+<p>OSM</p>
+</div>
+<div class="admonition build_dependencies" id="build_dependencies-0">
+<p class="admonition-title">Build dependencies</p>
+<p>libsqlite3 (and libexpat for OSM XML)</p>
+</div>
+<p>This driver reads OpenStreetMap files, in .osm (XML based) and .pbf
+(optimized binary) formats.</p>
+<p>The driver is available if GDAL is built with SQLite support and, for
+.osm XML files, with Expat support.</p>
+<p>The filenames must end with .osm or .pbf extension.</p>
+<p>The driver will categorize features into 5 layers :</p>
+<ul class="simple">
+<li><p><strong>points</strong> : &quot;node&quot; features that have significant tags attached.</p></li>
+<li><p><strong>lines</strong> : &quot;way&quot; features that are recognized as non-area.</p></li>
+<li><p><strong>multilinestrings</strong> : &quot;relation&quot; features that form a
+multilinestring(type = 'multilinestring' or type = 'route').</p></li>
+<li><p><strong>multipolygons</strong> : &quot;relation&quot; features that form a multipolygon
+(type = 'multipolygon' or type = 'boundary'), and &quot;way&quot; features that
+are recognized as area.</p></li>
+<li><p><strong>other_relations</strong> : &quot;relation&quot; features that do not belong to the
+above 2 layers.</p></li>
+</ul>
+<section id="driver-capabilities">
+<h2>Driver capabilities<a class="headerlink" href="#driver-capabilities" title="Link to this heading"></a></h2>
+<div class="admonition supports_georeferencing" id="supports_georeferencing-0">
+<p class="admonition-title">Supports Georeferencing</p>
+<p>This driver supports georeferencing</p>
+</div>
+<div class="admonition supports_virtualio" id="supports_virtualio-0">
+<p class="admonition-title">Supports VirtualIO</p>
+<p>This driver supports <a class="reference internal" href="../../user/virtual_file_systems.html#virtual-file-systems"><span class="std std-ref">virtual I/O operations (/vsimem/, etc.)</span></a></p>
+</div>
+</section>
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h2>
+<p>In the <em>data</em> folder of the GDAL distribution, you can find an
+<a class="reference external" href="https://github.com/OSGeo/gdal/blob/master/ogr/ogrsf_frmts/osm/data/osmconf.ini">osmconf.ini</a>
+file that can be customized to fit your needs. You can also define an
+alternate path with the <a class="reference internal" href="#config-OSM_CONFIG_FILE"><code class="docutils literal notranslate"><span class="pre">OSM_CONFIG_FILE</span></code></a> configuration option.</p>
+<p>The customization is essentially which OSM attributes and keys should be
+translated into OGR layer fields.</p>
+<p>Fields can be computed with SQL expressions
+(evaluated by SQLite engine) from other fields/tags. For example to
+compute the z_order attribute.</p>
+<section id="other-tags-field">
+<h3>&quot;other_tags&quot; field<a class="headerlink" href="#other-tags-field" title="Link to this heading"></a></h3>
+<p>When keys are not strictly identified in the <em>osmconf.ini</em> file, the
+key/value pair is appended in a &quot;other_tags&quot; field, with a syntax
+compatible with the PostgreSQL HSTORE type. See the <em>COLUMN_TYPES</em> layer
+creation option of the <a class="reference internal" href="pg.html#vector-pg"><span class="std std-ref">PG driver</span></a>.
+The <code class="docutils literal notranslate"><span class="pre">hstore_get_value()</span></code> function can be used with the <a class="reference internal" href="../../user/ogr_sql_dialect.html#ogr-sql-dialect"><span class="std std-ref">OGRSQL</span></a>
+or <a class="reference internal" href="../../user/sql_sqlite_dialect.html#sql-sqlite-dialect"><span class="std std-ref">SQLite</span></a> SQL dialects to extract the value of a
+given key.</p>
+<p>For example :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogr2ogr</span> <span class="o">-</span><span class="n">f</span> <span class="n">PostgreSQL</span> <span class="s2">&quot;PG:dbname=osm&quot;</span> <span class="n">test</span><span class="o">.</span><span class="n">pbf</span> \
+<span class="o">-</span><span class="n">lco</span> <span class="n">COLUMN_TYPES</span><span class="o">=</span><span class="n">other_tags</span><span class="o">=</span><span class="n">hstore</span>
+</pre></div>
+</div>
+<p>Starting with GDAL 3.7, it is possible to ask the format of this field to
+be JSON encoded, by using the TAGS_FORMAT=JSON open option, or the
+<code class="docutils literal notranslate"><span class="pre">tags_format=json</span></code> setting in the <em>osmconf.ini</em> file.</p>
+</section>
+<section id="all-tags-field">
+<h3>&quot;all_tags&quot; field<a class="headerlink" href="#all-tags-field" title="Link to this heading"></a></h3>
+<p>Similar to &quot;other_tags&quot;, except that it contains both keys specifically
+identified to be reported as dedicated fields, as well as other keys.</p>
+<p>&quot;all_tags&quot; is disabled by default, and when enabled, it is exclusive
+with &quot;other_tags&quot;.</p>
+</section>
+</section>
+<section id="configuration-options">
+<h2>Configuration options<a class="headerlink" href="#configuration-options" title="Link to this heading"></a></h2>
+<p><a class="reference internal" href="../../user/configoptions.html#configoptions"><span class="std std-ref">Configuration options</span></a> can be specified in command-line tools using the syntax <code class="docutils literal notranslate"><span class="pre">--config</span> <span class="pre">&lt;NAME&gt;=&lt;VALUE&gt;</span></code> or using functions such as <a class="reference internal" href="../../api/cpl.html#_CPPv418CPLSetConfigOptionPKcPKc" title="CPLSetConfigOption"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">CPLSetConfigOption()</span></code></a> (C) or <a class="reference internal" href="../../api/python/general.html#osgeo.gdal.config_options" title="osgeo.gdal.config_options"><code class="xref py py-func docutils literal notranslate"><span class="pre">gdal.config_options</span></code></a> (Python).
+The following configuration options are available:</p>
+<ul class="simple">
+<li><p id="config-OSM_CONFIG_FILE"><strong>OSM_CONFIG_FILE=&lt;filename&gt;: </strong>Path to an OSM configuration file. See <a class="reference internal" href="#configuration">Configuration</a>.</p>
+</li>
+<li><p id="config-OSM_MAX_TMPFILE_SIZE"><strong>OSM_MAX_TMPFILE_SIZE=&lt;MB&gt;: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">100</span></code>. Size of the internal SQLite database used to resolve geometries.
+If that database remains under the size specified by this option,
+it will reside in RAM. If it grows
+above, it will be written in a temporary file on disk. By default, this
+file will be written in the current directory, unless you define the
+<a class="reference internal" href="../../user/configoptions.html#config-CPL_TMPDIR"><code class="docutils literal notranslate"><span class="pre">CPL_TMPDIR</span></code></a> configuration option.</p>
+</li>
+<li><p id="config-OSM_USE_CUSTOM_INDEXING"><strong>OSM_USE_CUSTOM_INDEXING=[YES/NO]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">YES</span></code>. For indexation of nodes, a custom mechanism not relying on SQLite is
+used by default (indexation of ways to solve relations is still relying
+on SQLite). It can speed up operations significantly. However, in some
+situations (non increasing node ids, or node ids not in expected range),
+it might not work and the driver will output an error message suggesting
+to relaunch by setting this configuration option to NO.</p>
+</li>
+<li><p id="config-OSM_COMPRESS_NODES"><strong>OSM_COMPRESS_NODES=[YES/NO]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">NO</span></code>. When custom indexing is used (<a class="reference internal" href="#config-OSM_USE_CUSTOM_INDEXING"><code class="docutils literal notranslate"><span class="pre">OSM_USE_CUSTOM_INDEXING=YES</span></code></a>, default case),
+the <a class="reference internal" href="#config-OSM_COMPRESS_NODES"><code class="docutils literal notranslate"><span class="pre">OSM_COMPRESS_NODES</span></code></a>
+configuration option can be set to YES. This option
+might be turned on to improve performance when I/O access is the
+limiting factor (typically the case of rotational disk), and will be
+mostly efficient for country-sized OSM extracts where compression rate
+can go up to a factor of 3 or 4, and help keep the node DB to a size
+that fit in the OS I/O caches. For whole planet file, the effect of this
+option will be less efficient. This option consumes additional 60 MB of
+RAM.</p>
+</li>
+<li><p id="config-OGR_INTERLEAVED_READING"><strong>OGR_INTERLEAVED_READING=value: </strong>See <a class="reference internal" href="#interleaved-reading">Interleaved reading</a>.</p>
+</li>
+</ul>
+</section>
+<section id="interleaved-reading">
+<h2>Interleaved reading<a class="headerlink" href="#interleaved-reading" title="Link to this heading"></a></h2>
+<p>Due to the nature of OSM files and how the driver works internally, the
+default reading mode that works per-layer might not work correctly,
+because too many features will accumulate in the layers before being
+consumed by the user application.</p>
+<p>Starting with GDAL 2.2, applications should use the
+<code class="docutils literal notranslate"><span class="pre">GDALDataset::GetNextFeature()</span></code> API to iterate over features in the order
+they are produced.</p>
+<p>For earlier versions, for large files, applications should set the
+<a class="reference internal" href="#config-OGR_INTERLEAVED_READING"><code class="docutils literal notranslate"><span class="pre">OGR_INTERLEAVED_READING=YES</span></code></a> configuration option to turn on a special
+reading mode where the following reading pattern must be used:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">bool</span> <span class="n">bHasLayersNonEmpty</span><span class="p">;</span>
+<span class="n">do</span>
+<span class="p">{</span>
+    <span class="n">bHasLayersNonEmpty</span> <span class="o">=</span> <span class="n">false</span><span class="p">;</span>
+
+    <span class="k">for</span><span class="p">(</span> <span class="nb">int</span> <span class="n">iLayer</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">iLayer</span> <span class="o">&lt;</span> <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">GetLayerCount</span><span class="p">();</span> <span class="n">iLayer</span><span class="o">++</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">OGRLayer</span> <span class="o">*</span><span class="n">poLayer</span> <span class="o">=</span> <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">GetLayer</span><span class="p">(</span><span class="n">iLayer</span><span class="p">);</span>
+
+        <span class="n">OGRFeature</span><span class="o">*</span> <span class="n">poFeature</span><span class="p">;</span>
+        <span class="k">while</span><span class="p">(</span> <span class="p">(</span><span class="n">poFeature</span> <span class="o">=</span> <span class="n">poLayer</span><span class="o">-&gt;</span><span class="n">GetNextFeature</span><span class="p">())</span> <span class="o">!=</span> <span class="n">NULL</span> <span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">bHasLayersNonEmpty</span> <span class="o">=</span> <span class="n">true</span><span class="p">;</span>
+            <span class="n">OGRFeature</span><span class="p">::</span><span class="n">DestroyFeature</span><span class="p">(</span><span class="n">poFeature</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="k">while</span><span class="p">(</span> <span class="n">bHasLayersNonEmpty</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>Note : the ogr2ogr application has been modified to use that
+<a class="reference internal" href="#config-OGR_INTERLEAVED_READING"><code class="docutils literal notranslate"><span class="pre">OGR_INTERLEAVED_READING</span></code></a> mode without any
+particular user action.</p>
+</section>
+<section id="spatial-filtering">
+<h2>Spatial filtering<a class="headerlink" href="#spatial-filtering" title="Link to this heading"></a></h2>
+<p>Due to way .osm or .pbf files are structured and the parsing of the file
+is done, for efficiency reasons, a spatial filter applied on the points
+layer will also affect other layers. This may result in lines or
+polygons that have missing vertices.</p>
+<p>To improve this, a possibility is using a larger spatial filter with
+some buffer for the points layer, and then post-process the output to
+apply the desired filter. This would not work however if a polygon has
+vertices very far away from the interest area. In which case full
+conversion of the file to another format, and filtering of the resulting
+lines or polygons layers would be needed.</p>
+</section>
+<section id="reading-osm-bz2-files-and-or-online-files">
+<h2>Reading .osm.bz2 files and/or online files<a class="headerlink" href="#reading-osm-bz2-files-and-or-online-files" title="Link to this heading"></a></h2>
+<p>.osm.bz2 are not natively recognized, however you can process them (on
+Unix), with the following command :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bzcat</span> <span class="n">my</span><span class="o">.</span><span class="n">osm</span><span class="o">.</span><span class="n">bz2</span> <span class="o">|</span> <span class="n">ogr2ogr</span> <span class="o">-</span><span class="n">f</span> <span class="n">SQLite</span> <span class="n">my</span><span class="o">.</span><span class="n">sqlite</span> <span class="o">/</span><span class="n">vsistdin</span><span class="o">/</span>
+</pre></div>
+</div>
+<p>You can convert a .osm or .pbf file without downloading it :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">wget</span> <span class="o">-</span><span class="n">O</span> <span class="o">-</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">some</span><span class="o">.</span><span class="n">pbf</span> <span class="o">|</span>
+<span class="n">ogr2ogr</span> <span class="o">-</span><span class="n">f</span> <span class="n">SQLite</span> <span class="n">my</span><span class="o">.</span><span class="n">sqlite</span> <span class="o">/</span><span class="n">vsistdin</span><span class="o">/</span>
+
+<span class="ow">or</span>
+
+<span class="n">ogr2ogr</span> <span class="o">-</span><span class="n">f</span> <span class="n">SQLite</span> <span class="n">my</span><span class="o">.</span><span class="n">sqlite</span> \
+<span class="o">/</span><span class="n">vsicurl_streaming</span><span class="o">/</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">some</span><span class="o">.</span><span class="n">pbf</span> <span class="o">-</span><span class="n">progress</span>
+</pre></div>
+</div>
+<p>And to combine the above steps :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">wget</span> <span class="o">-</span><span class="n">O</span> <span class="o">-</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">some</span><span class="o">.</span><span class="n">osm</span><span class="o">.</span><span class="n">bz2</span> <span class="o">|</span>
+<span class="n">bzcat</span> <span class="o">|</span> <span class="n">ogr2ogr</span> <span class="o">-</span><span class="n">f</span> <span class="n">SQLite</span> <span class="n">my</span><span class="o">.</span><span class="n">sqlite</span> <span class="o">/</span><span class="n">vsistdin</span><span class="o">/</span>
+</pre></div>
+</div>
+</section>
+<section id="open-options">
+<h2>Open options<a class="headerlink" href="#open-options" title="Link to this heading"></a></h2>
+<p>Open options can be specified in command-line tools using the syntax <code class="docutils literal notranslate"><span class="pre">-oo</span> <span class="pre">&lt;NAME&gt;=&lt;VALUE&gt;</span></code> or by providing the appropriate arguments to <a class="reference internal" href="../../api/raster_c_api.html#_CPPv410GDALOpenExPKcjPPCKcPPCKcPPCKc" title="GDALOpenEx"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALOpenEx()</span></code></a> (C) or <a class="reference internal" href="../../api/python/raster_api.html#osgeo.gdal.OpenEx" title="osgeo.gdal.OpenEx"><code class="xref py py-meth docutils literal notranslate"><span class="pre">gdal.OpenEx</span></code></a> (Python).
+The following open options are supported:</p>
+<ul class="simple">
+<li><p id="drivers/vector/osm-oo-CONFIG_FILE"><strong>CONFIG_FILE=&lt;filename&gt;: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">{GDAL_DATA}/osmconf.ini</span></code>. Configuration filename.</p>
+</li>
+<li><p id="drivers/vector/osm-oo-USE_CUSTOM_INDEXING"><strong>USE_CUSTOM_INDEXING=[YES/NO]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">YES</span></code>. Whether to enable custom indexing.</p>
+</li>
+<li><p id="drivers/vector/osm-oo-COMPRESS_NODES"><strong>COMPRESS_NODES=[YES/NO]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">NO</span></code>. Whether to compress nodes in temporary DB.</p>
+</li>
+<li><p id="drivers/vector/osm-oo-MAX_TMPFILE_SIZE"><strong>MAX_TMPFILE_SIZE=&lt;MBytes&gt;: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">100</span></code>. Maximum size in MB of
+in-memory temporary file. If it exceeds that value, it will go to
+disk.</p>
+</li>
+<li><p id="drivers/vector/osm-oo-INTERLEAVED_READING"><strong>INTERLEAVED_READING=[YES/NO]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">NO</span></code>. Whether to enable interleaved reading.</p>
+</li>
+<li><p id="drivers/vector/osm-oo-TAGS_FORMAT"><strong>TAGS_FORMAT=[HSTORE/JSON]: </strong> (GDAL &gt;= 3.7)  Defaults to <code class="docutils literal notranslate"><span class="pre">HSTORE</span></code>. Format for all_tags/other_tags fields.</p>
+</li>
+</ul>
+</section>
+<section id="see-also">
+<h2>See Also<a class="headerlink" href="#see-also" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="http://www.openstreetmap.org/">OpenStreetMap home page</a></p></li>
+<li><p><a class="reference external" href="http://wiki.openstreetmap.org/wiki/OSM_XML">OSM XML Format
+description</a></p></li>
+<li><p><a class="reference external" href="http://wiki.openstreetmap.org/wiki/PBF_Format">OSM PBF Format
+description</a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="parquet.html" class="btn btn-neutral float-right" title="(Geo)Parquet" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="openfilegdb.html" class="btn btn-neutral float-left" title="ESRI File Geodatabase vector (OpenFileGDB)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2024 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+  </div>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

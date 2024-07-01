@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ogrinfo &mdash; GDAL  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d10597a4" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/gdal.css?v=e152ac3b" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="canonical" href="https://gdal.org/programs/ogrinfo.html"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ogr2ogr" href="ogr2ogr.html" />
+    <link rel="prev" title="Common options for vector programs" href="vector_common_options.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Programs</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#general">General</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#raster-programs">Raster programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#multidimensional-raster-programs">Multidimensional Raster programs</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#vector-programs">Vector programs</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="vector_common_options.html">Common options</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ogrinfo</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#synopsis">Synopsis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#description">Description</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#c-api">C API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ogr2ogr.html">ogr2ogr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ogrtindex.html">ogrtindex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ogrlineref.html">ogrlineref</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ogrmerge.html">ogrmerge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ogr_layer_algebra.html">ogr_layer_algebra</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#geographic-network-programs">Geographic network programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#other-utilities">Other utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sponsors/index.html">Sponsors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Programs</a> &raquo;</li>
+      
+      <li>ogrinfo</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit/master/doc/source/programs/ogrinfo.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="ogr2ogr.html" class="btn btn-neutral float-right" title="ogr2ogr" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="vector_common_options.html" class="btn btn-neutral float-left" title="Common options for vector programs" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="ogrinfo">
+<span id="id1"></span><h1>ogrinfo<a class="headerlink" href="#ogrinfo" title="Link to this heading"></a></h1>
+<p>Lists information about an OGR-supported data source. With SQL statements
+it is also possible to edit data.</p>
+<section id="synopsis">
+<span id="index-0"></span><h2>Synopsis<a class="headerlink" href="#synopsis" title="Link to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogrinfo</span> <span class="p">[</span><span class="o">--</span><span class="n">help</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">help</span><span class="o">-</span><span class="n">general</span><span class="p">]</span>
+        <span class="p">[</span><span class="o">-</span><span class="k">if</span> <span class="o">&lt;</span><span class="n">driver_name</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">json</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">ro</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">q</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">where</span> <span class="o">&lt;</span><span class="n">restricted_where</span><span class="o">&gt;|</span><span class="nd">@f</span><span class="o">&lt;</span><span class="n">ilename</span><span class="o">&gt;</span><span class="p">]</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">spat</span> <span class="o">&lt;</span><span class="n">xmin</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">ymin</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">xmax</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">ymax</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">geomfield</span> <span class="o">&lt;</span><span class="n">field</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">fid</span> <span class="o">&lt;</span><span class="n">fid</span><span class="o">&gt;</span><span class="p">]</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">sql</span> <span class="o">&lt;</span><span class="n">statement</span><span class="o">&gt;|@&lt;</span><span class="n">filename</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">dialect</span> <span class="o">&lt;</span><span class="n">sql_dialect</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">al</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">rl</span><span class="p">]</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">so</span><span class="o">|-</span><span class="n">features</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">limit</span> <span class="o">&lt;</span><span class="n">nb_features</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">fields</span><span class="o">=</span><span class="p">{</span><span class="n">YES</span><span class="o">|</span><span class="n">NO</span><span class="p">}]]</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">geom</span><span class="o">=</span><span class="p">{</span><span class="n">YES</span><span class="o">|</span><span class="n">NO</span><span class="o">|</span><span class="n">SUMMARY</span><span class="o">|</span><span class="n">WKT</span><span class="o">|</span><span class="n">ISO_WKT</span><span class="p">}]</span> <span class="p">[</span><span class="o">-</span><span class="n">oo</span> <span class="o">&lt;</span><span class="n">NAME</span><span class="o">&gt;=&lt;</span><span class="n">VALUE</span><span class="o">&gt;</span><span class="p">]</span><span class="o">...</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">nomd</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">listmdd</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">mdd</span> <span class="o">&lt;</span><span class="n">domain</span><span class="o">&gt;|</span><span class="nb">all</span><span class="p">]</span><span class="o">...</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">nocount</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">nogeomtype</span><span class="p">]</span> <span class="p">[[</span><span class="o">-</span><span class="n">noextent</span><span class="p">]</span> <span class="o">|</span> <span class="p">[</span><span class="o">-</span><span class="n">extent3D</span><span class="p">]]</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">wkt_format</span> <span class="n">WKT1</span><span class="o">|</span><span class="n">WKT2</span><span class="o">|&lt;</span><span class="n">other_values</span><span class="o">&gt;</span><span class="p">]</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">fielddomain</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="p">]</span>
+        <span class="o">&lt;</span><span class="n">datasource_name</span><span class="o">&gt;</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">layer</span><span class="o">&gt;</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">layer</span><span class="o">&gt;</span> <span class="o">...</span><span class="p">]]</span>
+</pre></div>
+</div>
+</section>
+<section id="description">
+<h2>Description<a class="headerlink" href="#description" title="Link to this heading"></a></h2>
+<p>The <strong class="program">ogrinfo</strong> program lists various information about an OGR-supported data
+source to stdout (the terminal). By executing SQL statements it is also possible to
+edit data.</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogrinfo-help">
+<span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-ogrinfo-help" title="Link to this definition"></a></dt>
+<dd><p>Show this help message and exit</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogrinfo-help-general">
+<span class="sig-name descname"><span class="pre">--help-general</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-ogrinfo-help-general" title="Link to this definition"></a></dt>
+<dd><p>Gives a brief usage message for the generic GDAL commandline options and exit.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogrinfo-if">
+<span class="sig-name descname"><span class="pre">-if</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;format&gt;</span></span><a class="headerlink" href="#cmdoption-ogrinfo-if" title="Link to this definition"></a></dt>
+<dd><p>Format/driver name to be attempted to open the input file(s). It is generally
+not necessary to specify it, but it can be used to skip automatic driver
+detection, when it fails to select the appropriate driver.
+This option can be repeated several times to specify several candidate drivers.
+Note that it does not force those drivers to open the dataset. In particular,
+some drivers have requirements on file extensions.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 3.2.</span></p>
+</div>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogrinfo-json">
+<span class="sig-name descname"><span class="pre">-json</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-ogrinfo-json" title="Link to this definition"></a></dt>
+<dd><p>Display the output in json format, conforming to the
+<a class="reference external" href="https://github.com/OSGeo/gdal/blob/master/apps/data/ogrinfo_output.schema.json">ogrinfo_output.schema.json</a>
+schema.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 3.7.</span></p>
+</div>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogrinfo-ro">
+<span class="sig-name descname"><span class="pre">-ro</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-ogrinfo-ro" title="Link to this definition"></a></dt>
+<dd><p>Open the data source in read-only mode.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogrinfo-al">
+<span class="sig-name descname"><span class="pre">-al</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-ogrinfo-al" title="Link to this definition"></a></dt>
+<dd><p>List all layers (used instead of having to give layer names
+as arguments).
+In the default text output, this also enables listing
+all features, which can be disabled with <a class="reference internal" href="#cmdoption-ogrinfo-so"><code class="xref std std-option docutils literal notranslate"><span class="pre">-so</span></code></a>.
+In JSON output, -al is implicit, but listing of features must be
+explicitly enabled with <a class="reference internal" href="#cmdoption-ogrinfo-features"><code class="xref std std-option docutils literal notranslate"><span class="pre">-features</span></code></a>.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogrinfo-rl">
+<span class="sig-name descname"><span class="pre">-rl</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-ogrinfo-rl" title="Link to this definition"></a></dt>
+<dd><p>Enable random layer reading mode, i.e. iterate over features in the order
+they are found in the dataset, and not layer per layer. This can be
+significantly faster for some formats (for example OSM, GMLAS).
+-rl cannot be used with -sql.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 2.2.</span></p>
+</div>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogrinfo-so">
+<span class="sig-name descname"><span class="pre">-so</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-ogrinfo-so" title="Link to this definition"></a></dt>
+<dd><p>Summary Only: suppress listing of individual features and show only
+summary information like projection, schema, feature count and extents.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogrinfo-features">
+<span class="sig-name descname"><span class="pre">-features</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-ogrinfo-features" title="Link to this definition"></a></dt>
+<dd><p>Enable listing of features. This has the opposite effect of <a class="reference internal" href="#cmdoption-ogrinfo-so"><code class="xref std std-option docutils literal notranslate"><span class="pre">-so</span></code></a>.</p>
+<p>This option should be used with caution if using the library function
+<a class="reference internal" href="../api/gdal_utils.html#_CPPv414GDALVectorInfo12GDALDatasetHPK21GDALVectorInfoOptions" title="GDALVectorInfo"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALVectorInfo()</span></code></a> and/or <a class="reference internal" href="#cmdoption-ogrinfo-json"><code class="xref std std-option docutils literal notranslate"><span class="pre">-json</span></code></a>, as the whole output of
+ogrinfo will be built in memory. Consequently, when used on a large
+collection of features, RAM may be exhausted.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 3.7.</span></p>
+</div>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogrinfo-limit">
+<span class="sig-name descname"><span class="pre">-limit</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;nb_features&gt;</span></span><a class="headerlink" href="#cmdoption-ogrinfo-limit" title="Link to this definition"></a></dt>
+<dd><div class="versionadded">
+<p><span class="versionmodified added">Added in version 3.9.</span></p>
+</div>
+<p>Limit the number of features per layer.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogrinfo-q">
+<span class="sig-name descname"><span class="pre">-q</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-ogrinfo-q" title="Link to this definition"></a></dt>
+<dd><p>Quiet verbose reporting of various information, including coordinate
+system, layer schema, extents, and feature count.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogrinfo-where">
+<span class="sig-name descname"><span class="pre">-where</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;restricted_where&gt;</span></span><a class="headerlink" href="#cmdoption-ogrinfo-where" title="Link to this definition"></a></dt>
+<dd><p>An attribute query in a restricted form of the queries used in the SQL
+<cite>WHERE</cite> statement. Only features matching the attribute query will be
+reported. Starting with GDAL 2.1, the <code class="docutils literal notranslate"><span class="pre">&#64;&lt;filename&gt;</span></code> syntax can be used to
+indicate that the content is in the pointed filename.</p>
+<p>Example of <code class="docutils literal notranslate"><span class="pre">-where</span></code> and quoting:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>-where<span class="w"> </span><span class="s2">&quot;\&quot;Corner Point Identifier\&quot; LIKE &#39;%__00_00&#39;&quot;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogrinfo-sql">
+<span class="sig-name descname"><span class="pre">-sql</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;statement&gt;|&#64;&lt;filename&gt;</span></span><a class="headerlink" href="#cmdoption-ogrinfo-sql" title="Link to this definition"></a></dt>
+<dd><p>Execute the indicated SQL statement and return the result. Starting with
+GDAL 2.1, the <code class="docutils literal notranslate"><span class="pre">&#64;&lt;filename&gt;</span></code> syntax can be used to indicate that the content is
+in the pointed filename (e.g <code class="docutils literal notranslate"><span class="pre">&#64;my_select.txt</span></code> where my_select.txt is a file
+in the current directory). Data can also be edited with SQL INSERT, UPDATE,
+DELETE, DROP TABLE, ALTER TABLE etc. Editing capabilities depend on the selected
+dialect with <a class="reference internal" href="#cmdoption-ogrinfo-dialect"><code class="xref std std-option docutils literal notranslate"><span class="pre">-dialect</span></code></a>.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogrinfo-dialect">
+<span class="sig-name descname"><span class="pre">-dialect</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;dialect&gt;</span></span><a class="headerlink" href="#cmdoption-ogrinfo-dialect" title="Link to this definition"></a></dt>
+<dd><p>SQL dialect. In some cases can be used to use (unoptimized) <a class="reference internal" href="../user/ogr_sql_dialect.html#ogr-sql-dialect"><span class="std std-ref">OGR SQL dialect</span></a> instead
+of the native SQL of an RDBMS by passing the <code class="docutils literal notranslate"><span class="pre">OGRSQL</span></code> dialect value.
+The <a class="reference internal" href="../user/sql_sqlite_dialect.html#sql-sqlite-dialect"><span class="std std-ref">SQL SQLite dialect</span></a> can be selected with the <code class="docutils literal notranslate"><span class="pre">SQLITE</span></code>
+and <code class="docutils literal notranslate"><span class="pre">INDIRECT_SQLITE</span></code> dialect values, and this can be used with any datasource.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogrinfo-spat">
+<span class="sig-name descname"><span class="pre">-spat</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;xmin&gt;</span> <span class="pre">&lt;ymin&gt;</span> <span class="pre">&lt;xmax&gt;</span> <span class="pre">&lt;ymax&gt;</span></span><a class="headerlink" href="#cmdoption-ogrinfo-spat" title="Link to this definition"></a></dt>
+<dd><p>The area of interest. Only features within the rectangle will be reported.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogrinfo-geomfield">
+<span class="sig-name descname"><span class="pre">-geomfield</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;field&gt;</span></span><a class="headerlink" href="#cmdoption-ogrinfo-geomfield" title="Link to this definition"></a></dt>
+<dd><p>Name of the geometry field on which the spatial filter operates.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogrinfo-fid">
+<span class="sig-name descname"><span class="pre">-fid</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;fid&gt;</span></span><a class="headerlink" href="#cmdoption-ogrinfo-fid" title="Link to this definition"></a></dt>
+<dd><p>If provided, only the feature with this feature id will be reported.
+Operates exclusive of the spatial or attribute queries. Note: if you want
+to select several features based on their feature id, you can also use the
+fact the 'fid' is a special field recognized by OGR SQL. So, <cite>-where &quot;fid in (1,3,5)&quot;</cite>
+would select features 1, 3 and 5.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogrinfo-fields">
+<span class="sig-name descname"><span class="pre">-fields</span></span><span class="sig-prename descclassname"><span class="pre">=YES|NO</span></span><a class="headerlink" href="#cmdoption-ogrinfo-fields" title="Link to this definition"></a></dt>
+<dd><p>If set to <code class="docutils literal notranslate"><span class="pre">NO</span></code>, the feature dump will not display field values. Default value
+is <code class="docutils literal notranslate"><span class="pre">YES</span></code>.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogrinfo-fielddomain">
+<span class="sig-name descname"><span class="pre">-fielddomain</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;domain_name&gt;</span></span><a class="headerlink" href="#cmdoption-ogrinfo-fielddomain" title="Link to this definition"></a></dt>
+<dd><div class="versionadded">
+<p><span class="versionmodified added">Added in version 3.3.</span></p>
+</div>
+<p>Display details about a field domain.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogrinfo-geom">
+<span class="sig-name descname"><span class="pre">-geom</span></span><span class="sig-prename descclassname"><span class="pre">=YES|NO|SUMMARY|WKT|ISO_WKT</span></span><a class="headerlink" href="#cmdoption-ogrinfo-geom" title="Link to this definition"></a></dt>
+<dd><p>If set to <code class="docutils literal notranslate"><span class="pre">NO</span></code>, the feature dump will not display the geometry. If set to
+<code class="docutils literal notranslate"><span class="pre">SUMMARY</span></code>, only a summary of the geometry will be displayed. If set to
+<code class="docutils literal notranslate"><span class="pre">YES</span></code> or <code class="docutils literal notranslate"><span class="pre">ISO_WKT</span></code>, the geometry will be reported in full OGC WKT format.
+If set to <code class="docutils literal notranslate"><span class="pre">WKT</span></code> the geometry will be reported in legacy <code class="docutils literal notranslate"><span class="pre">WKT</span></code>. Default
+value is <code class="docutils literal notranslate"><span class="pre">YES</span></code>. (WKT and <code class="docutils literal notranslate"><span class="pre">ISO_WKT</span></code> are available starting with GDAL 2.1,
+which also changes the default to ISO_WKT)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogrinfo-oo">
+<span class="sig-name descname"><span class="pre">-oo</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;NAME&gt;=&lt;VALUE&gt;</span></span><a class="headerlink" href="#cmdoption-ogrinfo-oo" title="Link to this definition"></a></dt>
+<dd><p>Dataset open option (format-specific)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogrinfo-nomd">
+<span class="sig-name descname"><span class="pre">-nomd</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-ogrinfo-nomd" title="Link to this definition"></a></dt>
+<dd><p>Suppress metadata printing. Some datasets may contain a lot of metadata
+strings.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogrinfo-listmdd">
+<span class="sig-name descname"><span class="pre">-listmdd</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-ogrinfo-listmdd" title="Link to this definition"></a></dt>
+<dd><p>List all metadata domains available for the dataset.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogrinfo-mdd">
+<span class="sig-name descname"><span class="pre">-mdd</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;domain&gt;</span></span><a class="headerlink" href="#cmdoption-ogrinfo-mdd" title="Link to this definition"></a></dt>
+<dd><p>Report metadata for the specified domain. <code class="docutils literal notranslate"><span class="pre">all</span></code> can be used to report
+metadata in all domains.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogrinfo-nocount">
+<span class="sig-name descname"><span class="pre">-nocount</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-ogrinfo-nocount" title="Link to this definition"></a></dt>
+<dd><p>Suppress feature count printing.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogrinfo-noextent">
+<span class="sig-name descname"><span class="pre">-noextent</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-ogrinfo-noextent" title="Link to this definition"></a></dt>
+<dd><p>Suppress spatial extent printing.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogrinfo-extent3D">
+<span class="sig-name descname"><span class="pre">-extent3D</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-ogrinfo-extent3D" title="Link to this definition"></a></dt>
+<dd><div class="versionadded">
+<p><span class="versionmodified added">Added in version 3.9.</span></p>
+</div>
+<p>Request a 3D extent to be reported (the default is 2D only). Note that this
+operation might be slower than requesting the 2D extent, depending on format
+and driver capabilities.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogrinfo-nogeomtype">
+<span class="sig-name descname"><span class="pre">-nogeomtype</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-ogrinfo-nogeomtype" title="Link to this definition"></a></dt>
+<dd><p>Suppress layer geometry type printing.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 3.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogrinfo-formats">
+<span class="sig-name descname"><span class="pre">--formats</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-ogrinfo-formats" title="Link to this definition"></a></dt>
+<dd><p>List all vector formats supported by this GDAL build (read-only and
+read-write) and exit. The format support is indicated as follows:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ro</span></code> is read-only driver</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rw</span></code> is read or write (i.e. supports <a class="reference internal" href="../api/gdaldriver_cpp.html#_CPPv4N10GDALDriver10CreateCopyEPKcP11GDALDataseti12CSLConstList16GDALProgressFuncPv" title="GDALDriver::CreateCopy"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDriver::CreateCopy()</span></code></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rw+</span></code> is read, write and update (i.e. supports <a class="reference internal" href="../api/gdaldriver_cpp.html#_CPPv4N10GDALDriver6CreateEPKciii12GDALDataType12CSLConstList" title="GDALDriver::Create"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDriver::Create()</span></code></a>)</p></li>
+<li><p>A <code class="docutils literal notranslate"><span class="pre">v</span></code> is appended for formats supporting virtual IO (<code class="docutils literal notranslate"><span class="pre">/vsimem</span></code>, <code class="docutils literal notranslate"><span class="pre">/vsigzip</span></code>, <code class="docutils literal notranslate"><span class="pre">/vsizip</span></code>, etc).</p></li>
+<li><p>A <code class="docutils literal notranslate"><span class="pre">s</span></code> is appended for formats supporting subdatasets.</p></li>
+</ul>
+<p>The order in which drivers are listed is the one in which they are registered,
+which determines the order in which they are successively probed when opening
+a dataset. Most of the time, this order does not matter, but in some situations,
+several drivers may recognize the same file. The <code class="docutils literal notranslate"><span class="pre">-if</span></code> option of some utilities
+can be specified to restrict opening the dataset with a subset of drivers (generally one).
+Note that it does not force those drivers to open the dataset. In particular,
+some drivers have requirements on file extensions.
+Alternatively, the <a class="reference internal" href="../user/configoptions.html#config-GDAL_SKIP"><code class="docutils literal notranslate"><span class="pre">GDAL_SKIP</span></code></a> configuration option can also be used
+to exclude one or several drivers.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogrinfo-wkt_format">
+<span class="sig-name descname"><span class="pre">-wkt_format</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;format&gt;</span></span><a class="headerlink" href="#cmdoption-ogrinfo-wkt_format" title="Link to this definition"></a></dt>
+<dd><p>The WKT format used to display the SRS.
+Currently supported values for the <code class="docutils literal notranslate"><span class="pre">format</span></code> are:</p>
+<p><code class="docutils literal notranslate"><span class="pre">WKT1</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">WKT2</span></code> (latest WKT version, currently <em>WKT2_2018</em>)</p>
+<p><code class="docutils literal notranslate"><span class="pre">WKT2_2015</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">WKT2_2018</span></code></p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 3.0.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogrinfo-arg-datasource_name">
+<span class="sig-name descname"><span class="pre">&lt;datasource_name&gt;</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-ogrinfo-arg-datasource_name" title="Link to this definition"></a></dt>
+<dd><p>The data source to open. May be a filename, directory or other virtual
+name. See the OGR Vector Formats list for supported datasources.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogrinfo-arg-layer">
+<span class="sig-name descname"><span class="pre">&lt;layer&gt;</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-ogrinfo-arg-layer" title="Link to this definition"></a></dt>
+<dd><p>One or more layer names may be reported.  If no layer names are passed then
+ogrinfo will report a list of available layers (and their layer wide
+geometry type). If layer name(s) are given then their extents, coordinate
+system, feature count, geometry type, schema and all features matching
+query parameters will be reported to the terminal. If no query parameters
+are provided, all features are reported.</p>
+</dd></dl>
+
+<p>Geometries are reported in OGC WKT format.</p>
+</section>
+<section id="c-api">
+<h2>C API<a class="headerlink" href="#c-api" title="Link to this heading"></a></h2>
+<p>This utility is also callable from C with <a class="reference internal" href="../api/gdal_utils.html#_CPPv414GDALVectorInfo12GDALDatasetHPK21GDALVectorInfoOptions" title="GDALVectorInfo"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALVectorInfo()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 3.7.</span></p>
+</div>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
+<p>Example of reporting the names of the layers in a NTF file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>ogrinfo wrk/SHETLAND_ISLANDS.NTF
+
+INFO: Open of `wrk/SHETLAND_ISLANDS.NTF&#39;
+using driver `UK .NTF&#39; successful.
+1: BL2000_LINK (Line String)
+2: BL2000_POLY (None)
+3: BL2000_COLLECTIONS (None)
+4: FEATURE_CLASSES (None)
+</pre></div>
+</div>
+<p>Example of retrieving a summary (<code class="docutils literal notranslate"><span class="pre">-so</span></code>) of a layer without showing details about every single feature:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>ogrinfo \
+  -so \
+  natural_earth_vector.gpkg \
+  ne_10m_admin_0_antarctic_claim_limit_lines
+
+  INFO: Open of `natural_earth_vector.gpkg&#39;
+       using driver `GPKG&#39; successful.
+
+  Layer name: ne_10m_admin_0_antarctic_claim_limit_lines
+  Geometry: Line String
+  Feature Count: 23
+  Extent: (-150.000000, -90.000000) - (160.100000, -60.000000)
+  Layer SRS WKT:
+  GEOGCS[&quot;WGS 84&quot;,
+      DATUM[&quot;WGS_1984&quot;,
+          SPHEROID[&quot;WGS 84&quot;,6378137,298.257223563,
+              AUTHORITY[&quot;EPSG&quot;,&quot;7030&quot;]],
+          AUTHORITY[&quot;EPSG&quot;,&quot;6326&quot;]],
+      PRIMEM[&quot;Greenwich&quot;,0,
+          AUTHORITY[&quot;EPSG&quot;,&quot;8901&quot;]],
+      UNIT[&quot;degree&quot;,0.0174532925199433,
+          AUTHORITY[&quot;EPSG&quot;,&quot;9122&quot;]],
+      AUTHORITY[&quot;EPSG&quot;,&quot;4326&quot;]]
+  FID Column = fid
+  Geometry Column = geom
+  type: String (15.0)
+  scalerank: Integer (0.0)
+  featurecla: String (50.0)
+</pre></div>
+</div>
+<p>Example of retrieving information on a file in JSON format without showing details about every single feature:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogrinfo</span> <span class="o">-</span><span class="n">json</span> <span class="n">poly</span><span class="o">.</span><span class="n">shp</span>
+</pre></div>
+</div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="s2">&quot;autotest/ogr/data/poly.shp&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;driverShortName&quot;</span><span class="p">:</span><span class="s2">&quot;ESRI Shapefile&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;driverLongName&quot;</span><span class="p">:</span><span class="s2">&quot;ESRI Shapefile&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;layers&quot;</span><span class="p">:[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;poly&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;metadata&quot;</span><span class="p">:{</span>
+<span class="w">        </span><span class="nt">&quot;&quot;</span><span class="p">:{</span>
+<span class="w">          </span><span class="nt">&quot;DBF_DATE_LAST_UPDATE&quot;</span><span class="p">:</span><span class="s2">&quot;2018-08-02&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;SHAPEFILE&quot;</span><span class="p">:{</span>
+<span class="w">          </span><span class="nt">&quot;SOURCE_ENCODING&quot;</span><span class="p">:</span><span class="s2">&quot;&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;geometryFields&quot;</span><span class="p">:[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;Polygon&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;nullable&quot;</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;extent&quot;</span><span class="p">:[</span>
+<span class="w">            </span><span class="mf">478315.53125</span><span class="p">,</span>
+<span class="w">            </span><span class="mf">4762880.5</span><span class="p">,</span>
+<span class="w">            </span><span class="mf">481645.3125</span><span class="p">,</span>
+<span class="w">            </span><span class="mf">4765610.5</span>
+<span class="w">          </span><span class="p">],</span>
+<span class="w">          </span><span class="nt">&quot;coordinateSystem&quot;</span><span class="p">:{</span>
+<span class="w">            </span><span class="nt">&quot;wkt&quot;</span><span class="p">:</span><span class="s2">&quot;PROJCRS[\&quot;OSGB36 / British National Grid\&quot;,BASEGEOGCRS[\&quot;OSGB36\&quot;,DATUM...&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;projjson&quot;</span><span class="p">:{</span>
+<span class="w">              </span><span class="nt">&quot;$schema&quot;</span><span class="p">:</span><span class="s2">&quot;https://proj.org/schemas/v0.6/projjson.schema.json&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;ProjectedCRS&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;OSGB36 / British National Grid&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;base_crs&quot;</span><span class="p">:{</span>
+<span class="w">                </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;OSGB36&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">&quot;datum&quot;</span><span class="p">:{</span>
+<span class="w">                  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;GeodeticReferenceFrame&quot;</span><span class="p">,</span>
+<span class="w">                  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Ordnance Survey of Great Britain 1936&quot;</span><span class="p">,</span>
+<span class="w">                  </span><span class="nt">&quot;ellipsoid&quot;</span><span class="p">:{</span>
+<span class="w">                    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Airy 1830&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">&quot;semi_major_axis&quot;</span><span class="p">:</span><span class="mf">6377563.396</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">&quot;inverse_flattening&quot;</span><span class="p">:</span><span class="mf">299.3249646</span>
+<span class="w">                  </span><span class="p">}</span>
+<span class="w">                </span><span class="p">},</span>
+<span class="w">                </span><span class="nt">&quot;coordinate_system&quot;</span><span class="p">:{</span>
+<span class="w">                  </span><span class="nt">&quot;subtype&quot;</span><span class="p">:</span><span class="s2">&quot;ellipsoidal&quot;</span><span class="p">,</span>
+<span class="w">                  </span><span class="nt">&quot;axis&quot;</span><span class="p">:[</span>
+<span class="w">                    </span><span class="p">{</span>
+<span class="w">                      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Geodetic latitude&quot;</span><span class="p">,</span>
+<span class="w">                      </span><span class="nt">&quot;abbreviation&quot;</span><span class="p">:</span><span class="s2">&quot;Lat&quot;</span><span class="p">,</span>
+<span class="w">                      </span><span class="nt">&quot;direction&quot;</span><span class="p">:</span><span class="s2">&quot;north&quot;</span><span class="p">,</span>
+<span class="w">                      </span><span class="nt">&quot;unit&quot;</span><span class="p">:</span><span class="s2">&quot;degree&quot;</span>
+<span class="w">                    </span><span class="p">},</span>
+<span class="w">                    </span><span class="p">{</span>
+<span class="w">                      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Geodetic longitude&quot;</span><span class="p">,</span>
+<span class="w">                      </span><span class="nt">&quot;abbreviation&quot;</span><span class="p">:</span><span class="s2">&quot;Lon&quot;</span><span class="p">,</span>
+<span class="w">                      </span><span class="nt">&quot;direction&quot;</span><span class="p">:</span><span class="s2">&quot;east&quot;</span><span class="p">,</span>
+<span class="w">                      </span><span class="nt">&quot;unit&quot;</span><span class="p">:</span><span class="s2">&quot;degree&quot;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                  </span><span class="p">]</span>
+<span class="w">                </span><span class="p">},</span>
+<span class="w">                </span><span class="nt">&quot;id&quot;</span><span class="p">:{</span>
+<span class="w">                  </span><span class="nt">&quot;authority&quot;</span><span class="p">:</span><span class="s2">&quot;EPSG&quot;</span><span class="p">,</span>
+<span class="w">                  </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="mi">4277</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">              </span><span class="p">},</span>
+<span class="w">              </span><span class="nt">&quot;conversion&quot;</span><span class="p">:{</span>
+<span class="w">                </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;British National Grid&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">&quot;method&quot;</span><span class="p">:{</span>
+<span class="w">                  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Transverse Mercator&quot;</span><span class="p">,</span>
+<span class="w">                  </span><span class="nt">&quot;id&quot;</span><span class="p">:{</span>
+<span class="w">                    </span><span class="nt">&quot;authority&quot;</span><span class="p">:</span><span class="s2">&quot;EPSG&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="mi">9807</span>
+<span class="w">                  </span><span class="p">}</span>
+<span class="w">                </span><span class="p">},</span>
+<span class="w">                </span><span class="nt">&quot;parameters&quot;</span><span class="p">:[</span>
+<span class="w">                  </span><span class="p">{</span>
+<span class="w">                    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Latitude of natural origin&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="mi">49</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">&quot;unit&quot;</span><span class="p">:</span><span class="s2">&quot;degree&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">&quot;id&quot;</span><span class="p">:{</span>
+<span class="w">                      </span><span class="nt">&quot;authority&quot;</span><span class="p">:</span><span class="s2">&quot;EPSG&quot;</span><span class="p">,</span>
+<span class="w">                      </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="mi">8801</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                  </span><span class="p">},</span>
+<span class="w">                  </span><span class="p">{</span>
+<span class="w">                    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Longitude of natural origin&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="mi">-2</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">&quot;unit&quot;</span><span class="p">:</span><span class="s2">&quot;degree&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">&quot;id&quot;</span><span class="p">:{</span>
+<span class="w">                      </span><span class="nt">&quot;authority&quot;</span><span class="p">:</span><span class="s2">&quot;EPSG&quot;</span><span class="p">,</span>
+<span class="w">                      </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="mi">8802</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                  </span><span class="p">},</span>
+<span class="w">                  </span><span class="p">{</span>
+<span class="w">                    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Scale factor at natural origin&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="mf">0.9996012717</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">&quot;unit&quot;</span><span class="p">:</span><span class="s2">&quot;unity&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">&quot;id&quot;</span><span class="p">:{</span>
+<span class="w">                      </span><span class="nt">&quot;authority&quot;</span><span class="p">:</span><span class="s2">&quot;EPSG&quot;</span><span class="p">,</span>
+<span class="w">                      </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="mi">8805</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                  </span><span class="p">},</span>
+<span class="w">                  </span><span class="p">{</span>
+<span class="w">                    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;False easting&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="mi">400000</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">&quot;unit&quot;</span><span class="p">:</span><span class="s2">&quot;metre&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">&quot;id&quot;</span><span class="p">:{</span>
+<span class="w">                      </span><span class="nt">&quot;authority&quot;</span><span class="p">:</span><span class="s2">&quot;EPSG&quot;</span><span class="p">,</span>
+<span class="w">                      </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="mi">8806</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                  </span><span class="p">},</span>
+<span class="w">                  </span><span class="p">{</span>
+<span class="w">                    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;False northing&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="mi">-100000</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">&quot;unit&quot;</span><span class="p">:</span><span class="s2">&quot;metre&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">&quot;id&quot;</span><span class="p">:{</span>
+<span class="w">                      </span><span class="nt">&quot;authority&quot;</span><span class="p">:</span><span class="s2">&quot;EPSG&quot;</span><span class="p">,</span>
+<span class="w">                      </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="mi">8807</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                  </span><span class="p">}</span>
+<span class="w">                </span><span class="p">]</span>
+<span class="w">              </span><span class="p">},</span>
+<span class="w">              </span><span class="nt">&quot;coordinate_system&quot;</span><span class="p">:{</span>
+<span class="w">                </span><span class="nt">&quot;subtype&quot;</span><span class="p">:</span><span class="s2">&quot;Cartesian&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">&quot;axis&quot;</span><span class="p">:[</span>
+<span class="w">                  </span><span class="p">{</span>
+<span class="w">                    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Easting&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">&quot;abbreviation&quot;</span><span class="p">:</span><span class="s2">&quot;E&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">&quot;direction&quot;</span><span class="p">:</span><span class="s2">&quot;east&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">&quot;unit&quot;</span><span class="p">:</span><span class="s2">&quot;metre&quot;</span>
+<span class="w">                  </span><span class="p">},</span>
+<span class="w">                  </span><span class="p">{</span>
+<span class="w">                    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Northing&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">&quot;abbreviation&quot;</span><span class="p">:</span><span class="s2">&quot;N&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">&quot;direction&quot;</span><span class="p">:</span><span class="s2">&quot;north&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">&quot;unit&quot;</span><span class="p">:</span><span class="s2">&quot;metre&quot;</span>
+<span class="w">                  </span><span class="p">}</span>
+<span class="w">                </span><span class="p">]</span>
+<span class="w">              </span><span class="p">},</span>
+<span class="w">              </span><span class="nt">&quot;scope&quot;</span><span class="p">:</span><span class="s2">&quot;Engineering survey, topographic mapping.&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;area&quot;</span><span class="p">:</span><span class="s2">&quot;United Kingdom (UK) - offshore to boundary of UKCS within 49°45...&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;bbox&quot;</span><span class="p">:{</span>
+<span class="w">                </span><span class="nt">&quot;south_latitude&quot;</span><span class="p">:</span><span class="mf">49.75</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">&quot;west_longitude&quot;</span><span class="p">:</span><span class="mi">-9</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">&quot;north_latitude&quot;</span><span class="p">:</span><span class="mf">61.01</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">&quot;east_longitude&quot;</span><span class="p">:</span><span class="mf">2.01</span>
+<span class="w">              </span><span class="p">},</span>
+<span class="w">              </span><span class="nt">&quot;id&quot;</span><span class="p">:{</span>
+<span class="w">                </span><span class="nt">&quot;authority&quot;</span><span class="p">:</span><span class="s2">&quot;EPSG&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="mi">27700</span>
+<span class="w">              </span><span class="p">}</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="nt">&quot;dataAxisToSRSAxisMapping&quot;</span><span class="p">:[</span>
+<span class="w">              </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">              </span><span class="mi">2</span>
+<span class="w">            </span><span class="p">]</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;featureCount&quot;</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;fields&quot;</span><span class="p">:[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;AREA&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;Real&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;width&quot;</span><span class="p">:</span><span class="mi">12</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;precision&quot;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;nullable&quot;</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;uniqueConstraint&quot;</span><span class="p">:</span><span class="kc">false</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;EAS_ID&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;Integer64&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;width&quot;</span><span class="p">:</span><span class="mi">11</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;nullable&quot;</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;uniqueConstraint&quot;</span><span class="p">:</span><span class="kc">false</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;PRFEDEA&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;String&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;width&quot;</span><span class="p">:</span><span class="mi">16</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;nullable&quot;</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;uniqueConstraint&quot;</span><span class="p">:</span><span class="kc">false</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;metadata&quot;</span><span class="p">:{</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;domains&quot;</span><span class="p">:{</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;relationships&quot;</span><span class="p">:{</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Example of using -q and an attribute query, to restrict the output to
+certain features in a layer:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ogrinfo<span class="w"> </span>-q<span class="w"> </span>-ro<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-where<span class="w"> </span><span class="s1">&#39;GLOBAL_LINK_ID=185878&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>wrk/SHETLAND_ISLANDS.NTF<span class="w"> </span>BL2000_LINK
+
+Layer<span class="w"> </span>name:<span class="w"> </span>BL2000_LINK
+OGRFeature<span class="o">(</span>BL2000_LINK<span class="o">)</span>:2
+<span class="w">  </span>LINE_ID<span class="w"> </span><span class="o">(</span>Integer<span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span>
+<span class="w">  </span>GEOM_ID<span class="w"> </span><span class="o">(</span>Integer<span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span>
+<span class="w">  </span>FEAT_CODE<span class="w"> </span><span class="o">(</span>String<span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">(</span>null<span class="o">)</span>
+<span class="w">  </span>GLOBAL_LINK_ID<span class="w"> </span><span class="o">(</span>Integer<span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">185878</span>
+<span class="w">  </span>TILE_REF<span class="w"> </span><span class="o">(</span>String<span class="o">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>SHETLAND<span class="w"> </span>I
+<span class="w">  </span>LINESTRING<span class="w"> </span><span class="o">(</span><span class="m">419832</span>.100<span class="w"> </span><span class="m">1069046</span>.300,419820.100<span class="w"> </span><span class="m">1069043</span>.800,...
+</pre></div>
+</div>
+<p>Example of updating a value of an attribute in a shapefile with SQL by using the SQLite dialect:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ogrinfo<span class="w"> </span>test.shp<span class="w"> </span>-dialect<span class="w"> </span>sqlite<span class="w"> </span>-sql<span class="w"> </span><span class="s2">&quot;update test set attr=&#39;bar&#39; where attr=&#39;foo&#39;&quot;</span>
+</pre></div>
+</div>
+<p>Adding a column to an input file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ogrinfo<span class="w"> </span>input.shp<span class="w"> </span>-sql<span class="w"> </span><span class="s2">&quot;ALTER TABLE input ADD fieldX float&quot;</span>
+</pre></div>
+</div>
+<p>Sometimes there is no input file involved in a calculation. In such cases one may
+use the <code class="docutils literal notranslate"><span class="pre">:memory:</span></code> input file which is a in-memory empty SQLite file (and the SQLite SQL dialect will be implicitly used).</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ogrinfo<span class="w"> </span>:memory:<span class="w"> </span>-sql<span class="w"> </span><span class="s2">&quot;SELECT ST_Buffer(ST_GeomFromText(&#39;POINT(0 0)&#39;), 1)&quot;</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ogr2ogr.html" class="btn btn-neutral float-right" title="ogr2ogr" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="vector_common_options.html" class="btn btn-neutral float-left" title="Common options for vector programs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2024 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+  </div>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

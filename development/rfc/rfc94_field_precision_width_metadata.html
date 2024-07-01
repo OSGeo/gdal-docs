@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RFC 94: Numeric fields width/precision metadata &mdash; GDAL  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d10597a4" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/gdal.css?v=e152ac3b" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://gdal.org/development/rfc/rfc94_field_precision_width_metadata.html"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="RFC 95: Use standard C/C++ integer types (proposed, NOT adopted)" href="rfc95_standard_int_types.html" />
+    <link rel="prev" title="RFC 93: OGRLayer::UpdateFeature() method" href="rfc93_update_feature.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../building_from_source.html">Building GDAL from source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev_environment.html">Setting up a development environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev_practices.html">Development practices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../testing.html">Automated testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev_documentation.html">Building documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cmake.html">Using GDAL in CMake projects</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters (not implemented)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open (withdrawn)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen (withdrawn)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open (withdrawn)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading (not implemented)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc77_drop_python2_support.html">RFC 77: Drop Python 2 support in favour of Python 3.6</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc78_gdal_utils_package.html">RFC 78: gdal-utils package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc79_listing_service_providers.html">RFC 79: Listing of Service Providers on GDAL website</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc80_numfocus_relationship.html">RFC 80: NumFOCUS relationship and sponsorship program</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc81_coordinate_epoch.html">RFC 81: Support for coordinate epochs in geospatial formats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc83_use_of_project_sponsorship.html">RFC 83: guidelines for the use of GDAL project sponsorship</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc84_cmake.html">RFC 84: Migrating build systems to CMake</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc85_policy_code_additions.html">RFC 85: Policy regarding substantial code additions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc86_column_oriented_api.html">RFC 86: Column-oriented read API for vector layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc87_signed_int8.html">RFC 87: Signed int8 data type for raster</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc88_googletest.html">RFC 88: Use GoogleTest framework for C/C++ unit tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc89_sql_logging_callback.html">RFC 89: SQL logging callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc90_read_compressed_data.html">RFC 90: Direct access to compressed raster data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc91_dataset_close.html">RFC 91: GDALDataset::Close() method</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc92_wkb_only_geometries.html">RFC 92: WKB Only geometries (on hold)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc93_update_feature.html">RFC 93: OGRLayer::UpdateFeature() method</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 94: Numeric fields width/precision metadata</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motivation">Motivation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#current-drivers-behavior">Current drivers behavior</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#technical-details">Technical details</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#efficiency-considerations">Efficiency considerations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#backward-compatibility">Backward compatibility</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#swig-bindings">SWIG Bindings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#testing">Testing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voting-history">Voting history</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rfc95_standard_int_types.html">RFC 95: Use standard C/C++ integer types (proposed, <em>NOT</em> adopted)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc96_deferred_plugin_loading.html">RFC 96: Deferred C++ plugin loading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc97_feature_and_fielddefn_sealing.html">RFC 97: OGRFeatureDefn, OGRFieldDefn and OGRGeomFieldDefn &quot;sealing&quot;</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc98_build_requirements_gdal_3_9.html">RFC 98: Build requirements for GDAL 3.9</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc99_geometry_coordinate_precision.html">RFC 99: Geometry coordinate precision</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sponsors/index.html">Sponsors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 94: Numeric fields width/precision metadata</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit/master/doc/source/development/rfc/rfc94_field_precision_width_metadata.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="rfc95_standard_int_types.html" class="btn btn-neutral float-right" title="RFC 95: Use standard C/C++ integer types (proposed, NOT adopted)" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc93_update_feature.html" class="btn btn-neutral float-left" title="RFC 93: OGRLayer::UpdateFeature() method" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="rfc-94-numeric-fields-width-precision-metadata">
+<span id="rfc-94"></span><h1>RFC 94: Numeric fields width/precision metadata<a class="headerlink" href="#rfc-94-numeric-fields-width-precision-metadata" title="Link to this heading"></a></h1>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Author:</p></td>
+<td><p>Alessandro Pasotti</p></td>
+</tr>
+<tr class="row-even"><td><p>Contact:</p></td>
+<td><p>elpaso &#64; itopen.it</p></td>
+</tr>
+<tr class="row-odd"><td><p>Started:</p></td>
+<td><p>2023-Feb-17</p></td>
+</tr>
+<tr class="row-even"><td><p>Status:</p></td>
+<td><p>Adopted, implemented</p></td>
+</tr>
+<tr class="row-odd"><td><p>Target:</p></td>
+<td><p>GDAL 3.7</p></td>
+</tr>
+</tbody>
+</table>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading"></a></h2>
+<p>The document proposes and describes the introduction of a couple of new
+vector driver metadata that return information for numeric real
+fields about how the precision and width have been calculated by the
+driver and have to be interpreted.</p>
+</section>
+<section id="motivation">
+<h2>Motivation<a class="headerlink" href="#motivation" title="Link to this heading"></a></h2>
+<p>Applications (for example OGR/GDAL utils and QGIS) may require information
+about the field width and precision in order to convert between different
+formats or to validate user input on editing.</p>
+<p>Different drivers may calculate the width and precision differently by including
+or not the decimal separator and/or the minus sign into the calculated length.</p>
+<p>There is currently no way for an application to access this information and this
+can lead to loss of width or precision while converting between formats or when the
+application decides to stay on the safe side and reduce the width reported by GDAL.</p>
+<p>Additionally, attention must be paid to the meaning of &quot;width&quot; and &quot;precision&quot;:
+OGR &quot;width&quot; corresponds to SQL &quot;precision&quot; and OGR &quot;precision&quot; corresponds to SQL &quot;scale&quot;.</p>
+<p>For reference:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://trac.osgeo.org/gdal/ticket/6960">https://trac.osgeo.org/gdal/ticket/6960</a></p></li>
+<li><p><a class="reference external" href="https://issues.qgis.org/issues/11755">https://issues.qgis.org/issues/11755</a></p></li>
+<li><p><a class="reference external" href="https://issues.qgis.org/issues/15188#note-8">https://issues.qgis.org/issues/15188#note-8</a></p></li>
+<li><p><a class="reference external" href="https://github.com/qgis/QGIS/issues/51849">https://github.com/qgis/QGIS/issues/51849</a></p></li>
+</ul>
+</section>
+<section id="current-drivers-behavior">
+<h2>Current drivers behavior<a class="headerlink" href="#current-drivers-behavior" title="Link to this heading"></a></h2>
+<p>Here is a list of the drivers and how they behave with respect to the width and precision,
+(for databases we refer to the <cite>NUMERIC</cite> data type).</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Driver</p></th>
+<th class="head"><p>Width Includes Decimal Separator</p></th>
+<th class="head"><p>Width Includes Sign</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Shapefile</p></td>
+<td><p>YES</p></td>
+<td><p>YES</p></td>
+</tr>
+<tr class="row-odd"><td><p>MapInfo</p></td>
+<td><p>YES</p></td>
+<td><p>YES</p></td>
+</tr>
+<tr class="row-even"><td><p>PostgreSQL</p></td>
+<td><p>NO</p></td>
+<td><p>NO</p></td>
+</tr>
+<tr class="row-odd"><td><p>MySQL</p></td>
+<td><p>NO</p></td>
+<td><p>NO</p></td>
+</tr>
+<tr class="row-even"><td><p>MSSQL</p></td>
+<td><p>NO</p></td>
+<td><p>NO</p></td>
+</tr>
+<tr class="row-odd"><td><p>OCI</p></td>
+<td><p>NO</p></td>
+<td><p>NO</p></td>
+</tr>
+<tr class="row-even"><td><p>GPKG</p></td>
+<td><p>N/A</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>CSV (from .csvt)</p></td>
+<td><p>YES</p></td>
+<td><p>YES</p></td>
+</tr>
+<tr class="row-even"><td><p>HANA</p></td>
+<td><p>NO</p></td>
+<td><p>NO</p></td>
+</tr>
+<tr class="row-odd"><td><p>FlatGeoBuf</p></td>
+<td><p>NO</p></td>
+<td><p>NO</p></td>
+</tr>
+<tr class="row-even"><td><p>FileGDB</p></td>
+<td><p>N/A</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>GML</p></td>
+<td><p>NO</p></td>
+<td><p>NO</p></td>
+</tr>
+<tr class="row-even"><td><p>MEM</p></td>
+<td><p>N/A</p></td>
+<td><p>N/A</p></td>
+</tr>
+</tbody>
+</table>
+<section id="notes-about-specific-drivers">
+<h3>Notes about specific drivers<a class="headerlink" href="#notes-about-specific-drivers" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>GPKG: SQLite column affinity storage is 8-byte IEEE floating point number</p></li>
+<li><p>GML: <cite>xsd:decimal</cite> with <cite>totalDigits</cite> and <cite>fractionDigits</cite>, <cite>xs:totalDigits</cite>
+defines the maximum number of digits of decimal and derived datatypes
+(both after and before the decimal point, not counting the decimal point itself).
+<cite>xs:fractionDigits`</cite> defines the maximum number of fractional digits (i.e.,
+digits that are after the decimal point) of an xs:decimal datatype.</p></li>
+<li><p>FlatGeoBuf: for Float fields, OGR_width = flatgeobuf_precision and OGR_precision = flatgeobuf_scale
+(if flatgeobuf_scale != -1, or 0 if flatgeobuf_scale == -1)</p></li>
+<li><p>FileGDB: Scale is the number of digits to the right of the decimal point in a number.
+For example, the number 56.78 has a scale of 2. Scale applies only to fields that are double.
+Scale is always returned as 0 from personal or File geodatabase fields.
+Precision is the number of digits in a number. For example, the number 56.78 has a precision of 4.
+Precision is only valid for fields that are numeric. Precision is always returned as 0 from personal or
+File geodatabase fields</p></li>
+</ul>
+</section>
+</section>
+<section id="technical-details">
+<h2>Technical details<a class="headerlink" href="#technical-details" title="Link to this heading"></a></h2>
+<p>The change will be done at the driver metadata level with a couple of flags
+that report the capabilities.</p>
+<p>The vector drivers will expose a metadata entry to define if the width
+of the fields includes the decimal separator and/or the sign.</p>
+<p>If the metadata entry is undefined the feature is not supported (there is no
+client-accessible width or precision constraint for numeric fields).</p>
+<p>The feature will be exposed to the <cite>ogr2ogr</cite> application with a switch to enable/disable
+the width reduction when converting from a format where width includes the minus sign to a format
+where it doesn't. This is useful when the user knows that the input data are all negative values
+because in that that case it won't be necessary to add the extra width to store it.</p>
+<p>To clarify, when converting from DBF to SQL the width is decreased by 1, when converting
+from SQL to DBF the width is increased by 2.</p>
+<p>&quot;-1.23&quot; for .DBF needs width=5 and precision=2. In SQL, it needs precision=3 and scale=2
+&quot;12.34&quot; for DBF needs width=5 and precision=2. In SQL, it needs precision=4 and scale=2</p>
+<p>This means that when converting from DBF to SQL we can safely reduce the width by 1 but
+we cannot safely reduce it by 2 unless we are sure all values are negative.</p>
+<p>Example API:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cm">/** Capability set by a vector driver that supports field width and precision.</span>
+<span class="cm">*</span>
+<span class="cm">* This capability reflects that a vector driver includes the decimal separator</span>
+<span class="cm">* in the field width.</span>
+<span class="cm">*</span>
+<span class="cm">* See GDAL_DMD_NUMERIC_FIELD_WIDTH_INCLUDES_SIGN for a related capability flag.</span>
+<span class="cm">* @since GDAL 3.7</span>
+<span class="cm">*/</span>
+<span class="cp">#define GDAL_DMD_NUMERIC_FIELD_WIDTH_INCLUDES_DECIMAL_SEPARATOR &quot;DMD_NUMERIC_FIELD_WIDTH_INCLUDES_DECIMAL_SEPARATOR&quot;</span>
+
+<span class="cm">/** Capability set by a vector driver that supports field width and precision.</span>
+<span class="cm">*</span>
+<span class="cm">* This capability reflects that a vector driver includes the (minus) sign</span>
+<span class="cm">* in the field width.</span>
+<span class="cm">*</span>
+<span class="cm">* See GDAL_DMD_NUMERIC_FIELD_WIDTH_INCLUDES__DECIMAL_SEPARATOR for a related capability flag.</span>
+<span class="cm">* @since GDAL 3.7</span>
+<span class="cm">*/</span>
+<span class="cp">#define GDAL_DMD_NUMERIC_FIELD_WIDTH_INCLUDES_SIGN &quot;DMD_NUMERIC_FIELD_WIDTH_INCLUDES_SIGN&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="efficiency-considerations">
+<h2>Efficiency considerations<a class="headerlink" href="#efficiency-considerations" title="Link to this heading"></a></h2>
+<p>None.</p>
+</section>
+<section id="backward-compatibility">
+<h2>Backward compatibility<a class="headerlink" href="#backward-compatibility" title="Link to this heading"></a></h2>
+<p>None.</p>
+</section>
+<section id="swig-bindings">
+<h2>SWIG Bindings<a class="headerlink" href="#swig-bindings" title="Link to this heading"></a></h2>
+<p>This implementation will be exposed to bindings.</p>
+</section>
+<section id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Link to this heading"></a></h2>
+<p>A C++ test will be added to the test suite.</p>
+</section>
+<section id="voting-history">
+<h2>Voting history<a class="headerlink" href="#voting-history" title="Link to this heading"></a></h2>
+<p>+1 from PSC members EvenR and JukkaR</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rfc95_standard_int_types.html" class="btn btn-neutral float-right" title="RFC 95: Use standard C/C++ integer types (proposed, NOT adopted)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc93_update_feature.html" class="btn btn-neutral float-left" title="RFC 93: OGRLayer::UpdateFeature() method" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2024 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+  </div>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

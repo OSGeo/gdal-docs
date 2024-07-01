@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gdal2xyz &mdash; GDAL  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d10597a4" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/gdal.css?v=e152ac3b" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="canonical" href="https://gdal.org/programs/gdal2xyz.html"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="gdal_calc" href="gdal_calc.html" />
+    <link rel="prev" title="gdal2tiles" href="gdal2tiles.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Programs</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#general">General</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#raster-programs">Raster programs</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="raster_common_options.html">Common options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal-config.html">gdal-config (Unix)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal2tiles.html">gdal2tiles</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">gdal2xyz</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#synopsis">Synopsis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#description">Description</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#caveats">Caveats</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_calc.html">gdal_calc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_contour.html">gdal_contour</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_create.html">gdal_create</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_edit.html">gdal_edit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_fillnodata.html">gdal_fillnodata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_footprint.html">gdal_footprint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_grid.html">gdal_grid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_merge.html">gdal_merge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_pansharpen.html">gdal_pansharpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_polygonize.html">gdal_polygonize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_proximity.html">gdal_proximity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_rasterize.html">gdal_rasterize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_retile.html">gdal_retile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_sieve.html">gdal_sieve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_translate.html">gdal_translate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_viewshed.html">gdal_viewshed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaladdo.html">gdaladdo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalattachpct.html">gdalattachpct</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalbuildvrt.html">gdalbuildvrt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalcompare.html">gdalcompare</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaldem.html">gdaldem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalinfo.html">gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdallocationinfo.html">gdallocationinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalmanage.html">gdalmanage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalmove.html">gdalmove</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalsrsinfo.html">gdalsrsinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaltindex.html">gdaltindex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaltransform.html">gdaltransform</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalwarp.html">gdalwarp</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nearblack.html">nearblack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pct2rgb.html">pct2rgb</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rgb2pct.html">rgb2pct</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#multidimensional-raster-programs">Multidimensional Raster programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#vector-programs">Vector programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#geographic-network-programs">Geographic network programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#other-utilities">Other utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sponsors/index.html">Sponsors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Programs</a> &raquo;</li>
+      
+      <li>gdal2xyz</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit/master/doc/source/programs/gdal2xyz.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="gdal_calc.html" class="btn btn-neutral float-right" title="gdal_calc" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gdal2tiles.html" class="btn btn-neutral float-left" title="gdal2tiles" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gdal2xyz">
+<span id="id1"></span><h1>gdal2xyz<a class="headerlink" href="#gdal2xyz" title="Link to this heading"></a></h1>
+<p>Translates a raster file into <cite>xyz</cite> format.</p>
+<section id="synopsis">
+<span id="index-0"></span><h2>Synopsis<a class="headerlink" href="#synopsis" title="Link to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdal2xyz</span> <span class="p">[</span><span class="o">--</span><span class="n">help</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">help</span><span class="o">-</span><span class="n">general</span><span class="p">]</span>
+    <span class="p">[</span><span class="o">-</span><span class="n">skip</span> <span class="o">&lt;</span><span class="n">factor</span><span class="o">&gt;</span><span class="p">]</span>
+    <span class="p">[</span><span class="o">-</span><span class="n">srcwin</span> <span class="o">&lt;</span><span class="n">xoff</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">yoff</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">xsize</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">ysize</span><span class="o">&gt;</span><span class="p">]</span>
+    <span class="p">[</span><span class="o">-</span><span class="n">b</span> <span class="o">&lt;</span><span class="n">band</span><span class="o">&gt;</span><span class="p">]</span><span class="o">...</span> <span class="p">[</span><span class="o">-</span><span class="n">allbands</span><span class="p">]</span>
+    <span class="p">[</span><span class="o">-</span><span class="n">skipnodata</span><span class="p">]</span>
+    <span class="p">[</span><span class="o">-</span><span class="n">csv</span><span class="p">]</span>
+    <span class="p">[</span><span class="o">-</span><span class="n">srcnodata</span> <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">dstnodata</span> <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span><span class="p">]</span>
+    <span class="o">&lt;</span><span class="n">src_dataset</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">dst_dataset</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="description">
+<h2>Description<a class="headerlink" href="#description" title="Link to this heading"></a></h2>
+<p>The <strong class="program">gdal2xyz</strong> utility can be used to translate a raster file into xyz format.
+<cite>gdal2xyz</cite> can be used as an alternative to <cite>gdal_translate of=xyz</cite>. Features include:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Select more then one band</p></li>
+<li><p>Skip or replace nodata value</p></li>
+<li><p>Return the output as numpy arrays.</p></li>
+</ul>
+</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>gdal2xyz is a Python utility, and is only available if GDAL Python bindings are available.</p>
+</div>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2xyz-help">
+<span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal2xyz-help" title="Link to this definition"></a></dt>
+<dd><p>Show this help message and exit</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2xyz-help-general">
+<span class="sig-name descname"><span class="pre">--help-general</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal2xyz-help-general" title="Link to this definition"></a></dt>
+<dd><p>Gives a brief usage message for the generic GDAL commandline options and exit.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2xyz-skip">
+<span class="sig-name descname"><span class="pre">-skip</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal2xyz-skip" title="Link to this definition"></a></dt>
+<dd><p>How many rows/cols to skip in each iteration.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2xyz-srcwin">
+<span class="sig-name descname"><span class="pre">-srcwin</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;xoff&gt;</span> <span class="pre">&lt;yoff&gt;</span> <span class="pre">&lt;xsize&gt;</span> <span class="pre">&lt;ysize&gt;</span></span><a class="headerlink" href="#cmdoption-gdal2xyz-srcwin" title="Link to this definition"></a></dt>
+<dd><p>Selects a subwindow from the source image for copying based on pixel/line location.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2xyz-b">
+<span id="cmdoption-gdal2xyz-band"></span><span class="sig-name descname"><span class="pre">-b</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-band</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;band&gt;</span></span><a class="headerlink" href="#cmdoption-gdal2xyz-b" title="Link to this definition"></a></dt>
+<dd><p>Select band <em>band</em> from the input spectral bands for output.
+Bands are numbered from 1 in the order spectral bands are specified.
+Multiple <strong>-b</strong> switches may be used.
+When no -b switch is used, the first band will be used.
+In order to use all input bands set <cite>-allbands</cite> or <cite>-b 0</cite>.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2xyz-allbands">
+<span class="sig-name descname"><span class="pre">-allbands</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal2xyz-allbands" title="Link to this definition"></a></dt>
+<dd><p>Select all input bands.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2xyz-csv">
+<span class="sig-name descname"><span class="pre">-csv</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal2xyz-csv" title="Link to this definition"></a></dt>
+<dd><p>Use comma instead of space as a delimiter.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2xyz-skipnodata">
+<span class="sig-name descname"><span class="pre">-skipnodata</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal2xyz-skipnodata" title="Link to this definition"></a></dt>
+<dd><p>Exclude the output lines with nodata value (as determined by srcnodata)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2xyz-srcnodata">
+<span class="sig-name descname"><span class="pre">-srcnodata</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal2xyz-srcnodata" title="Link to this definition"></a></dt>
+<dd><p>The nodata value of the dataset (for skipping or replacing)
+Default (<cite>None</cite>) - Use the dataset nodata value;
+<cite>Sequence</cite>/<cite>Number</cite> - Use the given nodata value (per band or per dataset).</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2xyz-dstnodata">
+<span class="sig-name descname"><span class="pre">-dstnodata</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal2xyz-dstnodata" title="Link to this definition"></a></dt>
+<dd><p>Replace source nodata with a given nodata. Has an effect only if not setting <cite>-skipnodata</cite>.
+Default(<cite>None</cite>) - Use <cite>srcnodata</cite>, no replacement;
+<cite>Sequence</cite>/<cite>Number</cite> - Replace the <cite>srcnodata</cite> with the given nodata value (per band or per dataset).</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2xyz-h">
+<span id="cmdoption-gdal2xyz-0"></span><span class="sig-name descname"><span class="pre">-h</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal2xyz-h" title="Link to this definition"></a></dt>
+<dd><p>Show help message and exit.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2xyz-arg-src_dataset">
+<span class="sig-name descname"><span class="pre">&lt;src_dataset&gt;</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal2xyz-arg-src_dataset" title="Link to this definition"></a></dt>
+<dd><p>The source dataset name. It can be either file name, URL of data source or
+subdataset name for multi-dataset files.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2xyz-arg-dst_dataset">
+<span class="sig-name descname"><span class="pre">&lt;dst_dataset&gt;</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal2xyz-arg-dst_dataset" title="Link to this definition"></a></dt>
+<dd><p>The destination file name.</p>
+</dd></dl>
+
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdal2xyz</span> <span class="o">-</span><span class="n">b</span> <span class="mi">1</span> <span class="o">-</span><span class="n">b</span> <span class="mi">2</span> <span class="o">-</span><span class="n">dstnodata</span> <span class="mi">0</span> <span class="nb">input</span><span class="o">.</span><span class="n">tif</span> <span class="n">output</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+<p>To create a text file in <cite>xyz</cite> format from the input file <cite>input.tif</cite>.
+The first columns, x and y, are the coordinates of the centers of each cell.
+The remaining columns represent the first and second bands.
+We also replace the dataset nodata values with zeros.</p>
+</section>
+<section id="caveats">
+<h2>Caveats<a class="headerlink" href="#caveats" title="Link to this heading"></a></h2>
+<p>gdal2xyz output values with a limited precision. Use <code class="docutils literal notranslate"><span class="pre">gdal_translate</span> <span class="pre">-of</span> <span class="pre">XYZ</span></code> if more precision is desired.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="gdal_calc.html" class="btn btn-neutral float-right" title="gdal_calc" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gdal2tiles.html" class="btn btn-neutral float-left" title="gdal2tiles" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2024 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+  </div>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

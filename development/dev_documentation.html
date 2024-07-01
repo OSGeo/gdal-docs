@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Building documentation &mdash; GDAL  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d10597a4" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/gdal.css?v=e152ac3b" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="canonical" href="https://gdal.org/development/dev_documentation.html"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Using GDAL in CMake projects" href="cmake.html" />
+    <link rel="prev" title="Automated testing" href="testing.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Development</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="building_from_source.html">Building GDAL from source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dev_environment.html">Setting up a development environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dev_practices.html">Development practices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html">Automated testing</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Building documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#documentation-overview">Documentation overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Building documentation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#python-api-documentation">Python API documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#sphinx-rst-style-guide">Sphinx RST Style guide</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#basic-markup">Basic markup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lists">Lists</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#list-tables">List-tables</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#page-labels">Page labels</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#linking">Linking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sections">Sections</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#notes-and-warnings">Notes and warnings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#images">Images</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#external-files">External files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#reference-files-and-paths">Reference files and paths</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#reference-code">Reference code</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#define-and-reference-configuration-options">Define and reference configuration options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#reference-commands">Reference commands</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cmake.html">Using GDAL in CMake projects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rfc/index.html">RFC list</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sponsors/index.html">Sponsors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Development</a> &raquo;</li>
+      
+      <li>Building documentation</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit/master/doc/source/development/dev_documentation.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="cmake.html" class="btn btn-neutral float-right" title="Using GDAL in CMake projects" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="testing.html" class="btn btn-neutral float-left" title="Automated testing" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="building-documentation">
+<span id="dev-documentation"></span><h1>Building documentation<a class="headerlink" href="#building-documentation" title="Link to this heading"></a></h1>
+<section id="documentation-overview">
+<h2>Documentation overview<a class="headerlink" href="#documentation-overview" title="Link to this heading"></a></h2>
+<p>GDAL's documentation includes C and C++ <a class="reference internal" href="../api/index.html#api"><span class="std std-ref">API documentation</span></a> built
+automatically from source comments using Doxygen and reStructuredText (rst)
+files containing manually-edited content.</p>
+<p><a class="reference external" href="https://www.sphinx-doc.org/">Sphinx</a> is used to combine the above components into a complete set of documentation in HTML, PDF, and other formats.</p>
+<p><a class="reference external" href="https://www.sphinx-doc.org/">Sphinx</a> and extensions used by GDAL can be installed by running <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-r</span> <span class="pre">requirements.txt</span></code> from
+the <code class="docutils literal notranslate"><span class="pre">doc</span></code> subdirectory.</p>
+</section>
+<section id="id1">
+<h2>Building documentation<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<p>Documentation can be generated with Makefile targets, from the <code class="docutils literal notranslate"><span class="pre">doc</span></code> subdirectory
+of the GDAL source repository (only on Unix systems).</p>
+<p>The following targets are available:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">html</span></code>: build HTML documentation into the <code class="docutils literal notranslate"><span class="pre">doc/build/html</span></code> directory, where
+they can be viewed using a web browser.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">man</span></code>: build MAN pages into the <code class="docutils literal notranslate"><span class="pre">doc/build/man</span></code> directory.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">latexpdf</span></code>: build PDF documentation into the <code class="docutils literal notranslate"><span class="pre">doc/build/pdf</span></code> directory</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">doxygen</span></code>: regenerate API Doxygen XML and HTML output, that is used by the
+<code class="docutils literal notranslate"><span class="pre">html</span></code> target. Doxygen content is not automatically rebuilt when source files
+are modified, hence this target must be explicitly run to refresh it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">doxygen_check_warnings</span></code>: same as <code class="docutils literal notranslate"><span class="pre">doxygen</span></code>, but errors out when Doxygen
+emits a warning (the <code class="docutils literal notranslate"><span class="pre">doxygen</span></code> target is tolerant to Doxygen warnings).
+This can be useful to reproduce one of the continuous integration checks that
+verifies that there are no Doxygen warnings.
+Requires Doxygen &gt;= 1.9.3 to be warning free.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">clean</span></code>: clean the <code class="docutils literal notranslate"><span class="pre">doc/build</span></code> directory.</p></li>
+</ul>
+<p>It is also possible to run those targets as CMake targets. In that case, the
+output directory will be the <code class="docutils literal notranslate"><span class="pre">doc/build</span></code> subdirectory of the CMake
+build directory. To only clean the documentation, the <code class="docutils literal notranslate"><span class="pre">clean_doc</span></code> target can
+be invoked.
+Note: those CMake targets are only available if the CMake BUILD_DOCS=ON variable
+is set (it is set by default if build preconditions are met, that is if Doxygen,
+Sphinx and make are available)</p>
+<p>To visualize documentation changes while editing, it may be useful to install the <a class="reference external" href="https://pypi.org/project/sphinx-autobuild/">sphinx-autobuild</a> python package.
+Once installed, running <code class="docutils literal notranslate"><span class="pre">sphinx-autobuild</span> <span class="pre">-b</span> <span class="pre">html</span> <span class="pre">source</span> <span class="pre">build</span></code> from the <code class="docutils literal notranslate"><span class="pre">doc</span></code> subdirectory will build documentation
+and serve it on a local web server at <code class="docutils literal notranslate"><span class="pre">http://127.0.0.1:8000</span></code>. The pages served will be automatically refreshed as changes
+are made to underlying <code class="docutils literal notranslate"><span class="pre">rst</span></code> documentation files.</p>
+<section id="python-api-documentation">
+<h3>Python API documentation<a class="headerlink" href="#python-api-documentation" title="Link to this heading"></a></h3>
+<p>Sphinx uses the <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html">autodoc</a> extension
+to generate documentation for the Python API from Python function docstrings.
+To be correctly parsed by <code class="docutils literal notranslate"><span class="pre">autodoc</span></code>, docstrings should follow the <a class="reference external" href="https://numpydoc.readthedocs.io/en/latest/format.html">numpydoc Style guide</a>.
+Docstrings may be found in two locations. If the function was defined in Python
+(i.e., using a <code class="docutils literal notranslate"><span class="pre">%pythoncode</span></code> SWIG directive), then the docstring must be
+placed within the function definition. If the function is defined in C++ only,
+then the docstring should be placed in a separate file
+containing only docstrings (located in <a class="reference external" href="https://github.com/OSGeo/gdal/blob/master/swig/include/python/docs">docs</a>).
+Sphinx loads the Python bindings when generating documentation, so for it to see any changes
+the following steps must be completed:</p>
+<ul class="simple">
+<li><p>rebuild the Python bindings from the build directory (<code class="docutils literal notranslate"><span class="pre">cmake</span> <span class="pre">--build</span> <span class="pre">.</span> <span class="pre">--target</span> <span class="pre">python_binding</span></code>)</p></li>
+<li><p>make the updated Python bindings visible to Python, either by installing them, or by running <code class="docutils literal notranslate"><span class="pre">scripts/setdevenv.sh</span></code>
+from the build directory</p></li>
+<li><p>update the timestamp of the <code class="docutils literal notranslate"><span class="pre">rst</span></code> files associated with the page where the documentation appears (e.g., <code class="docutils literal notranslate"><span class="pre">touch</span> <span class="pre">doc/source/api/python/osgeo.ogr.rst</span></code>)</p></li>
+</ul>
+</section>
+</section>
+<section id="sphinx-rst-style-guide">
+<span id="rst-style"></span><h2>Sphinx RST Style guide<a class="headerlink" href="#sphinx-rst-style-guide" title="Link to this heading"></a></h2>
+<p>This section contains syntax rules, tips, and tricks for using Sphinx and reStructuredText.  For more information, please see this  <a class="reference external" href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html">comprehensive guide to reStructuredText</a>, as well as the <a class="reference external" href="http://sphinx.pocoo.org/rest.html">Sphinx reStructuredText Primer</a>.</p>
+<section id="basic-markup">
+<h3>Basic markup<a class="headerlink" href="#basic-markup" title="Link to this heading"></a></h3>
+<p>A reStructuredText document is written in plain text.  Without the need for complex formatting, one can be composed simply, just like one would any plain text document.  For basic formatting, see this table:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 40.0%" />
+<col style="width: 30.0%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>Format</strong></p></td>
+<td><p><strong>Syntax</strong></p></td>
+<td><p><strong>Output</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>Italics</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">*italics*</span></code> (single asterisk)</p></td>
+<td><p><em>italics</em></p></td>
+</tr>
+<tr class="row-odd"><td><p>Bold</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">**bold**</span></code> (double asterisk)</p></td>
+<td><p><strong>bold</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>Monospace</p></td>
+<td><p>`` <code class="docutils literal notranslate"><span class="pre">monospace</span></code> `` (double back quote)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">monospace</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Use of basic markup is <strong>not recommend</strong>! Where possible use sphinx inline directives (described below) to logically mark commands, parameters, options, input, and files. By using directives consistently these items can be styled appropriately.</p>
+</div>
+</section>
+<section id="lists">
+<h3>Lists<a class="headerlink" href="#lists" title="Link to this heading"></a></h3>
+<p>There are two types of lists, bulleted lists and numbered lists.  A <strong>bulleted list</strong> looks like this:</p>
+<ul class="simple">
+<li><p>An item</p></li>
+<li><p>Another item</p></li>
+<li><p>Yet another item</p></li>
+</ul>
+<p>This is accomplished with the following code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">*</span> <span class="n">An</span> <span class="n">item</span>
+<span class="o">*</span> <span class="n">Another</span> <span class="n">item</span>
+<span class="o">*</span> <span class="n">Yet</span> <span class="n">another</span> <span class="n">item</span>
+</pre></div>
+</div>
+<p>A <strong>numbered list</strong> looks like this:</p>
+<ol class="arabic simple">
+<li><p>First item</p></li>
+<li><p>Second item</p></li>
+<li><p>Third item</p></li>
+</ol>
+<p>This is accomplished with the following code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#. First item</span>
+<span class="c1">#. Second item</span>
+<span class="c1">#. Third item</span>
+</pre></div>
+</div>
+<p>Note that numbers are automatically generated, making it easy to add/remove items.</p>
+</section>
+<section id="list-tables">
+<h3>List-tables<a class="headerlink" href="#list-tables" title="Link to this heading"></a></h3>
+<p>Bulleted lists can sometimes be cumbersome and hard to follow.  When dealing with a long list of items, use list-tables.  For example, to talk about a list of options, create a table that looks like this:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 80.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Shapes</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Square</p></td>
+<td><p>Four sides of equal length, 90 degree angles</p></td>
+</tr>
+<tr class="row-odd"><td><p>Rectangle</p></td>
+<td><p>Four sides, 90 degree angles</p></td>
+</tr>
+</tbody>
+</table>
+<p>This is done with the following code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="nb">list</span><span class="o">-</span><span class="n">table</span><span class="p">::</span>
+   <span class="p">:</span><span class="n">widths</span><span class="p">:</span> <span class="mi">20</span> <span class="mi">80</span>
+   <span class="p">:</span><span class="n">header</span><span class="o">-</span><span class="n">rows</span><span class="p">:</span> <span class="mi">1</span>
+
+   <span class="o">*</span> <span class="o">-</span> <span class="n">Shapes</span>
+     <span class="o">-</span> <span class="n">Description</span>
+   <span class="o">*</span> <span class="o">-</span> <span class="n">Square</span>
+     <span class="o">-</span> <span class="n">Four</span> <span class="n">sides</span> <span class="n">of</span> <span class="n">equal</span> <span class="n">length</span><span class="p">,</span> <span class="mi">90</span> <span class="n">degree</span> <span class="n">angles</span>
+   <span class="o">*</span> <span class="o">-</span> <span class="n">Rectangle</span>
+     <span class="o">-</span> <span class="n">Four</span> <span class="n">sides</span><span class="p">,</span> <span class="mi">90</span> <span class="n">degree</span> <span class="n">angles</span>
+</pre></div>
+</div>
+</section>
+<section id="page-labels">
+<h3>Page labels<a class="headerlink" href="#page-labels" title="Link to this heading"></a></h3>
+<p><strong>Ensure every page has a label that matches the name of the file.</strong> For example if the page is named <code class="docutils literal notranslate"><span class="pre">foo_bar.rst</span></code> then the page should have the label:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">..</span>  <span class="n">_foo_bar</span><span class="p">:</span>
+</pre></div>
+</div>
+<p>Other pages can then link to that page by using the following code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>:ref:`foo_bar`
+</pre></div>
+</div>
+</section>
+<section id="linking">
+<span id="id2"></span><h3>Linking<a class="headerlink" href="#linking" title="Link to this heading"></a></h3>
+<p>Links to other pages should never be titled as &quot;here&quot;.  Sphinx makes this easy by automatically inserting the title of the linked document.</p>
+<dl class="simple">
+<dt>Bad</dt><dd><p>More information about linking can be found <a class="reference internal" href="#linking"><span class="std std-ref">here</span></a>.</p>
+</dd>
+<dt>Good</dt><dd><p>For more information, please see the section on <a class="reference internal" href="#linking"><span class="std std-ref">Linking</span></a>.</p>
+</dd>
+</dl>
+<p>To insert a link to an external website:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>`Text of the link &lt;http://example.com&gt;`__
+</pre></div>
+</div>
+<p>The resulting link would look like this: <a class="reference external" href="http://example.com">Text of the link</a></p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>It is very easy to have two links with the same text resulting in the following error:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">**</span><span class="p">(</span><span class="n">WARNING</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="n">Duplicate</span> <span class="n">explicit</span> <span class="n">target</span> <span class="n">name</span><span class="p">:</span><span class="n">foo</span><span class="o">**</span>
+</pre></div>
+</div>
+<p>To avoid these warnings use of a double <cite>__</cite> generates an anonymous link.</p>
+</div>
+</section>
+<section id="sections">
+<h3>Sections<a class="headerlink" href="#sections" title="Link to this heading"></a></h3>
+<p>Use sections to break up long pages and to help Sphinx generate tables of contents.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">================================================================================</span>
+<span class="n">Document</span> <span class="n">title</span>
+<span class="o">================================================================================</span>
+
+<span class="n">First</span> <span class="n">level</span>
+<span class="o">-----------</span>
+
+<span class="n">Second</span> <span class="n">level</span>
+<span class="o">++++++++++++</span>
+
+<span class="n">Third</span> <span class="n">level</span>
+<span class="o">***********</span>
+
+<span class="n">Fourth</span> <span class="n">level</span>
+<span class="o">~~~~~~~~~~~~</span>
+</pre></div>
+</div>
+</section>
+<section id="notes-and-warnings">
+<h3>Notes and warnings<a class="headerlink" href="#notes-and-warnings" title="Link to this heading"></a></h3>
+<p>When it is beneficial to have a section of text stand out from the main text, Sphinx has two such boxes, the note and the warning.  They function identically, and only differ in their coloring.  You should use notes and warnings sparingly, however, as adding emphasis to everything makes the emphasis less effective.</p>
+<p>Here is an example of a note:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is a note.</p>
+</div>
+<p>This note is generated with the following code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">note</span><span class="p">::</span> <span class="n">This</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">note</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>Similarly, here is an example of a warning:</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Beware of dragons.</p>
+</div>
+<p>This warning is generated by the following code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">warning</span><span class="p">::</span> <span class="n">Beware</span> <span class="n">of</span> <span class="n">dragons</span><span class="o">.</span>
+</pre></div>
+</div>
+</section>
+<section id="images">
+<h3>Images<a class="headerlink" href="#images" title="Link to this heading"></a></h3>
+<p>Add images to your documentation when possible.  Images, such as screenshots, are a very helpful way of making documentation understandable.  When making screenshots, try to crop out unnecessary content (browser window, desktop, etc).  Avoid scaling the images, as the Sphinx theme automatically resizes large images.  It is also helpful to include a caption underneath the image.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">figure</span><span class="p">::</span> <span class="n">image</span><span class="o">.</span><span class="n">png</span>
+   <span class="p">:</span><span class="n">align</span><span class="p">:</span> <span class="n">center</span>
+
+   <span class="o">*</span><span class="n">Caption</span><span class="o">*</span>
+</pre></div>
+</div>
+<p>In this example, the image file exists in the same directory as the source page.  If this is not the case, you can insert path information in the above command. The root <code class="file docutils literal notranslate"><span class="pre">/</span></code> is the directory of the <code class="file docutils literal notranslate"><span class="pre">conf.py</span></code> file.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">figure</span><span class="p">::</span> <span class="o">/../</span><span class="n">images</span><span class="o">/</span><span class="n">gdalicon</span><span class="o">.</span><span class="n">png</span>
+</pre></div>
+</div>
+</section>
+<section id="external-files">
+<h3>External files<a class="headerlink" href="#external-files" title="Link to this heading"></a></h3>
+<p>Text snippets, large blocks of downloadable code, and even zip files or other binary sources can all be included as part of the documentation.</p>
+<p>To include link to sample file, use the <code class="docutils literal notranslate"><span class="pre">download</span></code> directive:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>:download:`An external file &lt;example.txt&gt;`
+</pre></div>
+</div>
+<p>The result of this code will generate a standard link to an <a class="reference download internal" download="" href="../_downloads/0056e2c062ae841249224ed996032d6c/example.txt"><code class="xref download docutils literal notranslate"><span class="pre">external</span> <span class="pre">file</span></code></a></p>
+<p>To include the contents of a file, use <code class="docutils literal notranslate"><span class="pre">literalinclude</span></code> directive:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Example of :command:`gdalinfo` use:
+
+.. literalinclude:: example.txt
+</pre></div>
+</div>
+<p>Example of <strong class="command">gdalinfo</strong> use:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Driver</span><span class="p">:</span> <span class="n">GTiff</span><span class="o">/</span><span class="n">GeoTIFF</span>
+<span class="n">Size</span> <span class="ow">is</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">512</span>
+<span class="n">Coordinate</span> <span class="n">System</span> <span class="ow">is</span><span class="p">:</span>
+<span class="n">PROJCS</span><span class="p">[</span><span class="s2">&quot;NAD27 / UTM zone 11N&quot;</span><span class="p">,</span>
+    <span class="n">GEOGCS</span><span class="p">[</span><span class="s2">&quot;NAD27&quot;</span><span class="p">,</span>
+        <span class="n">DATUM</span><span class="p">[</span><span class="s2">&quot;North_American_Datum_1927&quot;</span><span class="p">,</span>
+            <span class="n">SPHEROID</span><span class="p">[</span><span class="s2">&quot;Clarke 1866&quot;</span><span class="p">,</span><span class="mf">6378206.4</span><span class="p">,</span><span class="mf">294.978698213901</span><span class="p">]],</span>
+        <span class="n">PRIMEM</span><span class="p">[</span><span class="s2">&quot;Greenwich&quot;</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+        <span class="n">UNIT</span><span class="p">[</span><span class="s2">&quot;degree&quot;</span><span class="p">,</span><span class="mf">0.0174532925199433</span><span class="p">]],</span>
+    <span class="n">PROJECTION</span><span class="p">[</span><span class="s2">&quot;Transverse_Mercator&quot;</span><span class="p">],</span>
+    <span class="n">PARAMETER</span><span class="p">[</span><span class="s2">&quot;latitude_of_origin&quot;</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+    <span class="n">PARAMETER</span><span class="p">[</span><span class="s2">&quot;central_meridian&quot;</span><span class="p">,</span><span class="o">-</span><span class="mi">117</span><span class="p">],</span>
+    <span class="n">PARAMETER</span><span class="p">[</span><span class="s2">&quot;scale_factor&quot;</span><span class="p">,</span><span class="mf">0.9996</span><span class="p">],</span>
+    <span class="n">PARAMETER</span><span class="p">[</span><span class="s2">&quot;false_easting&quot;</span><span class="p">,</span><span class="mi">500000</span><span class="p">],</span>
+    <span class="n">PARAMETER</span><span class="p">[</span><span class="s2">&quot;false_northing&quot;</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+    <span class="n">UNIT</span><span class="p">[</span><span class="s2">&quot;metre&quot;</span><span class="p">,</span><span class="mi">1</span><span class="p">]]</span>
+<span class="n">Origin</span> <span class="o">=</span> <span class="p">(</span><span class="mf">440720.000000</span><span class="p">,</span><span class="mf">3751320.000000</span><span class="p">)</span>
+<span class="n">Pixel</span> <span class="n">Size</span> <span class="o">=</span> <span class="p">(</span><span class="mf">60.000000</span><span class="p">,</span><span class="o">-</span><span class="mf">60.000000</span><span class="p">)</span>
+<span class="n">Corner</span> <span class="n">Coordinates</span><span class="p">:</span>
+<span class="n">Upper</span> <span class="n">Left</span>  <span class="p">(</span>  <span class="mf">440720.000</span><span class="p">,</span> <span class="mf">3751320.000</span><span class="p">)</span> <span class="p">(</span><span class="mi">117</span><span class="n">d38</span><span class="s1">&#39;28.21&quot;W, 33d54&#39;</span><span class="mf">8.47</span><span class="s2">&quot;N)</span>
+<span class="n">Lower</span> <span class="n">Left</span>  <span class="p">(</span>  <span class="mf">440720.000</span><span class="p">,</span> <span class="mf">3720600.000</span><span class="p">)</span> <span class="p">(</span><span class="mi">117</span><span class="n">d38</span><span class="s1">&#39;20.79&quot;W, 33d37&#39;</span><span class="mf">31.04</span><span class="s2">&quot;N)</span>
+<span class="n">Upper</span> <span class="n">Right</span> <span class="p">(</span>  <span class="mf">471440.000</span><span class="p">,</span> <span class="mf">3751320.000</span><span class="p">)</span> <span class="p">(</span><span class="mi">117</span><span class="n">d18</span><span class="s1">&#39;32.07&quot;W, 33d54&#39;</span><span class="mf">13.08</span><span class="s2">&quot;N)</span>
+<span class="n">Lower</span> <span class="n">Right</span> <span class="p">(</span>  <span class="mf">471440.000</span><span class="p">,</span> <span class="mf">3720600.000</span><span class="p">)</span> <span class="p">(</span><span class="mi">117</span><span class="n">d18</span><span class="s1">&#39;28.50&quot;W, 33d37&#39;</span><span class="mf">35.61</span><span class="s2">&quot;N)</span>
+<span class="n">Center</span>      <span class="p">(</span>  <span class="mf">456080.000</span><span class="p">,</span> <span class="mf">3735960.000</span><span class="p">)</span> <span class="p">(</span><span class="mi">117</span><span class="n">d28</span><span class="s1">&#39;27.39&quot;W, 33d45&#39;</span><span class="mf">52.46</span><span class="s2">&quot;N)</span>
+<span class="n">Band</span> <span class="mi">1</span> <span class="n">Block</span><span class="o">=</span><span class="mi">512</span><span class="n">x16</span> <span class="n">Type</span><span class="o">=</span><span class="n">Byte</span><span class="p">,</span> <span class="n">ColorInterp</span><span class="o">=</span><span class="n">Gray</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">literalinclude</span></code> directive has options for syntax highlighting, line numbers and extracting just a snippet:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Example of :command:`gdalinfo` use:
+
+.. literalinclude:: example.txt
+   :language: txt
+   :linenos:
+   :emphasize-lines: 2-6
+   :start-after: Coordinate System is:
+   :end-before: Origin =
+</pre></div>
+</div>
+</section>
+<section id="reference-files-and-paths">
+<h3>Reference files and paths<a class="headerlink" href="#reference-files-and-paths" title="Link to this heading"></a></h3>
+<p>Use the following syntax to reference files and paths:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>:file:`myfile.txt`
+</pre></div>
+</div>
+<p>This will output: <code class="file docutils literal notranslate"><span class="pre">myfile.txt</span></code>.</p>
+<p>You can reference paths in the same way:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>:file:`path/to/myfile.txt`
+</pre></div>
+</div>
+<p>This will output: <code class="file docutils literal notranslate"><span class="pre">path/to/myfile.txt</span></code>.</p>
+<p>For Windows paths, use double backslashes:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>:file:`C:\\myfile.txt`
+</pre></div>
+</div>
+<p>This will output: <code class="file docutils literal notranslate"><span class="pre">C:\myfile.txt</span></code>.</p>
+<p>If you want to reference a non-specific path or file name:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>:file:`{your/own/path/to}/myfile.txt`
+</pre></div>
+</div>
+<p>This will output: <code class="file docutils literal notranslate"><em><span class="pre">your/own/path/to</span></em><span class="pre">/myfile.txt</span></code></p>
+<p>To reference a file in the GDAL source tree, use:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>:source_file:`gcore/gdaldriver.cpp`
+</pre></div>
+</div>
+<p>This will output a link to the file on GitHub: <a class="reference external" href="https://github.com/OSGeo/gdal/blob/master/gcore/gdaldriver.cpp">gdaldriver.cpp</a></p>
+</section>
+<section id="reference-code">
+<h3>Reference code<a class="headerlink" href="#reference-code" title="Link to this heading"></a></h3>
+<p>To reference a class:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>:cpp:class:`MyClass`
+</pre></div>
+</div>
+<p>To reference a method or function:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>:cpp:func:`MyClass::MyMethod`
+:cpp:func:`MyFunction`
+</pre></div>
+</div>
+</section>
+<section id="define-and-reference-configuration-options">
+<span id="config-option-syntax"></span><h3>Define and reference configuration options<a class="headerlink" href="#define-and-reference-configuration-options" title="Link to this heading"></a></h3>
+<p>To define a configuration option, use:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">config</span><span class="p">::</span> <span class="n">OPTION_NAME</span>
+   <span class="p">:</span><span class="n">choices</span><span class="p">:</span> <span class="n">COMMA</span><span class="p">,</span> <span class="n">SEPARATED</span><span class="p">,</span> <span class="n">LIST</span>
+   <span class="p">:</span><span class="n">default</span><span class="p">:</span> <span class="n">DEFAULT_VALUE</span>
+   <span class="p">:</span><span class="n">since</span><span class="p">:</span> <span class="n">GDAL</span><span class="o">.</span><span class="n">MIN</span><span class="o">.</span><span class="n">VERSION</span>
+
+   <span class="n">Narrative</span> <span class="n">about</span> <span class="n">the</span> <span class="n">option</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>Similar syntax can be used to define opening options (<code class="docutils literal notranslate"><span class="pre">..</span> <span class="pre">oo::</span></code>),
+creation options (<code class="docutils literal notranslate"><span class="pre">..</span> <span class="pre">co::</span></code>), dataset creation options (<code class="docutils literal notranslate"><span class="pre">..</span> <span class="pre">dsco::</span></code>), or layer creation options
+(<code class="docutils literal notranslate"><span class="pre">..</span> <span class="pre">lco::</span></code>).</p>
+<p>To reference a configuration option, such as <strong>GDAL_CACHEMAX</strong>,
+use the syntax in the table below.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Option type</p></th>
+<th class="head"><p>Syntax</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Configuration option</p></td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>:config:`option_name`
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Creation option</p></td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>:co:`option_name`
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>Open option</p></td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>:oo:`option_name`
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Dataset creation option</p></td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>:dsco:`option_name`
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>Layer creation option</p></td>
+<td><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>:lco:`option_name`
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="reference-commands">
+<h3>Reference commands<a class="headerlink" href="#reference-commands" title="Link to this heading"></a></h3>
+<p>Reference commands (such as <strong class="program">gdalinfo</strong>) with the following syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>:program:`gdalinfo`
+</pre></div>
+</div>
+<p>Use <code class="docutils literal notranslate"><span class="pre">option</span></code> directive for command line options:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">option</span><span class="p">::</span> <span class="o">-</span><span class="n">json</span>
+
+   <span class="n">Display</span> <span class="n">the</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">json</span> <span class="nb">format</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>Use <code class="docutils literal notranslate"><span class="pre">describe</span></code> to document create parameters:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">describe</span><span class="p">::</span> <span class="n">WORLDFILE</span><span class="o">=</span><span class="n">YES</span>
+
+   <span class="n">Force</span> <span class="n">the</span> <span class="n">generation</span> <span class="n">of</span> <span class="n">an</span> <span class="n">associated</span> <span class="n">ESRI</span> <span class="n">world</span> <span class="n">file</span> <span class="p">(</span><span class="k">with</span> <span class="n">the</span> <span class="n">extension</span> <span class="o">.</span><span class="n">wld</span><span class="p">)</span><span class="o">.</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="cmake.html" class="btn btn-neutral float-right" title="Using GDAL in CMake projects" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="testing.html" class="btn btn-neutral float-left" title="Automated testing" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2024 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+  </div>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

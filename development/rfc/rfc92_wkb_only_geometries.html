@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RFC 92: WKB Only geometries (on hold) &mdash; GDAL  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d10597a4" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/gdal.css?v=e152ac3b" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://gdal.org/development/rfc/rfc92_wkb_only_geometries.html"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="RFC 93: OGRLayer::UpdateFeature() method" href="rfc93_update_feature.html" />
+    <link rel="prev" title="RFC 91: GDALDataset::Close() method" href="rfc91_dataset_close.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../building_from_source.html">Building GDAL from source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev_environment.html">Setting up a development environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev_practices.html">Development practices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../testing.html">Automated testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev_documentation.html">Building documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cmake.html">Using GDAL in CMake projects</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters (not implemented)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open (withdrawn)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen (withdrawn)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open (withdrawn)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading (not implemented)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc77_drop_python2_support.html">RFC 77: Drop Python 2 support in favour of Python 3.6</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc78_gdal_utils_package.html">RFC 78: gdal-utils package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc79_listing_service_providers.html">RFC 79: Listing of Service Providers on GDAL website</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc80_numfocus_relationship.html">RFC 80: NumFOCUS relationship and sponsorship program</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc81_coordinate_epoch.html">RFC 81: Support for coordinate epochs in geospatial formats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc83_use_of_project_sponsorship.html">RFC 83: guidelines for the use of GDAL project sponsorship</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc84_cmake.html">RFC 84: Migrating build systems to CMake</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc85_policy_code_additions.html">RFC 85: Policy regarding substantial code additions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc86_column_oriented_api.html">RFC 86: Column-oriented read API for vector layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc87_signed_int8.html">RFC 87: Signed int8 data type for raster</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc88_googletest.html">RFC 88: Use GoogleTest framework for C/C++ unit tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc89_sql_logging_callback.html">RFC 89: SQL logging callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc90_read_compressed_data.html">RFC 90: Direct access to compressed raster data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc91_dataset_close.html">RFC 91: GDALDataset::Close() method</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 92: WKB Only geometries (on hold)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motivation">Motivation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#technical-details">Technical details</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#c-api">C API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#backward-compatibility">Backward compatibility</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#benchmarking">Benchmarking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#discussion">Discussion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#points-raised-during-discussion">Points raised during discussion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#issues-pull-requests">Issues / pull requests</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voting-history">Voting history</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rfc93_update_feature.html">RFC 93: OGRLayer::UpdateFeature() method</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc94_field_precision_width_metadata.html">RFC 94: Numeric fields width/precision metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc95_standard_int_types.html">RFC 95: Use standard C/C++ integer types (proposed, <em>NOT</em> adopted)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc96_deferred_plugin_loading.html">RFC 96: Deferred C++ plugin loading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc97_feature_and_fielddefn_sealing.html">RFC 97: OGRFeatureDefn, OGRFieldDefn and OGRGeomFieldDefn &quot;sealing&quot;</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc98_build_requirements_gdal_3_9.html">RFC 98: Build requirements for GDAL 3.9</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc99_geometry_coordinate_precision.html">RFC 99: Geometry coordinate precision</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sponsors/index.html">Sponsors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 92: WKB Only geometries (on hold)</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit/master/doc/source/development/rfc/rfc92_wkb_only_geometries.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="rfc93_update_feature.html" class="btn btn-neutral float-right" title="RFC 93: OGRLayer::UpdateFeature() method" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc91_dataset_close.html" class="btn btn-neutral float-left" title="RFC 91: GDALDataset::Close() method" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="rfc-92-wkb-only-geometries-on-hold">
+<span id="rfc-92"></span><h1>RFC 92: WKB Only geometries (on hold)<a class="headerlink" href="#rfc-92-wkb-only-geometries-on-hold" title="Link to this heading"></a></h1>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Author:</p></td>
+<td><p>Even Rouault</p></td>
+</tr>
+<tr class="row-even"><td><p>Contact:</p></td>
+<td><p>even.rouault at spatialys.com</p></td>
+</tr>
+<tr class="row-odd"><td><p>Started:</p></td>
+<td><p>2023-Jan-31</p></td>
+</tr>
+<tr class="row-even"><td><p>Status:</p></td>
+<td><p>On hold</p></td>
+</tr>
+<tr class="row-odd"><td><p>Target:</p></td>
+<td><p>N/A</p></td>
+</tr>
+</tbody>
+</table>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading"></a></h2>
+<p>This RFC provides shortcuts to avoid instantiation of full OGRGeometry instances
+in scenarios where only the WKB representation of geometries is needed. The
+hope is to save CPU time.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This RFC is on hold.</p>
+</div>
+</section>
+<section id="motivation">
+<h2>Motivation<a class="headerlink" href="#motivation" title="Link to this heading"></a></h2>
+<p>Some consumers of the OGR feature API only use the WKB representation of
+the geometry. This is typically the case in the QGIS OGR provider (a QGIS
+&quot;provider&quot; ~= a GDAL driver) which creates the corresponding QgsGeometry
+instance from WKB.</p>
+<p>The format of geometries of some popular formats like GeoPackage or PostGIS is
+based on WKB. Consequently the chain of processings done by QGIS reading GeoPackage
+is:</p>
+<p>GDAL side:</p>
+<ol class="arabic simple">
+<li><p>acquire GeoPackage geometry blob (WKB with a GeoPackage specific header) from
+the database</p></li>
+<li><p>instantiate the relevant OGRGeometry subclass instance (OGRPoint, OGRLineString,
+OGRPolygon, etc.) from WKB</p></li>
+<li><p>store it in a OGRFeature</p></li>
+</ol>
+<p>QGIS side:</p>
+<ol class="arabic simple" start="4">
+<li><p>get the OGRGeometry from the OGRFeature</p></li>
+<li><p>asks for its WKB representation, build from the subclass members (not the
+original WKB of step 2.)</p></li>
+<li><p>instantiate QgsGeometry from WKB</p></li>
+</ol>
+<p>One can see that if we were able to store the original WKB representation and
+get it back we could save OGRGeometry subclass object creation, destruction and
+WKB deserialization and serialization.</p>
+<p><a class="reference internal" href="rfc86_column_oriented_api.html#rfc-86"><span class="std std-ref">RFC 86: Column-oriented read API for vector layers</span></a> has seen related performance boosts since ArrowArray batches store
+the WKB representation of geometries and not OGRGeometry instances.
+This RFC borrows the same idea, but applying it to the traditional feature API,
+as switching to ArrowArray API is a significant undertaking for GDAL users.</p>
+<p>That could also be used in the future for a generic implementation of a potential
+OGRLayer::WriteArrowArray() method that would build temporary OGRFeature objects
+from the rows of the array to call the ICreateFeature() implementation: the temporary
+geometries could be OGRWKBOnlyGeometry instances for drivers such as GeoPackage
+that use WKB natively.</p>
+</section>
+<section id="technical-details">
+<h2>Technical details<a class="headerlink" href="#technical-details" title="Link to this heading"></a></h2>
+<p>The proposal mostly contains in adding a new subclass of OGRGeometry called
+<cite>OGRWKBOnlyGeometry</cite></p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cm">/**</span>
+<span class="cm"> * Special OGRGeometry subclass that only holds its WKB representation.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Used for optimizations when passing geometries between drivers or</span>
+<span class="cm"> * application code that does not require to query details of the geometry,</span>
+<span class="cm"> * such as structure in sub-components or vertex coordinates.</span>
+<span class="cm"> */</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CPL_DLL</span><span class="w"> </span><span class="n">OGRWKBOnlyGeometry</span><span class="w"> </span><span class="k">final</span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">OGRGeometry</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">GByte</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_abyWKB</span><span class="p">{};</span>
+<span class="w">    </span><span class="n">OGREnvelope</span><span class="w">        </span><span class="n">m_sEnvelope</span><span class="p">{};</span><span class="w"> </span><span class="c1">// optional</span>
+
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">OGRWKBOnlyGeometry</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="n">pabyWKB</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">nWKBSize</span><span class="p">);</span>
+<span class="w">    </span><span class="n">OGRWKBOnlyGeometry</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="n">pabyWKB</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">nWKBSize</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">OGREnvelope</span><span class="o">&amp;</span><span class="w"> </span><span class="n">sEnvelope</span><span class="p">);</span>
+
+<span class="w">    </span><span class="cm">/** Get WKB */</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">GByte</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">Wkb</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_abyWKB</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/** Return a &quot;real&quot; OGRGeometry instantiated from the WKB */</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">OGRGeometry</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Materialize</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+
+<span class="w">    </span><span class="cm">/** Returns the equivalent of Materialize()-&gt;getGeometryType() without</span>
+<span class="cm">     * materializing */</span>
+<span class="w">    </span><span class="n">OGRwkbGeometryType</span><span class="w"> </span><span class="nf">getUnderlyingGeometryType</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
+
+<span class="w">    </span><span class="cm">/** Returns envelope stored at construction time, or &quot;quickly&quot;</span>
+<span class="cm">     * determined by inspecting the WKB content */</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">getEnvelope</span><span class="p">(</span><span class="n">OGREnvelope</span><span class="w"> </span><span class="o">*</span><span class="n">psEnvelope</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// Dummy implementation of all pure virtual methods of OGRGeometry</span>
+<span class="w">    </span><span class="c1">// ==&gt; all return an error</span>
+<span class="w">    </span><span class="c1">// Typically getGeometryType() returns wkbUnknown, to avoid user code</span>
+<span class="w">    </span><span class="c1">// to wrongly cast to a OGRPoint/OGRLineString/etc. instance.</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>A new method is added to the OGRLayer class:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cm">/** If bRequestWKBOnlyGeometries is true, then the driver should return, in</span>
+<span class="cm"> *  GetNextFeature(), geometries that are instance of OGRWKBOnlyGeometry.</span>
+<span class="cm"> *  Only drivers for which TestCapability(OLCReadWKBGeometries) is true</span>
+<span class="cm"> *  are capable of this. Other drivers will error out.</span>
+<span class="cm"> */</span>
+<span class="k">virtual</span><span class="w"> </span><span class="n">OGRErr</span><span class="w"> </span><span class="nf">RequestWKBOnlyGeometries</span><span class="p">(</span><span class="kt">bool</span><span class="w"> </span><span class="n">bRequestWKBOnlyGeometries</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Two new capabilities are added at the OGRLayer level:</p>
+<ul class="simple">
+<li><p>OLCReadWKBGeometries: a layer must return TRUE for it when the layer can
+honour RequestWKBOnlyGeometries(true)</p></li>
+<li><p>OLCWriteWKBGeometries: a layer must return TRUE for it if its CreateFeature()
+and SetFeature() implementations support being passed OGRWKBOnlyGeometry
+instances.</p></li>
+</ul>
+<p>ogr2ogr is modified to call RequestWKBOnlyGeometries(true) on the source layer:</p>
+<ul class="simple">
+<li><p>if the source layer advertises OLCReadWKBGeometries</p></li>
+<li><p>if the target layer advertises OLCWriteWKBGeometries</p></li>
+<li><p>if no command line switch requires a &quot;materialized&quot; geometry.</p></li>
+</ul>
+<p>So basically this is for requests like
+&quot;ogr2ogr out.gpkg in.gpkg [layer or SQL request] [attribute filter] [spatial filter]&quot;</p>
+<p>To be noted that while bounding box intersection in the case of GeoPackage is
+done at the SQLite RTree level, the GeoPackage driver currently does a &quot;client-side&quot;
+post filtering using GEOSIntersects() (in situations where bounding box analysis
+only cannot conclude), so geometry materialization is done in OGRLayer::FilterGeometry()
+for a subset of features.</p>
+</section>
+<section id="c-api">
+<h2>C API<a class="headerlink" href="#c-api" title="Link to this heading"></a></h2>
+<p>OGR_L_RequestWKBOnlyGeometries() is added.</p>
+</section>
+<section id="backward-compatibility">
+<h2>Backward compatibility<a class="headerlink" href="#backward-compatibility" title="Link to this heading"></a></h2>
+<p>No issue. Only API additions</p>
+</section>
+<section id="benchmarking">
+<h2>Benchmarking<a class="headerlink" href="#benchmarking" title="Link to this heading"></a></h2>
+<section id="bench-ogr-c-api">
+<h3>bench_ogr_c_api<a class="headerlink" href="#bench-ogr-c-api" title="Link to this heading"></a></h3>
+<p>The <a class="reference external" href="https://github.com/OSGeo/gdal/blob/master/perftests/bench_ogr_c_api.cpp">bench_ogr_c_api</a>
+benchmark utility which uses the C API to iterate over features and get their WKB
+representation is enhanced with a <cite>-wkb_only_geometry</cite> switch to call
+OGR_L_RequestWKBOnlyGeometries().</p>
+<p>On a 1.6 GB GeoPackage (nz-building-outlines.gpkg) made of 3.2 million features
+with simple polygons (typically quadrilaterals, building footprints) and 13
+attributes:</p>
+<ul class="simple">
+<li><p>bench_ogr_c_api runs in 6.4 s</p></li>
+<li><p>bench_ogr_c_api -wkb_only_geometry runs in 5.0 s</p></li>
+</ul>
+<p>==&gt; 22% faster</p>
+<p>Other synthetic benchmarks show that the maximum speed-up is about 30% on a
+dataset with 10 millions polygonal features of 10 points each.</p>
+<p>Conversely, the gain is much more modest, or close to null, with just a few
+thousands of features that hold larger geometries (several thousands of points
+each).</p>
+<p>The gain is more in saving instantiation of OGRPolygon and OGRLinearRing
+objects that in the size of their coordinate set.</p>
+</section>
+<section id="ogr2ogr">
+<h3>ogr2ogr<a class="headerlink" href="#ogr2ogr" title="Link to this heading"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogr2ogr</span> <span class="o">/</span><span class="n">vsimem</span><span class="o">/</span><span class="n">out</span><span class="o">.</span><span class="n">gpkg</span> <span class="n">nz</span><span class="o">-</span><span class="n">building</span><span class="o">-</span><span class="n">outlines</span><span class="o">.</span><span class="n">gpkg</span> <span class="o">-</span><span class="n">lco</span> <span class="n">spatial_index</span><span class="o">=</span><span class="n">no</span>
+</pre></div>
+</div>
+<p>runs in 15.8 second in WKBOnlyGeometry mode vs 19.1 second without it (master),
+hence a 17% speed-up.</p>
+<p>With spatial index creation enabled (multi-threaded), the wall clock time
+difference is within measurement noise. And for singe threaded creation, the
+WKBOnlyGeometry mode is 5% faster.</p>
+</section>
+</section>
+<section id="discussion">
+<h2>Discussion<a class="headerlink" href="#discussion" title="Link to this heading"></a></h2>
+<p>Is it a good idea... ?</p>
+<p>The design of OGRWKBOnlyGeometry is admittedly a bit clunky, or at least at odds
+with other OGRGeometry subclasses, but nothing more elegant, concise, performant
+and that doesn't change the whole OGRGeometry API and driver implementations
+comes to mind.</p>
+<p>The scope is limited to a few drivers: GeoPackage, PostGIS (but the current
+throughput of the driver is probably not sufficient for OGRGeometry overhead to
+be noticeable), what else?</p>
+<p>Should methods of OGRWKBOnlyGeometry that cannot work without materialization
+of the real geometry return an error like done currently, or do the materialization
+on-the-fly when needed ? The motivation for erroring out is to avoid silent
+performance issues related to materialization.</p>
+</section>
+<section id="points-raised-during-discussion">
+<h2>Points raised during discussion<a class="headerlink" href="#points-raised-during-discussion" title="Link to this heading"></a></h2>
+<p>Sean Gillies: Wouldn't it be possible for all OGRFeatures to carry WKB data by
+default and add a method to provide it to callers?</p>
+<p>Even: That involve massive code rewrites in all drivers and wouldn't be desirable
+from a performance point of view, because most drivers can't generate WKB easily
+(PostGIS and GPKG are the exceptions rather the norm). So either all other drivers
+should be modified to compose WKB at hand (massive coding effort. Probably
+several weeks of effort and significant risk of regressions). Or get it from the
+ExportToWkb() method of the OGRGeometry instance they currently build, but then
+you pay the price in memory and CPU time to generate WKB that might not be
+consumed by users.</p>
+<p>Sean Gillies: And only construct an OGRGeometry when it's asked for? Such as when
+GetGeometryRef is called?</p>
+<p>Even: we could both make GetGeometryRef() and GetGeomFieldRef() virtual methods
+whose default implementation would be the same as currently, ie. return the value
+of the corresponding member variable in the base OGRFeature class stored with
+SetGeometry[Directly]()/SetGeomField[Directly]()</p>
+<p>And add a new virtual method:</p>
+<p>virtual GByte* OGRFeature::GetWKBGeometry(int iGeomField, size_t* pnOutSize) const</p>
+<p>whose default implementation would just use GetGeomFieldRef(iGeomField)-&gt;ExportToWkb().</p>
+<p>The few drivers that can provide a more efficient implementation (GPKG typically)
+would create a derived class OGRFeatureGPKG with a specific implementation of
+those new virtual methods to avoid systematic OGRGeometry instantiation. The only
+drawback I see is that making GetGeometryRef() and GetGeomFieldRef() virtual would
+have a slight performance impact, but probably small enough.</p>
+<p>Dan Baston: I'm wondering about a more broad application of this. Would it be
+helpful to have the ability to lazy-initialize an OGRGeometry from multiple
+source types such as WKB and GEOS, initially storing only a reference to the
+external data in WKB/GEOS/etc and actually materializing the geometry when
+required? Then methods such as OGRGeometry::exportToWkb and
+OGRGeometry::exportToGEOS could check the external data type and use it directly
+if it is compatible, avoiding materialization. This would avoid multiple
+conversions to/from GEOS in cases where operations are chained, as well as
+allowing WKB to pass directly between input and output drivers that support it.
+Relatedly, this ability could be used to cache external-format data when it is
+generated for an OGRGeometry, avoiding inefficiencies such as two conversions
+to GEOS when checking to see if two geometries intersect before calculating
+their intersection.</p>
+<p>Even: That's definitely something doable. At a minimum, you would have to
+inspect the top geometry type to instantiate the appropriate OGRGeometry
+subclass, and then its members could be lazy initialized, but that means that
+all methods of OGRGeometry and its subclasses would have to do a check whether
+the object has been fully initialized. There might be performance implications
+for people doing for example lineString-&gt;getX(idx) to iterate on big geometries,
+although branch predictors of modern CPUs are probably very good at repeatedly
+evaluating stuff like &quot;if (!materialized) materialize();&quot;. The main drawback is
+that is a substantial &amp; risky change that requires to revisit <em>all</em> methods of
+the geometry classes. For setters, you would also have to make sure to invalidate
+the potentially initial WKB / GEOS source.</p>
+</section>
+<section id="issues-pull-requests">
+<h2>Issues / pull requests<a class="headerlink" href="#issues-pull-requests" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/OSGeo/gdal/compare/master...rouault:gdal:rfc92_implementation?expand=1">https://github.com/OSGeo/gdal/compare/master...rouault:gdal:rfc92_implementation?expand=1</a>
+contains a preliminary candidate implementation.</p>
+<p>Not all subtleties have been taken into account in the prototype implementation
+(like doing OGRSQL and requesting the OGR_GEOMETRY special attribute).</p>
+<p>OGRLayer::FilterGeometry() (used for spatial filter evaluation by GetNextFeature())
+uses OGRWKBOnlyGeometry::Materialize() for convenience currently. This could be
+improved for geometry types that are directly compatible of GEOS to pass directly
+the WKB to GEOS.</p>
+</section>
+<section id="voting-history">
+<h2>Voting history<a class="headerlink" href="#voting-history" title="Link to this heading"></a></h2>
+<p>TBD</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rfc93_update_feature.html" class="btn btn-neutral float-right" title="RFC 93: OGRLayer::UpdateFeature() method" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc91_dataset_close.html" class="btn btn-neutral float-left" title="RFC 91: GDALDataset::Close() method" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2024 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+  </div>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

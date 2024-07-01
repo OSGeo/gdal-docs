@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ogr_layer_algebra &mdash; GDAL  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d10597a4" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/gdal.css?v=e152ac3b" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="canonical" href="https://gdal.org/programs/ogr_layer_algebra.html"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="gnmmanage" href="gnmmanage.html" />
+    <link rel="prev" title="ogrmerge" href="ogrmerge.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Programs</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#general">General</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#raster-programs">Raster programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#multidimensional-raster-programs">Multidimensional Raster programs</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#vector-programs">Vector programs</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="vector_common_options.html">Common options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ogrinfo.html">ogrinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ogr2ogr.html">ogr2ogr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ogrtindex.html">ogrtindex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ogrlineref.html">ogrlineref</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ogrmerge.html">ogrmerge</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ogr_layer_algebra</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#synopsis">Synopsis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#description">Description</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#geographic-network-programs">Geographic network programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#other-utilities">Other utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sponsors/index.html">Sponsors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Programs</a> &raquo;</li>
+      
+      <li>ogr_layer_algebra</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit/master/doc/source/programs/ogr_layer_algebra.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="gnmmanage.html" class="btn btn-neutral float-right" title="gnmmanage" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ogrmerge.html" class="btn btn-neutral float-left" title="ogrmerge" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="ogr-layer-algebra">
+<span id="id1"></span><h1>ogr_layer_algebra<a class="headerlink" href="#ogr-layer-algebra" title="Link to this heading"></a></h1>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 3.6.</span></p>
+</div>
+<p>Performs various Vector layer algebraic operations.</p>
+<section id="synopsis">
+<span id="index-0"></span><h2>Synopsis<a class="headerlink" href="#synopsis" title="Link to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogr_layer_algebra</span> <span class="p">[</span><span class="o">--</span><span class="n">help</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">help</span><span class="o">-</span><span class="n">general</span><span class="p">]</span>
+                    <span class="n">Union</span><span class="o">|</span><span class="n">Intersection</span><span class="o">|</span><span class="n">SymDifference</span><span class="o">|</span><span class="n">Identity</span><span class="o">|</span><span class="n">Update</span><span class="o">|</span><span class="n">Clip</span><span class="o">|</span><span class="n">Erase</span>
+                    <span class="o">-</span><span class="n">input_ds</span> <span class="o">&lt;</span><span class="n">path</span><span class="o">&gt;</span> <span class="p">[</span><span class="o">-</span><span class="n">input_lyr</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="p">]</span>
+                    <span class="o">-</span><span class="n">method_ds</span> <span class="o">&lt;</span><span class="n">path</span><span class="o">&gt;</span> <span class="p">[</span><span class="o">-</span><span class="n">method_lyr</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="p">]</span>
+                    <span class="o">-</span><span class="n">output_ds</span> <span class="o">&lt;</span><span class="n">path</span><span class="o">&gt;</span> <span class="p">[</span><span class="o">-</span><span class="n">output_lyr</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">overwrite</span><span class="p">]</span>
+                    <span class="p">[</span><span class="o">-</span><span class="n">opt</span> <span class="o">&lt;</span><span class="n">NAME</span><span class="o">&gt;=&lt;</span><span class="n">VALUE</span><span class="o">&gt;</span><span class="p">]</span><span class="o">...</span>
+                    <span class="p">[</span><span class="o">-</span><span class="n">f</span> <span class="o">&lt;</span><span class="n">format_name</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">dsco</span> <span class="o">&lt;</span><span class="n">NAME</span><span class="o">&gt;=&lt;</span><span class="n">VALUE</span><span class="o">&gt;</span><span class="p">]</span><span class="o">...</span> <span class="p">[</span><span class="o">-</span><span class="n">lco</span> <span class="o">&lt;</span><span class="n">NAME</span><span class="o">&gt;=&lt;</span><span class="n">VALUE</span><span class="o">&gt;</span><span class="p">]</span><span class="o">...</span>
+                    <span class="p">[</span><span class="o">-</span><span class="n">input_fields</span> <span class="p">{</span><span class="n">NONE</span><span class="o">|</span><span class="n">ALL</span><span class="o">|&lt;</span><span class="n">fld1</span><span class="o">&gt;</span><span class="p">,</span><span class="o">&lt;</span><span class="n">fl2</span><span class="o">&gt;</span><span class="p">,</span><span class="o">...&lt;</span><span class="n">fldN</span><span class="o">&gt;</span><span class="p">}]</span> <span class="p">[</span><span class="o">-</span><span class="n">method_fields</span> <span class="p">{</span><span class="n">NONE</span><span class="o">|</span><span class="n">ALL</span><span class="o">|&lt;</span><span class="n">fld1</span><span class="o">&gt;</span><span class="p">,</span><span class="o">&lt;</span><span class="n">fl2</span><span class="o">&gt;</span><span class="p">,</span><span class="o">...&lt;</span><span class="n">fldN</span><span class="o">&gt;</span><span class="p">}]</span>
+                    <span class="p">[</span><span class="o">-</span><span class="n">nlt</span> <span class="o">&lt;</span><span class="n">geom_type</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">a_srs</span> <span class="o">&lt;</span><span class="n">srs_def</span><span class="o">&gt;</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="description">
+<h2>Description<a class="headerlink" href="#description" title="Link to this heading"></a></h2>
+<p>The <strong class="program">ogr_layer_algebra</strong> provides a command line utility to perform various vector layer algebraic operations. The utility takes a vector
+input source and a method source and generates the output of the operation in the specified output file.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>ogr_layer_algebra is a Python utility, and is only available if GDAL Python bindings are available.</p>
+</div>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogr_layer_algebra-help">
+<span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-ogr_layer_algebra-help" title="Link to this definition"></a></dt>
+<dd><p>Show this help message and exit</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogr_layer_algebra-help-general">
+<span class="sig-name descname"><span class="pre">--help-general</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-ogr_layer_algebra-help-general" title="Link to this definition"></a></dt>
+<dd><p>Gives a brief usage message for the generic GDAL commandline options and exit.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogr_layer_algebra-arg-mode">
+<span class="sig-name descname"><span class="pre">&lt;mode&gt;</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-ogr_layer_algebra-arg-mode" title="Link to this definition"></a></dt>
+<dd><p>Where &lt;mode&gt; is one of the seven available modes:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">Union</span></code></p>
+<blockquote>
+<div><p>A union is a set of features, which represent areas that are in either of the operand layers.</p>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Intersection</span></code></p>
+<blockquote>
+<div><p>An intersection is a set of features, which represent the common areas of two layers.</p>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SymDifference</span></code></p>
+<blockquote>
+<div><p>A symmetric difference is a set of features, which represent areas that are in operand layers but which do not intersect.</p>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Identity</span></code></p>
+<blockquote>
+<div><p>The identity method identifies features in the input layer with features in the method layer possibly splitting features into several features.
+By default the result layer has attributes from both operand layers.</p>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Update</span></code></p>
+<blockquote>
+<div><p>The update method creates a layer, which add features into the input layer from the method layer possibly cutting features in the input layer.
+By default the result layer has attributes only from the input layer.</p>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Clip</span></code></p>
+<blockquote>
+<div><p>The clip method creates a layer, which has features from the input layer clipped to the areas of the features in the method layer.
+By default the result layer has attributes of the input layer.</p>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Erase</span></code></p>
+<blockquote>
+<div><p>The erase method creates a layer, which has features from the input layer whose areas are erased by the features in the method layer.
+By default the result layer has attributes of the input layer.</p>
+</div></blockquote>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogr_layer_algebra-input_ds">
+<span class="sig-name descname"><span class="pre">-input_ds</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;path&gt;</span></span><a class="headerlink" href="#cmdoption-ogr_layer_algebra-input_ds" title="Link to this definition"></a></dt>
+<dd><p>Input dataset path for the operation to be performed.
+For operations involving two datasets, this is one of the datasets.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogr_layer_algebra-input_lyr">
+<span class="sig-name descname"><span class="pre">-input_lyr</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;name&gt;</span></span><a class="headerlink" href="#cmdoption-ogr_layer_algebra-input_lyr" title="Link to this definition"></a></dt>
+<dd><p>Layer name of the <code class="docutils literal notranslate"><span class="pre">input_ds</span></code> for which the operations have to be performed ( Optional )</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogr_layer_algebra-method_ds">
+<span class="sig-name descname"><span class="pre">-method_ds</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;path&gt;</span></span><a class="headerlink" href="#cmdoption-ogr_layer_algebra-method_ds" title="Link to this definition"></a></dt>
+<dd><p>Method data set path for the operation to be performed.
+This is usually the conditional data set supplied to the operation ( ex: clip , erase , update )
+This is the Second data set in the operation ( ex : Union, Intersection , SymDifference )</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogr_layer_algebra-method_lyr">
+<span class="sig-name descname"><span class="pre">-method_lyr</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;name&gt;</span></span><a class="headerlink" href="#cmdoption-ogr_layer_algebra-method_lyr" title="Link to this definition"></a></dt>
+<dd><p>Layer name of the <code class="docutils literal notranslate"><span class="pre">method_ds</span></code> for which the operations have to be performed ( Optional )</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogr_layer_algebra-output_ds">
+<span class="sig-name descname"><span class="pre">-output_ds</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;path&gt;</span></span><a class="headerlink" href="#cmdoption-ogr_layer_algebra-output_ds" title="Link to this definition"></a></dt>
+<dd><p>Output data set path for writing the result of the operations performed by <code class="docutils literal notranslate"><span class="pre">ogr_layer_algebra</span></code>.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogr_layer_algebra-output_lyr_name">
+<span class="sig-name descname"><span class="pre">-output_lyr_name</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;name&gt;</span></span><a class="headerlink" href="#cmdoption-ogr_layer_algebra-output_lyr_name" title="Link to this definition"></a></dt>
+<dd><p>Layer name of the <code class="docutils literal notranslate"><span class="pre">output_lyr_name</span></code> where the output vector has to be written. ( Optional )</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogr_layer_algebra-overwrite">
+<span class="sig-name descname"><span class="pre">-overwrite</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-ogr_layer_algebra-overwrite" title="Link to this definition"></a></dt>
+<dd><p>Indicates whether the <code class="docutils literal notranslate"><span class="pre">output_ds</span></code> have to be overwritten with the generated result of <code class="docutils literal notranslate"><span class="pre">ogr_layer_algebra</span></code>.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogr_layer_algebra-opt">
+<span class="sig-name descname"><span class="pre">-opt</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;NAME&gt;=&lt;VALUE&gt;</span></span><a class="headerlink" href="#cmdoption-ogr_layer_algebra-opt" title="Link to this definition"></a></dt>
+<dd><p>Attributes for which the operation has to run on <code class="docutils literal notranslate"><span class="pre">input_ds</span></code> and <code class="docutils literal notranslate"><span class="pre">method_ds</span></code>.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogr_layer_algebra-f">
+<span class="sig-name descname"><span class="pre">-f</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;format_name&gt;</span></span><a class="headerlink" href="#cmdoption-ogr_layer_algebra-f" title="Link to this definition"></a></dt>
+<dd><p>Select the output format.If not specified,
+the format is guessed from the extension (previously was ESRI Shapefile).
+Use the short format name</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogr_layer_algebra-dsco">
+<span class="sig-name descname"><span class="pre">-dsco</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;NAME&gt;=&lt;VALUE&gt;</span></span><a class="headerlink" href="#cmdoption-ogr_layer_algebra-dsco" title="Link to this definition"></a></dt>
+<dd><p>Dataset creation option (format specific).</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogr_layer_algebra-lco">
+<span class="sig-name descname"><span class="pre">-lco</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;NAME&gt;=&lt;VALUE&gt;</span></span><a class="headerlink" href="#cmdoption-ogr_layer_algebra-lco" title="Link to this definition"></a></dt>
+<dd><p>Layer creation option (format specific).</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogr_layer_algebra-input_fields">
+<span class="sig-name descname"><span class="pre">-input_fields</span></span><span class="sig-prename descclassname"> <span class="pre">{NONE|ALL|&lt;fld1&gt;,&lt;fl2&gt;,...&lt;fldN&gt;}</span></span><a class="headerlink" href="#cmdoption-ogr_layer_algebra-input_fields" title="Link to this definition"></a></dt>
+<dd><p>Comma-delimited list of fields from input layer to copy to the output layer ,
+if eligible according to the operation.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogr_layer_algebra-method_fields">
+<span class="sig-name descname"><span class="pre">-method_fields</span></span><span class="sig-prename descclassname"> <span class="pre">{NONE|ALL|&lt;fld1&gt;,&lt;fl2&gt;,...&lt;fldN&gt;}</span></span><a class="headerlink" href="#cmdoption-ogr_layer_algebra-method_fields" title="Link to this definition"></a></dt>
+<dd><p>Comma-delimited list of fields from method layer to copy to the output layer ,
+if eligible according to the operation.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogr_layer_algebra-nlt">
+<span class="sig-name descname"><span class="pre">-nlt</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;geom_type&gt;</span></span><a class="headerlink" href="#cmdoption-ogr_layer_algebra-nlt" title="Link to this definition"></a></dt>
+<dd><p>Define the geometry type for the created layer.
+One of NONE, GEOMETRY, POINT, LINESTRING, POLYGON, GEOMETRYCOLLECTION,
+MULTIPOINT, MULTIPOLYGON, GEOMETRY25D, POINT25D, LINESTRING25D, POLYGON25D,
+GEOMETRYCOLLECTION25D, MULTIPOINT25D, MULTIPOLYGON25D.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ogr_layer_algebra-a_srs">
+<span class="sig-name descname"><span class="pre">-a_srs</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;srs_def&gt;</span></span><a class="headerlink" href="#cmdoption-ogr_layer_algebra-a_srs" title="Link to this definition"></a></dt>
+<dd><p>Assign an output SRS, but without reprojecting</p>
+<p>The coordinate reference systems that can be passed are anything supported by the
+OGRSpatialReference.SetFromUserInput() call, which includes EPSG Projected,
+Geographic or Compound CRS (i.e. EPSG:4296), a well known text (WKT) CRS definition,
+PROJ.4 declarations, or the name of a .prj file containing a WKT CRS definition.</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="gnmmanage.html" class="btn btn-neutral float-right" title="gnmmanage" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ogrmerge.html" class="btn btn-neutral float-left" title="ogrmerge" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2024 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+  </div>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Setting up a development environment &mdash; GDAL  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d10597a4" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/gdal.css?v=e152ac3b" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="canonical" href="https://gdal.org/development/dev_environment.html"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Development practices" href="dev_practices.html" />
+    <link rel="prev" title="Building GDAL from source" href="building_from_source.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Development</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="building_from_source.html">Building GDAL from source</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Setting up a development environment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#build-requirements">Build requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vagrant">Vagrant</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#docker">Docker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#building-on-windows-with-conda-dependencies-and-visual-studio">Building on Windows with Conda dependencies and Visual Studio</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#install-git">Install git</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#install-miniconda">Install miniconda</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#install-gdal-dependencies">Install GDAL dependencies</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#checkout-gdal-sources">Checkout GDAL sources</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#build-gdal">Build GDAL</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#setting-development-environment-variables">Setting development environment variables</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="dev_practices.html">Development practices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html">Automated testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dev_documentation.html">Building documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cmake.html">Using GDAL in CMake projects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rfc/index.html">RFC list</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sponsors/index.html">Sponsors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Development</a> &raquo;</li>
+      
+      <li>Setting up a development environment</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit/master/doc/source/development/dev_environment.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="dev_practices.html" class="btn btn-neutral float-right" title="Development practices" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="building_from_source.html" class="btn btn-neutral float-left" title="Building GDAL from source" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="setting-up-a-development-environment">
+<span id="dev-environment"></span><h1>Setting up a development environment<a class="headerlink" href="#setting-up-a-development-environment" title="Link to this heading"></a></h1>
+<section id="build-requirements">
+<h2>Build requirements<a class="headerlink" href="#build-requirements" title="Link to this heading"></a></h2>
+<p>See <a class="reference internal" href="building_from_source.html#build-requirements"><span class="std std-ref">Build requirements</span></a></p>
+</section>
+<section id="vagrant">
+<h2>Vagrant<a class="headerlink" href="#vagrant" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://www.vagrantup.com">Vagrant</a> is a tool that works with a virtualization product such as
+VirtualBox to create a reproducible development environment. GDAL includes a Vagrant configuration
+file that sets up an Ubuntu virtual machine with a comprehensive set of dependencies.</p>
+<p>Once Vagrant has been installed and the GDAL source downloaded, the virtual machine can be set up
+by running the following from the source root directory:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># VAGRANT_VM_CPU=number_of_cpus</span>
+vagrant<span class="w"> </span>up
+</pre></div>
+</div>
+<p>The source root directory is exposed inside the virtual machine at <code class="docutils literal notranslate"><span class="pre">/vagrant</span></code>, so changes made to
+GDAL source files on the host are seen inside the VM. To rebuild GDAL after changing source files,
+you can connect to the VM and re-run the build command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vagrant<span class="w"> </span>ssh
+cmake<span class="w"> </span>--build<span class="w"> </span>.
+</pre></div>
+</div>
+<p>Note that the following directories on the host will be created (and can be
+removed if the Vagrant environment is no longer needed):</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">../apt-cache/ubuntu/jammy64</span></code>: contains a cache of Ubuntu packages of the VM,
+to allow faster VM reconstruction</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">build_vagrant</span></code>: CMake build directory</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ccache_vagrant</span></code>: CCache directory</p></li>
+</ul>
+</section>
+<section id="docker">
+<h2>Docker<a class="headerlink" href="#docker" title="Link to this heading"></a></h2>
+<p>The Linux environments used for building and testing GDAL on GitHub Actions are
+defined by Docker images that can be pulled to any machine for development. The
+Docker image used for each build is specified in <a class="reference external" href="https://github.com/OSGeo/gdal/blob/master/.github/workflows/linux_build.yml">linux_build.yml</a>. As an
+example, the following commands can be run from the GDAL source root to build
+and test GDAL using the clang address sanitizer (ASAN) in the same environment
+that is used in GitHub Actions:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>run<span class="w"> </span>-it<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-v<span class="w"> </span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/gdal:rw<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>ghcr.io/osgeo/gdal-deps:ubuntu20.04-master
+<span class="nb">cd</span><span class="w"> </span>/gdal
+mkdir<span class="w"> </span>build-asan
+<span class="nb">cd</span><span class="w"> </span>build-asan
+../.github/workflows/asan/build.sh
+../.github/workflows/asan/test.sh
+</pre></div>
+</div>
+<p>To avoid built objects being owned by root, it may be desirable to add <code class="docutils literal notranslate"><span class="pre">-u</span> <span class="pre">$(id</span>
+<span class="pre">-u):$(id</span> <span class="pre">-g)</span> <span class="pre">-v</span> <span class="pre">/etc/passwd:/etc/passwd</span></code> to the <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">run</span></code> command above.</p>
+</section>
+<section id="building-on-windows-with-conda-dependencies-and-visual-studio">
+<h2>Building on Windows with Conda dependencies and Visual Studio<a class="headerlink" href="#building-on-windows-with-conda-dependencies-and-visual-studio" title="Link to this heading"></a></h2>
+<p>It is less appropriate for Debug builds of GDAL, than other methods, such as using vcpkg.</p>
+<section id="install-git">
+<h3>Install git<a class="headerlink" href="#install-git" title="Link to this heading"></a></h3>
+<p>Install <a class="reference external" href="https://git-scm.com/download/win">git</a></p>
+</section>
+<section id="install-miniconda">
+<h3>Install miniconda<a class="headerlink" href="#install-miniconda" title="Link to this heading"></a></h3>
+<p>Install <a class="reference external" href="https://repo.anaconda.com/miniconda/Miniconda3-latest-Windows-x86_64.exe">miniconda</a></p>
+</section>
+<section id="install-gdal-dependencies">
+<h3>Install GDAL dependencies<a class="headerlink" href="#install-gdal-dependencies" title="Link to this heading"></a></h3>
+<p>Start a Conda enabled console and assuming there is a c:\dev directory</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd c:\dev</span>
+<span class="go">conda create --name gdal</span>
+<span class="go">conda activate gdal</span>
+<span class="go">conda install --yes --quiet curl libiconv icu git python=3.7 swig numpy pytest zlib clcache</span>
+<span class="go">conda install --yes --quiet -c conda-forge compilers</span>
+<span class="go">conda install --yes --quiet -c conda-forge \</span>
+<span class="go">    cmake proj geos hdf4 hdf5 \</span>
+<span class="go">    libnetcdf openjpeg poppler libtiff libpng xerces-c expat libxml2 kealib json-c \</span>
+<span class="go">    cfitsio freexl geotiff jpeg libpq libspatialite libwebp-base pcre postgresql \</span>
+<span class="go">    sqlite tiledb zstd charls cryptopp cgal librttopo libkml openssl xz</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">compilers</span></code> package will install <code class="docutils literal notranslate"><span class="pre">vs2017_win-64</span></code> (at time of writing)
+to set the appropriate environment for cmake to pick up. It is also possible
+to use the <code class="docutils literal notranslate"><span class="pre">vs2019_win-64</span></code> package if Visual Studio 2019 is to be used.</p>
+</div>
+</section>
+<section id="checkout-gdal-sources">
+<h3>Checkout GDAL sources<a class="headerlink" href="#checkout-gdal-sources" title="Link to this heading"></a></h3>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd c:\dev</span>
+<span class="go">git clone https://github.com/OSGeo/gdal.git</span>
+</pre></div>
+</div>
+</section>
+<section id="build-gdal">
+<h3>Build GDAL<a class="headerlink" href="#build-gdal" title="Link to this heading"></a></h3>
+<p>From a Conda enabled console</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">conda activate gdal</span>
+<span class="go">cd c:\dev\gdal</span>
+<span class="go">cmake -S . -B build -DCMAKE_PREFIX_PATH:FILEPATH=&quot;%CONDA_PREFIX%&quot; \</span>
+<span class="go">                    -DCMAKE_C_COMPILER_LAUNCHER=clcache</span>
+<span class="go">                    -DCMAKE_CXX_COMPILER_LAUNCHER=clcache</span>
+<span class="go">cmake --build build --config Release -j 8</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="setting-development-environment-variables">
+<h2>Setting development environment variables<a class="headerlink" href="#setting-development-environment-variables" title="Link to this heading"></a></h2>
+<p>Once GDAL has been built, a number of environment variables must be set to be
+able to execute C++ or Python utilities of the build directory, or run tests.</p>
+<p>This can be done by sourcing the following from the build directory:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>.<span class="w"> </span>../scripts/setdevenv.sh
+</pre></div>
+</div>
+<p>(with adjustments to the above path if the build directory is not a subdirectory of the GDAL source root).</p>
+<p>For Windows, a similar <code class="docutils literal notranslate"><span class="pre">scripts/setdevenv.bat</span></code> script exists (it currently assumes a Release build).</p>
+<p>To verify that environment variables have been set correctly, you can check the version of a GDAL binary:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gdalinfo<span class="w"> </span>--version
+<span class="c1"># GDAL 3.7.0dev-5327c149f5-dirty, released 2018/99/99 (debug build)</span>
+</pre></div>
+</div>
+<p>and the Python bindings:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s1">&#39;from osgeo import gdal; print(gdal.__version__)&#39;</span>
+<span class="c1"># 3.7.0dev-5327c149f5-dirty</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="dev_practices.html" class="btn btn-neutral float-right" title="Development practices" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="building_from_source.html" class="btn btn-neutral float-left" title="Building GDAL from source" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2024 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+  </div>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

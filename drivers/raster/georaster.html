@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Oracle Spatial GeoRaster &mdash; GDAL  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d10597a4" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/gdal.css?v=e152ac3b" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://gdal.org/drivers/raster/georaster.html"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="GFF -- Sandia National Laboratories GSAT File Format" href="gff.html" />
+    <link rel="prev" title="GenBin -- Generic Binary (.hdr labelled)" href="genbin.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Raster drivers</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="aaigrid.html">AAIGrid -- Arc/Info ASCII Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ace2.html">ACE2 -- ACE2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adrg.html">ADRG -- ADRG/ARC Digitized Raster Graphics (.gen/.thf)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aig.html">AIG -- Arc/Info Binary Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="airsar.html">AIRSAR -- AIRSAR Polarimetric Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bag.html">BAG -- Bathymetry Attributed Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basisu.html">BASISU -- Basis Universal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blx.html">BLX -- Magellan BLX Topo File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bmp.html">BMP -- Microsoft Windows Device Independent Bitmap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bsb.html">BSB -- Maptech/NOAA BSB Nautical Chart Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bt.html">BT -- VTP .bt Binary Terrain Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="byn.html">BYN - Natural Resources Canada's Geoid file format (.byn)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cad.html">CAD -- AutoCAD DWG raster layer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cals.html">CALS -- CALS Type 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ceos.html">CEOS -- CEOS Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coasp.html">COASP --  DRDC COASP SAR Processor Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cog.html">COG -- Cloud Optimized GeoTIFF generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cosar.html">COSAR -- TerraSAR-X Complex SAR Data Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpg.html">CPG -- Convair PolGASP data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctable2.html">CTable2 -- CTable2 Datum Grid Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctg.html">CTG -- USGS LULC Composite Theme Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="daas.html">DAAS (Airbus DS Intelligence Data As A Service driver)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dds.html">DDS -- DirectDraw Surface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="derived.html">DERIVED -- Derived subdatasets driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dimap.html">DIMAP -- Spot DIMAP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dipex.html">DIPEx -- ELAS DIPEx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doq1.html">DOQ1 -- First Generation USGS DOQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doq2.html">DOQ2 -- New Labelled USGS DOQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dted.html">DTED -- Military Elevation Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ecrgtoc.html">ECRGTOC -- ECRG Table Of Contents (TOC.xml)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ecw.html">ECW -- Enhanced Compressed Wavelets (.ecw)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eedai.html">EEDAI - Google Earth Engine Data API Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ehdr.html">EHdr -- ESRI .hdr Labelled</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eir.html">EIR -- Erdas Imagine Raw</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elas.html">ELAS - Earth Resources Laboratory Applications Software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="envi.html">ENVI -- ENVI .hdr Labelled Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="esat.html">ESAT -- Envisat Image Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="esric.html">ESRIC -- Esri Compact Cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ers.html">ERS -- ERMapper .ERS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exr.html">EXR -- Extended Dynamic Range Image File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fast.html">FAST -- EOSAT FAST Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fit.html">FIT -- FIT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fits.html">FITS -- Flexible Image Transport System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="genbin.html">GenBin -- Generic Binary (.hdr labelled)</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Oracle Spatial GeoRaster</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#driver-capabilities">Driver capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#browsing-the-database-for-georasters">Browsing the database for GeoRasters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#creation-options">Creation Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#importing-georaster">Importing GeoRaster</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#exporting-georaster">Exporting GeoRaster</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cross-schema-access">Cross schema access</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#general-use-of-georaster">General use of GeoRaster</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gff.html">GFF -- Sandia National Laboratories GSAT File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gif.html">GIF -- Graphics Interchange Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpkg.html">GPKG -- GeoPackage raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grass.html">GRASS Raster Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grassasciigrid.html">GRASSASCIIGrid -- GRASS ASCII Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grib.html">GRIB -- WMO General Regularly-distributed Information in Binary form</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gs7bg.html">GS7BG -- Golden Software Surfer 7 Binary Grid File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gsag.html">GSAG -- Golden Software ASCII Grid File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gsbg.html">GSBG -- Golden Software Binary Grid File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gsc.html">GSC -- GSC Geogrid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gta.html">GTA - Generic Tagged Arrays</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gti.html">GTI -- GDAL Raster Tile Index</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gtiff.html">GTiff -- GeoTIFF File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gxf.html">GXF -- Grid eXchange File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hdf4.html">HDF4 -- Hierarchical Data Format Release 4 (HDF4)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hdf5.html">HDF5 -- Hierarchical Data Format Release 5 (HDF5)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="heif.html">HEIF / HEIC -- ISO/IEC 23008-12:2017 High Efficiency Image File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hf2.html">HF2 -- HF2/HFZ heightfield raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hfa.html">HFA -- Erdas Imagine .img</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Idrisi.html">RST -- Idrisi Raster Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ilwis.html">ILWIS -- Raster Map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iris.html">IRIS -- Vaisala's weather radar software format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="isce.html">ISCE -- ISCE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="isg.html">ISG -- International Service for the Geoid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="isis2.html">ISIS2 -- USGS Astrogeology ISIS Cube (Version 2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="isis3.html">ISIS3 -- USGS Astrogeology ISIS Cube (Version 3)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jdem.html">JDEM -- Japanese DEM (.mem)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2ecw.html">JP2ECW -- ERDAS JPEG2000 (.jp2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2kak.html">JP2KAK -- JPEG 2000 (based on Kakadu SDK)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2lura.html">JP2Lura -- JPEG2000 driver based on Lurawave library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2mrsid.html">JP2MrSID -- JPEG2000 via MrSID SDK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2openjpeg.html">JP2OpenJPEG -- JPEG2000 driver based on OpenJPEG library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jpeg.html">JPEG -- JPEG JFIF File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jpegxl.html">JPEGXL -- JPEG-XL File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jpipkak.html">JPIPKAK - JPIP Streaming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kea.html">KEA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kmlsuperoverlay.html">KMLSuperoverlay -- KMLSuperoverlay</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kro.html">KRO -- KOLOR Raw format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ktx2.html">KTX2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lan.html">LAN -- Erdas 7.x .LAN and .GIS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="l1b.html">L1B -- NOAA Polar Orbiter Level 1b Data Set (AVHRR)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lcp.html">LCP -- FARSITE v.4 LCP Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="leveller.html">Leveller -- Daylon Leveller Heightfield</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loslas.html">LOSLAS -- NADCON .los/.las Datum Grid Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="map.html">MAP -- OziExplorer .MAP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="marfa.html">MRF -- Meta Raster Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mbtiles.html">MBTiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mem.html">MEM -- In Memory Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mff.html">MFF -- Vexcel MFF Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mff2.html">MFF2 -- Vexcel MFF2 Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mrsid.html">MrSID -- Multi-resolution Seamless Image Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="msg.html">MSG -- Meteosat Second Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="msgn.html">MSGN -- Meteosat Second Generation (MSG) Native Archive Format (.nat)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ndf.html">NDF -- NLAPS Data Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="netcdf.html">NetCDF: Network Common Data Form</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ngsgeoid.html">NGSGEOID - NOAA NGS Geoid Height Grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ngw.html">NGW -- NextGIS Web</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nitf.html">NITF -- National Imagery Transmission Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="noaa_b.html">NOAA_B -- NOAA GEOCON/NADCON5 .b format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nsidcbin.html">NSIDCbin -- National Snow and Ice Data Centre Sea Ice Concentrations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ntv2.html">NTv2 -- NTv2 Datum Grid Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nwtgrd.html">NWT_GRD/NWT_GRC -- Northwood/Vertical Mapper File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ogcapi.html">OGCAPI -- OGC API Tiles / Maps / Coverage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="openfilegdb.html">ESRI File Geodatabase raster (OpenFileGDB)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ozi.html">OZI -- OZF2/OZFX3 raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="palsar.html">JAXA PALSAR Processed Products</a></li>
+<li class="toctree-l2"><a class="reference internal" href="paux.html">PAux -- PCI .aux Labelled Raw Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pcidsk.html">PCIDSK -- PCI Geomatics Database File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pcraster.html">PCRaster -- PCRaster raster file format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pdf.html">PDF -- Geospatial PDF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pds.html">PDS -- Planetary Data System v3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pds4.html">PDS4 -- NASA Planetary Data System (Version 4)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plmosaic.html">PLMosaic (Planet Labs Mosaics API)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="png.html">PNG -- Portable Network Graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pnm.html">PNM -- Netpbm (.pgm, .ppm)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="postgisraster.html">PostGISRaster -- PostGIS Raster driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prf.html">PHOTOMOD Raster File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasterlite.html">Rasterlite - Rasters in SQLite DB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasterlite2.html">RasterLite2 - Rasters in SQLite DB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="r.html">R -- R Object Data Store</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rdb.html">RDB - <em>RIEGL</em> Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rik.html">RIK -- Swedish Grid Maps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rmf.html">RMF -- Raster Matrix Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="roi_pac.html">ROI_PAC -- ROI_PAC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpftoc.html">RPFTOC -- Raster Product Format/RPF (a.toc)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rraster.html">RRASTER -- R Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rs2.html">RS2 -- RadarSat 2 XML Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s102.html">S102 -- S-102 Bathymetric Surface Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s104.html">S104 -- S-104 Water Level Information for Surface Navigation Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s111.html">S111 -- S-111 Surface Currents Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="safe.html">SAFE -- Sentinel-1 SAFE XML Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sar_ceos.html">SAR_CEOS -- CEOS SAR Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sdat.html">SAGA -- SAGA GIS Binary Grid File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sdts.html">SDTS -- USGS SDTS DEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sentinel2.html">SENTINEL2 -- Sentinel-2 Products</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sgi.html">SGI -- SGI Image Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sigdem.html">SIGDEM -- Scaled Integer Gridded DEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="snodas.html">SNODAS -- Snow Data Assimilation System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="srp.html">SRP -- Standard Product Format (ASRP/USRP) (.gen)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="srtmhgt.html">SRTMHGT -- SRTM HGT Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stacit.html">STACIT - Spatio-Temporal Asset Catalog Items</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stacta.html">STACTA - Spatio-Temporal Asset Catalog Tiled Assets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="terragen.html">Terragen -- Terragen™ Terrain File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tga.html">TGA -- TARGA Image File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="til.html">TIL -- EarthWatch/DigitalGlobe .TIL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.html">TileDB - TileDB raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tsx.html">TSX --  TerraSAR-X Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usgsdem.html">USGSDEM -- USGS ASCII DEM (and CDED)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vicar.html">VICAR -- VICAR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vrt.html">VRT -- GDAL Virtual Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wcs.html">WCS -- OGC Web Coverage Service</a></li>
+<li class="toctree-l2"><a class="reference internal" href="webp.html">WEBP - WEBP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wms.html">WMS -- Web Map Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wmts.html">WMTS -- OGC Web Map Tile Service</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xpm.html">XPM -- X11 Pixmap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xyz.html">XYZ -- ASCII Gridded XYZ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="zarr.html">Zarr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="zmap.html">ZMap -- ZMap Plus Grid</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sponsors/index.html">Sponsors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Raster drivers</a> &raquo;</li>
+      
+      <li>Oracle Spatial GeoRaster</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit/master/doc/source/drivers/raster/georaster.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="gff.html" class="btn btn-neutral float-right" title="GFF -- Sandia National Laboratories GSAT File Format" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="genbin.html" class="btn btn-neutral float-left" title="GenBin -- Generic Binary (.hdr labelled)" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="oracle-spatial-georaster">
+<span id="raster-georaster"></span><h1>Oracle Spatial GeoRaster<a class="headerlink" href="#oracle-spatial-georaster" title="Link to this heading"></a></h1>
+<div class="admonition shortname" id="shortname-0">
+<p class="admonition-title">Driver short name</p>
+<p>GeoRaster</p>
+</div>
+<div class="admonition build_dependencies" id="build_dependencies-0">
+<p class="admonition-title">Build dependencies</p>
+<p>Oracle client libraries</p>
+</div>
+<p>This driver supports reading and writing raster data in Oracle Spatial
+GeoRaster format (10g or later). The Oracle Spatial GeoRaster driver is
+optionally built as a GDAL plugin, but it requires Oracle client
+libraries.</p>
+<p>When opening a GeoRaster, its name should be specified in the form:</p>
+<div class="line-block">
+<div class="line">georaster:&lt;user&gt;{,/}&lt;pwd&gt;{,&#64;}[db],[schema.][table],[column],[where]</div>
+<div class="line">georaster:&lt;user&gt;{,/}&lt;pwd&gt;{,&#64;}[db],&lt;rdt&gt;,&lt;rid&gt;</div>
+</div>
+<p>Where:</p>
+<div class="line-block">
+<div class="line">user   = Oracle server user's name login</div>
+<div class="line">pwd    = user password</div>
+<div class="line">db     = Oracle server identification (database name)</div>
+<div class="line">schema = name of a schema</div>
+<div class="line">table  = name of a GeoRaster table (table that contains GeoRaster
+columns)</div>
+<div class="line">column = name of a column data type MDSYS.SDO_GEORASTER</div>
+<div class="line">where  = a simple where clause to identify one or multiples
+GeoRaster(s)</div>
+<div class="line">rdt    = name of a raster data table</div>
+<div class="line">rid    = numeric identification of one GeoRaster</div>
+</div>
+<p>Examples:</p>
+<div class="line-block">
+<div class="line">geor:scott,tiger,demodb,table,column,id=1</div>
+<div class="line">geor:scott,tiger,demodb,table,column,&quot;id = 1&quot;</div>
+<div class="line">&quot;georaster:scott/tiger&#64;demodb,table,column,gain&gt;10&quot;</div>
+<div class="line">&quot;georaster:scott/tiger&#64;demodb,table,column,city='Brasilia'&quot;</div>
+<div class="line">georaster:scott,tiger,,rdt_10$,10</div>
+<div class="line">geor:scott/tiger,,rdt_10$,10</div>
+</div>
+<p>Note: do note use space around the field values and the commas.</p>
+<p>Note: like in the last two examples, the database name field could be
+left empty (&quot;,,&quot;) and the TNSNAME will be used.</p>
+<p>Note: If  the query results in more than one GeoRaster it will be
+treated as a GDAL metadata's list of sub-datasets (see below)</p>
+<section id="driver-capabilities">
+<h2>Driver capabilities<a class="headerlink" href="#driver-capabilities" title="Link to this heading"></a></h2>
+<div class="admonition supports_createcopy" id="supports_createcopy-0">
+<p class="admonition-title">Supports CreateCopy()</p>
+<p>This driver supports the <a class="reference internal" href="../../api/gdaldriver_cpp.html#_CPPv4N10GDALDriver10CreateCopyEPKcP11GDALDataseti12CSLConstList16GDALProgressFuncPv" title="GDALDriver::CreateCopy"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDriver::CreateCopy()</span></code></a> operation</p>
+</div>
+<div class="admonition supports_create" id="supports_create-0">
+<p class="admonition-title">Supports Create()</p>
+<p>This driver supports the <a class="reference internal" href="../../api/gdaldriver_cpp.html#_CPPv4N10GDALDriver6CreateEPKciii12GDALDataType12CSLConstList" title="GDALDriver::Create"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDriver::Create()</span></code></a> operation</p>
+</div>
+<div class="admonition supports_georeferencing" id="supports_georeferencing-0">
+<p class="admonition-title">Supports Georeferencing</p>
+<p>This driver supports georeferencing</p>
+</div>
+<div class="admonition supports_virtualio" id="supports_virtualio-0">
+<p class="admonition-title">Supports VirtualIO</p>
+<p>This driver supports <a class="reference internal" href="../../user/virtual_file_systems.html#virtual-file-systems"><span class="std std-ref">virtual I/O operations (/vsimem/, etc.)</span></a></p>
+</div>
+</section>
+<section id="browsing-the-database-for-georasters">
+<h2>Browsing the database for GeoRasters<a class="headerlink" href="#browsing-the-database-for-georasters" title="Link to this heading"></a></h2>
+<p>By providing some basic information the GeoRaster driver is capable of
+listing the existing rasters stored on the server:</p>
+<p>To list all the GeoRaster table on the server that belongs to that user
+name and database:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gdalinfo<span class="w"> </span>georaster:scott/tiger@db1
+</pre></div>
+</div>
+<p>To list all the GeoRaster type columns that exist in that table:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gdalinfo<span class="w"> </span>georaster:scott/tiger@db1,table_name
+</pre></div>
+</div>
+<p>That will list all the GeoRaster objects stored in that table.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gdalinfo<span class="w"> </span>georaster:scott/tiger@db1,table_name,georaster_column
+</pre></div>
+</div>
+<p>That will list all the GeoRaster existing on that table according to a
+Where clause.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gdalinfo<span class="w"> </span>georaster:scott/tiger@db1,table_name,georaster_column,city<span class="o">=</span><span class="s1">&#39;Brasilia&#39;</span>
+</pre></div>
+</div>
+<p>Note that the result of those queries are returned as GDAL metadata
+sub-datasets, e.g.:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gdalinfo<span class="w"> </span>georaster:scott/tiger
+<span class="c1"># Driver: GeoRaster/Oracle Spatial GeoRaster</span>
+<span class="c1"># Subdatasets:</span>
+<span class="c1"># SUBDATASET_1_NAME=georaster:scott,tiger,,LANDSAT</span>
+<span class="c1"># SUBDATASET_1_DESC=Table:LANDSAT</span>
+<span class="c1"># SUBDATASET_2_NAME=georaster:scott,tiger,,GDAL_IMPORT</span>
+<span class="c1"># SUBDATASET_2_DESC=Table:GDAL_IMPORT</span>
+</pre></div>
+</div>
+</section>
+<section id="creation-options">
+<h2>Creation Options<a class="headerlink" href="#creation-options" title="Link to this heading"></a></h2>
+<p>Creation options can be specified in command-line tools using the syntax <code class="docutils literal notranslate"><span class="pre">-co</span> <span class="pre">&lt;NAME&gt;=&lt;VALUE&gt;</span></code> or by providing the appropriate arguments to <a class="reference internal" href="../../api/raster_c_api.html#_CPPv410GDALCreate11GDALDriverHPKciii12GDALDataType12CSLConstList" title="GDALCreate"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALCreate()</span></code></a> (C) or <a class="reference internal" href="../../api/python/raster_api.html#osgeo.gdal.Driver.Create" title="osgeo.gdal.Driver.Create"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Driver.Create</span></code></a> (Python).
+The following creation options are supported:</p>
+<ul class="simple">
+<li><p id="drivers/raster/georaster-co-BLOCKXSIZE"><strong>BLOCKXSIZE=value: </strong>The number of pixel columns per raster block.</p>
+</li>
+<li><p id="drivers/raster/georaster-co-BLOCKYSIZE"><strong>BLOCKYSIZE=value: </strong>The number of pixel rows per raster block.</p>
+</li>
+<li><p id="drivers/raster/georaster-co-BLOCKBSIZE"><strong>BLOCKBSIZE=value: </strong>The number of bands per raster block.</p>
+</li>
+<li><p id="drivers/raster/georaster-co-BLOCKING"><strong>BLOCKING=value: </strong>Decline the use of blocking (NO) or request an
+automatic blocking size (OPTIMALPADDING).</p>
+</li>
+<li><p id="drivers/raster/georaster-co-SRID"><strong>SRID=value: </strong>Assign a specific EPSG projection/reference system
+identification to the GeoRaster.</p>
+</li>
+<li><p id="drivers/raster/georaster-co-INTERLEAVE"><strong>INTERLEAVE=[BAND/LINE/PIXEL]: </strong>Band interleaving mode, BAND, LINE, PIXEL (or BSQ,
+BIL, BIP) for band sequential, Line or Pixel interleaving.
+Starting with GDAL 3.5, when copying from a source dataset with multiple bands
+which advertises a INTERLEAVE metadata item, if the INTERLEAVE creation option
+is not specified, the source dataset INTERLEAVE will be automatically taken
+into account, unless the <a class="reference internal" href="#drivers/raster/georaster-co-COMPRESS"><code class="docutils literal notranslate"><span class="pre">COMPRESS</span></code></a> creation option is specified.</p>
+</li>
+<li><p id="drivers/raster/georaster-co-DESCRIPTION"><strong>DESCRIPTION=value: </strong>A simple description of a newly created table in SQL
+syntax. If the table already exist, this create option will be
+ignored, e.g.:<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gdal_translate<span class="w"> </span>-of<span class="w"> </span>georaster<span class="w"> </span>landsat_823.tif<span class="w"> </span>geor:scott/tiger@orcl,landsat,raster<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-co<span class="w"> </span><span class="nv">DESCRIPTION</span><span class="o">=</span><span class="s2">&quot;(ID NUMBER, NAME VARCHAR2(40), RASTER MDSYS.SDO_GEORASTER)&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-co<span class="w"> </span><span class="nv">INSERT</span><span class="o">=</span><span class="s2">&quot;VALUES (1,&#39;Scene 823&#39;,SDO_GEOR.INIT())&quot;</span>
+</pre></div>
+</div>
+</p>
+</li>
+<li><p id="drivers/raster/georaster-co-INSERT"><strong>INSERT=value: </strong>A simple SQL insert/values clause to inform the driver
+what values to fill up when inserting a new row on the table, e.g.:<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gdal_translate<span class="w"> </span>-of<span class="w"> </span>georaster<span class="w"> </span>landsat_825.tif<span class="w"> </span>geor:scott/tiger@orcl,landsat,raster<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-co<span class="w"> </span><span class="nv">INSERT</span><span class="o">=</span><span class="s2">&quot;(ID, RASTER) VALUES (2,SDO_GEOR.INIT())&quot;</span>
+</pre></div>
+</div>
+</p>
+</li>
+<li><p id="drivers/raster/georaster-co-COMPRESS"><strong>COMPRESS=[JPEG-F/JP2-F/DEFLATE/NONE]: </strong>Compression options.
+The JPEG-F options is lossy, meaning that the original pixel values
+are changed. The JP2-F compression is lossless if <a class="reference internal" href="#drivers/raster/georaster-co-JP2_QUALITY"><code class="docutils literal notranslate"><span class="pre">JP2_QUALITY=100</span></code></a>.</p>
+</li>
+<li><p id="drivers/raster/georaster-co-GENPYRAMID"><strong>GENPYRAMID=value: </strong>Generate pyramid after a GeoRaster object have been
+loaded to the database. The content of that parameter must be the
+resampling method of choice NN (nearest neighbor) , BILINEAR,
+BIQUADRATIC, CUBIC, AVERAGE4 or AVERAGE16. If <a class="reference internal" href="#drivers/raster/georaster-co-GENPYRLEVELS"><code class="docutils literal notranslate"><span class="pre">GENPYRLEVELS</span></code></a> is not
+informed the PL/SQL function sdo_geor.generatePyramid will calculate
+the number of levels to generate.</p>
+</li>
+<li><p id="drivers/raster/georaster-co-GENPYRLEVELS"><strong>GENPYRLEVELS=value: </strong>Define the number of pyramid levels to be
+generated. If <a class="reference internal" href="#drivers/raster/georaster-co-GENPYRAMID"><code class="docutils literal notranslate"><span class="pre">GENPYRAMID</span></code></a> is not informed the resample method NN
+(nearest neighbor) will apply.</p>
+</li>
+<li><p id="drivers/raster/georaster-co-GENSTATS"><strong>GENSTATS=[TRUE/FALSE]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">FALSE</span></code>. To generate statistics from the given rasters, set this value to TRUE.
+Default value is FALSE.
+This option must be present in order to generate the stats, otherwise,
+other GENSTATS options are ignored.</p>
+</li>
+<li><p id="drivers/raster/georaster-co-GENSTATS_SAMPLINGFACTOR"><strong>GENSTATS_SAMPLINGFACTOR=&lt;integer&gt;: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">1</span></code>. Defines the number of cells skipped in both row and column dimensions when
+the statistics are computed.
+For example, when setting this value to 4, one-sixteenth of the cells are sampled.
+The higher the value, the less accurate the statistics are likely to be,
+but the more quickly they will be computed.
+Defaults to 1, which means that all cells are sampled.</p>
+</li>
+<li><p id="drivers/raster/georaster-co-GENSTATS_SAMPLINGWINDOW"><strong>GENSTATS_SAMPLINGWINDOW=&lt;integer,integer,integer,integer&gt;: </strong>This parameter identifies the upper-left (row, column) and lower-right
+(row, column) coordinates of a rectangular window, and raster space is assumed.
+The intersection of the MBR (minimum bounding rectangle) of the
+GeoRaster object in raster space is used for computing statistics.
+When this value is not specified, statistics are computed for the entire raster.</p>
+</li>
+<li><p id="drivers/raster/georaster-co-GENSTATS_HISTOGRAM"><strong>GENSTATS_HISTOGRAM=[TRUE/FALSE]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">FALSE</span></code>. When this value is set to TRUE, a histogram will be computed and stored.
+Defaults to FALSE, so a histogram won't be generated.</p>
+</li>
+<li><p id="drivers/raster/georaster-co-GENSTATS_LAYERNUMBERS"><strong>GENSTATS_LAYERNUMBERS=[&lt;integer,integer,...&gt;/&lt;integer&gt;-&lt;integer&gt;]: </strong>Defines the numbers of the layers for which to compute the statistics.
+This can include numbers, ranges (indicated by hyphens), and commas
+to separate any combination of those.
+For example, '1,3-5,7', '1,3,6', '1-6'.
+If this value is not specified, statistics will be computed for all
+layers.</p>
+</li>
+<li><p id="drivers/raster/georaster-co-GENSTATS_USEBIN"><strong>GENSTATS_USEBIN=[TRUE/FALSE]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">TRUE</span></code>. Defaults to TRUE.
+Specifies whether or not to use a provided bin function
+(specified in <a class="reference internal" href="#drivers/raster/georaster-co-GENSTATS_BINFUNCTION"><code class="docutils literal notranslate"><span class="pre">GENSTATS_BINFUNCTION</span></code></a>).
+When this value is set to TRUE, the bin function to be
+used follows the following sequence: (1) the bin function
+specified in <a class="reference internal" href="#drivers/raster/georaster-co-GENSTATS_BINFUNCTION"><code class="docutils literal notranslate"><span class="pre">GENSTATS_BINFUNCTION</span></code></a>. (2) the bin
+function specified by the &lt;binFunction&gt; element in the
+GeoRaster XML metadata. (3) a dynamically generated bin
+function generated as follows:
+Min and max are the actual min and max values of the raster
+Numbins is defined as:
+* celldepth = 1, numbins = 2.
+* cellDepth = 2, numbins = 4.
+* cellDepth = 4, numbins = 8.
+* cellDepth &gt;= 8, numbins = 256.<p>When this value is set to FALSE, then the bin function
+to use is the one generated dynamically as previously
+described.</p>
+</p>
+</li>
+<li><p id="drivers/raster/georaster-co-GENSTATS_BINFUNCTION"><strong>GENSTATS_BINFUNCTION=&lt;integer,integer,integer,integer,integer&gt;: </strong>An array whose element specify the bin type, total
+number of bins, first bin number, minimum cell value,
+and maximum cell value. Bin type must be linear (0).
+When this value is not specified, and <a class="reference internal" href="#drivers/raster/georaster-co-GENSTATS_USEBIN"><code class="docutils literal notranslate"><span class="pre">GENSTATS_USEBIN</span></code></a>
+is TRUE, then the bin function to use is as follows:<ol class="arabic simple">
+<li><p>A valid function defined in the GeoRaster metadata.</p></li>
+<li><p>The same bin function generated when <a class="reference internal" href="#drivers/raster/georaster-co-GENSTATS_USEBIN"><code class="docutils literal notranslate"><span class="pre">GENSTATS_USEBIN</span></code></a> is FALSE.</p></li>
+</ol>
+</p>
+</li>
+<li><p id="drivers/raster/georaster-co-GENSTATS_NODATA"><strong>GENSTATS_NODATA=[TRUE/FALSE]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">FALSE</span></code>. Specifies whether or not to compare each cell values
+with NODATA values defined in the metadata when computing
+statistics. When set to TRUE, all pixels with a NODATA
+value won't be considered. When set to FALSE, NODATA
+pixels will be considered as regular pixels.<p>A NODATA value is used for cells whose values are either not known
+or meaningless</p>
+</p>
+</li>
+<li><p id="drivers/raster/georaster-co-QUALITY"><strong>QUALITY=0-100: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">75</span></code>. Quality compression option for JPEG ranging from 0 to 100.</p>
+</li>
+<li><p id="drivers/raster/georaster-co-JP2_QUALITY"><strong>JP2_QUALITY=&lt;float_value,float_value,...&gt;: </strong>Only if <a class="reference internal" href="#drivers/raster/georaster-co-COMPRESS"><code class="docutils literal notranslate"><span class="pre">COMPRESS=JP2-f</span></code></a>.
+Percentage between 0 and 100. A value of 50 means the file will be
+half-size in comparison to uncompressed data, 33 means 1/3, etc..
+Defaults to 25 (unless the dataset is made of a single band with
+color table, in which case the default quality is 100).</p>
+</li>
+<li><p id="drivers/raster/georaster-co-JP2_REVERSIBLE"><strong>JP2_REVERSIBLE=[YES/NO]: </strong>Only if <a class="reference internal" href="#drivers/raster/georaster-co-COMPRESS"><code class="docutils literal notranslate"><span class="pre">COMPRESS=JP2-f</span></code></a>. YES means use of
+reversible 5x3 integer-only filter, NO use of the irreversible DWT
+9-7. Defaults to NO (unless the dataset is made of a single band with
+color table, in which case reversible filter is used).</p>
+</li>
+<li><p id="drivers/raster/georaster-co-JP2_RESOLUTIONS"><strong>JP2_RESOLUTIONS=&lt;integer&gt;: </strong>Only if <a class="reference internal" href="#drivers/raster/georaster-co-COMPRESS"><code class="docutils literal notranslate"><span class="pre">COMPRESS=JP2-f</span></code></a>. Number of
+resolution levels. Default value is selected such the smallest
+overview of a tile is no bigger than 128x128.</p>
+</li>
+<li><p id="drivers/raster/georaster-co-JP2_BLOCKXSIZE"><strong>JP2_BLOCKXSIZE=&lt;integer&gt;: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">1024</span></code>. Only if <a class="reference internal" href="#drivers/raster/georaster-co-COMPRESS"><code class="docutils literal notranslate"><span class="pre">COMPRESS=JP2-f</span></code></a>. Tile width.</p>
+</li>
+<li><p id="drivers/raster/georaster-co-JP2_BLOCKYSIZE"><strong>JP2_BLOCKYSIZE=&lt;integer&gt;: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">1024</span></code>. Only if <a class="reference internal" href="#drivers/raster/georaster-co-COMPRESS"><code class="docutils literal notranslate"><span class="pre">COMPRESS=JP2-f</span></code></a>. Tile height.</p>
+</li>
+<li><p id="drivers/raster/georaster-co-JP2_PROGRESSION"><strong>JP2_PROGRESSION=[LRCP/RLCP/RPCL/PCRL/CPRL]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">LRCP</span></code>. Only if <a class="reference internal" href="#drivers/raster/georaster-co-COMPRESS"><code class="docutils literal notranslate"><span class="pre">COMPRESS=JP2-f</span></code></a>.
+Progression order.</p>
+</li>
+<li><p id="drivers/raster/georaster-co-NBITS"><strong>NBITS=[1/2/4]: </strong>Sub byte data type.</p>
+</li>
+<li><p id="drivers/raster/georaster-co-SPATIALEXTENT"><strong>SPATIALEXTENT=[TRUE/FALSE]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">TRUE</span></code>. Generate Spatial Extents. The default value
+is TRUE, which means that this option only need to be set
+to force the Spatial Extent to remain as NULL. If <a class="reference internal" href="#drivers/raster/georaster-co-EXTENTSRID"><code class="docutils literal notranslate"><span class="pre">EXTENTSRID</span></code></a> is not
+set the Spatial Extent geometry will be generated with the same
+SRID as the GeoRaster object.</p>
+</li>
+<li><p id="drivers/raster/georaster-co-EXTENTSRID"><strong>EXTENTSRID=value: </strong>SRID code to be used on the Spatial Extent geometry.
+If the table/column has already a spatial index, the value specified
+should be the same as the SRID on the Spatial Extents of the other
+existing GeoRaster objects, on which the spatial index is built.</p>
+</li>
+<li><p id="drivers/raster/georaster-co-OBJECTTABLE"><strong>OBJECTTABLE=[TRUE/FALSE]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">FALSE</span></code>. To create RDT as SDO_RASTER object set to TRUE.
+Otherwise, the RDT will be created as
+regular relational tables. That does not apply for Oracle version
+older than 11.</p>
+</li>
+</ul>
+</section>
+<section id="importing-georaster">
+<h2>Importing GeoRaster<a class="headerlink" href="#importing-georaster" title="Link to this heading"></a></h2>
+<p>During the process of importing raster into a GeoRaster object it is
+possible to give the driver a simple SQL table definition and also a SQL
+insert/values clause to inform the driver about the table to be created
+and the values to be added to the newly created row. The following
+example does that:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gdal_translate<span class="w"> </span>-of<span class="w"> </span>georaster<span class="w"> </span>Newpor.tif<span class="w"> </span>georaster:scott/tiger,,landsat,scene<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-co<span class="w"> </span><span class="s2">&quot;DESCRIPTION=(ID NUMBER, SITE VARCHAR2(45), SCENE MDSYS.SDO_GEORASTER)&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-co<span class="w"> </span><span class="s2">&quot;INSERT=VALUES(1,&#39;West fields&#39;, SDO_GEOR.INIT())&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-co<span class="w"> </span><span class="s2">&quot;BLOCKXSIZE=512&quot;</span><span class="w"> </span>-co<span class="w"> </span><span class="s2">&quot;BLOCKYSIZE=512&quot;</span><span class="w"> </span>-co<span class="w"> </span><span class="s2">&quot;BLOCKBSIZE=3&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-co<span class="w"> </span><span class="s2">&quot;INTERLEAVE=PIXEL&quot;</span><span class="w"> </span>-co<span class="w"> </span><span class="s2">&quot;COMPRESS=JPEG-F&quot;</span>
+</pre></div>
+</div>
+<p>Note that the create option DESCRIPTION requires to inform table name
+(in bold). And column name (underlined) should match the description:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gdal_translate<span class="w"> </span>-of<span class="w"> </span>georaster<span class="w"> </span>landsat_1.tif<span class="w"> </span>georaster:scott/tiger,,landsat,scene<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-co<span class="w"> </span><span class="s2">&quot;DESCRIPTION=(ID NUMBER, SITE VARCHAR2(45), SCENE MDSYS.SDO_GEORASTER)&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-co<span class="w"> </span><span class="s2">&quot;INSERT=VALUES(1,&#39;West fields&#39;, SDO_GEOR.INIT())&quot;</span>
+</pre></div>
+</div>
+<p>If the table &quot;landsat&quot; exist, the option &quot;DESCRIPTION&quot; is ignored. The
+driver can only update one GeoRaster column per run of
+gdal_translate. Oracle create default names and values for RDT and RID
+during the initialization of the SDO_GEORASTER object but user are also
+able to specify a name and value of their choice.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gdal_translate<span class="w"> </span>-of<span class="w"> </span>georaster<span class="w"> </span>landsat_1.tif<span class="w"> </span>georaster:scott/tiger,,landsat,scene<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-co<span class="w"> </span><span class="s2">&quot;INSERT=VALUES(10,&#39;Main building&#39;, SDO_GEOR.INIT(&#39;RDT&#39;, 10))&quot;</span>
+</pre></div>
+</div>
+<p>If no information is given about where to store the raster the driver
+will create (if doesn't exist already) a default table named GDAL_IMPORT
+with just one GeoRaster column named RASTER and a table GDAL_RDT as the
+RDT, the RID will be given automatically by the server, example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gdal_translate<span class="w"> </span>-of<span class="w"> </span>georaster<span class="w"> </span>input.tif<span class="w"> </span>“geor:scott/tiger@dbdemo”
+</pre></div>
+</div>
+</section>
+<section id="exporting-georaster">
+<h2>Exporting GeoRaster<a class="headerlink" href="#exporting-georaster" title="Link to this heading"></a></h2>
+<p>A GeoRaster can be identified by a Where clause or by a pair of RDT &amp; RID:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gdal_translate<span class="w"> </span>-of<span class="w"> </span>gtiff<span class="w"> </span>geor:scott/tiger@dbdemo,landsat,scene,id<span class="o">=</span><span class="m">54</span><span class="w"> </span>output.tif
+gdal_translate<span class="w"> </span>-of<span class="w"> </span>gtiff<span class="w"> </span>geor:scott/tiger@dbdemo,st_rdt_1,130<span class="w"> </span>output.tif
+</pre></div>
+</div>
+</section>
+<section id="cross-schema-access">
+<h2>Cross schema access<a class="headerlink" href="#cross-schema-access" title="Link to this heading"></a></h2>
+<p>As long as the user was granted full access the GeoRaster table and
+the Raster Data Table, e.g.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">sqlplus</span> <span class="n">scott</span><span class="o">/</span><span class="n">tiger</span>
+<span class="n">SQL</span><span class="o">&gt;</span> <span class="n">grant</span> <span class="n">select</span><span class="p">,</span><span class="n">insert</span><span class="p">,</span><span class="n">update</span><span class="p">,</span><span class="n">delete</span> <span class="n">on</span> <span class="n">gdal_import</span> <span class="n">to</span> <span class="n">spock</span><span class="p">;</span>
+<span class="n">SQL</span><span class="o">&gt;</span> <span class="n">grant</span> <span class="n">select</span><span class="p">,</span><span class="n">insert</span><span class="p">,</span><span class="n">update</span><span class="p">,</span><span class="n">delete</span> <span class="n">on</span> <span class="n">gdal_rdt</span> <span class="n">to</span> <span class="n">spock</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>It is possible to an user access to extract and load GeoRaster from
+another user/schema by informing the schema name as showed here:</p>
+<p>Browsing:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gdalinfo<span class="w"> </span>geor:spock/lion@orcl,scott.
+gdalinfo<span class="w"> </span>geor:spock/lion@orcl,scott.gdal_import,raster,<span class="s2">&quot;t.raster.rasterid &gt; 100&quot;</span>
+gdalinfo<span class="w"> </span>geor:spock/lion@orcl,scott.gdal_import,raster,t.raster.rasterid<span class="o">=</span><span class="m">101</span>
+</pre></div>
+</div>
+<p>Extracting:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gdal_translate<span class="w"> </span>geor:spock/lion@orcl,scott.gdal_import,raster,t.raster.rasterid<span class="o">=</span>101out.tif
+gdal_translate<span class="w"> </span>geor:spock/lion@orcl,gdal_rdt,101<span class="w"> </span>out.tif
+</pre></div>
+</div>
+<p>Note: On the above example that accessing by RDT/RID doesn't need
+schame name as long as the users is granted full access to both
+tables.</p>
+<p>Loading:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gdal_translate<span class="w"> </span>-of<span class="w"> </span>georaster<span class="w"> </span>input.tif<span class="w"> </span>geor:spock/lion@orcl,scott.
+gdal_translate<span class="w"> </span>-of<span class="w"> </span>georaster<span class="w"> </span>input.tif<span class="w"> </span>geor:spock/lion@orcl,scott.cities,image<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-co<span class="w"> </span><span class="nv">INSERT</span><span class="o">=</span><span class="s2">&quot;(1,&#39;Rio de Janeiro&#39;,sdo_geor.init(&#39;cities_rdt&#39;))&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="general-use-of-georaster">
+<h2>General use of GeoRaster<a class="headerlink" href="#general-use-of-georaster" title="Link to this heading"></a></h2>
+<p>GeoRaster can be used in any GDAL command line tool with all the available options.
+Like a image subset extraction or re-project:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="w"> </span>%<span class="w"> </span>gdal_translate<span class="w"> </span>-of<span class="w"> </span>gtiff<span class="w"> </span>geor:scott/tiger@dbdemo,landsat,scene,id<span class="o">=</span><span class="m">54</span><span class="w"> </span>output.tif<span class="w"> </span><span class="se">\</span>
+<span class="w"> </span>-srcwin<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">800</span><span class="w"> </span><span class="m">600</span>
+<span class="w"> </span>%<span class="w"> </span>gdalwarp<span class="w"> </span>-of<span class="w"> </span>png<span class="w"> </span>geor:scott/tiger@dbdemo,st_rdt_1,130<span class="w"> </span>output.png
+-t_srs<span class="w"> </span>EPSG:9000913
+</pre></div>
+</div>
+<p>Two different GeoRaster can be used as input and output on the same operation:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>%<span class="w"> </span>gdal_translate<span class="w"> </span>-of<span class="w"> </span>georaster<span class="w"> </span>geor:scott/tiger@dbdemo,landsat,scene,id<span class="o">=</span><span class="m">54</span><span class="w"> </span><span class="se">\</span>
+geor:scott/tiger@proj1,projview,image<span class="w"> </span>-co<span class="w"> </span><span class="nv">INSERT</span><span class="o">=</span><span class="s2">&quot;VALUES (102, SDO_GEOR.INIT())&quot;</span>
+</pre></div>
+</div>
+<p>Applications that use GDAL can theoretically read and write from GeoRaster just like
+any other format but most of then are more inclined to try to access files on the file
+system so one alternative is to create VRT to represent the GeoRaster description, e.g.:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>%<span class="w"> </span>gdal_translate<span class="w"> </span>-of<span class="w"> </span>VRT<span class="w"> </span>geor:scott/tiger@dbdemo,landsat,scene,id<span class="o">=</span><span class="m">54</span><span class="w"> </span>view_54.vrt
+%<span class="w"> </span>openenv<span class="w"> </span>view_54.vrt
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="gff.html" class="btn btn-neutral float-right" title="GFF -- Sandia National Laboratories GSAT File Format" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="genbin.html" class="btn btn-neutral float-left" title="GenBin -- Generic Binary (.hdr labelled)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2024 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+  </div>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

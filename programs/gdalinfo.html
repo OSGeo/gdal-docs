@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gdalinfo &mdash; GDAL  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d10597a4" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/gdal.css?v=e152ac3b" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="canonical" href="https://gdal.org/programs/gdalinfo.html"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="gdallocationinfo" href="gdallocationinfo.html" />
+    <link rel="prev" title="gdaldem" href="gdaldem.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Programs</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#general">General</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#raster-programs">Raster programs</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="raster_common_options.html">Common options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal-config.html">gdal-config (Unix)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal2tiles.html">gdal2tiles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal2xyz.html">gdal2xyz</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_calc.html">gdal_calc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_contour.html">gdal_contour</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_create.html">gdal_create</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_edit.html">gdal_edit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_fillnodata.html">gdal_fillnodata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_footprint.html">gdal_footprint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_grid.html">gdal_grid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_merge.html">gdal_merge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_pansharpen.html">gdal_pansharpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_polygonize.html">gdal_polygonize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_proximity.html">gdal_proximity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_rasterize.html">gdal_rasterize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_retile.html">gdal_retile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_sieve.html">gdal_sieve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_translate.html">gdal_translate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_viewshed.html">gdal_viewshed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaladdo.html">gdaladdo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalattachpct.html">gdalattachpct</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalbuildvrt.html">gdalbuildvrt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalcompare.html">gdalcompare</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaldem.html">gdaldem</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">gdalinfo</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#synopsis">Synopsis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#description">Description</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#c-api">C API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#example">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="gdallocationinfo.html">gdallocationinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalmanage.html">gdalmanage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalmove.html">gdalmove</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalsrsinfo.html">gdalsrsinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaltindex.html">gdaltindex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaltransform.html">gdaltransform</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalwarp.html">gdalwarp</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nearblack.html">nearblack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pct2rgb.html">pct2rgb</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rgb2pct.html">rgb2pct</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#multidimensional-raster-programs">Multidimensional Raster programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#vector-programs">Vector programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#geographic-network-programs">Geographic network programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#other-utilities">Other utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sponsors/index.html">Sponsors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Programs</a> &raquo;</li>
+      
+      <li>gdalinfo</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit/master/doc/source/programs/gdalinfo.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="gdallocationinfo.html" class="btn btn-neutral float-right" title="gdallocationinfo" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gdaldem.html" class="btn btn-neutral float-left" title="gdaldem" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gdalinfo">
+<span id="id1"></span><h1>gdalinfo<a class="headerlink" href="#gdalinfo" title="Link to this heading"></a></h1>
+<p>Lists information about a raster dataset.</p>
+<section id="synopsis">
+<span id="index-0"></span><h2>Synopsis<a class="headerlink" href="#synopsis" title="Link to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdalinfo</span> <span class="p">[</span><span class="o">--</span><span class="n">help</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">help</span><span class="o">-</span><span class="n">general</span><span class="p">]</span>
+         <span class="p">[</span><span class="o">-</span><span class="n">json</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">mm</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">stats</span> <span class="o">|</span> <span class="o">-</span><span class="n">approx_stats</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">hist</span><span class="p">]</span>
+         <span class="p">[</span><span class="o">-</span><span class="n">nogcp</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">nomd</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">norat</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">noct</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">nofl</span><span class="p">]</span>
+         <span class="p">[</span><span class="o">-</span><span class="n">checksum</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">listmdd</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">mdd</span> <span class="o">&lt;</span><span class="n">domain</span><span class="o">&gt;|</span><span class="nb">all</span><span class="p">]</span>
+         <span class="p">[</span><span class="o">-</span><span class="n">proj4</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">wkt_format</span> <span class="p">{</span><span class="n">WKT1</span><span class="o">|</span><span class="n">WKT2</span><span class="o">|&lt;</span><span class="n">other_format</span><span class="o">&gt;</span><span class="p">}]</span><span class="o">...</span>
+         <span class="p">[</span><span class="o">-</span><span class="n">sd</span> <span class="o">&lt;</span><span class="n">subdataset</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">oo</span> <span class="o">&lt;</span><span class="n">NAME</span><span class="o">&gt;=&lt;</span><span class="n">VALUE</span><span class="o">&gt;</span><span class="p">]</span><span class="o">...</span> <span class="p">[</span><span class="o">-</span><span class="k">if</span> <span class="o">&lt;</span><span class="nb">format</span><span class="o">&gt;</span><span class="p">]</span><span class="o">...</span>
+         <span class="o">&lt;</span><span class="n">datasetname</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="description">
+<h2>Description<a class="headerlink" href="#description" title="Link to this heading"></a></h2>
+<p><strong class="program">gdalinfo</strong> program lists various information about a GDAL supported
+raster dataset.</p>
+<p>The following command line parameters can appear in any order</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdalinfo-help">
+<span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdalinfo-help" title="Link to this definition"></a></dt>
+<dd><p>Show this help message and exit</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdalinfo-help-general">
+<span class="sig-name descname"><span class="pre">--help-general</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdalinfo-help-general" title="Link to this definition"></a></dt>
+<dd><p>Gives a brief usage message for the generic GDAL commandline options and exit.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdalinfo-json">
+<span class="sig-name descname"><span class="pre">-json</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdalinfo-json" title="Link to this definition"></a></dt>
+<dd><p>Display the output in json format. Since GDAL 3.6, this includes key-value
+pairs useful for building a <a class="reference external" href="https://github.com/radiantearth/stac-spec/blob/v1.0.0/item-spec/item-spec.md">STAC item</a>
+, including statistics and histograms if <code class="docutils literal notranslate"><span class="pre">-stats</span></code> or <code class="docutils literal notranslate"><span class="pre">-hist</span></code> flags are
+passed, respectively.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdalinfo-mm">
+<span class="sig-name descname"><span class="pre">-mm</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdalinfo-mm" title="Link to this definition"></a></dt>
+<dd><p>Force computation of the actual min/max values for each band in the
+dataset.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdalinfo-stats">
+<span class="sig-name descname"><span class="pre">-stats</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdalinfo-stats" title="Link to this definition"></a></dt>
+<dd><p>Read and display image statistics. Force computation if no
+statistics are stored in an image.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdalinfo-approx_stats">
+<span class="sig-name descname"><span class="pre">-approx_stats</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdalinfo-approx_stats" title="Link to this definition"></a></dt>
+<dd><p>Read and display image statistics. Force computation if no
+statistics are stored in an image. However, they may be computed
+based on overviews or a subset of all tiles. Useful if you are in a
+hurry and don't want precise stats.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdalinfo-hist">
+<span class="sig-name descname"><span class="pre">-hist</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdalinfo-hist" title="Link to this definition"></a></dt>
+<dd><p>Report histogram information for all bands.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdalinfo-nogcp">
+<span class="sig-name descname"><span class="pre">-nogcp</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdalinfo-nogcp" title="Link to this definition"></a></dt>
+<dd><p>Suppress ground control points list printing. It may be useful for
+datasets with huge amount of GCPs, such as L1B AVHRR or HDF4 MODIS
+which contain thousands of them.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdalinfo-nomd">
+<span class="sig-name descname"><span class="pre">-nomd</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdalinfo-nomd" title="Link to this definition"></a></dt>
+<dd><p>Suppress metadata printing. Some datasets may contain a lot of
+metadata strings.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdalinfo-norat">
+<span class="sig-name descname"><span class="pre">-norat</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdalinfo-norat" title="Link to this definition"></a></dt>
+<dd><p>Suppress printing of raster attribute table.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdalinfo-noct">
+<span class="sig-name descname"><span class="pre">-noct</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdalinfo-noct" title="Link to this definition"></a></dt>
+<dd><p>Suppress printing of color table.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdalinfo-checksum">
+<span class="sig-name descname"><span class="pre">-checksum</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdalinfo-checksum" title="Link to this definition"></a></dt>
+<dd><p>Force computation of the checksum for each band in the dataset.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdalinfo-listmdd">
+<span class="sig-name descname"><span class="pre">-listmdd</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdalinfo-listmdd" title="Link to this definition"></a></dt>
+<dd><p>List all metadata domains available for the dataset.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdalinfo-mdd">
+<span class="sig-name descname"><span class="pre">-mdd</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;domain&gt;|all</span></span><a class="headerlink" href="#cmdoption-gdalinfo-mdd" title="Link to this definition"></a></dt>
+<dd><p>adds metadata using:</p>
+<p><code class="docutils literal notranslate"><span class="pre">domain</span></code> Report metadata for the specified domain.</p>
+<p><code class="docutils literal notranslate"><span class="pre">all</span></code> Report metadata for all domains.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdalinfo-nofl">
+<span class="sig-name descname"><span class="pre">-nofl</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdalinfo-nofl" title="Link to this definition"></a></dt>
+<dd><p>Only display the first file of the file list.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdalinfo-wkt_format">
+<span class="sig-name descname"><span class="pre">-wkt_format</span></span><span class="sig-prename descclassname"> <span class="pre">WKT1|WKT2|WKT2_2015|WKT2_2018|WKT2_2019</span></span><a class="headerlink" href="#cmdoption-gdalinfo-wkt_format" title="Link to this definition"></a></dt>
+<dd><p>WKT format used to display the SRS.
+Currently the supported values are:</p>
+<p><code class="docutils literal notranslate"><span class="pre">WKT1</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">WKT2</span></code> (latest WKT version, currently <em>WKT2_2019</em>)</p>
+<p><code class="docutils literal notranslate"><span class="pre">WKT2_2015</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">WKT2_2018</span></code> (deprecated)</p>
+<p><code class="docutils literal notranslate"><span class="pre">WKT2_2019</span></code></p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 3.0.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdalinfo-sd">
+<span class="sig-name descname"><span class="pre">-sd</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;n&gt;</span></span><a class="headerlink" href="#cmdoption-gdalinfo-sd" title="Link to this definition"></a></dt>
+<dd><p>If the input dataset contains several subdatasets read and display
+a subdataset with specified <code class="docutils literal notranslate"><span class="pre">n</span></code> number (starting from 1).
+This is an alternative of giving the full subdataset name.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdalinfo-proj4">
+<span class="sig-name descname"><span class="pre">-proj4</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdalinfo-proj4" title="Link to this definition"></a></dt>
+<dd><p>Report a PROJ.4 string corresponding to the file's coordinate system.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdalinfo-oo">
+<span class="sig-name descname"><span class="pre">-oo</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;NAME&gt;=&lt;VALUE&gt;</span></span><a class="headerlink" href="#cmdoption-gdalinfo-oo" title="Link to this definition"></a></dt>
+<dd><p>Dataset open option (format specific).</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdalinfo-if">
+<span class="sig-name descname"><span class="pre">-if</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;format&gt;</span></span><a class="headerlink" href="#cmdoption-gdalinfo-if" title="Link to this definition"></a></dt>
+<dd><p>Format/driver name to be attempted to open the input file(s). It is generally
+not necessary to specify it, but it can be used to skip automatic driver
+detection, when it fails to select the appropriate driver.
+This option can be repeated several times to specify several candidate drivers.
+Note that it does not force those drivers to open the dataset. In particular,
+some drivers have requirements on file extensions.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 3.2.</span></p>
+</div>
+</dd></dl>
+
+<p>The gdalinfo will report all of the following (if known):</p>
+<ul class="simple">
+<li><p>The format driver used to access the file.</p></li>
+<li><p>Raster size (in pixels and lines).</p></li>
+<li><p>The coordinate system for the file (in OGC WKT).</p></li>
+<li><p>The geotransform associated with the file (rotational coefficients
+are currently not reported).</p></li>
+<li><p>Corner coordinates in georeferenced, and if possible lat/long based
+on the full geotransform (but not GCPs).</p></li>
+<li><p>Ground control points.</p></li>
+<li><p>File wide (including subdatasets) metadata.</p></li>
+<li><p>Band data types.</p></li>
+<li><p>Band color interpretations.</p></li>
+<li><p>Band block size.</p></li>
+<li><p>Band descriptions.</p></li>
+<li><p>Band min/max values (internally known and possibly computed).</p></li>
+<li><p>Band checksum (if computation asked).</p></li>
+<li><p>Band NODATA value.</p></li>
+<li><p>Band overview resolutions available.</p></li>
+<li><p>Band unit type (i.e.. &quot;meters&quot; or &quot;feet&quot; for elevation bands).</p></li>
+<li><p>Band pseudo-color tables.</p></li>
+</ul>
+</section>
+<section id="c-api">
+<h2>C API<a class="headerlink" href="#c-api" title="Link to this heading"></a></h2>
+<p>This utility is also callable from C with <a class="reference internal" href="../api/gdal_utils.html#_CPPv48GDALInfo12GDALDatasetHPK15GDALInfoOptions" title="GDALInfo"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALInfo()</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 2.1.</span></p>
+</div>
+</section>
+<section id="example">
+<h2>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdalinfo</span> <span class="o">~/</span><span class="n">openev</span><span class="o">/</span><span class="n">utm</span><span class="o">.</span><span class="n">tif</span>
+<span class="n">Driver</span><span class="p">:</span> <span class="n">GTiff</span><span class="o">/</span><span class="n">GeoTIFF</span>
+<span class="n">Size</span> <span class="ow">is</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">512</span>
+<span class="n">Coordinate</span> <span class="n">System</span> <span class="ow">is</span><span class="p">:</span>
+<span class="n">PROJCS</span><span class="p">[</span><span class="s2">&quot;NAD27 / UTM zone 11N&quot;</span><span class="p">,</span>
+    <span class="n">GEOGCS</span><span class="p">[</span><span class="s2">&quot;NAD27&quot;</span><span class="p">,</span>
+        <span class="n">DATUM</span><span class="p">[</span><span class="s2">&quot;North_American_Datum_1927&quot;</span><span class="p">,</span>
+            <span class="n">SPHEROID</span><span class="p">[</span><span class="s2">&quot;Clarke 1866&quot;</span><span class="p">,</span><span class="mf">6378206.4</span><span class="p">,</span><span class="mf">294.978698213901</span><span class="p">]],</span>
+        <span class="n">PRIMEM</span><span class="p">[</span><span class="s2">&quot;Greenwich&quot;</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+        <span class="n">UNIT</span><span class="p">[</span><span class="s2">&quot;degree&quot;</span><span class="p">,</span><span class="mf">0.0174532925199433</span><span class="p">]],</span>
+    <span class="n">PROJECTION</span><span class="p">[</span><span class="s2">&quot;Transverse_Mercator&quot;</span><span class="p">],</span>
+    <span class="n">PARAMETER</span><span class="p">[</span><span class="s2">&quot;latitude_of_origin&quot;</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+    <span class="n">PARAMETER</span><span class="p">[</span><span class="s2">&quot;central_meridian&quot;</span><span class="p">,</span><span class="o">-</span><span class="mi">117</span><span class="p">],</span>
+    <span class="n">PARAMETER</span><span class="p">[</span><span class="s2">&quot;scale_factor&quot;</span><span class="p">,</span><span class="mf">0.9996</span><span class="p">],</span>
+    <span class="n">PARAMETER</span><span class="p">[</span><span class="s2">&quot;false_easting&quot;</span><span class="p">,</span><span class="mi">500000</span><span class="p">],</span>
+    <span class="n">PARAMETER</span><span class="p">[</span><span class="s2">&quot;false_northing&quot;</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+    <span class="n">UNIT</span><span class="p">[</span><span class="s2">&quot;metre&quot;</span><span class="p">,</span><span class="mi">1</span><span class="p">]]</span>
+<span class="n">Origin</span> <span class="o">=</span> <span class="p">(</span><span class="mf">440720.000000</span><span class="p">,</span><span class="mf">3751320.000000</span><span class="p">)</span>
+<span class="n">Pixel</span> <span class="n">Size</span> <span class="o">=</span> <span class="p">(</span><span class="mf">60.000000</span><span class="p">,</span><span class="o">-</span><span class="mf">60.000000</span><span class="p">)</span>
+<span class="n">Corner</span> <span class="n">Coordinates</span><span class="p">:</span>
+<span class="n">Upper</span> <span class="n">Left</span>  <span class="p">(</span>  <span class="mf">440720.000</span><span class="p">,</span> <span class="mf">3751320.000</span><span class="p">)</span> <span class="p">(</span><span class="mi">117</span><span class="n">d38</span><span class="s1">&#39;28.21&quot;W, 33d54&#39;</span><span class="mf">8.47</span><span class="s2">&quot;N)</span>
+<span class="n">Lower</span> <span class="n">Left</span>  <span class="p">(</span>  <span class="mf">440720.000</span><span class="p">,</span> <span class="mf">3720600.000</span><span class="p">)</span> <span class="p">(</span><span class="mi">117</span><span class="n">d38</span><span class="s1">&#39;20.79&quot;W, 33d37&#39;</span><span class="mf">31.04</span><span class="s2">&quot;N)</span>
+<span class="n">Upper</span> <span class="n">Right</span> <span class="p">(</span>  <span class="mf">471440.000</span><span class="p">,</span> <span class="mf">3751320.000</span><span class="p">)</span> <span class="p">(</span><span class="mi">117</span><span class="n">d18</span><span class="s1">&#39;32.07&quot;W, 33d54&#39;</span><span class="mf">13.08</span><span class="s2">&quot;N)</span>
+<span class="n">Lower</span> <span class="n">Right</span> <span class="p">(</span>  <span class="mf">471440.000</span><span class="p">,</span> <span class="mf">3720600.000</span><span class="p">)</span> <span class="p">(</span><span class="mi">117</span><span class="n">d18</span><span class="s1">&#39;28.50&quot;W, 33d37&#39;</span><span class="mf">35.61</span><span class="s2">&quot;N)</span>
+<span class="n">Center</span>      <span class="p">(</span>  <span class="mf">456080.000</span><span class="p">,</span> <span class="mf">3735960.000</span><span class="p">)</span> <span class="p">(</span><span class="mi">117</span><span class="n">d28</span><span class="s1">&#39;27.39&quot;W, 33d45&#39;</span><span class="mf">52.46</span><span class="s2">&quot;N)</span>
+<span class="n">Band</span> <span class="mi">1</span> <span class="n">Block</span><span class="o">=</span><span class="mi">512</span><span class="n">x16</span> <span class="n">Type</span><span class="o">=</span><span class="n">Byte</span><span class="p">,</span> <span class="n">ColorInterp</span><span class="o">=</span><span class="n">Gray</span>
+</pre></div>
+</div>
+<p>For corner coordinates formatted as decimal degree instead of the above degree, minute, second, inspect the <code class="docutils literal notranslate"><span class="pre">wgs84Extent</span></code> member of gdalinfo -json:</p>
+<p>Example of JSON output with <code class="docutils literal notranslate"><span class="pre">gdalinfo</span> <span class="pre">-json</span> <span class="pre">byte.tif</span></code></p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="s2">&quot;byte.tif&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;driverShortName&quot;</span><span class="p">:</span><span class="s2">&quot;GTiff&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;driverLongName&quot;</span><span class="p">:</span><span class="s2">&quot;GeoTIFF&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;files&quot;</span><span class="p">:[</span>
+<span class="w">    </span><span class="s2">&quot;byte.tif&quot;</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;size&quot;</span><span class="p">:[</span>
+<span class="w">    </span><span class="mi">20</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">20</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;coordinateSystem&quot;</span><span class="p">:{</span>
+<span class="w">    </span><span class="nt">&quot;wkt&quot;</span><span class="p">:</span><span class="s2">&quot;PROJCRS[\&quot;NAD27 / UTM zone 11N\&quot;,\n    BASEGEOGCRS[\&quot;NAD27\&quot;,\n        DATUM[\&quot;North American Datum 1927\&quot;,\n            ELLIPSOID[\&quot;Clarke 1866\&quot;,6378206.4,294.978698213898,\n                LENGTHUNIT[\&quot;metre\&quot;,1]]],\n        PRIMEM[\&quot;Greenwich\&quot;,0,\n            ANGLEUNIT[\&quot;degree\&quot;,0.0174532925199433]],\n        ID[\&quot;EPSG\&quot;,4267]],\n    CONVERSION[\&quot;UTM zone 11N\&quot;,\n        METHOD[\&quot;Transverse Mercator\&quot;,\n            ID[\&quot;EPSG\&quot;,9807]],\n        PARAMETER[\&quot;Latitude of natural origin\&quot;,0,\n            ANGLEUNIT[\&quot;degree\&quot;,0.0174532925199433],\n            ID[\&quot;EPSG\&quot;,8801]],\n        PARAMETER[\&quot;Longitude of natural origin\&quot;,-117,\n            ANGLEUNIT[\&quot;degree\&quot;,0.0174532925199433],\n            ID[\&quot;EPSG\&quot;,8802]],\n        PARAMETER[\&quot;Scale factor at natural origin\&quot;,0.9996,\n            SCALEUNIT[\&quot;unity\&quot;,1],\n            ID[\&quot;EPSG\&quot;,8805]],\n        PARAMETER[\&quot;False easting\&quot;,500000,\n            LENGTHUNIT[\&quot;metre\&quot;,1],\n            ID[\&quot;EPSG\&quot;,8806]],\n        PARAMETER[\&quot;False northing\&quot;,0,\n            LENGTHUNIT[\&quot;metre\&quot;,1],\n            ID[\&quot;EPSG\&quot;,8807]]],\n    CS[Cartesian,2],\n        AXIS[\&quot;(E)\&quot;,east,\n            ORDER[1],\n            LENGTHUNIT[\&quot;metre\&quot;,1]],\n        AXIS[\&quot;(N)\&quot;,north,\n            ORDER[2],\n            LENGTHUNIT[\&quot;metre\&quot;,1]],\n    USAGE[\n        SCOPE[\&quot;Engineering survey, topographic mapping.\&quot;],\n        AREA[\&quot;North America - between 120°W and 114°W - onshore. Canada - Alberta; British Columbia; Northwest Territories; Nunavut. Mexico. United States (USA) - California; Idaho; Nevada; Oregon; Washington.\&quot;],\n        BBOX[26.93,-120,78.13,-114]],\n    ID[\&quot;EPSG\&quot;,26711]]&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;dataAxisToSRSAxisMapping&quot;</span><span class="p">:[</span>
+<span class="w">      </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">      </span><span class="mi">2</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;geoTransform&quot;</span><span class="p">:[</span>
+<span class="w">    </span><span class="mf">440720.0</span><span class="p">,</span>
+<span class="w">    </span><span class="mf">60.0</span><span class="p">,</span>
+<span class="w">    </span><span class="mf">0.0</span><span class="p">,</span>
+<span class="w">    </span><span class="mf">3751320.0</span><span class="p">,</span>
+<span class="w">    </span><span class="mf">0.0</span><span class="p">,</span>
+<span class="w">    </span><span class="mf">-60.0</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;metadata&quot;</span><span class="p">:{</span>
+<span class="w">    </span><span class="nt">&quot;&quot;</span><span class="p">:{</span>
+<span class="w">      </span><span class="nt">&quot;AREA_OR_POINT&quot;</span><span class="p">:</span><span class="s2">&quot;Area&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;IMAGE_STRUCTURE&quot;</span><span class="p">:{</span>
+<span class="w">      </span><span class="nt">&quot;INTERLEAVE&quot;</span><span class="p">:</span><span class="s2">&quot;BAND&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;cornerCoordinates&quot;</span><span class="p">:{</span>
+<span class="w">    </span><span class="nt">&quot;upperLeft&quot;</span><span class="p">:[</span>
+<span class="w">      </span><span class="mf">440720.0</span><span class="p">,</span>
+<span class="w">      </span><span class="mf">3751320.0</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;lowerLeft&quot;</span><span class="p">:[</span>
+<span class="w">      </span><span class="mf">440720.0</span><span class="p">,</span>
+<span class="w">      </span><span class="mf">3750120.0</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;lowerRight&quot;</span><span class="p">:[</span>
+<span class="w">      </span><span class="mf">441920.0</span><span class="p">,</span>
+<span class="w">      </span><span class="mf">3750120.0</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;upperRight&quot;</span><span class="p">:[</span>
+<span class="w">      </span><span class="mf">441920.0</span><span class="p">,</span>
+<span class="w">      </span><span class="mf">3751320.0</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;center&quot;</span><span class="p">:[</span>
+<span class="w">      </span><span class="mf">441320.0</span><span class="p">,</span>
+<span class="w">      </span><span class="mf">3750720.0</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;wgs84Extent&quot;</span><span class="p">:{</span>
+<span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;Polygon&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;coordinates&quot;</span><span class="p">:[</span>
+<span class="w">      </span><span class="p">[</span>
+<span class="w">        </span><span class="p">[</span>
+<span class="w">          </span><span class="mf">-117.6420428</span><span class="p">,</span>
+<span class="w">          </span><span class="mf">33.9023684</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="p">[</span>
+<span class="w">          </span><span class="mf">-117.6419617</span><span class="p">,</span>
+<span class="w">          </span><span class="mf">33.8915461</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="p">[</span>
+<span class="w">          </span><span class="mf">-117.6289846</span><span class="p">,</span>
+<span class="w">          </span><span class="mf">33.8916131</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="p">[</span>
+<span class="w">          </span><span class="mf">-117.629064</span><span class="p">,</span>
+<span class="w">          </span><span class="mf">33.9024353</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="p">[</span>
+<span class="w">          </span><span class="mf">-117.6420428</span><span class="p">,</span>
+<span class="w">          </span><span class="mf">33.9023684</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;bands&quot;</span><span class="p">:[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;band&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;block&quot;</span><span class="p">:[</span>
+<span class="w">        </span><span class="mi">20</span><span class="p">,</span>
+<span class="w">        </span><span class="mi">20</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;Byte&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;colorInterpretation&quot;</span><span class="p">:</span><span class="s2">&quot;Gray&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;metadata&quot;</span><span class="p">:{</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;stac&quot;</span><span class="p">:{</span>
+<span class="w">    </span><span class="nt">&quot;proj:shape&quot;</span><span class="p">:[</span>
+<span class="w">      </span><span class="mi">20</span><span class="p">,</span>
+<span class="w">      </span><span class="mi">20</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;proj:wkt2&quot;</span><span class="p">:</span><span class="s2">&quot;PROJCRS[\&quot;NAD27 / UTM zone 11N\&quot;,\n    BASEGEOGCRS[\&quot;NAD27\&quot;,\n        DATUM[\&quot;North American Datum 1927\&quot;,\n            ELLIPSOID[\&quot;Clarke 1866\&quot;,6378206.4,294.978698213898,\n                LENGTHUNIT[\&quot;metre\&quot;,1]]],\n        PRIMEM[\&quot;Greenwich\&quot;,0,\n            ANGLEUNIT[\&quot;degree\&quot;,0.0174532925199433]],\n        ID[\&quot;EPSG\&quot;,4267]],\n    CONVERSION[\&quot;UTM zone 11N\&quot;,\n        METHOD[\&quot;Transverse Mercator\&quot;,\n            ID[\&quot;EPSG\&quot;,9807]],\n        PARAMETER[\&quot;Latitude of natural origin\&quot;,0,\n            ANGLEUNIT[\&quot;degree\&quot;,0.0174532925199433],\n            ID[\&quot;EPSG\&quot;,8801]],\n        PARAMETER[\&quot;Longitude of natural origin\&quot;,-117,\n            ANGLEUNIT[\&quot;degree\&quot;,0.0174532925199433],\n            ID[\&quot;EPSG\&quot;,8802]],\n        PARAMETER[\&quot;Scale factor at natural origin\&quot;,0.9996,\n            SCALEUNIT[\&quot;unity\&quot;,1],\n            ID[\&quot;EPSG\&quot;,8805]],\n        PARAMETER[\&quot;False easting\&quot;,500000,\n            LENGTHUNIT[\&quot;metre\&quot;,1],\n            ID[\&quot;EPSG\&quot;,8806]],\n        PARAMETER[\&quot;False northing\&quot;,0,\n            LENGTHUNIT[\&quot;metre\&quot;,1],\n            ID[\&quot;EPSG\&quot;,8807]]],\n    CS[Cartesian,2],\n        AXIS[\&quot;(E)\&quot;,east,\n            ORDER[1],\n            LENGTHUNIT[\&quot;metre\&quot;,1]],\n        AXIS[\&quot;(N)\&quot;,north,\n            ORDER[2],\n            LENGTHUNIT[\&quot;metre\&quot;,1]],\n    USAGE[\n        SCOPE[\&quot;Engineering survey, topographic mapping.\&quot;],\n        AREA[\&quot;North America - between 120°W and 114°W - onshore. Canada - Alberta; British Columbia; Northwest Territories; Nunavut. Mexico. United States (USA) - California; Idaho; Nevada; Oregon; Washington.\&quot;],\n        BBOX[26.93,-120,78.13,-114]],\n    ID[\&quot;EPSG\&quot;,26711]]&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;proj:epsg&quot;</span><span class="p">:</span><span class="mi">26711</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;proj:projjson&quot;</span><span class="p">:{</span>
+<span class="w">      </span><span class="nt">&quot;$schema&quot;</span><span class="p">:</span><span class="s2">&quot;https://proj.org/schemas/v0.6/projjson.schema.json&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;ProjectedCRS&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;NAD27 / UTM zone 11N&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;base_crs&quot;</span><span class="p">:{</span>
+<span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;NAD27&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;datum&quot;</span><span class="p">:{</span>
+<span class="w">          </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;GeodeticReferenceFrame&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;North American Datum 1927&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;ellipsoid&quot;</span><span class="p">:{</span>
+<span class="w">            </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Clarke 1866&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;semi_major_axis&quot;</span><span class="p">:</span><span class="mf">6378206.4</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;semi_minor_axis&quot;</span><span class="p">:</span><span class="mf">6356583.8</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;coordinate_system&quot;</span><span class="p">:{</span>
+<span class="w">          </span><span class="nt">&quot;subtype&quot;</span><span class="p">:</span><span class="s2">&quot;ellipsoidal&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;axis&quot;</span><span class="p">:[</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">              </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Geodetic latitude&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;abbreviation&quot;</span><span class="p">:</span><span class="s2">&quot;Lat&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;direction&quot;</span><span class="p">:</span><span class="s2">&quot;north&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;unit&quot;</span><span class="p">:</span><span class="s2">&quot;degree&quot;</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">              </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Geodetic longitude&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;abbreviation&quot;</span><span class="p">:</span><span class="s2">&quot;Lon&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;direction&quot;</span><span class="p">:</span><span class="s2">&quot;east&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;unit&quot;</span><span class="p">:</span><span class="s2">&quot;degree&quot;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">          </span><span class="p">]</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;id&quot;</span><span class="p">:{</span>
+<span class="w">          </span><span class="nt">&quot;authority&quot;</span><span class="p">:</span><span class="s2">&quot;EPSG&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="mi">4267</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;conversion&quot;</span><span class="p">:{</span>
+<span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;UTM zone 11N&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;method&quot;</span><span class="p">:{</span>
+<span class="w">          </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Transverse Mercator&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;id&quot;</span><span class="p">:{</span>
+<span class="w">            </span><span class="nt">&quot;authority&quot;</span><span class="p">:</span><span class="s2">&quot;EPSG&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="mi">9807</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;parameters&quot;</span><span class="p">:[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Latitude of natural origin&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;unit&quot;</span><span class="p">:</span><span class="s2">&quot;degree&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;id&quot;</span><span class="p">:{</span>
+<span class="w">              </span><span class="nt">&quot;authority&quot;</span><span class="p">:</span><span class="s2">&quot;EPSG&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="mi">8801</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">          </span><span class="p">},</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Longitude of natural origin&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="mi">-117</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;unit&quot;</span><span class="p">:</span><span class="s2">&quot;degree&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;id&quot;</span><span class="p">:{</span>
+<span class="w">              </span><span class="nt">&quot;authority&quot;</span><span class="p">:</span><span class="s2">&quot;EPSG&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="mi">8802</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">          </span><span class="p">},</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Scale factor at natural origin&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="mf">0.9996</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;unit&quot;</span><span class="p">:</span><span class="s2">&quot;unity&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;id&quot;</span><span class="p">:{</span>
+<span class="w">              </span><span class="nt">&quot;authority&quot;</span><span class="p">:</span><span class="s2">&quot;EPSG&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="mi">8805</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">          </span><span class="p">},</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;False easting&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="mi">500000</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;unit&quot;</span><span class="p">:</span><span class="s2">&quot;metre&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;id&quot;</span><span class="p">:{</span>
+<span class="w">              </span><span class="nt">&quot;authority&quot;</span><span class="p">:</span><span class="s2">&quot;EPSG&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="mi">8806</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">          </span><span class="p">},</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;False northing&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;unit&quot;</span><span class="p">:</span><span class="s2">&quot;metre&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;id&quot;</span><span class="p">:{</span>
+<span class="w">              </span><span class="nt">&quot;authority&quot;</span><span class="p">:</span><span class="s2">&quot;EPSG&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="mi">8807</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;coordinate_system&quot;</span><span class="p">:{</span>
+<span class="w">        </span><span class="nt">&quot;subtype&quot;</span><span class="p">:</span><span class="s2">&quot;Cartesian&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;axis&quot;</span><span class="p">:[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Easting&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;abbreviation&quot;</span><span class="p">:</span><span class="s2">&quot;E&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;direction&quot;</span><span class="p">:</span><span class="s2">&quot;east&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;unit&quot;</span><span class="p">:</span><span class="s2">&quot;metre&quot;</span>
+<span class="w">          </span><span class="p">},</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Northing&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;abbreviation&quot;</span><span class="p">:</span><span class="s2">&quot;N&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;direction&quot;</span><span class="p">:</span><span class="s2">&quot;north&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;unit&quot;</span><span class="p">:</span><span class="s2">&quot;metre&quot;</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;scope&quot;</span><span class="p">:</span><span class="s2">&quot;Engineering survey, topographic mapping.&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;area&quot;</span><span class="p">:</span><span class="s2">&quot;North America - between 120°W and 114°W - onshore. Canada - Alberta; British Columbia; Northwest Territories; Nunavut. Mexico. United States (USA) - California; Idaho; Nevada; Oregon; Washington.&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;bbox&quot;</span><span class="p">:{</span>
+<span class="w">        </span><span class="nt">&quot;south_latitude&quot;</span><span class="p">:</span><span class="mf">26.93</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;west_longitude&quot;</span><span class="p">:</span><span class="mi">-120</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;north_latitude&quot;</span><span class="p">:</span><span class="mf">78.13</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;east_longitude&quot;</span><span class="p">:</span><span class="mi">-114</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;id&quot;</span><span class="p">:{</span>
+<span class="w">        </span><span class="nt">&quot;authority&quot;</span><span class="p">:</span><span class="s2">&quot;EPSG&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="mi">26711</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;proj:transform&quot;</span><span class="p">:[</span>
+<span class="w">      </span><span class="mf">440720.0</span><span class="p">,</span>
+<span class="w">      </span><span class="mf">60.0</span><span class="p">,</span>
+<span class="w">      </span><span class="mf">0.0</span><span class="p">,</span>
+<span class="w">      </span><span class="mf">3751320.0</span><span class="p">,</span>
+<span class="w">      </span><span class="mf">0.0</span><span class="p">,</span>
+<span class="w">      </span><span class="mf">-60.0</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;raster:bands&quot;</span><span class="p">:[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;data_type&quot;</span><span class="p">:</span><span class="s2">&quot;uint8&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;eo:bands&quot;</span><span class="p">:[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;b1&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="s2">&quot;Gray&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="gdallocationinfo.html" class="btn btn-neutral float-right" title="gdallocationinfo" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gdaldem.html" class="btn btn-neutral float-left" title="gdaldem" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2024 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+  </div>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
