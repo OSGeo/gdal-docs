@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gdal2tiles &mdash; GDAL  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d10597a4" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/gdal.css?v=e152ac3b" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="canonical" href="https://gdal.org/programs/gdal2tiles.html"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="gdal2xyz" href="gdal2xyz.html" />
+    <link rel="prev" title="gdal-config (Unix)" href="gdal-config.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Programs</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#general">General</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#raster-programs">Raster programs</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="raster_common_options.html">Common options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal-config.html">gdal-config (Unix)</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">gdal2tiles</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#synopsis">Synopsis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#description">Description</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="gdal2xyz.html">gdal2xyz</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_calc.html">gdal_calc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_contour.html">gdal_contour</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_create.html">gdal_create</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_edit.html">gdal_edit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_fillnodata.html">gdal_fillnodata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_footprint.html">gdal_footprint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_grid.html">gdal_grid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_merge.html">gdal_merge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_pansharpen.html">gdal_pansharpen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_polygonize.html">gdal_polygonize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_proximity.html">gdal_proximity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_rasterize.html">gdal_rasterize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_retile.html">gdal_retile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_sieve.html">gdal_sieve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_translate.html">gdal_translate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdal_viewshed.html">gdal_viewshed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaladdo.html">gdaladdo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalattachpct.html">gdalattachpct</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalbuildvrt.html">gdalbuildvrt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalcompare.html">gdalcompare</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaldem.html">gdaldem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalinfo.html">gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdallocationinfo.html">gdallocationinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalmanage.html">gdalmanage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalmove.html">gdalmove</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalsrsinfo.html">gdalsrsinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaltindex.html">gdaltindex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdaltransform.html">gdaltransform</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gdalwarp.html">gdalwarp</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nearblack.html">nearblack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pct2rgb.html">pct2rgb</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rgb2pct.html">rgb2pct</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#multidimensional-raster-programs">Multidimensional Raster programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#vector-programs">Vector programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#geographic-network-programs">Geographic network programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#other-utilities">Other utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sponsors/index.html">Sponsors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Programs</a> &raquo;</li>
+      
+      <li>gdal2tiles</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit/master/doc/source/programs/gdal2tiles.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="gdal2xyz.html" class="btn btn-neutral float-right" title="gdal2xyz" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gdal-config.html" class="btn btn-neutral float-left" title="gdal-config (Unix)" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gdal2tiles">
+<span id="id1"></span><h1>gdal2tiles<a class="headerlink" href="#gdal2tiles" title="Link to this heading"></a></h1>
+<p>Generates directory with TMS tiles, KMLs and simple web viewers.</p>
+<section id="synopsis">
+<span id="index-0"></span><h2>Synopsis<a class="headerlink" href="#synopsis" title="Link to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdal2tiles</span> <span class="p">[</span><span class="o">--</span><span class="n">help</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">help</span><span class="o">-</span><span class="n">general</span><span class="p">]</span>
+              <span class="p">[</span><span class="o">-</span><span class="n">p</span> <span class="o">&lt;</span><span class="n">profile</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">r</span> <span class="n">resampling</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">s</span> <span class="o">&lt;</span><span class="n">srs</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">z</span> <span class="o">&lt;</span><span class="n">zoom</span><span class="o">&gt;</span><span class="p">]</span>
+              <span class="p">[</span><span class="o">-</span><span class="n">e</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">a</span> <span class="n">nodata</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">q</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">k</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">n</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">u</span> <span class="o">&lt;</span><span class="n">url</span><span class="o">&gt;</span><span class="p">]</span>
+              <span class="p">[</span><span class="o">-</span><span class="n">w</span> <span class="o">&lt;</span><span class="n">webviewer</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">t</span> <span class="o">&lt;</span><span class="n">title</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">c</span> <span class="o">&lt;</span><span class="n">copyright</span><span class="o">&gt;</span><span class="p">]</span>
+              <span class="p">[</span><span class="o">--</span><span class="n">processes</span><span class="o">=&lt;</span><span class="n">NB_PROCESSES</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">mpi</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">xyz</span><span class="p">]</span>
+              <span class="p">[</span><span class="o">--</span><span class="n">tilesize</span><span class="o">=&lt;</span><span class="n">PIXELS</span><span class="o">&gt;</span><span class="p">]</span> <span class="o">--</span><span class="n">tiledriver</span><span class="o">=&lt;</span><span class="n">DRIVER</span><span class="o">&gt;</span> <span class="p">[</span><span class="o">--</span><span class="n">tmscompatible</span><span class="p">]</span>
+              <span class="p">[</span><span class="o">--</span><span class="n">excluded</span><span class="o">-</span><span class="n">values</span><span class="o">=&lt;</span><span class="n">EXCLUDED_VALUES</span><span class="o">&gt;</span><span class="p">]</span>
+              <span class="p">[</span><span class="o">--</span><span class="n">excluded</span><span class="o">-</span><span class="n">values</span><span class="o">-</span><span class="n">pct</span><span class="o">-</span><span class="n">threshold</span><span class="o">=&lt;</span><span class="n">EXCLUDED_VALUES_PCT_THRESHOLD</span><span class="o">&gt;</span><span class="p">]</span>
+              <span class="p">[</span><span class="o">--</span><span class="n">nodata</span><span class="o">-</span><span class="n">values</span><span class="o">-</span><span class="n">pct</span><span class="o">-</span><span class="n">threshold</span><span class="o">=&lt;</span><span class="n">NODATA_VALUES_PCT_THRESHOLD</span><span class="o">&gt;</span><span class="p">]</span>
+              <span class="p">[</span><span class="o">-</span><span class="n">g</span> <span class="o">&lt;</span><span class="n">googlekey</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">b</span> <span class="o">&lt;</span><span class="n">bingkey</span><span class="o">&gt;</span><span class="p">]</span> <span class="o">&lt;</span><span class="n">input_file</span><span class="o">&gt;</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">output_dir</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">COMMON_OPTIONS</span><span class="o">&gt;</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="description">
+<h2>Description<a class="headerlink" href="#description" title="Link to this heading"></a></h2>
+<p>This utility generates a directory with small tiles and metadata, following
+the OSGeo Tile Map Service Specification. Simple web pages with viewers based on
+Google Maps, OpenLayers and Leaflet are generated as well - so anybody can comfortably
+explore your maps on-line and you do not need to install or configure any
+special software (like MapServer) and the map displays very fast in the
+web browser. You only need to upload the generated directory onto a web server.</p>
+<p>GDAL2Tiles also creates the necessary metadata for Google Earth (KML
+SuperOverlay), in case the supplied map uses EPSG:4326 projection.</p>
+<p>World files and embedded georeferencing is used during tile generation, but you
+can publish a picture without proper georeferencing too.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Inputs with non-Byte data type (i.e. <code class="docutils literal notranslate"><span class="pre">Int16</span></code>, <code class="docutils literal notranslate"><span class="pre">UInt16</span></code>,...) will be clamped to
+the <code class="docutils literal notranslate"><span class="pre">Byte</span></code> data type, causing wrong results. To avoid this it is necessary to
+rescale input to the <code class="docutils literal notranslate"><span class="pre">Byte</span></code> data type using <cite>gdal_translate</cite> utility.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Config options of the input drivers may have an effect on the output of gdal2tiles. An example driver config option is GDAL_PDF_DPI, which can be found at <a class="reference internal" href="../user/configoptions.html#configoptions"><span class="std std-ref">Configuration options</span></a></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>gdal2tiles is a Python utility, and is only available if GDAL Python bindings are available.</p>
+</div>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2tiles-help">
+<span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal2tiles-help" title="Link to this definition"></a></dt>
+<dd><p>Show this help message and exit</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2tiles-help-general">
+<span class="sig-name descname"><span class="pre">--help-general</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal2tiles-help-general" title="Link to this definition"></a></dt>
+<dd><p>Gives a brief usage message for the generic GDAL commandline options and exit.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2tiles-p">
+<span id="cmdoption-gdal2tiles-profile"></span><span class="sig-name descname"><span class="pre">-p</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;PROFILE&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--profile</span></span><span class="sig-prename descclassname"><span class="pre">=&lt;PROFILE&gt;</span></span><a class="headerlink" href="#cmdoption-gdal2tiles-p" title="Link to this definition"></a></dt>
+<dd><p>Tile cutting profile (mercator, geodetic, raster) - default 'mercator' (Google Maps compatible).</p>
+<p>Starting with GDAL 3.2, additional profiles are available from tms_XXXX.json files
+placed in GDAL data directory (provided all zoom levels use same origin, tile dimensions,
+and resolution between consecutive zoom levels vary by a factor of two).</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2tiles-r">
+<span id="cmdoption-gdal2tiles-resampling"></span><span class="sig-name descname"><span class="pre">-r</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;RESAMPLING&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--resampling</span></span><span class="sig-prename descclassname"><span class="pre">=&lt;RESAMPLING&gt;</span></span><a class="headerlink" href="#cmdoption-gdal2tiles-r" title="Link to this definition"></a></dt>
+<dd><p>Resampling method (average, near, bilinear, cubic, cubicspline, lanczos, antialias, mode, max, min, med, q1, q3) - default 'average'.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2tiles-s">
+<span id="cmdoption-gdal2tiles-s_srs"></span><span class="sig-name descname"><span class="pre">-s</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;SRS&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--s_srs</span></span><span class="sig-prename descclassname"><span class="pre">=&lt;SRS&gt;</span></span><a class="headerlink" href="#cmdoption-gdal2tiles-s" title="Link to this definition"></a></dt>
+<dd><p>The spatial reference system used for the source input data.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2tiles-xyz">
+<span class="sig-name descname"><span class="pre">--xyz</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal2tiles-xyz" title="Link to this definition"></a></dt>
+<dd><p>Generate XYZ tiles (OSM Slippy Map standard) instead of TMS.
+In the default mode (TMS), tiles at y=0 are the southern-most tiles, whereas
+in XYZ mode (used by OGC WMTS too), tiles at y=0 are the northern-most tiles.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 3.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2tiles-d">
+<span id="cmdoption-gdal2tiles-tmscompatible"></span><span class="sig-name descname"><span class="pre">-d</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--tmscompatible</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal2tiles-d" title="Link to this definition"></a></dt>
+<dd><p>When using the geodetic profile, specifies the base resolution as 0.703125
+or 2 tiles at zoom level 0.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2tiles-z">
+<span id="cmdoption-gdal2tiles-zoom"></span><span class="sig-name descname"><span class="pre">-z</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;ZOOM&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--zoom</span></span><span class="sig-prename descclassname"><span class="pre">=&lt;ZOOM&gt;</span></span><a class="headerlink" href="#cmdoption-gdal2tiles-z" title="Link to this definition"></a></dt>
+<dd><p>Zoom levels to render (format:'2-5', '10-' or '10').</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2tiles-e">
+<span id="cmdoption-gdal2tiles-resume"></span><span class="sig-name descname"><span class="pre">-e</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--resume</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal2tiles-e" title="Link to this definition"></a></dt>
+<dd><p>Resume mode. Generate only missing files.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2tiles-a">
+<span id="cmdoption-gdal2tiles-srcnodata"></span><span class="sig-name descname"><span class="pre">-a</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;NODATA&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--srcnodata</span></span><span class="sig-prename descclassname"><span class="pre">=&lt;NODATA&gt;</span></span><a class="headerlink" href="#cmdoption-gdal2tiles-a" title="Link to this definition"></a></dt>
+<dd><p>Value in the input dataset considered as transparent. If the input dataset
+had already an associate nodata value, it is overridden by the specified value.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2tiles-v">
+<span id="cmdoption-gdal2tiles-verbose"></span><span class="sig-name descname"><span class="pre">-v</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--verbose</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal2tiles-v" title="Link to this definition"></a></dt>
+<dd><p>Generate verbose output of tile generation.</p>
+<p>Starting with GDAL 3.7, that verbose output is emitted through the
+<code class="docutils literal notranslate"><span class="pre">logging.getLogger(&quot;gdal2tiles&quot;)</span></code> object.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2tiles-x">
+<span id="cmdoption-gdal2tiles-exclude"></span><span class="sig-name descname"><span class="pre">-x</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--exclude</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal2tiles-x" title="Link to this definition"></a></dt>
+<dd><p>Exclude transparent tiles from result tileset.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2tiles-q">
+<span id="cmdoption-gdal2tiles-quiet"></span><span class="sig-name descname"><span class="pre">-q</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--quiet</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal2tiles-q" title="Link to this definition"></a></dt>
+<dd><p>Disable messages and status to stdout</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 2.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2tiles-processes">
+<span class="sig-name descname"><span class="pre">--processes</span></span><span class="sig-prename descclassname"><span class="pre">=&lt;NB_PROCESSES&gt;</span></span><a class="headerlink" href="#cmdoption-gdal2tiles-processes" title="Link to this definition"></a></dt>
+<dd><p>Number of parallel processes to use for tiling, to speed-up the computation.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 2.3.</span></p>
+</div>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2tiles-mpi">
+<span class="sig-name descname"><span class="pre">--mpi</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal2tiles-mpi" title="Link to this definition"></a></dt>
+<dd><p>Assume launched by mpiexec, enable MPI parallelism and ignore --processes.
+Requires working MPI environment and the MPI for Python (mpi4py) package.
+User should set GDAL_CACHEMAX to an appropriate cache size per process
+based on memory per node and the number of processes launched per node.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 3.5.</span></p>
+</div>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2tiles-tilesize">
+<span class="sig-name descname"><span class="pre">--tilesize</span></span><span class="sig-prename descclassname"><span class="pre">=&lt;PIXELS&gt;</span></span><a class="headerlink" href="#cmdoption-gdal2tiles-tilesize" title="Link to this definition"></a></dt>
+<dd><p>Width and height in pixel of a tile. Default is 256.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 3.1.</span></p>
+</div>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2tiles-tiledriver">
+<span class="sig-name descname"><span class="pre">--tiledriver</span></span><span class="sig-prename descclassname"><span class="pre">=&lt;DRIVER&gt;</span></span><a class="headerlink" href="#cmdoption-gdal2tiles-tiledriver" title="Link to this definition"></a></dt>
+<dd><p>Which output driver to use for the tiles, determines the file format of the tiles.
+Currently PNG, WEBP and JPEG (JPEG added in GDAL 3.9) are supported. Default is PNG.
+Additional configuration for the WEBP and JPEG drivers are documented below.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 3.6.</span></p>
+</div>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2tiles-excluded-values">
+<span class="sig-name descname"><span class="pre">--excluded-values</span></span><span class="sig-prename descclassname"><span class="pre">=&lt;EXCLUDED_VALUES&gt;</span></span><a class="headerlink" href="#cmdoption-gdal2tiles-excluded-values" title="Link to this definition"></a></dt>
+<dd><p>Comma-separated tuple of values (thus typically &quot;R,G,B&quot;), that are ignored
+as contributing source * pixels during resampling. The number of values in
+the tuple must be the same as the number of bands, excluding the alpha band.
+Several tuples of excluded values may be specified using the &quot;(R1,G1,B2),(R2,G2,B2)&quot; syntax.
+Only taken into account by Average currently.
+This concept is a bit similar to nodata/alpha, but the main difference is
+that pixels matching one of the excluded value tuples are still considered
+as valid, when determining the target pixel validity/density.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 3.9.</span></p>
+</div>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2tiles-excluded-values-pct-threshold">
+<span class="sig-name descname"><span class="pre">--excluded-values-pct-threshold</span></span><span class="sig-prename descclassname"><span class="pre">=EXCLUDED_VALUES_PCT_THRESHOLD</span></span><a class="headerlink" href="#cmdoption-gdal2tiles-excluded-values-pct-threshold" title="Link to this definition"></a></dt>
+<dd><p>Minimum percentage of source pixels that must be set at one of the --excluded-values to cause the excluded
+value, that is in majority among source pixels, to be used as the target pixel value. Default value is 50(%)</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 3.9.</span></p>
+</div>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2tiles-nodata-values-pct-threshold">
+<span class="sig-name descname"><span class="pre">--nodata-values-pct-threshold</span></span><span class="sig-prename descclassname"><span class="pre">=&lt;NODATA_VALUES_PCT_THRESHOLD&gt;</span></span><a class="headerlink" href="#cmdoption-gdal2tiles-nodata-values-pct-threshold" title="Link to this definition"></a></dt>
+<dd><p>Minimum percentage of source pixels that must be at nodata (or alpha=0 or any
+other way to express transparent pixel) to cause the target pixel value to
+be transparent. Default value is 100 (%), which means that a target pixel is
+transparent only if all contributing source pixels are transparent.
+Only taken into account for average resampling.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 3.9.</span></p>
+</div>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2tiles-h">
+<span id="cmdoption-gdal2tiles-0"></span><span class="sig-name descname"><span class="pre">-h</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal2tiles-h" title="Link to this definition"></a></dt>
+<dd><p>Show help message and exit.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2tiles-version">
+<span class="sig-name descname"><span class="pre">--version</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal2tiles-version" title="Link to this definition"></a></dt>
+<dd><p>Show program's version number and exit.</p>
+</dd></dl>
+
+<section id="kml-google-earth-options">
+<h3>KML (Google Earth) options<a class="headerlink" href="#kml-google-earth-options" title="Link to this heading"></a></h3>
+<p>Options for generated Google Earth SuperOverlay metadata</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2tiles-k">
+<span id="cmdoption-gdal2tiles-force-kml"></span><span class="sig-name descname"><span class="pre">-k</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--force-kml</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal2tiles-k" title="Link to this definition"></a></dt>
+<dd><p>Generate KML for Google Earth - default for 'geodetic' profile and 'raster' in EPSG:4326. For a dataset with different projection use with caution!</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2tiles-n">
+<span id="cmdoption-gdal2tiles-no-kml"></span><span class="sig-name descname"><span class="pre">-n</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--no-kml</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal2tiles-n" title="Link to this definition"></a></dt>
+<dd><p>Avoid automatic generation of KML files for EPSG:4326.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2tiles-u">
+<span id="cmdoption-gdal2tiles-url"></span><span class="sig-name descname"><span class="pre">-u</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;URL&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--url</span></span><span class="sig-prename descclassname"><span class="pre">=&lt;URL&gt;</span></span><a class="headerlink" href="#cmdoption-gdal2tiles-u" title="Link to this definition"></a></dt>
+<dd><p>URL address where the generated tiles are going to be published.</p>
+</dd></dl>
+
+</section>
+<section id="web-viewer-options">
+<h3>Web viewer options<a class="headerlink" href="#web-viewer-options" title="Link to this heading"></a></h3>
+<p>Options for generated HTML viewers a la Google Maps</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2tiles-w">
+<span id="cmdoption-gdal2tiles-webviewer"></span><span class="sig-name descname"><span class="pre">-w</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;WEBVIEWER&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--webviewer</span></span><span class="sig-prename descclassname"><span class="pre">=&lt;WEBVIEWER&gt;</span></span><a class="headerlink" href="#cmdoption-gdal2tiles-w" title="Link to this definition"></a></dt>
+<dd><p>Web viewer to generate (all, google, openlayers, leaflet, mapml, none) - default 'all'.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2tiles-t">
+<span id="cmdoption-gdal2tiles-title"></span><span class="sig-name descname"><span class="pre">-t</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;TITLE&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--title</span></span><span class="sig-prename descclassname"><span class="pre">=&lt;TITLE&gt;</span></span><a class="headerlink" href="#cmdoption-gdal2tiles-t" title="Link to this definition"></a></dt>
+<dd><p>Title of the map.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2tiles-c">
+<span id="cmdoption-gdal2tiles-copyright"></span><span class="sig-name descname"><span class="pre">-c</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;COPYRIGHT&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--copyright</span></span><span class="sig-prename descclassname"><span class="pre">=&lt;COPYRIGHT&gt;</span></span><a class="headerlink" href="#cmdoption-gdal2tiles-c" title="Link to this definition"></a></dt>
+<dd><p>Copyright for the map.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2tiles-g">
+<span id="cmdoption-gdal2tiles-googlekey"></span><span class="sig-name descname"><span class="pre">-g</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;GOOGLEKEY&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--googlekey</span></span><span class="sig-prename descclassname"><span class="pre">=&lt;GOOGLEKEY&gt;</span></span><a class="headerlink" href="#cmdoption-gdal2tiles-g" title="Link to this definition"></a></dt>
+<dd><p>Google Maps API key from <a class="reference external" href="http://code.google.com/apis/maps/signup.html">http://code.google.com/apis/maps/signup.html</a>.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2tiles-b">
+<span id="cmdoption-gdal2tiles-bingkey"></span><span class="sig-name descname"><span class="pre">-b</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;BINGKEY&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--bingkey</span></span><span class="sig-prename descclassname"><span class="pre">=&lt;BINGKEY&gt;</span></span><a class="headerlink" href="#cmdoption-gdal2tiles-b" title="Link to this definition"></a></dt>
+<dd><p>Bing Maps API key from <a class="reference external" href="https://www.bingmapsportal.com/">https://www.bingmapsportal.com/</a></p>
+</dd></dl>
+
+</section>
+<section id="mapml-options">
+<h3>MapML options<a class="headerlink" href="#mapml-options" title="Link to this heading"></a></h3>
+<p>MapML support is new to GDAL 3.2. When --webviewer=mapml is specified,
+--xyz is implied, as well as --tmscompatible if --profile=geodetic.</p>
+<p>The following profiles are supported:</p>
+<ul class="simple">
+<li><p>mercator: mapped to OSMTILE MapML tiling scheme</p></li>
+<li><p>geodetic: mapped to WGS84 MapML tiling scheme</p></li>
+<li><p>APSTILE: from the tms_MapML_APSTILE.json data file</p></li>
+</ul>
+<p>The generated MapML file in the output directory is <code class="docutils literal notranslate"><span class="pre">mapml.mapl</span></code></p>
+<p>Available options are:</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2tiles-mapml-template">
+<span class="sig-name descname"><span class="pre">--mapml-template</span></span><span class="sig-prename descclassname"><span class="pre">=&lt;filename&gt;</span></span><a class="headerlink" href="#cmdoption-gdal2tiles-mapml-template" title="Link to this definition"></a></dt>
+<dd><p>Filename of a template mapml file where variables will
+be substituted. If not specified, the generic
+template_tiles.mapml file from GDAL data resources
+will be used</p>
+</dd></dl>
+
+<p>The --url option is also used to substitute <code class="docutils literal notranslate"><span class="pre">${URL}</span></code> in the template MapML file.</p>
+</section>
+<section id="webp-options">
+<h3>WEBP options<a class="headerlink" href="#webp-options" title="Link to this heading"></a></h3>
+<p>WEBP tiledriver support is new to GDAL 3.6. It is enabled by using --tiledriver=WEBP.</p>
+<p>The following configuration options are available to further customize the WebP output:</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2tiles-webp-quality">
+<span class="sig-name descname"><span class="pre">--webp-quality</span></span><span class="sig-prename descclassname"><span class="pre">=&lt;QUALITY&gt;</span></span><a class="headerlink" href="#cmdoption-gdal2tiles-webp-quality" title="Link to this definition"></a></dt>
+<dd><p>QUALITY is a integer between 1-100. Default is 75.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2tiles-webp-lossless">
+<span class="sig-name descname"><span class="pre">--webp-lossless</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-gdal2tiles-webp-lossless" title="Link to this definition"></a></dt>
+<dd><p>Use WEBP lossless compression, default is lossy</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>GDAL <a class="reference internal" href="../drivers/raster/webp.html#raster-webp"><span class="std std-ref">WEBP driver</span></a> documentation can be consulted</p>
+</div>
+</section>
+<section id="jpeg-options">
+<h3>JPEG options<a class="headerlink" href="#jpeg-options" title="Link to this heading"></a></h3>
+<p>JPEG tiledriver support is new to GDAL 3.9. It is enabled by using --tiledriver=JPEG.</p>
+<p>Note that JPEG does not support transparency, hence edge tiles will display black
+pixels in areas not covered by the source raster.</p>
+<p>The following configuration options are available to further customize the JPEG output:</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-gdal2tiles-jpeg-quality">
+<span class="sig-name descname"><span class="pre">---jpeg-quality</span></span><span class="sig-prename descclassname"><span class="pre">=JPEG_QUALITY</span></span><a class="headerlink" href="#cmdoption-gdal2tiles-jpeg-quality" title="Link to this definition"></a></dt>
+<dd><p>QUALITY is a integer between 1-100. Default is 75.</p>
+</dd></dl>
+
+</section>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
+<p>Basic example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdal2tiles</span> <span class="o">--</span><span class="n">zoom</span><span class="o">=</span><span class="mi">2</span><span class="o">-</span><span class="mi">5</span> <span class="nb">input</span><span class="o">.</span><span class="n">tif</span> <span class="n">output_folder</span>
+</pre></div>
+</div>
+<p>MapML generation:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gdal2tiles</span> <span class="o">--</span><span class="n">zoom</span><span class="o">=</span><span class="mi">16</span><span class="o">-</span><span class="mi">18</span> <span class="o">-</span><span class="n">w</span> <span class="n">mapml</span> <span class="o">-</span><span class="n">p</span> <span class="n">APSTILE</span> <span class="o">--</span><span class="n">url</span> <span class="s2">&quot;https://example.com&quot;</span> <span class="nb">input</span><span class="o">.</span><span class="n">tif</span> <span class="n">output_folder</span>
+</pre></div>
+</div>
+<p>MPI example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>mpiexec -n $NB_PROCESSES gdal2tiles --mpi --config GDAL_CACHEMAX 500 --zoom=2-5 input.tif output_folder
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="gdal2xyz.html" class="btn btn-neutral float-right" title="gdal2xyz" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gdal-config.html" class="btn btn-neutral float-left" title="gdal-config (Unix)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2024 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+  </div>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

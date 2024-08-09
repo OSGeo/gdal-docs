@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>&lt;no title&gt; &mdash; GDAL  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d10597a4" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/gdal.css?v=e152ac3b" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://gdal.org/drivers/raster/wms_wmts_cache.html"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sponsors/index.html">Sponsors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+      <li>&lt;no title&gt;</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit/master/doc/source/drivers/raster/wms_wmts_cache.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <p>Caching of remote pixel data is possible by setting a &lt;Cache&gt; element in the
+WMS (or WMTS) configuration file.</p>
+<p>Before GDAL 3.9, if the &lt;Path&gt; sub-element of &lt;Cache&gt; was not specified, the
+directory of the cache was <code class="docutils literal notranslate"><span class="pre">./gdalwmscache</span></code> (that is to say a <code class="docutils literal notranslate"><span class="pre">gdalwmscache</span></code>
+subdirectory of the current directory), unless the <a class="reference internal" href="wms.html#config-GDAL_DEFAULT_WMS_CACHE_PATH"><code class="docutils literal notranslate"><span class="pre">GDAL_DEFAULT_WMS_CACHE_PATH</span></code></a>
+configuration option is specified.</p>
+<p>Starting with GDAL 3.9, the directory of the cache is set according to the
+following logic (first listed criterion is prioritary over following ones):</p>
+<ul>
+<li><p>Value of the &lt;Path&gt; sub-element of &lt;Cache&gt;, if specified.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">${GDAL_DEFAULT_WMS_CACHE_PATH}</span></code> if <a class="reference internal" href="wms.html#config-GDAL_DEFAULT_WMS_CACHE_PATH"><code class="docutils literal notranslate"><span class="pre">GDAL_DEFAULT_WMS_CACHE_PATH</span></code></a> is set.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">${XDG_CACHE_HOME}/gdalwmscache</span></code> if the <code class="docutils literal notranslate"><span class="pre">XDG_CACHE_HOME</span></code> configuration option is set.</p></li>
+<li><p>On Unix, <code class="docutils literal notranslate"><span class="pre">${HOME}/.cache/gdalwmscache</span></code> if the <code class="docutils literal notranslate"><span class="pre">HOME</span></code> configuration option is set.</p></li>
+<li><p>On Windows, <code class="docutils literal notranslate"><span class="pre">${USERPROFILE}/.cache/gdalwmscache</span></code> if the <code class="docutils literal notranslate"><span class="pre">USERPROFILE</span></code> configuration option is set.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">${CPL_TMPDIR}/gdalwmscache_${USER}</span></code> if <a class="reference internal" href="../../user/configoptions.html#config-CPL_TMPDIR"><code class="docutils literal notranslate"><span class="pre">CPL_TMPDIR</span></code></a> and <code class="docutils literal notranslate"><span class="pre">USER</span></code> configuration options are set.</p>
+<blockquote>
+<div><p>If <code class="docutils literal notranslate"><span class="pre">CPL_TMPDIR</span></code> is not set, then <code class="docutils literal notranslate"><span class="pre">TMPDIR</span></code> is used, or <code class="docutils literal notranslate"><span class="pre">TEMP</span></code></p>
+<p>If <code class="docutils literal notranslate"><span class="pre">USER</span></code> is not set, <code class="docutils literal notranslate"><span class="pre">USERNAME</span></code> is used if set.
+If neither <code class="docutils literal notranslate"><span class="pre">USERNAME</span></code> or <code class="docutils literal notranslate"><span class="pre">USER</span></code> are set, the md5sum of the filename of the configuration file is used)</p>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">./gdalwmscache_{md5sum(filename)}</span></code> if none of the above mentioned configuration options are set.</p></li>
+</ul>
+<p>Note that if the &lt;Unique&gt; element is set to true (which is its default value),
+a subdirectory whose name is the md5sum of the filename of the configuration file
+is appended to the caching directory.</p>
+<p>The actual caching directory can be got by querying the <code class="docutils literal notranslate"><span class="pre">CACHE_PATH</span></code> metadata
+item on the dataset.</p>
+
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2024 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+  </div>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

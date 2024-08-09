@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GTI -- GDAL Raster Tile Index &mdash; GDAL  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d10597a4" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/gdal.css?v=e152ac3b" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://gdal.org/drivers/raster/gti.html"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="GTiff -- GeoTIFF File Format" href="gtiff.html" />
+    <link rel="prev" title="GTA - Generic Tagged Arrays" href="gta.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Raster drivers</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="aaigrid.html">AAIGrid -- Arc/Info ASCII Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ace2.html">ACE2 -- ACE2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adrg.html">ADRG -- ADRG/ARC Digitized Raster Graphics (.gen/.thf)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aig.html">AIG -- Arc/Info Binary Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="airsar.html">AIRSAR -- AIRSAR Polarimetric Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bag.html">BAG -- Bathymetry Attributed Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basisu.html">BASISU -- Basis Universal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blx.html">BLX -- Magellan BLX Topo File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bmp.html">BMP -- Microsoft Windows Device Independent Bitmap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bsb.html">BSB -- Maptech/NOAA BSB Nautical Chart Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bt.html">BT -- VTP .bt Binary Terrain Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="byn.html">BYN - Natural Resources Canada's Geoid file format (.byn)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cad.html">CAD -- AutoCAD DWG raster layer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cals.html">CALS -- CALS Type 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ceos.html">CEOS -- CEOS Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coasp.html">COASP --  DRDC COASP SAR Processor Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cog.html">COG -- Cloud Optimized GeoTIFF generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cosar.html">COSAR -- TerraSAR-X Complex SAR Data Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpg.html">CPG -- Convair PolGASP data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctable2.html">CTable2 -- CTable2 Datum Grid Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ctg.html">CTG -- USGS LULC Composite Theme Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="daas.html">DAAS (Airbus DS Intelligence Data As A Service driver)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dds.html">DDS -- DirectDraw Surface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="derived.html">DERIVED -- Derived subdatasets driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dimap.html">DIMAP -- Spot DIMAP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dipex.html">DIPEx -- ELAS DIPEx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doq1.html">DOQ1 -- First Generation USGS DOQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doq2.html">DOQ2 -- New Labelled USGS DOQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dted.html">DTED -- Military Elevation Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ecrgtoc.html">ECRGTOC -- ECRG Table Of Contents (TOC.xml)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ecw.html">ECW -- Enhanced Compressed Wavelets (.ecw)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eedai.html">EEDAI - Google Earth Engine Data API Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ehdr.html">EHdr -- ESRI .hdr Labelled</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eir.html">EIR -- Erdas Imagine Raw</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elas.html">ELAS - Earth Resources Laboratory Applications Software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="envi.html">ENVI -- ENVI .hdr Labelled Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="esat.html">ESAT -- Envisat Image Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="esric.html">ESRIC -- Esri Compact Cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ers.html">ERS -- ERMapper .ERS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exr.html">EXR -- Extended Dynamic Range Image File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fast.html">FAST -- EOSAT FAST Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fit.html">FIT -- FIT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fits.html">FITS -- Flexible Image Transport System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="genbin.html">GenBin -- Generic Binary (.hdr labelled)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="georaster.html">Oracle Spatial GeoRaster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gff.html">GFF -- Sandia National Laboratories GSAT File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gif.html">GIF -- Graphics Interchange Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpkg.html">GPKG -- GeoPackage raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grass.html">GRASS Raster Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grassasciigrid.html">GRASSASCIIGrid -- GRASS ASCII Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grib.html">GRIB -- WMO General Regularly-distributed Information in Binary form</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gs7bg.html">GS7BG -- Golden Software Surfer 7 Binary Grid File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gsag.html">GSAG -- Golden Software ASCII Grid File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gsbg.html">GSBG -- Golden Software Binary Grid File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gsc.html">GSC -- GSC Geogrid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gta.html">GTA - Generic Tagged Arrays</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">GTI -- GDAL Raster Tile Index</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#connection-strings">Connection strings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tile-index-requirements">Tile index requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gti-xml-format">GTI XML format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#how-to-build-a-gti-comptatible-index">How to build a GTI comptatible index ?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#open-options">Open options</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gtiff.html">GTiff -- GeoTIFF File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gxf.html">GXF -- Grid eXchange File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hdf4.html">HDF4 -- Hierarchical Data Format Release 4 (HDF4)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hdf5.html">HDF5 -- Hierarchical Data Format Release 5 (HDF5)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="heif.html">HEIF / HEIC -- ISO/IEC 23008-12:2017 High Efficiency Image File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hf2.html">HF2 -- HF2/HFZ heightfield raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hfa.html">HFA -- Erdas Imagine .img</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Idrisi.html">RST -- Idrisi Raster Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ilwis.html">ILWIS -- Raster Map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iris.html">IRIS -- Vaisala's weather radar software format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="isce.html">ISCE -- ISCE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="isg.html">ISG -- International Service for the Geoid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="isis2.html">ISIS2 -- USGS Astrogeology ISIS Cube (Version 2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="isis3.html">ISIS3 -- USGS Astrogeology ISIS Cube (Version 3)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jdem.html">JDEM -- Japanese DEM (.mem)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2ecw.html">JP2ECW -- ERDAS JPEG2000 (.jp2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2kak.html">JP2KAK -- JPEG 2000 (based on Kakadu SDK)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2lura.html">JP2Lura -- JPEG2000 driver based on Lurawave library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2mrsid.html">JP2MrSID -- JPEG2000 via MrSID SDK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jp2openjpeg.html">JP2OpenJPEG -- JPEG2000 driver based on OpenJPEG library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jpeg.html">JPEG -- JPEG JFIF File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jpegxl.html">JPEGXL -- JPEG-XL File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jpipkak.html">JPIPKAK - JPIP Streaming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kea.html">KEA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kmlsuperoverlay.html">KMLSuperoverlay -- KMLSuperoverlay</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kro.html">KRO -- KOLOR Raw format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ktx2.html">KTX2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lan.html">LAN -- Erdas 7.x .LAN and .GIS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="l1b.html">L1B -- NOAA Polar Orbiter Level 1b Data Set (AVHRR)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lcp.html">LCP -- FARSITE v.4 LCP Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="leveller.html">Leveller -- Daylon Leveller Heightfield</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loslas.html">LOSLAS -- NADCON .los/.las Datum Grid Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="map.html">MAP -- OziExplorer .MAP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="marfa.html">MRF -- Meta Raster Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mbtiles.html">MBTiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mem.html">MEM -- In Memory Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mff.html">MFF -- Vexcel MFF Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mff2.html">MFF2 -- Vexcel MFF2 Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mrsid.html">MrSID -- Multi-resolution Seamless Image Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="msg.html">MSG -- Meteosat Second Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="msgn.html">MSGN -- Meteosat Second Generation (MSG) Native Archive Format (.nat)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ndf.html">NDF -- NLAPS Data Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="netcdf.html">NetCDF: Network Common Data Form</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ngsgeoid.html">NGSGEOID - NOAA NGS Geoid Height Grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ngw.html">NGW -- NextGIS Web</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nitf.html">NITF -- National Imagery Transmission Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="noaa_b.html">NOAA_B -- NOAA GEOCON/NADCON5 .b format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nsidcbin.html">NSIDCbin -- National Snow and Ice Data Centre Sea Ice Concentrations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ntv2.html">NTv2 -- NTv2 Datum Grid Shift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nwtgrd.html">NWT_GRD/NWT_GRC -- Northwood/Vertical Mapper File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ogcapi.html">OGCAPI -- OGC API Tiles / Maps / Coverage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="openfilegdb.html">ESRI File Geodatabase raster (OpenFileGDB)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ozi.html">OZI -- OZF2/OZFX3 raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="palsar.html">JAXA PALSAR Processed Products</a></li>
+<li class="toctree-l2"><a class="reference internal" href="paux.html">PAux -- PCI .aux Labelled Raw Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pcidsk.html">PCIDSK -- PCI Geomatics Database File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pcraster.html">PCRaster -- PCRaster raster file format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pdf.html">PDF -- Geospatial PDF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pds.html">PDS -- Planetary Data System v3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pds4.html">PDS4 -- NASA Planetary Data System (Version 4)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plmosaic.html">PLMosaic (Planet Labs Mosaics API)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="png.html">PNG -- Portable Network Graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pnm.html">PNM -- Netpbm (.pgm, .ppm)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="postgisraster.html">PostGISRaster -- PostGIS Raster driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prf.html">PHOTOMOD Raster File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasterlite.html">Rasterlite - Rasters in SQLite DB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rasterlite2.html">RasterLite2 - Rasters in SQLite DB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="r.html">R -- R Object Data Store</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rdb.html">RDB - <em>RIEGL</em> Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rik.html">RIK -- Swedish Grid Maps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rmf.html">RMF -- Raster Matrix Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="roi_pac.html">ROI_PAC -- ROI_PAC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rpftoc.html">RPFTOC -- Raster Product Format/RPF (a.toc)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rraster.html">RRASTER -- R Raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rs2.html">RS2 -- RadarSat 2 XML Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s102.html">S102 -- S-102 Bathymetric Surface Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s104.html">S104 -- S-104 Water Level Information for Surface Navigation Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s111.html">S111 -- S-111 Surface Currents Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="safe.html">SAFE -- Sentinel-1 SAFE XML Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sar_ceos.html">SAR_CEOS -- CEOS SAR Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sdat.html">SAGA -- SAGA GIS Binary Grid File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sdts.html">SDTS -- USGS SDTS DEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sentinel2.html">SENTINEL2 -- Sentinel-2 Products</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sgi.html">SGI -- SGI Image Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sigdem.html">SIGDEM -- Scaled Integer Gridded DEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="snodas.html">SNODAS -- Snow Data Assimilation System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="srp.html">SRP -- Standard Product Format (ASRP/USRP) (.gen)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="srtmhgt.html">SRTMHGT -- SRTM HGT Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stacit.html">STACIT - Spatio-Temporal Asset Catalog Items</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stacta.html">STACTA - Spatio-Temporal Asset Catalog Tiled Assets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="terragen.html">Terragen -- Terragen™ Terrain File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tga.html">TGA -- TARGA Image File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="til.html">TIL -- EarthWatch/DigitalGlobe .TIL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.html">TileDB - TileDB raster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tsx.html">TSX --  TerraSAR-X Product</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usgsdem.html">USGSDEM -- USGS ASCII DEM (and CDED)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vicar.html">VICAR -- VICAR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vrt.html">VRT -- GDAL Virtual Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wcs.html">WCS -- OGC Web Coverage Service</a></li>
+<li class="toctree-l2"><a class="reference internal" href="webp.html">WEBP - WEBP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wms.html">WMS -- Web Map Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wmts.html">WMTS -- OGC Web Map Tile Service</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xpm.html">XPM -- X11 Pixmap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xyz.html">XYZ -- ASCII Gridded XYZ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="zarr.html">Zarr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="zmap.html">ZMap -- ZMap Plus Grid</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sponsors/index.html">Sponsors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Raster drivers</a> &raquo;</li>
+      
+      <li>GTI -- GDAL Raster Tile Index</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit/master/doc/source/drivers/raster/gti.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="gtiff.html" class="btn btn-neutral float-right" title="GTiff -- GeoTIFF File Format" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gta.html" class="btn btn-neutral float-left" title="GTA - Generic Tagged Arrays" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gti-gdal-raster-tile-index">
+<span id="raster-gti"></span><h1>GTI -- GDAL Raster Tile Index<a class="headerlink" href="#gti-gdal-raster-tile-index" title="Link to this heading"></a></h1>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 3.9.</span></p>
+</div>
+<div class="admonition shortname" id="shortname-0">
+<p class="admonition-title">Driver short name</p>
+<p>GTI</p>
+</div>
+<div class="admonition built_in_by_default" id="built_in_by_default-0">
+<p class="admonition-title">Driver built-in by default</p>
+<p>This driver is built-in by default</p>
+</div>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading"></a></h2>
+<p>The GTI driver is a driver that allows to handle catalogs with a large
+number of raster files (called &quot;tiles&quot; in the rest of this document, even if a
+regular tiling is not required by the driver), and build a virtual mosaic from
+them. Each tile may be in any GDAL supported raster format, and be a file
+stored on a regular filesystem, or any GDAL supported virtual filesystem (for
+raster drivers that support such files).</p>
+<p>This driver offers similar functionality as the <a class="reference internal" href="vrt.html#raster-vrt"><span class="std std-ref">VRT</span></a>
+driver with the following main differences:</p>
+<ul class="simple">
+<li><p>The tiles are listed as features of any GDAL supported vector format. Use of
+formats with efficient spatial filtering is recommended, such as
+<a class="reference internal" href="../vector/gpkg.html#vector-gpkg"><span class="std std-ref">GeoPackage</span></a>, <a class="reference internal" href="../vector/flatgeobuf.html#vector-flatgeobuf"><span class="std std-ref">FlatGeoBuf</span></a> or
+<a class="reference internal" href="../vector/pg.html#vector-pg"><span class="std std-ref">PostGIS</span></a>. The GTI driver can thus use a larger number of
+tiles than the VRT driver (hundreds of thousands or more), provided the
+underlying vector format is efficient.</p></li>
+<li><p>The tiles may have different SRS. The GTI driver is capable of on-the-fly
+reprojection</p></li>
+<li><p>The GTI driver offers control on the order in which tiles are composited,
+when they overlap (z-order)</p></li>
+<li><p>The GTI driver honours the mask/alpha band when compositing together
+overlapping tiles.</p></li>
+<li><p>Contrary to the VRT driver, the GTI driver does not enable to alter
+characteristics of referenced tiles, such as their georeferencing, nodata value,
+etc. If such behavior is desired, the tiles must be for example wrapped
+individually in a VRT file before being referenced in the GTI index.</p></li>
+</ul>
+</section>
+<section id="connection-strings">
+<h2>Connection strings<a class="headerlink" href="#connection-strings" title="Link to this heading"></a></h2>
+<p>The GTI driver accepts different types of connection strings:</p>
+<ul>
+<li><p>a vector file in GeoPackage format with a <code class="docutils literal notranslate"><span class="pre">.gti.gpkg</span></code> extension, or in
+FlatGeoBuf format with a <code class="docutils literal notranslate"><span class="pre">.gti.fgb</span></code> extension, meeting the minimum requirements
+for a GTI compatible tile index, detailed later.</p>
+<p>For example: <code class="docutils literal notranslate"><span class="pre">tileindex.gti.gpkg</span></code></p>
+<p>Starting with GDAL 3.10, specifying the <code class="docutils literal notranslate"><span class="pre">-if</span> <span class="pre">GTI</span></code> option to command line utilities
+accepting it, or <code class="docutils literal notranslate"><span class="pre">GTI</span></code> as the only value of the <code class="docutils literal notranslate"><span class="pre">papszAllowedDrivers</span></code> of
+<a class="reference internal" href="../../api/raster_c_api.html#_CPPv410GDALOpenExPKcjPPCKcPPCKcPPCKc" title="GDALOpenEx"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALOpenEx()</span></code></a>, also forces the driver to recognize the passed filename
+if its extension is just <code class="docutils literal notranslate"><span class="pre">.gpkg</span></code> or <code class="docutils literal notranslate"><span class="pre">.fgb</span></code>.</p>
+</li>
+<li><p>any vector file in a GDAL supported format, with its filename (or connection
+string prefixed with <code class="docutils literal notranslate"><span class="pre">GTI:</span></code></p>
+<p>For example: <code class="docutils literal notranslate"><span class="pre">GTI:tileindex.shp</span></code> or <code class="docutils literal notranslate"><span class="pre">GTI:PG:database=my_db</span> <span class="pre">schema=tileindex</span></code></p>
+</li>
+<li><p>a XML file, following the below GTI XML format, generally with the
+recommended <code class="docutils literal notranslate"><span class="pre">.gti</span></code> extension, referencing a vector file. Using such
+XML file may be more practical for tile indexes not stored in a file, or
+if some additional metadata must be defined at the dataset or band level of
+the virtual mosaic.</p>
+<p>For example: <code class="docutils literal notranslate"><span class="pre">tileindex.gti</span></code></p>
+</li>
+</ul>
+</section>
+<section id="tile-index-requirements">
+<h2>Tile index requirements<a class="headerlink" href="#tile-index-requirements" title="Link to this heading"></a></h2>
+<p>The minimum requirements for a GTI compatible tile index is to be a
+vector format supported by GDAL, with a geometry column storing polygons with
+the extent of the tiles, and an attribute field of type string, storing the
+path to each tile. The default name for this attribute field is <code class="docutils literal notranslate"><span class="pre">location</span></code>.
+If relative filenames are stored in the tile index, they are considered to
+be relative to the path of the tile index.</p>
+<p>In addition, for formats that can store layer metadata (GeoPackage, FlatGeoBuf,
+PostGIS, ...), the following layer metadata items may be set:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">RESX=&lt;float&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">RESY=&lt;float&gt;</span></code>: resolution along X and Y axis,
+in SRS units / pixel.</p>
+<p>Setting those metadata items is recommended, otherwise
+the driver will try to open one of the tiles referenced in the tile index,
+and use its resolution as the resolution for the mosaic.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BAND_COUNT=&lt;int&gt;</span></code>: number of bands of the virtual mosaic. The tiles
+stored in an index should generally have the same number of bands.</p>
+<p>Setting that metadata item is recommended, otherwise
+the driver will try to open one of the tiles referenced in the tile index, and
+use it as the number of bands for the mosaic.</p>
+<p>A mix of tiles with N and N+1 bands is allowed, provided that the color
+interpretation of the (N+1)th band is alpha. The N+1 value must be written
+as the band count in that situation.</p>
+<p>If tiles contains a single band with a color table, and that the color table
+may differ among tiles, BAND_COUNT should be set to 3 (resp. 4) to perform
+expansion to Red, Green, Blue components (resp. Red, Green, Blue, Alpha).
+If the color table is identical between the tiles, and it is desired to
+preserve it, the VRRTI XML file format may be used to include the ColorTable
+element.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DATA_TYPE=&lt;val&gt;</span></code>: data type of the tiles of the tile index
+<code class="docutils literal notranslate"><span class="pre">Byte</span></code>, <code class="docutils literal notranslate"><span class="pre">Int8</span></code>, <code class="docutils literal notranslate"><span class="pre">UInt16</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Int16</span></code>, <code class="docutils literal notranslate"><span class="pre">UInt32</span></code>, <code class="docutils literal notranslate"><span class="pre">Int32</span></code>, <code class="docutils literal notranslate"><span class="pre">UInt64</span></code>, <code class="docutils literal notranslate"><span class="pre">Int64</span></code>, <code class="docutils literal notranslate"><span class="pre">Float32</span></code>, <code class="docutils literal notranslate"><span class="pre">Float64</span></code>, <code class="docutils literal notranslate"><span class="pre">CInt16</span></code>,
+<code class="docutils literal notranslate"><span class="pre">CInt32</span></code>, <code class="docutils literal notranslate"><span class="pre">CFloat32</span></code> or <code class="docutils literal notranslate"><span class="pre">CFloat64</span></code></p>
+<p>Setting that metadata item is recommended, otherwise
+the driver will try to open one of the tiles referenced in the tile index, and
+use it as the data type for the mosaic.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NODATA=&lt;val&gt;[,&lt;val]...</span></code>: nodata value of the bands of the virtual mosaic.</p>
+<p>Note that source tiles may have or may not have a nodata value themselves,
+and it may be different than the nodata value of the virtual mosaic.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MINX=&lt;float&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">MINY=&lt;float&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">MAXX=&lt;float&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">MAXY=&lt;float&gt;</span></code>:
+defines the extent of the virtual mosaic.</p>
+<p>For vector formats that have efficient retrieval of the layer extent, setting
+those items is not needed.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GEOTRANSFORM=&lt;gt0&gt;,&lt;gt1&gt;,&lt;gt2&gt;,&lt;gt3&gt;,&lt;gt4&gt;,&lt;gt5&gt;</span></code>: defines the GeoTransform.
+Used together with <code class="docutils literal notranslate"><span class="pre">XSIZE</span></code> and <code class="docutils literal notranslate"><span class="pre">YSIZE</span></code>, this is an alternate way of
+defining the extent and resolution os the virtual mosaic.</p>
+<p>It is not necessary to define this item if <code class="docutils literal notranslate"><span class="pre">RESX=</span></code> and <code class="docutils literal notranslate"><span class="pre">RESY</span></code> are set
+(potentially accompanied with <code class="docutils literal notranslate"><span class="pre">MINX</span></code>, <code class="docutils literal notranslate"><span class="pre">MINY</span></code>, <code class="docutils literal notranslate"><span class="pre">MAXX</span></code> and <code class="docutils literal notranslate"><span class="pre">MAXY</span></code>)</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">XSIZE=&lt;int&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">YSIZE=&lt;int&gt;</span></code>: size of the virtual mosaic in pixel.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">COLOR_INTERPRETATION=&lt;val&gt;[,&lt;val]...</span></code>: color interpretation of the bands
+of the mosaic. Possible values are <code class="docutils literal notranslate"><span class="pre">red</span></code>, <code class="docutils literal notranslate"><span class="pre">green</span></code>, <code class="docutils literal notranslate"><span class="pre">blue</span></code>, <code class="docutils literal notranslate"><span class="pre">alpha</span></code>,
+<code class="docutils literal notranslate"><span class="pre">undefined</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SRS=&lt;string&gt;</span></code>: defines the SRS of the virtual mosaic, using any value
+supported by the <a class="reference internal" href="../../api/ogrspatialref.html#_CPPv4N19OGRSpatialReference16SetFromUserInputEPKc" title="OGRSpatialReference::SetFromUserInput"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRSpatialReference::SetFromUserInput()</span></code></a> call, which
+includes EPSG Projected, Geographic or Compound CRS (i.e. EPSG:4296), a
+well known text (WKT) CRS definition, PROJ.4 declarations, etc.</p>
+<p>It is not necessary to define this element if the virtual mosaic SRS is
+recorded as the SRS of the vector layer of the tile index.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LOCATION_FIELD=&lt;string&gt;</span></code>: name of the field where the tile location is
+stored. Defaults to <code class="docutils literal notranslate"><span class="pre">location</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SORT_FIELD=&lt;string&gt;</span></code>: name of a field to use to control the order in which
+tiles are composited, when they overlap (z-order). That field may be of
+type String, Integer, Integer64, Date or DateTime. By default, the higher the
+value in that field, the last the corresponding tile will be rendered in the
+virtual mosaic (unless SORT_FIELD_ASC=NO is set)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SORT_FIELD_ASC=YES|NO</span></code>: whether the values in SORT_FIELD should be sorted
+in ascendent or descent order. Defaults to YES (ascendent)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BLOCKXSIZE=&lt;int&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">BLOCKYSIZE=&lt;int&gt;</span></code>: Block size of bands of the
+virtual mosaic. Defaults to 256x256.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MASK_BAND=YES|NO</span></code>: whether a dataset-level mask band should be exposed.
+Defaults to NO.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RESAMPLING=&lt;val&gt;</span></code>: Resampling method to use for on-the-fly reprojection,
+or rendering of tiles whose origin coordinates are not at an offset multiple
+of the resolution of the mosaic compared to the origin of the mosaic. In that
+later case, RESAMPLING is only taken into account when requesting pixels with
+the default nearest resampling mode.</p>
+<p>Possible values: <code class="docutils literal notranslate"><span class="pre">nearest</span></code>, <code class="docutils literal notranslate"><span class="pre">cubic</span></code>, <code class="docutils literal notranslate"><span class="pre">cubicspline</span></code>, <code class="docutils literal notranslate"><span class="pre">lanczos</span></code>, <code class="docutils literal notranslate"><span class="pre">average</span></code>, <code class="docutils literal notranslate"><span class="pre">rms</span></code>, <code class="docutils literal notranslate"><span class="pre">gauss</span></code></p>
+<p>Defaults to <code class="docutils literal notranslate"><span class="pre">nearest</span></code></p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BAND_&lt;number&gt;_OFFSET=&lt;val&gt;</span></code> where number is an integer index starting at 1.</p>
+<p>Additive offset to apply to the raw numbers of the band.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BAND_&lt;number&gt;_SCALE=&lt;val&gt;</span></code> where number is an integer index starting at 1.</p>
+<p>Multiplicative factor to apply to the raw numbers of the band.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BAND_&lt;number&gt;_UNITTYPE=&lt;val&gt;</span></code> where number is an integer index starting at 1.</p>
+<p>Unit of the band.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OVERVIEW_&lt;idx&gt;_DATASET=&lt;string&gt;</span></code> where idx is an integer index starting at 0.</p>
+<p>Name of the dataset to use as the first overview level. This may be a
+raster dataset (for example a GeoTIFF file, or another GTI dataset).
+This may also be a vector dataset with a GTI compatible layer, potentially
+specified with <code class="docutils literal notranslate"><span class="pre">OVERVIEW_&lt;idx&gt;_LAYER</span></code>.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OVERVIEW_&lt;idx&gt;_OPEN_OPTIONS=&lt;key1=value1&gt;[,key2=value2]...</span></code> where idx is an integer index starting at 0.</p>
+<p>Open options(s) to use to open <code class="docutils literal notranslate"><span class="pre">OVERVIEW_&lt;idx&gt;_DATASET</span></code>.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OVERVIEW_&lt;idx&gt;_LAYER=&lt;string&gt;</span></code> where idx is an integer index starting at 0.</p>
+<p>Name of the vector layer to use as the first overview level, assuming
+<code class="docutils literal notranslate"><span class="pre">OVERVIEW_&lt;idx&gt;_DATASET</span></code> points to a vector dataset. <code class="docutils literal notranslate"><span class="pre">OVERVIEW_&lt;idx&gt;_DATASET</span></code>
+may also not be specified, in which case the vector dataset of the full
+resolution virtual mosaic is used.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OVERVIEW_&lt;idx&gt;_FACTOR=&lt;int&gt;</span></code> where idx is an integer index starting at 0.</p>
+<p>Sub-sampling factor, strictly greater than 1. If <code class="docutils literal notranslate"><span class="pre">OVERVIEW_&lt;idx&gt;_DATASET</span></code>
+and <code class="docutils literal notranslate"><span class="pre">OVERVIEW_&lt;idx&gt;_LAYER</span></code> are not specified, then all tiles of the full
+resolution virtual mosaic are used, with the specified sub-sampling factor
+(it is recommended, but not required, that those tiles do have a corresponding overview).
+<code class="docutils literal notranslate"><span class="pre">OVERVIEW_&lt;idx&gt;_DATASET</span></code> and/or <code class="docutils literal notranslate"><span class="pre">OVERVIEW_&lt;idx&gt;_LAYER</span></code> may also be
+specified to point to another tile index.</p>
+</li>
+</ul>
+<p>All overviews <em>must</em> have exactly the same extent as the full resolution
+virtual mosaic. The GTI driver does not check that, and if that condition is
+not met, subsampled pixel request will lead to incorrect result.</p>
+<p>In addition to those layer metadata items, the dataset-level metadata item
+<code class="docutils literal notranslate"><span class="pre">TILE_INDEX_LAYER</span></code> may be set to indicate, for dataset with multiple layers,
+which one should be used as the tile index layer.</p>
+<p>Alternatively to setting those metadata items individually, the corresponding
+information can be grouped together in a GTI XML document, attached in the
+<code class="docutils literal notranslate"><span class="pre">xml:GTI</span></code> metadata domain of the layer (for drivers that support alternate
+metadata domains such as GeoPackage)</p>
+</section>
+<section id="gti-xml-format">
+<h2>GTI XML format<a class="headerlink" href="#gti-xml-format" title="Link to this heading"></a></h2>
+<p>A <a class="reference external" href="https://raw.githubusercontent.com/OSGeo/gdal/master/data/gdaltileindex.xsd">XML schema of the GDAL GTI format</a>
+is available.</p>
+<p>The following artificial example contains all potential elements and attributes.
+A number of them have similar name and same semantics as layer metadata items
+mentioned in the previous section.</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;GDALTileIndexDataset&gt;</span>
+<span class="w">    </span><span class="nt">&lt;IndexDataset&gt;</span>PG:dbname=my_db<span class="nt">&lt;/IndexDataset&gt;</span><span class="w">   </span><span class="cm">&lt;!-- required for stanalone XML GTI files. Ignored if embedded in the xml:GTI metadata domain of the layer  --&gt;</span>
+<span class="w">    </span><span class="nt">&lt;IndexLayer&gt;</span>my_layer<span class="nt">&lt;/IndexLayer&gt;</span><span class="w">              </span><span class="cm">&lt;!-- optional, but required if there are multiple layers in IndexDataset --&gt;</span>
+<span class="w">    </span><span class="nt">&lt;Filter&gt;</span>pub_date<span class="w"> </span>&gt;=<span class="w"> </span>&#39;2023/12/01&#39;<span class="nt">&lt;/Filter&gt;</span><span class="w">      </span><span class="cm">&lt;!-- optional --&gt;</span>
+<span class="w">    </span><span class="nt">&lt;SortField&gt;</span>pub_date<span class="nt">&lt;/SortField&gt;</span><span class="w">                </span><span class="cm">&lt;!-- optional --&gt;</span>
+<span class="w">    </span><span class="nt">&lt;SortFieldAsc&gt;</span>true<span class="nt">&lt;/SortFieldAsc&gt;</span><span class="w">              </span><span class="cm">&lt;!-- optional --&gt;</span>
+<span class="w">    </span><span class="nt">&lt;SRS&gt;</span>EPSG:4326<span class="nt">&lt;/SRS&gt;</span><span class="w">                           </span><span class="cm">&lt;!-- optional --&gt;</span>
+<span class="w">    </span><span class="nt">&lt;ResX&gt;</span>60<span class="nt">&lt;/ResX&gt;</span><span class="w">                                </span><span class="cm">&lt;!-- optional, but recommended --&gt;</span>
+<span class="w">    </span><span class="nt">&lt;ResY&gt;</span>60<span class="nt">&lt;/ResY&gt;</span><span class="w">                                </span><span class="cm">&lt;!-- optional, but recommended --&gt;</span>
+<span class="w">    </span><span class="nt">&lt;MinX&gt;</span>0<span class="nt">&lt;/MinX&gt;</span><span class="w">                                 </span><span class="cm">&lt;!-- optional --&gt;</span>
+<span class="w">    </span><span class="nt">&lt;MinY&gt;</span>1<span class="nt">&lt;/MinY&gt;</span><span class="w">                                 </span><span class="cm">&lt;!-- optional --&gt;</span>
+<span class="w">    </span><span class="nt">&lt;MaxX&gt;</span>2<span class="nt">&lt;/MaxX&gt;</span><span class="w">                                 </span><span class="cm">&lt;!-- optional --&gt;</span>
+<span class="w">    </span><span class="nt">&lt;MaxY&gt;</span>3<span class="nt">&lt;/MaxY&gt;</span><span class="w">                                 </span><span class="cm">&lt;!-- optional --&gt;</span>
+<span class="w">    </span><span class="nt">&lt;GeoTransform&gt;</span>2,1,0,49,0,-1<span class="nt">&lt;/GeoTransform&gt;</span><span class="w">     </span><span class="cm">&lt;!-- optional --&gt;</span>
+<span class="w">    </span><span class="nt">&lt;XSize&gt;</span>2048<span class="nt">&lt;/XSize&gt;</span><span class="w">                            </span><span class="cm">&lt;!-- optional --&gt;</span>
+<span class="w">    </span><span class="nt">&lt;YSize&gt;</span>1024<span class="nt">&lt;/YSize&gt;</span><span class="w">                            </span><span class="cm">&lt;!-- optional --&gt;</span>
+<span class="w">    </span><span class="nt">&lt;BlockXSize&gt;</span>256<span class="nt">&lt;/BlockXSize&gt;</span><span class="w">                   </span><span class="cm">&lt;!-- optional --&gt;</span>
+<span class="w">    </span><span class="nt">&lt;BlockYSize&gt;</span>256<span class="nt">&lt;/BlockYSize&gt;</span><span class="w">                   </span><span class="cm">&lt;!-- optional --&gt;</span>
+<span class="w">    </span><span class="nt">&lt;Resampling&gt;</span>Cubic<span class="nt">&lt;/Resampling&gt;</span><span class="w">                 </span><span class="cm">&lt;!-- optional --&gt;</span>
+<span class="w">    </span><span class="nt">&lt;BandCount&gt;</span>1<span class="nt">&lt;/BandCount&gt;</span><span class="w">                       </span><span class="cm">&lt;!-- optional, not needed if Band elements are defined --&gt;</span>
+
+<span class="w">    </span><span class="cm">&lt;!-- Band is optional, but recommended. Repeated as many times as there are bands --&gt;</span>
+<span class="w">    </span><span class="cm">&lt;!-- The &quot;band&quot; attribute is required --&gt;</span>
+<span class="w">    </span><span class="cm">&lt;!-- The &quot;dataType&quot; attribute is optional, but recommended --&gt;</span>
+<span class="w">    </span><span class="nt">&lt;Band</span><span class="w"> </span><span class="na">band=</span><span class="s">&quot;1&quot;</span><span class="w"> </span><span class="na">dataType=</span><span class="s">&quot;Byte&quot;</span><span class="nt">&gt;</span>
+<span class="w">        </span><span class="nt">&lt;Description&gt;</span>my<span class="w"> </span>band<span class="nt">&lt;/Description&gt;</span><span class="w">         </span><span class="cm">&lt;!-- optional --&gt;</span>
+<span class="w">        </span><span class="nt">&lt;Offset&gt;</span>2<span class="nt">&lt;/Offset&gt;</span><span class="w">                         </span><span class="cm">&lt;!-- optional --&gt;</span>
+<span class="w">        </span><span class="nt">&lt;Scale&gt;</span>3<span class="nt">&lt;/Scale&gt;</span><span class="w">                           </span><span class="cm">&lt;!-- optional --&gt;</span>
+<span class="w">        </span><span class="nt">&lt;NoDataValue&gt;</span>4<span class="nt">&lt;/NoDataValue&gt;</span><span class="w">               </span><span class="cm">&lt;!-- optional --&gt;</span>
+<span class="w">        </span><span class="nt">&lt;UnitType&gt;</span>dn<span class="nt">&lt;/UnitType&gt;</span><span class="w">                    </span><span class="cm">&lt;!-- optional --&gt;</span>
+<span class="w">        </span><span class="nt">&lt;ColorInterp&gt;</span>Gray<span class="nt">&lt;/ColorInterp&gt;</span><span class="w">            </span><span class="cm">&lt;!-- optional --&gt;</span>
+<span class="w">        </span><span class="nt">&lt;ColorTable&gt;</span><span class="w">                               </span><span class="cm">&lt;!-- optional --&gt;</span>
+<span class="w">            </span><span class="nt">&lt;Entry</span><span class="w"> </span><span class="na">c1=</span><span class="s">&quot;1&quot;</span><span class="w"> </span><span class="na">c2=</span><span class="s">&quot;2&quot;</span><span class="w"> </span><span class="na">c3=</span><span class="s">&quot;3&quot;</span><span class="w"> </span><span class="na">c4=</span><span class="s">&quot;255&quot;</span><span class="nt">/&gt;</span>
+<span class="w">        </span><span class="nt">&lt;/ColorTable&gt;</span>
+<span class="w">        </span><span class="nt">&lt;CategoryNames&gt;</span><span class="w">                            </span><span class="cm">&lt;!-- optional --&gt;</span>
+<span class="w">            </span><span class="nt">&lt;Category&gt;</span>cat<span class="nt">&lt;/Category&gt;</span>
+<span class="w">        </span><span class="nt">&lt;/CategoryNames&gt;</span>
+<span class="w">        </span><span class="nt">&lt;GDALRasterAttributeTable&gt;</span><span class="cm">&lt;!--... --&gt;</span><span class="nt">&lt;/GDALRasterAttributeTable&gt;</span><span class="w">  </span><span class="cm">&lt;!-- optional --&gt;</span>
+<span class="w">        </span><span class="nt">&lt;Metadata&gt;</span><span class="w">                                 </span><span class="cm">&lt;!-- optional --&gt;</span>
+<span class="w">            </span><span class="nt">&lt;MDI</span><span class="w"> </span><span class="na">key=</span><span class="s">&quot;FOO&quot;</span><span class="nt">&gt;</span>BAR<span class="nt">&lt;/MDI&gt;</span>
+<span class="w">        </span><span class="nt">&lt;/Metadata&gt;</span>
+<span class="w">        </span><span class="nt">&lt;Metadata</span><span class="w"> </span><span class="na">domain=</span><span class="s">&quot;other_domain&quot;</span><span class="nt">&gt;</span><span class="w">           </span><span class="cm">&lt;!-- optional --&gt;</span>
+<span class="w">            </span><span class="nt">&lt;MDI</span><span class="w"> </span><span class="na">key=</span><span class="s">&quot;FOO&quot;</span><span class="nt">&gt;</span>BAR<span class="nt">&lt;/MDI&gt;</span>
+<span class="w">        </span><span class="nt">&lt;/Metadata&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/Band&gt;</span>
+
+<span class="w">    </span><span class="nt">&lt;Metadata&gt;</span><span class="w">                                     </span><span class="cm">&lt;!-- optional --&gt;</span>
+<span class="w">        </span><span class="nt">&lt;MDI</span><span class="w"> </span><span class="na">key=</span><span class="s">&quot;FOO&quot;</span><span class="nt">&gt;</span>BAR<span class="nt">&lt;/MDI&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/Metadata&gt;</span>
+<span class="w">    </span><span class="nt">&lt;Metadata</span><span class="w"> </span><span class="na">domain=</span><span class="s">&quot;other_domain&quot;</span><span class="nt">&gt;</span><span class="w">               </span><span class="cm">&lt;!-- optional --&gt;</span>
+<span class="w">        </span><span class="nt">&lt;MDI</span><span class="w"> </span><span class="na">key=</span><span class="s">&quot;FOO&quot;</span><span class="nt">&gt;</span>BAR<span class="nt">&lt;/MDI&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/Metadata&gt;</span>
+
+<span class="w">    </span><span class="nt">&lt;Overview&gt;</span><span class="w">                                     </span><span class="cm">&lt;!-- optional --&gt;</span>
+<span class="w">        </span><span class="cm">&lt;!-- 1st overview level will reuse the tile index of the</span>
+<span class="cm">             IndexDataset and IndexLayer elements, with all tiles considered</span>
+<span class="cm">             downsampled by a factor of 2 --&gt;</span>
+<span class="w">        </span><span class="nt">&lt;Factor&gt;</span>2<span class="nt">&lt;/Factor&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/Overview&gt;</span>
+<span class="w">    </span><span class="nt">&lt;Overview&gt;</span><span class="w">                                     </span><span class="cm">&lt;!-- optional --&gt;</span>
+<span class="w">        </span><span class="cm">&lt;!-- 2nd overview level will reuse the tile index of the</span>
+<span class="cm">             IndexDataset and IndexLayer elements, with all tiles considered</span>
+<span class="cm">             downsampled by a factor of 4 --&gt;</span>
+<span class="w">        </span><span class="nt">&lt;Factor&gt;</span>4<span class="nt">&lt;/Factor&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/Overview&gt;</span>
+<span class="w">    </span><span class="nt">&lt;Overview&gt;</span><span class="w">                                     </span><span class="cm">&lt;!-- optional --&gt;</span>
+<span class="w">        </span><span class="cm">&lt;!-- 3rd overview level (and potentially 4th, 5th... depending on</span>
+<span class="cm">             the number of overview levels in the pointed GeoTIFF file)</span>
+<span class="cm">        --&gt;</span>
+<span class="w">        </span><span class="nt">&lt;Dataset&gt;</span>some.tif<span class="nt">&lt;/Dataset&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/Overview&gt;</span>
+<span class="w">    </span><span class="nt">&lt;Overview&gt;</span><span class="w">                                     </span><span class="cm">&lt;!-- optional --&gt;</span>
+<span class="w">        </span><span class="cm">&lt;!-- Last overview level points to another GTI dataset --&gt;</span>
+<span class="w">        </span><span class="nt">&lt;Dataset&gt;</span>other.gti.gpkg<span class="nt">&lt;/Dataset&gt;</span>
+<span class="w">        </span><span class="nt">&lt;Layer&gt;</span>other_layer<span class="nt">&lt;/Layer&gt;</span>
+<span class="w">        </span><span class="nt">&lt;OpenOptions&gt;</span><span class="w">                              </span><span class="cm">&lt;!-- optional --&gt;</span>
+<span class="w">            </span><span class="nt">&lt;OOI</span><span class="w"> </span><span class="na">key=</span><span class="s">&quot;XMIN&quot;</span><span class="nt">&gt;</span>0<span class="nt">&lt;/OOI&gt;</span>
+<span class="w">            </span><span class="nt">&lt;OOI</span><span class="w"> </span><span class="na">key=</span><span class="s">&quot;YMIN&quot;</span><span class="nt">&gt;</span>1<span class="nt">&lt;/OOI&gt;</span>
+<span class="w">            </span><span class="nt">&lt;OOI</span><span class="w"> </span><span class="na">key=</span><span class="s">&quot;XMAX&quot;</span><span class="nt">&gt;</span>2<span class="nt">&lt;/OOI&gt;</span>
+<span class="w">            </span><span class="nt">&lt;OOI</span><span class="w"> </span><span class="na">key=</span><span class="s">&quot;YMAX&quot;</span><span class="nt">&gt;</span>3<span class="nt">&lt;/OOI&gt;</span>
+<span class="w">        </span><span class="nt">&lt;/OpenOptions&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/Overview&gt;</span>
+
+<span class="nt">&lt;/GDALTileIndexDataset&gt;</span>
+</pre></div>
+</div>
+<p>At the GDALTileIndexDataset level, the elements specific to GTI XML are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Filter</span></code>: value of a SQL WHERE clause, used to select a subset of the
+features of the index.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BlockXSize</span></code> / <code class="docutils literal notranslate"><span class="pre">BlockYSize</span></code>: dimension of the block size of bands.
+Defaults to 256x256</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Metadata</span></code>: defines dataset-level metadata. You can refer to the
+documentation of the <a class="reference internal" href="vrt.html#raster-vrt"><span class="std std-ref">VRT</span></a> driver for its syntax.</p></li>
+</ul>
+<p>At the Band level, the elements specific to GTI XML are: Description,
+Offset, Scale, UnitType, ColorTable, CategoryNames, GDALRasterAttributeTable,
+Metadata.
+You can refer to the documentation of the <a class="reference internal" href="vrt.html#raster-vrt"><span class="std std-ref">VRT</span></a> driver for
+their syntax and semantics.</p>
+</section>
+<section id="how-to-build-a-gti-comptatible-index">
+<h2>How to build a GTI comptatible index ?<a class="headerlink" href="#how-to-build-a-gti-comptatible-index" title="Link to this heading"></a></h2>
+<p>The <a class="reference internal" href="../../programs/gdaltindex.html#gdaltindex"><span class="std std-ref">gdaltindex</span></a> program may be used to generate both a vector tile index,
+and optionally a wrapping .gti XML file.</p>
+<p>A GTI comptatible index may also be created by any programmatic means, provided
+the above format specifications are met.</p>
+</section>
+<section id="open-options">
+<h2>Open options<a class="headerlink" href="#open-options" title="Link to this heading"></a></h2>
+<p>Open options can be specified in command-line tools using the syntax <code class="docutils literal notranslate"><span class="pre">-oo</span> <span class="pre">&lt;NAME&gt;=&lt;VALUE&gt;</span></code> or by providing the appropriate arguments to <a class="reference internal" href="../../api/raster_c_api.html#_CPPv410GDALOpenExPKcjPPCKcPPCKcPPCKc" title="GDALOpenEx"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALOpenEx()</span></code></a> (C) or <a class="reference internal" href="../../api/python/raster_api.html#osgeo.gdal.OpenEx" title="osgeo.gdal.OpenEx"><code class="xref py py-meth docutils literal notranslate"><span class="pre">gdal.OpenEx</span></code></a> (Python).
+The following open options are available. Most of them can be
+also defined as layer metadata items or in the .gti XML file</p>
+<ul class="simple">
+<li><p id="drivers/raster/gti-oo-LAYER"><strong>LAYER=&lt;string&gt;: </strong>For dataset with multiple layers, indicates which one should be used as
+the tile index layer.
+Same role as the TILE_INDEX_LAYER dataset level metadata item</p>
+</li>
+<li><p id="drivers/raster/gti-oo-LOCATION_FIELD"><strong>LOCATION_FIELD=&lt;string&gt;: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">location</span></code>. Name of the field where the tile location is stored.</p>
+</li>
+<li><p id="drivers/raster/gti-oo-SORT_FIELD"><strong>SORT_FIELD=&lt;string&gt;: </strong>Name of a field to use to control the order in which
+tiles are composited, when they overlap (z-order). That field may be of
+type String, Integer, Integer64, Date or DateTime. By default, the higher the
+value in that field, the last the corresponding tile will be rendered in the
+virtual mosaic (unless SORT_FIELD_ASC=NO is set)</p>
+</li>
+<li><p id="drivers/raster/gti-oo-SORT_FIELD_ASC"><strong>SORT_FIELD_ASC=[YES/NO]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">YES</span></code>. Whether the values in SORT_FIELD should be sorted in ascendent or descent order</p>
+</li>
+<li><p id="drivers/raster/gti-oo-FILTER"><strong>FILTER=&lt;string&gt;: </strong>Value of a SQL WHERE clause, used to select a subset of the features of the index.</p>
+</li>
+<li><p id="drivers/raster/gti-oo-RESX"><strong>RESX=&lt;float&gt;: </strong>Resolution along X axis in SRS units / pixel.</p>
+</li>
+<li><p id="drivers/raster/gti-oo-RESY"><strong>RESY=&lt;float&gt;: </strong>Resolution along Y axis in SRS units / pixel.</p>
+</li>
+<li><p id="drivers/raster/gti-oo-MINX"><strong>MINX=&lt;float&gt;: </strong>Minimum X value for the virtual mosaic extent</p>
+</li>
+<li><p id="drivers/raster/gti-oo-MINY"><strong>MINY=&lt;float&gt;: </strong>Minimum Y value for the virtual mosaic extent</p>
+</li>
+<li><p id="drivers/raster/gti-oo-MAXX"><strong>MAXX=&lt;float&gt;: </strong>Maximum X value for the virtual mosaic extent</p>
+</li>
+<li><p id="drivers/raster/gti-oo-MAXY"><strong>MAXY=&lt;float&gt;: </strong>Maximum Y value for the virtual mosaic extent</p>
+</li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="gtiff.html" class="btn btn-neutral float-right" title="GTiff -- GeoTIFF File Format" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gta.html" class="btn btn-neutral float-left" title="GTA - Generic Tagged Arrays" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2024 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+  </div>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

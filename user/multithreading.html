@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Multi-threading &mdash; GDAL  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d10597a4" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/gdal.css?v=e152ac3b" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="canonical" href="https://gdal.org/user/multithreading.html"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="OGR SQL dialect and SQLITE SQL dialect" href="ogr_sql_sqlite_dialect.html" />
+    <link rel="prev" title="Geographic Networks Data Model" href="gnm_data_model.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">User</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="raster_data_model.html">Raster Data Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multidim_raster_data_model.html">Multidimensional Raster Data Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vector_data_model.html">Vector Data Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gnm_data_model.html">Geographic Networks Data Model</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Multi-threading</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#gdal-api-re-entrant-but-not-thread-safe">GDAL API: re-entrant, but not thread-safe</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gdal-block-cache-and-multi-threading">GDAL block cache and multi-threading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ram-fragmentation-and-multi-threading">RAM fragmentation and multi-threading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gdal-and-multi-processing">GDAL and multi-processing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ogr_sql_sqlite_dialect.html">OGR SQL dialect and SQLITE SQL dialect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="virtual_file_systems.html">GDAL Virtual File Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ogr_feature_style.html">Feature Style Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coordinate_epoch.html">Coordinate epoch support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configoptions.html">Configuration options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gdal_python_utilities.html">GDAL Python Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sponsors/index.html">Sponsors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">User oriented documentation</a> &raquo;</li>
+      
+      <li>Multi-threading</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit/master/doc/source/user/multithreading.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="ogr_sql_sqlite_dialect.html" class="btn btn-neutral float-right" title="OGR SQL dialect and SQLITE SQL dialect" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gnm_data_model.html" class="btn btn-neutral float-left" title="Geographic Networks Data Model" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="multi-threading">
+<span id="multithreading"></span><h1>Multi-threading<a class="headerlink" href="#multi-threading" title="Link to this heading"></a></h1>
+<section id="gdal-api-re-entrant-but-not-thread-safe">
+<h2>GDAL API: re-entrant, but not thread-safe<a class="headerlink" href="#gdal-api-re-entrant-but-not-thread-safe" title="Link to this heading"></a></h2>
+<p>The exact meaning of the terms <code class="docutils literal notranslate"><span class="pre">thread-safe</span></code> or <code class="docutils literal notranslate"><span class="pre">re-entrant</span></code> is not fully
+standardized. We will use here the <a class="reference external" href="https://doc.qt.io/qt-5/threads-reentrancy.html">QT definitions</a>.
+In particular, a C function or C++ method is said to be re-entrant if it can
+be called simultaneously from multiple threads, <em>but</em> only if each invocation
+uses its own data.</p>
+<p>All GDAL public C functions and C++ methods are re-entrant, except:</p>
+<ul class="simple">
+<li><p>the general initialization functions, like <a class="reference internal" href="../api/raster_c_api.html#_CPPv415GDALAllRegisterv" title="GDALAllRegister"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALAllRegister()</span></code></a>.</p></li>
+<li><p>the general cleanup functions like <a class="reference internal" href="../api/raster_c_api.html#_CPPv411GDALDestroyv" title="GDALDestroy"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDestroy()</span></code></a> or <a class="reference internal" href="../api/ogr_srs_api.html#_CPPv410OSRCleanupv" title="OSRCleanup"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OSRCleanup()</span></code></a>.</p></li>
+</ul>
+<p>Those functions should not be called concurrently from several threads, and it
+is general best practice to call them from the main thread of the program at
+program initialization and termination.</p>
+<p>Unless otherwise stated, no GDAL public C functions and C++ methods should be
+assumed to be thread-safe. That is you should not call simultaneously GDAL
+functions from multiple threads on the same data instance, or even instances
+that are closely related through ownership relationships. For example, for a
+multi-band raster dataset, it is not safe to call concurrently GDAL functions
+on different <a class="reference internal" href="../api/gdalrasterband_cpp.html#_CPPv414GDALRasterBand" title="GDALRasterBand"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALRasterBand</span></code></a> instances owned by the same
+<a class="reference internal" href="../api/gdaldataset_cpp.html#_CPPv411GDALDataset" title="GDALDataset"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDataset</span></code></a> instance (each thread should instead manipulate a
+distinct GDALDataset). Similarly for a GDALDataset owning several <a class="reference internal" href="../api/ogrlayer_cpp.html#_CPPv48OGRLayer" title="OGRLayer"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRLayer</span></code></a>.</p>
+<p>The reason is that most implementations of GDALDataset or GDALRasterBand
+are stateful. A GDALDataset typically owns a file handle,
+and performs seek/read operations on it, thus not allowing concurrent access.
+Block cache related structures for a given GDALDataset are not thread-safe.
+Drivers also often implement lazy initialization strategies to access various
+metadata which are resolved only the first time the method to access them is
+invoked. Drivers may also rely on third-party libraries that expose objects
+that are not thread-safe.</p>
+<p>Those restrictions apply to the C and C++ ABI, and all languages bindings (unless
+they would take special precautions to serialize calls)</p>
+</section>
+<section id="gdal-block-cache-and-multi-threading">
+<h2>GDAL block cache and multi-threading<a class="headerlink" href="#gdal-block-cache-and-multi-threading" title="Link to this heading"></a></h2>
+<p>The current design of the GDAL raster block cache allows concurrent reads of several datasets. However performance issues may
+arise when writing several datasets from several threads, due to lock contention
+in the global structures of the block cache mechanism.</p>
+</section>
+<section id="ram-fragmentation-and-multi-threading">
+<h2>RAM fragmentation and multi-threading<a class="headerlink" href="#ram-fragmentation-and-multi-threading" title="Link to this heading"></a></h2>
+<p>It has been observed that scenarios that involve multi-threading reading or
+writing of raster datasets are prone to cause a high RAM usage, in particular
+when using the default dynamic memory allocator of Linux. Using the alternate
+<a class="reference external" href="https://github.com/google/tcmalloc">tcmalloc</a> memory allocator helps
+reducing the amount of virtual and resident memory used.</p>
+<p>For example, with Debian/Ubuntu distributions, this can be done by
+installing the <code class="docutils literal notranslate"><span class="pre">libtcmalloc-minimal4</span></code> package and running the binary that
+executes GDAL with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">LD_PRELOAD</span><span class="o">=/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">x86_64</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">gnu</span><span class="o">/</span><span class="n">libtcmalloc_minimal</span><span class="o">.</span><span class="n">so</span><span class="mf">.4</span> <span class="o">./</span><span class="n">binary</span>
+</pre></div>
+</div>
+</section>
+<section id="gdal-and-multi-processing">
+<h2>GDAL and multi-processing<a class="headerlink" href="#gdal-and-multi-processing" title="Link to this heading"></a></h2>
+<p>POSIX fork() API should not be called during the middle of a GDAL operation,
+otherwise some structures like mutexes might appear to be locked forever in the
+forked process. If multi-processing is done, we recommend that processes are
+forked before any GDAL operation is done. Operating on the same GDALDataset
+instance in several sub-processes will generally lead to wrong results due to
+the underlying file descriptors being shared.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ogr_sql_sqlite_dialect.html" class="btn btn-neutral float-right" title="OGR SQL dialect and SQLITE SQL dialect" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gnm_data_model.html" class="btn btn-neutral float-left" title="Geographic Networks Data Model" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2024 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+  </div>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

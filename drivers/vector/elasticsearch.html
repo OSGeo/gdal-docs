@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Elasticsearch: Geographically Encoded Objects for Elasticsearch &mdash; GDAL  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d10597a4" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/gdal.css?v=e152ac3b" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://gdal.org/drivers/vector/elasticsearch.html"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="ESRIJSON / FeatureService driver" href="esrijson.html" />
+    <link rel="prev" title="EDIGEO" href="edigeo.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Vector drivers</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="amigocloud.html">AmigoCloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arrow.html">(Geo)Arrow IPC File Format / Stream</a></li>
+<li class="toctree-l2"><a class="reference internal" href="avcbin.html">Arc/Info Binary Coverage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="avce00.html">Arc/Info E00 (ASCII) Coverage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cad.html">CAD -- AutoCAD DWG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="carto.html">Carto</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csv.html">Comma Separated Value (.csv)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csw.html">CSW - OGC CSW (Catalog Service for the Web)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dgn.html">Microstation DGN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dgnv8.html">Microstation DGN v8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dwg.html">AutoCAD DWG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dxf.html">AutoCAD DXF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eeda.html">Google Earth Engine Data API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="edigeo.html">EDIGEO</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Elasticsearch: Geographically Encoded Objects for Elasticsearch</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#driver-capabilities">Driver capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#opening-dataset-name-syntax">Opening dataset name syntax</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#layer-open-options">Layer open options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#elasticsearch-vs-ogr-concepts">Elasticsearch vs OGR concepts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#field-definitions">Field definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geometry-types">Geometry types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#filtering">Filtering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#paging">Paging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#schema">Schema</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#feature-id">Feature ID</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#executesql-interface">ExecuteSQL() interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#aggregations">Aggregations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#multi-target-layers">Multi-target layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#getting-metadata">Getting metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#write-support">Write support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#spatial-reference-system">Spatial reference system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#layer-creation-options">Layer creation options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configuration-options">Configuration options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#see-also">See Also</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="esrijson.html">ESRIJSON / FeatureService driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filegdb.html">ESRI File Geodatabase (FileGDB)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flatgeobuf.html">FlatGeobuf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoconcept.html">GeoConcept text export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geojson.html">GeoJSON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geojsonseq.html">GeoJSONSeq: sequence of GeoJSON features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="georss.html">GeoRSS : Geographically Encoded Objects for RSS feeds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gml.html">GML - Geography Markup Language</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gmlas.html">GMLAS - Geography Markup Language (GML) driven by application schemas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gmt.html">GMT ASCII Vectors (.gmt)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpkg.html">GPKG -- GeoPackage vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpsbabel.html">GPSBabel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpx.html">GPX - GPS Exchange Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grass.html">GRASS Vector Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gtfs.html">GTFS - General Transit Feed Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hana.html">SAP HANA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="idb.html">IDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="idrisi.html">Idrisi Vector (.VCT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ili.html">&quot;INTERLIS 1&quot; and &quot;INTERLIS 2&quot; drivers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jml.html">JML: OpenJUMP JML format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jsonfg.html">JSONFG -- OGC Features and Geometries JSON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kml.html">KML - Keyhole Markup Language</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libkml.html">LIBKML Driver (.kml .kmz)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lvbag.html">Dutch Kadaster LV BAG 2.0 Extract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mapml.html">MapML</a></li>
+<li class="toctree-l2"><a class="reference internal" href="memory.html">Memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="miramon.html">MiraMon Vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mitab.html">MapInfo TAB and MIF/MID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mongodbv3.html">MongoDBv3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mssqlspatial.html">MSSQLSpatial - Microsoft SQL Server Spatial Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mvt.html">MVT: Mapbox Vector Tiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mysql.html">MySQL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nas.html">NAS - ALKIS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="netcdf.html">NetCDF: Network Common Data Form - Vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ngw.html">NGW -- NextGIS Web</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ntf.html">UK .NTF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="oapif.html">OGC API - Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="oci.html">Oracle Spatial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="odbc.html">ODBC RDBMS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ods.html">ODS - Open Document Spreadsheet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ogdi.html">OGDI Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="openfilegdb.html">ESRI File Geodatabase vector (OpenFileGDB)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="osm.html">OSM - OpenStreetMap XML and PBF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parquet.html">(Geo)Parquet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pdf.html">PDF -- Geospatial PDF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pds.html">PDS - Planetary Data Systems TABLE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pgdump.html">PostgreSQL SQL Dump</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pgeo.html">ESRI Personal GeoDatabase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pg.html">PostgreSQL / PostGIS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plscenes.html">PLScenes (Planet Labs Scenes/Catalog API)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pmtiles.html">PMTiles -- ProtoMaps Tiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s57.html">IHO S-57 (ENC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sdts.html">SDTS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="selafin.html">Selafin files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shapefile.html">ESRI Shapefile / DBF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sosi.html">Norwegian SOSI Standard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sqlite.html">SQLite / Spatialite RDBMS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="svg.html">SVG - Scalable Vector Graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sxf.html">Storage and eXchange Format - SXF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiger.html">U.S. Census TIGER/Line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.html">TileDB -- TileDB vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="topojson.html">TopoJSON driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vdv.html">VDV - VDV-451/VDV-452/INTREST Data Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vfk.html">VFK - Czech Cadastral Exchange Data Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vrt.html">VRT -- Virtual Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wasp.html">WAsP - WAsP .map format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wfs.html">WFS - OGC WFS service</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xls.html">XLS - MS Excel format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xlsx.html">XLSX - MS Office Open XML spreadsheet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xodr.html">XODR -- OpenDRIVE Road Description Format</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sponsors/index.html">Sponsors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Vector drivers</a> &raquo;</li>
+      
+      <li>Elasticsearch: Geographically Encoded Objects for Elasticsearch</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit/master/doc/source/drivers/vector/elasticsearch.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="esrijson.html" class="btn btn-neutral float-right" title="ESRIJSON / FeatureService driver" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="edigeo.html" class="btn btn-neutral float-left" title="EDIGEO" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="elasticsearch-geographically-encoded-objects-for-elasticsearch">
+<span id="vector-elasticsearch"></span><h1>Elasticsearch: Geographically Encoded Objects for Elasticsearch<a class="headerlink" href="#elasticsearch-geographically-encoded-objects-for-elasticsearch" title="Link to this heading"></a></h1>
+<div class="admonition shortname" id="shortname-0">
+<p class="admonition-title">Driver short name</p>
+<p>Elasticsearch</p>
+</div>
+<div class="admonition build_dependencies" id="build_dependencies-0">
+<p class="admonition-title">Build dependencies</p>
+<p>libcurl</p>
+</div>
+<div class="line-block">
+<div class="line">Driver is read-write starting with GDAL 2.1</div>
+<div class="line">As of GDAL 2.1, Elasticsearch 1.X and, partially, 2.X versions are
+supported (5.0 known not to work). GDAL 2.2 adds supports for
+Elasticsearch 2.X and 5.X</div>
+</div>
+<p><a class="reference external" href="http://elasticsearch.org/">Elasticsearch</a> is an Enterprise-level
+search engine for a variety of data sources. It supports full-text
+indexing and geospatial querying of those data in a fast and efficient
+manor using a predefined REST API.</p>
+<section id="driver-capabilities">
+<h2>Driver capabilities<a class="headerlink" href="#driver-capabilities" title="Link to this heading"></a></h2>
+<div class="admonition supports_create" id="supports_create-0">
+<p class="admonition-title">Supports Create()</p>
+<p>This driver supports the <a class="reference internal" href="../../api/gdaldriver_cpp.html#_CPPv4N10GDALDriver6CreateEPKciii12GDALDataType12CSLConstList" title="GDALDriver::Create"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDriver::Create()</span></code></a> operation</p>
+</div>
+<div class="admonition supports_georeferencing" id="supports_georeferencing-0">
+<p class="admonition-title">Supports Georeferencing</p>
+<p>This driver supports georeferencing</p>
+</div>
+</section>
+<section id="opening-dataset-name-syntax">
+<h2>Opening dataset name syntax<a class="headerlink" href="#opening-dataset-name-syntax" title="Link to this heading"></a></h2>
+<p>Starting with GDAL 2.1, the driver supports reading existing indices
+from a Elasticsearch host. There are two main possible syntaxes to open
+a dataset:</p>
+<ul class="simple">
+<li><p>Using <em>ES:http://hostname:port</em> (where port is typically 9200)</p></li>
+<li><p>Using <em>ES:</em> with the open options to specify HOST and PORT</p></li>
+</ul>
+</section>
+<section id="layer-open-options">
+<h2>Layer open options<a class="headerlink" href="#layer-open-options" title="Link to this heading"></a></h2>
+<p>Open options can be specified in command-line tools using the syntax <code class="docutils literal notranslate"><span class="pre">-oo</span> <span class="pre">&lt;NAME&gt;=&lt;VALUE&gt;</span></code> or by providing the appropriate arguments to <a class="reference internal" href="../../api/raster_c_api.html#_CPPv410GDALOpenExPKcjPPCKcPPCKcPPCKc" title="GDALOpenEx"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALOpenEx()</span></code></a> (C) or <a class="reference internal" href="../../api/python/raster_api.html#osgeo.gdal.OpenEx" title="osgeo.gdal.OpenEx"><code class="xref py py-meth docutils literal notranslate"><span class="pre">gdal.OpenEx</span></code></a> (Python).
+The following open options are supported:</p>
+<ul class="simple">
+<li><p id="drivers/vector/elasticsearch-oo-HOST"><strong>HOST=&lt;hostname&gt;: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">localhost</span></code>. Server hostname.</p>
+</li>
+<li><p id="drivers/vector/elasticsearch-oo-PORT"><strong>PORT=&lt;port&gt;: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">9200</span></code>. Server port.</p>
+</li>
+<li><p id="drivers/vector/elasticsearch-oo-USERPWD"><strong>USERPWD=&lt;user:password&gt;: </strong>Basic authentication as username:password.</p>
+</li>
+<li><p id="drivers/vector/elasticsearch-oo-LAYER"><strong>LAYER=&lt;name&gt;: </strong>Index name or index_mapping to use for restricting layer listing.</p>
+</li>
+<li><p id="drivers/vector/elasticsearch-oo-BATCH_SIZE"><strong>BATCH_SIZE=&lt;integer&gt;: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">100</span></code>. Number of features to retrieve per batch.</p>
+</li>
+<li><p id="drivers/vector/elasticsearch-oo-FEATURE_COUNT_TO_ESTABLISH_FEATURE_DEFN"><strong>FEATURE_COUNT_TO_ESTABLISH_FEATURE_DEFN=&lt;integer&gt;: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">100</span></code>. Number of features to retrieve to establish feature definition.
+-1 = unlimited.</p>
+</li>
+<li><p id="drivers/vector/elasticsearch-oo-SINGLE_QUERY_TIMEOUT"><strong>SINGLE_QUERY_TIMEOUT=&lt;seconds&gt;: </strong> (GDAL &gt;= 3.2.1)  Defaults to <code class="docutils literal notranslate"><span class="pre">unlimited</span></code>. Timeout in second (as floating point number) for requests such as
+GetFeatureCount() or GetExtent().</p>
+</li>
+<li><p id="drivers/vector/elasticsearch-oo-SINGLE_QUERY_TERMINATE_AFTER"><strong>SINGLE_QUERY_TERMINATE_AFTER=&lt;integer&gt;: </strong> (GDAL &gt;= 3.2.1)  Defaults to <code class="docutils literal notranslate"><span class="pre">unlimited</span></code>. Maximum number of documents to collect for requests such as
+GetFeatureCount() or GetExtent().</p>
+</li>
+<li><p id="drivers/vector/elasticsearch-oo-FEATURE_ITERATION_TIMEOUT"><strong>FEATURE_ITERATION_TIMEOUT=&lt;seconds&gt;: </strong> (GDAL &gt;= 3.2.1)  Defaults to <code class="docutils literal notranslate"><span class="pre">unlimited</span></code>. Timeout in seconds (as floating point number) for feature iteration,
+starting from the time of ResetReading().</p>
+</li>
+<li><p id="drivers/vector/elasticsearch-oo-FEATURE_ITERATION_TERMINATE_AFTER"><strong>FEATURE_ITERATION_TERMINATE_AFTER=&lt;integer&gt;: </strong> (GDAL &gt;= 3.2.1)  Defaults to <code class="docutils literal notranslate"><span class="pre">unlimited</span></code>. Maximum number of documents to collect for feature iteration.</p>
+</li>
+<li><p id="drivers/vector/elasticsearch-oo-JSON_FIELD"><strong>JSON_FIELD=[YES/NO]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">NO</span></code>. Whether to include a field called &quot;_json&quot; with the full document as JSON.</p>
+</li>
+<li><p id="drivers/vector/elasticsearch-oo-FLATTEN_NESTED_ATTRIBUTE"><strong>FLATTEN_NESTED_ATTRIBUTE=[YES/NO]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">YES</span></code>. Whether to recursively explore nested objects and produce flatten OGR attributes.</p>
+</li>
+<li><p id="drivers/vector/elasticsearch-oo-FID"><strong>FID=value: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">ogc_fid</span></code>. Field name, with integer values, to use as FID.</p>
+</li>
+<li><p id="drivers/vector/elasticsearch-oo-FORWARD_HTTP_HEADERS_FROM_ENV"><strong>FORWARD_HTTP_HEADERS_FROM_ENV=value: </strong> (GDAL &gt;= 3.1) Can be used to specify HTTP headers,
+typically for authentication purposes, that must be passed to Elasticsearch.
+The value of string is a comma separated list of http_header_name=env_variable_name,
+where http_header_name is the name of a HTTP header and env_variable_name
+the name of the environment variable / configuration option from which th value
+of the HTTP header should be retrieved. This is intended for a use case where
+the OGR Elasticsearch driver is invoked from a web server that stores the HTTP
+headers of incoming request into environment variables.
+The ES_FORWARD_HTTP_HEADERS_FROM_ENV configuration option can also be used.</p>
+</li>
+<li><p id="drivers/vector/elasticsearch-oo-AGGREGATION"><strong>AGGREGATION=value: </strong> (GDAL &gt;= 3.5) JSON-serialized definition of an <a class="reference internal" href="#vector-elasticsearch-aggregations"><span class="std std-ref">aggregation</span></a>.</p>
+</li>
+</ul>
+</section>
+<section id="elasticsearch-vs-ogr-concepts">
+<h2>Elasticsearch vs OGR concepts<a class="headerlink" href="#elasticsearch-vs-ogr-concepts" title="Link to this heading"></a></h2>
+<p>Each mapping type inside a Elasticsearch index will be considered as a
+OGR layer. A Elasticsearch document is considered as a OGR feature.</p>
+</section>
+<section id="field-definitions">
+<h2>Field definitions<a class="headerlink" href="#field-definitions" title="Link to this heading"></a></h2>
+<p>Fields are dynamically mapped from the input OGR data source. However,
+the driver will take advantage of advanced options within Elasticsearch
+as defined in a <a class="reference external" href="http://code.google.com/p/ogr2elasticsearch/wiki/ModifyingtheIndex">field mapping
+file</a>.</p>
+<p>The mapping file allows you to modify the mapping according to the
+<a class="reference external" href="http://www.elasticsearch.org/guide/reference/mapping/core-types.html">Elasticsearch field-specific
+types</a>.
+There are many options to choose from, however, most of the
+functionality is based on all the different things you are able to do
+with text fields within Elasticsearch.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogr2ogr</span> <span class="o">-</span><span class="n">progress</span> <span class="o">--</span><span class="n">config</span> <span class="n">ES_WRITEMAP</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">file</span><span class="o">/</span><span class="nb">map</span><span class="o">.</span><span class="n">txt</span> <span class="o">-</span><span class="n">f</span> <span class="s2">&quot;Elasticsearch&quot;</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">9200</span> <span class="n">my_shapefile</span><span class="o">.</span><span class="n">shp</span>
+</pre></div>
+</div>
+</section>
+<section id="geometry-types">
+<h2>Geometry types<a class="headerlink" href="#geometry-types" title="Link to this heading"></a></h2>
+<p>In GDAL 2.0 and earlier, the driver was limited in the geometry it
+handles: even if polygons were provided as input, they were stored as
+<a class="reference external" href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping-geo-point-type.html">geo
+point</a>
+and the &quot;center&quot; of the polygon is used as value of the point. Starting
+with GDAL 2.1,
+<a class="reference external" href="https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-geo-shape-type.html">geo_shape</a>
+is used to store all geometry types (except curve geometries that are
+not handled by Elasticsearch and will be approximated to their linear
+equivalents).</p>
+</section>
+<section id="filtering">
+<h2>Filtering<a class="headerlink" href="#filtering" title="Link to this heading"></a></h2>
+<p>The driver will forward any spatial filter set with SetSpatialFilter()
+to the server.</p>
+<p>Starting with GDAL 2.2, SQL attribute filters set with
+SetAttributeFilter() are converted to <a class="reference external" href="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-filters.html">Elasticsearch filter
+syntax</a>.
+They will be combined with the potentially defined spatial filter.</p>
+<p>It is also possible to directly use a Elasticsearch filter by setting
+the string passed to SetAttributeFilter() as a JSON serialized object,
+e.g.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;post_filter&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;term&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;properties.EAS_ID&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">169</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Note: if defining directly an Elastic Search JSON filter, the spatial
+filter specified through SetSpatialFilter() will be ignored, and must
+thus be included in the JSON filter if needed.</p>
+</section>
+<section id="paging">
+<h2>Paging<a class="headerlink" href="#paging" title="Link to this heading"></a></h2>
+<p>Features are retrieved from the server by chunks of 100. This can be
+altered with the BATCH_SIZE open option.</p>
+</section>
+<section id="schema">
+<h2>Schema<a class="headerlink" href="#schema" title="Link to this heading"></a></h2>
+<p>When reading a Elastic Search index/type, OGR must establish the schema
+of attribute and geometry fields, since OGR has a fixed schema concept.</p>
+<p>In the general case, OGR will read the mapping definition and the first
+100 documents (can be altered with the
+<a class="reference internal" href="#drivers/vector/elasticsearch-oo-FEATURE_COUNT_TO_ESTABLISH_FEATURE_DEFN"><code class="docutils literal notranslate"><span class="pre">FEATURE_COUNT_TO_ESTABLISH_FEATURE_DEFN</span></code></a> open option) of the index/type
+and build the schema that best fit to the found fields and values.</p>
+<p>It is also possible to set the <a class="reference internal" href="#drivers/vector/elasticsearch-oo-JSON_FIELD"><code class="docutils literal notranslate"><span class="pre">JSON_FIELD=YES</span></code></a> open option so that a
+_json special field is added to the OGR schema. When reading Elastic
+Search documents as OGR features, the full JSON version of the document
+will be stored in the _json field. This might be useful in case of
+complex documents or with data types that do not translate well in OGR
+data types. On creation/update of documents, if the _json field is
+present and set, its content will be used directly (other fields will be
+ignored).</p>
+</section>
+<section id="feature-id">
+<h2>Feature ID<a class="headerlink" href="#feature-id" title="Link to this heading"></a></h2>
+<p>Elastic Search have a special _id field that contains the unique ID of
+the document. This field is returned as an OGR field, but cannot be used
+as the OGR special FeatureID field, which must be of integer type. By
+default, OGR will try to read a potential 'ogc_fid' field to set the OGR
+FeatureID. The name of this field to look up can be set with the FID
+open option. If the field is not found, the FID returned by OGR will be
+a sequential number starting at 1, but it is not guaranteed to be stable
+at all.</p>
+</section>
+<section id="executesql-interface">
+<h2>ExecuteSQL() interface<a class="headerlink" href="#executesql-interface" title="Link to this heading"></a></h2>
+<p>Starting with GDAL 2.2, SQL requests, involving a single layer, with
+WHERE and ORDER BY statements will be translated as Elasticsearch
+queries.</p>
+<p>Otherwise, if specifying &quot;ES&quot; as the dialect of ExecuteSQL(), a JSON
+string with a serialized <a class="reference external" href="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-filters.html">Elastic Search
+filter</a>
+can be passed. The search will be done on all indices and types, unless
+the filter itself restricts the search. The returned layer will be a
+union of the types returned by the
+<a class="reference internal" href="#drivers/vector/elasticsearch-oo-FEATURE_COUNT_TO_ESTABLISH_FEATURE_DEFN"><code class="docutils literal notranslate"><span class="pre">FEATURE_COUNT_TO_ESTABLISH_FEATURE_DEFN</span></code></a> first documents. It will also
+contain the _index and _type special fields to indicate the provenance
+of the features.</p>
+<p>The following filter can be used to restrict the search to the &quot;poly&quot;
+index and its &quot;FeatureCollection&quot; type mapping (Elasticsearch 1.X and
+2.X)</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;filter&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;indices&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;no_match_filter&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;index&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;poly&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;filter&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">           </span><span class="nt">&quot;and&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">             </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FeatureCollection&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<span class="w">             </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;term&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;properties.EAS_ID&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mf">158.0</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">           </span><span class="p">]</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>For Elasticsearch 5.X (works also with 2.X) :</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;post_filter&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;indices&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;no_match_query&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;index&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;poly&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;bool&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;must&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">              </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FeatureCollection&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span>
+<span class="w">              </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;term&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;properties.EAS_ID&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mf">158.0</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="p">]</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Aggregations are not supported through the ExecuteSQL() interface, but through
+the below described mechanism.</p>
+</section>
+<section id="aggregations">
+<span id="vector-elasticsearch-aggregations"></span><h2>Aggregations<a class="headerlink" href="#aggregations" title="Link to this heading"></a></h2>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 3.5.0.</span></p>
+</div>
+<p>The driver can support issuing aggregation requests to an index. ElasticSearch
+aggregations can potentially be rather complex, so the driver currently limits
+to geohash grid based spatial aggegrations, with additional fields with
+statistical indicators (min, max, average, .), which can be used for example
+to generate heatmaps. The specification of the aggegation is done through
+the <a class="reference internal" href="#drivers/vector/elasticsearch-oo-AGGREGATION"><code class="docutils literal notranslate"><span class="pre">AGGREGATION</span></code></a> open option, whose value is a JSON serialized object whose
+members are:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">index</span></code> (required): the name of the index to query.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">geometry_field</span></code> (optional): the path to the geometry field on which to do
+<a class="reference external" href="https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket-geohashgrid-aggregation.html">geohash grid aggregation</a>. For documents with points encoded as GeoJSON, this will
+be for example <cite>geometry.coordinates</cite>. When this property is not specified,
+the driver will analyze the mapping and use the geometry field definition
+found into it (provided there is a single one). Note that aggegration on
+geo_shape geometries is only supported since Elasticsearch 7 and may require
+a non-free license.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">geohash_grid</span></code> (optional): a JSON object, describing a few characteristics of
+the geohash_grid, that can have the following members:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">size</span></code> (optional): maximum number of geohash buckets to return per query. The
+default is 10,000. If <code class="docutils literal notranslate"><span class="pre">precision</span></code> is specified and the number of results
+would exceed <code class="docutils literal notranslate"><span class="pre">size</span></code>, then the server will trim the results, by sorting
+by decreasing number of documents matched.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">precision</span></code> (optional): string length of the geohashes used to define
+cells/buckets in the results, in the [1,12] range. A geohash of size 1
+can generate up to 32 buckets, of size 2 up to 32*32 buckets, etc.
+When it is not specified, the driver will automatically compute a value,
+taking into account the <code class="docutils literal notranslate"><span class="pre">size</span></code> parameter and the spatial filter, so that
+the theoretical number of buckets returned does not exceed <code class="docutils literal notranslate"><span class="pre">size</span></code>.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fields</span></code> (optional): a JSON object, describing which additional statistical
+fields should be added, that can have the following members:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">min</span></code> (optional): array with the paths to index properties on which
+to compute the minimum during aggegation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">max</span></code> (optional): array with the paths to index properties on which
+to compute the maximum  during aggegation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">avg</span></code> (optional): array with the paths to index properties on which
+to compute the average during aggegation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sum</span></code> (optional): array with the paths to index properties on which
+to compute the sum during aggegation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">count</span></code> (optional): array with the paths to index properties on which
+to compute the value_count during aggegation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stats</span></code> (optional): array with the paths to index properties on which
+to compute all the above indicators during aggegation.</p></li>
+</ul>
+</div></blockquote>
+<p>When using a GeoJSON mapping, the path to an index property is typically
+<code class="docutils literal notranslate"><span class="pre">property.some_name</span></code>.</p>
+</li>
+</ul>
+<p>When specifying the <a class="reference internal" href="#drivers/vector/elasticsearch-oo-AGGREGATION"><code class="docutils literal notranslate"><span class="pre">AGGREGATION</span></code></a> open option, a single read-only layer called
+<code class="docutils literal notranslate"><span class="pre">aggregation</span></code> will be returned. A spatial filter can be set on it using the
+standard OGR SetSpatialFilter() API: it is applied prior to aggregation.</p>
+<p>An example of a potential value for the <a class="reference internal" href="#drivers/vector/elasticsearch-oo-AGGREGATION"><code class="docutils literal notranslate"><span class="pre">AGGREGATION</span></code></a> open option can be:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;index&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my_points&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;geometry_field&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;geometry.coordinates&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;geohash_grid&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;size&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;precision&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;fields&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;min&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">&quot;field_a&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;field_b&quot;</span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;stats&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">&quot;field_c&quot;</span><span class="w"> </span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>It will return a layer with a Point geometry field and the following fields:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">key</span></code> of type String: the value of the geohash of the corresponding bucket</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">doc_count</span></code> of type Integer64: the number of matching documents in the bucket</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">field_a_min</span></code> of type Real</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">field_b_min</span></code> of type Real</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">field_c_min</span></code> of type Real</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">field_c_max</span></code> of type Real</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">field_c_avg</span></code> of type Real</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">field_c_sum</span></code> of type Real</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">field_c_count</span></code> of type Integer64</p></li>
+</ul>
+</section>
+<section id="multi-target-layers">
+<h2>Multi-target layers<a class="headerlink" href="#multi-target-layers" title="Link to this heading"></a></h2>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 3.5.0.</span></p>
+</div>
+<p>The GetLayerByName() method accepts a layer name that can be a comma-separated
+list of indices, potentially combined with the '*' wildcard character. See
+<a class="reference external" href="https://www.elastic.co/guide/en/elasticsearch/reference/current/multi-index.html">https://www.elastic.co/guide/en/elasticsearch/reference/current/multi-index.html</a>.
+Note that in the current implementation, the field definition will be established
+from the one of the matching layers, but not all, so using this functionality will be
+appropriate when the multiple matching layers share the same schema.</p>
+</section>
+<section id="getting-metadata">
+<h2>Getting metadata<a class="headerlink" href="#getting-metadata" title="Link to this heading"></a></h2>
+<p>Getting feature count is efficient.</p>
+<p>Getting extent is efficient, only on geometry columns mapped to
+Elasticsearch type geo_point. On geo_shape fields, feature retrieval of
+the whole layer is done, which might be slow.</p>
+</section>
+<section id="write-support">
+<h2>Write support<a class="headerlink" href="#write-support" title="Link to this heading"></a></h2>
+<p>Index/type creation and deletion is possible.</p>
+<p>Write support is only enabled when the datasource is opened in update
+mode.</p>
+<p>When inserting a new feature with CreateFeature() in non-bulk mode, and
+if the command is successful, OGR will fetch the returned _id and use
+it for the SetFeature() operation.</p>
+</section>
+<section id="spatial-reference-system">
+<h2>Spatial reference system<a class="headerlink" href="#spatial-reference-system" title="Link to this heading"></a></h2>
+<p>Geometries stored in Elastic Search are supposed to be referenced as
+longitude/latitude over WGS84 datum (EPSG:4326). On creation, the driver
+will automatically reproject from the layer (or geometry field) SRS to
+EPSG:4326, provided that the input SRS is set and that is not already
+EPSG:4326.</p>
+</section>
+<section id="layer-creation-options">
+<h2>Layer creation options<a class="headerlink" href="#layer-creation-options" title="Link to this heading"></a></h2>
+<p>Layer creation options can be specified in command-line tools using the syntax <code class="docutils literal notranslate"><span class="pre">-lco</span> <span class="pre">&lt;NAME&gt;=&lt;VALUE&gt;</span></code> or by providing the appropriate arguments to <a class="reference internal" href="../../api/raster_c_api.html#_CPPv422GDALDatasetCreateLayer12GDALDatasetHPKc20OGRSpatialReferenceH18OGRwkbGeometryType12CSLConstList" title="GDALDatasetCreateLayer"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDatasetCreateLayer()</span></code></a> (C) or <a class="reference internal" href="../../api/python/raster_api.html#osgeo.gdal.Dataset.CreateLayer" title="osgeo.gdal.Dataset.CreateLayer"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Dataset.CreateLayer</span></code></a> (Python).
+Starting with GDAL 2.1, the driver supports the following layer creation
+options:</p>
+<ul class="simple">
+<li><p id="drivers/vector/elasticsearch-lco-INDEX_NAME"><strong>INDEX_NAME=value: </strong>Name of the index to create (or reuse). By default the index name is the layer name.</p>
+</li>
+<li><p id="drivers/vector/elasticsearch-lco-INDEX_DEFINITION"><strong>INDEX_DEFINITION=[&lt;filename&gt;/&lt;json&gt;]: </strong>Filename from which to read a user-defined index definition, or inlined index
+definition as serialized JSON .</p>
+</li>
+<li><p id="drivers/vector/elasticsearch-lco-MAPPING_NAME"><strong>MAPPING_NAME=value: </strong>(Elasticsearch &lt; 7) Name of the mapping type within the index.
+By default, the mapping name is &quot;FeatureCollection&quot; and the documents
+will be written as GeoJSON Feature objects. If another mapping name
+is chosen, a more &quot;flat&quot; structure will be used.  This option is
+ignored when converting to Elasticsearch &gt;=7 (see <a class="reference external" href="https://www.elastic.co/guide/en/elasticsearch/reference/current/removal-of-types.html">Removal of mapping types</a>).
+With Elasticsearch 7 or later, a &quot;flat&quot; structure is always used.</p>
+</li>
+<li><p id="drivers/vector/elasticsearch-lco-MAPPING"><strong>MAPPING=[&lt;filename&gt;/&lt;json&gt;]: </strong>Filename from which to read a user-defined mapping, or mapping as serialized JSON .</p>
+</li>
+<li><p id="drivers/vector/elasticsearch-lco-WRITE_MAPPING"><strong>WRITE_MAPPING=&lt;filename&gt;: </strong>Creates a mapping file that can be
+modified by the user prior to insert in to the index. No feature will
+be written. This option is exclusive with <a class="reference internal" href="#drivers/vector/elasticsearch-lco-MAPPING"><code class="docutils literal notranslate"><span class="pre">MAPPING</span></code></a>.</p>
+</li>
+<li><p id="drivers/vector/elasticsearch-lco-OVERWRITE"><strong>OVERWRITE=[YES/NO]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">NO</span></code>. Whether to overwrite an existing type mapping with the layer name to be created.</p>
+</li>
+<li><p id="drivers/vector/elasticsearch-lco-OVERWRITE_INDEX"><strong>OVERWRITE_INDEX=[YES/NO]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">NO</span></code>. Whether to overwrite the whole index to which the layer belongs to. This
+option is stronger than <a class="reference internal" href="#drivers/vector/elasticsearch-lco-OVERWRITE"><code class="docutils literal notranslate"><span class="pre">OVERWRITE</span></code></a>. <a class="reference internal" href="#drivers/vector/elasticsearch-lco-OVERWRITE"><code class="docutils literal notranslate"><span class="pre">OVERWRITE</span></code></a> will only proceed if the
+type mapping corresponding to the layer is the single type mapping of
+the index. In case there are several type mappings, the whole index
+need to be destroyed (it is unsafe to destroy a mapping and the
+documents that use it, since they might be used by other mappings.
+This was possible in Elasticsearch 1.X, but no longer in later
+versions).</p>
+</li>
+<li><p id="drivers/vector/elasticsearch-lco-GEOMETRY_NAME"><strong>GEOMETRY_NAME=value: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">geometry</span></code>. Name of geometry column.</p>
+</li>
+<li><p id="drivers/vector/elasticsearch-lco-GEOM_MAPPING_TYPE"><strong>GEOM_MAPPING_TYPE=[AUTO/GEO_POINT/GEO_SHAPE]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">AUTO</span></code>. Mapping type for geometry fields. GEO_POINT uses the
+<a class="reference external" href="https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-geo-point-type.html">geo_point</a>
+mapping type. If used, the &quot;centroid&quot; of the geometry is used. This
+is the behavior of GDAL &lt; 2.1. GEO_SHAPE uses the
+<a class="reference external" href="https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-geo-shape-type.html">geo_shape</a>
+mapping type, compatible of all geometry types. When using AUTO, for
+geometry fields of type Point, a geo_point is used. In other cases,
+geo_shape is used.</p>
+</li>
+<li><p id="drivers/vector/elasticsearch-lco-GEO_SHAPE_ENCODING"><strong>GEO_SHAPE_ENCODING=[&lt;GeoJSON&gt;/&lt;WKT&gt;]: </strong> (GDAL &gt;= 3.2.1) Encoding for geo_shape geometry fields. Defaults to GeoJSON. WKT is possible
+since Elasticsearch 6.2</p>
+</li>
+<li><p id="drivers/vector/elasticsearch-lco-GEOM_PRECISION"><strong>GEOM_PRECISION=&lt;value&gt;&lt;unit&gt;: </strong>Desired geometry precision.
+Number followed by unit. For example 1m. For a geo_point geometry
+field, this causes a compressed geometry format to be used. This
+option is without effect if <a class="reference internal" href="#drivers/vector/elasticsearch-lco-MAPPING"><code class="docutils literal notranslate"><span class="pre">MAPPING</span></code></a> is specified.</p>
+</li>
+<li><p id="drivers/vector/elasticsearch-lco-STORE_FIELDS"><strong>STORE_FIELDS=[YES/NO]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">NO</span></code>. Whether fields should be stored in the
+index. Setting to YES sets the <a class="reference external" href="https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-core-types.html">&quot;store&quot;
+property</a>
+of the field mapping to &quot;true&quot; for all fields. (Note:
+prior to GDAL 2.1, the default behavior was to store fields) This
+option is without effect if <a class="reference internal" href="#drivers/vector/elasticsearch-lco-MAPPING"><code class="docutils literal notranslate"><span class="pre">MAPPING</span></code></a> is specified.</p>
+</li>
+<li><p id="drivers/vector/elasticsearch-lco-STORED_FIELDS"><strong>STORED_FIELDS=value: </strong>List of comma separated field names that should
+be stored in the index. Those fields will have their <a class="reference external" href="https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-core-types.html">&quot;store&quot;
+property</a>
+of the field mapping set to &quot;true&quot;. If all fields must be stored,
+then using STORE_FIELDS=YES is a shortcut. This option is without
+effect if <a class="reference internal" href="#drivers/vector/elasticsearch-lco-MAPPING"><code class="docutils literal notranslate"><span class="pre">MAPPING</span></code></a> is specified.</p>
+</li>
+<li><p id="drivers/vector/elasticsearch-lco-NOT_ANALYZED_FIELDS"><strong>NOT_ANALYZED_FIELDS=value: </strong>List of comma separated field names that
+should not be analyzed during indexing. Those fields will have their
+<a class="reference external" href="https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-core-types.html">&quot;index&quot;
+property</a>
+of the field mapping set to &quot;not_analyzed&quot; (the default in
+Elasticsearch is &quot;analyzed&quot;). A same field should not be specified
+both in <a class="reference internal" href="#drivers/vector/elasticsearch-lco-NOT_ANALYZED_FIELDS"><code class="docutils literal notranslate"><span class="pre">NOT_ANALYZED_FIELDS</span></code></a> and :<a class="reference internal" href="#drivers/vector/elasticsearch-lco-NOT_INDEXED_FIELDS"><code class="docutils literal notranslate"><span class="pre">NOT_INDEXED_FIELDS</span></code></a>. Starting with
+GDAL 2.2, the {ALL} value can be used to designate all fields. This
+option is without effect if <a class="reference internal" href="#drivers/vector/elasticsearch-lco-MAPPING"><code class="docutils literal notranslate"><span class="pre">MAPPING</span></code></a> is specified.</p>
+</li>
+<li><p id="drivers/vector/elasticsearch-lco-NOT_INDEXED_FIELDS"><strong>NOT_INDEXED_FIELDS=value: </strong>List of comma separated field names that
+should not be indexed. Those fields will have their <a class="reference external" href="https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-core-types.html">&quot;index&quot;
+property</a>
+of the field mapping set to &quot;no&quot; (the default in Elasticsearch is
+&quot;analyzed&quot;). A same field should not be specified both in
+<a class="reference internal" href="#drivers/vector/elasticsearch-lco-NOT_ANALYZED_FIELDS"><code class="docutils literal notranslate"><span class="pre">NOT_ANALYZED_FIELDS</span></code></a> and <a class="reference internal" href="#drivers/vector/elasticsearch-lco-NOT_INDEXED_FIELDS"><code class="docutils literal notranslate"><span class="pre">NOT_INDEXED_FIELDS</span></code></a>. This option is without
+effect if <a class="reference internal" href="#drivers/vector/elasticsearch-lco-MAPPING"><code class="docutils literal notranslate"><span class="pre">MAPPING</span></code></a> is specified.</p>
+</li>
+<li><p id="drivers/vector/elasticsearch-lco-FIELDS_WITH_RAW_VALUE"><strong>FIELDS_WITH_RAW_VALUE=value: </strong>List of comma separated
+field names (of type string) that should be created with an
+additional raw/not_analyzed sub-field, or {ALL} to designate all
+string analyzed fields. This is needed for sorting on those columns,
+and can improve performance when filtering with SQL operators. This
+option is without effect if <a class="reference internal" href="#drivers/vector/elasticsearch-lco-MAPPING"><code class="docutils literal notranslate"><span class="pre">MAPPING</span></code></a> is specified.</p>
+</li>
+<li><p id="drivers/vector/elasticsearch-lco-BULK_INSERT"><strong>BULK_INSERT=[YES/NO]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">YES</span></code>. Whether to use bulk insert for feature creation.</p>
+</li>
+<li><p id="drivers/vector/elasticsearch-lco-BULK_SIZE"><strong>BULK_SIZE=&lt;bytes&gt;: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">1000000</span></code>. Size in bytes of the buffer for bulk upload.</p>
+</li>
+<li><p id="drivers/vector/elasticsearch-lco-FID"><strong>FID=value: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">ogc_fid</span></code>. Field name, with integer values, to use as FID. Can
+be set to empty to disable the writing of the FID value.</p>
+</li>
+<li><p id="drivers/vector/elasticsearch-lco-DOT_AS_NESTED_FIELD"><strong>DOT_AS_NESTED_FIELD=[YES/NO]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">YES</span></code>. Whether to consider dot character
+in field name as sub-document.</p>
+</li>
+<li><p id="drivers/vector/elasticsearch-lco-IGNORE_SOURCE_ID"><strong>IGNORE_SOURCE_ID=[YES/NO]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">NO</span></code>. Whether to ignore _id field in features passed to CreateFeature().</p>
+</li>
+</ul>
+</section>
+<section id="configuration-options">
+<h2>Configuration options<a class="headerlink" href="#configuration-options" title="Link to this heading"></a></h2>
+<p><a class="reference internal" href="../../user/configoptions.html#configoptions"><span class="std std-ref">Configuration options</span></a> can be specified in command-line tools using the syntax <code class="docutils literal notranslate"><span class="pre">--config</span> <span class="pre">&lt;NAME&gt;=&lt;VALUE&gt;</span></code> or using functions such as <a class="reference internal" href="../../api/cpl.html#_CPPv418CPLSetConfigOptionPKcPKc" title="CPLSetConfigOption"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">CPLSetConfigOption()</span></code></a> (C) or <a class="reference internal" href="../../api/python/general.html#osgeo.gdal.config_options" title="osgeo.gdal.config_options"><code class="xref py py-func docutils literal notranslate"><span class="pre">gdal.config_options</span></code></a> (Python).
+The following (deprecated) configuration options are
+available. Starting with GDAL 2.1, layer creation options are also available
+and should be preferred (see above):</p>
+<ul class="simple">
+<li><p id="config-ES_WRITEMAP"><strong>ES_WRITEMAP=&lt;filename&gt;: </strong>Creates a mapping file that
+can be modified by the user prior to insert in to the index. No
+feature will be written. Note that this will properly work only if
+only one single layer is created. Starting with GDAL 2.1, the
+<a class="reference internal" href="#drivers/vector/elasticsearch-lco-WRITE_MAPPING"><code class="docutils literal notranslate"><span class="pre">WRITE_MAPPING</span></code></a> layer creation option should be used instead.</p>
+</li>
+<li><p id="config-ES_META"><strong>ES_META=&lt;filename&gt;: </strong>Tells the driver to the
+user-defined field mappings. Starting with GDAL 2.1, the lco:<cite>MAPPING</cite>
+layer creation option should be used instead.</p>
+</li>
+<li><p id="config-ES_BULK"><strong>ES_BULK=&lt;bytes&gt;: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">5000000</span></code>. Identifies the maximum size in bytes of the
+buffer to store documents to be inserted at a time. Lower record
+counts help with memory consumption within Elasticsearch but take
+longer to insert. Starting with GDAL 2.1, the <a class="reference internal" href="#drivers/vector/elasticsearch-lco-BULK_SIZE"><code class="docutils literal notranslate"><span class="pre">BULK_SIZE</span></code></a> layer
+creation option should be used instead.</p>
+</li>
+<li><p id="config-ES_OVERWRITE"><strong>ES_OVERWRITE=[YES/NO]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">NO</span></code>. Overwrites the current index by deleting an
+existing one. Starting with GDAL 2.1, the <a class="reference internal" href="#drivers/vector/elasticsearch-lco-OVERWRITE"><code class="docutils literal notranslate"><span class="pre">OVERWRITE</span></code></a> layer
+creation option should be used instead.</p>
+</li>
+</ul>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
+<p><strong>Open the local store:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogrinfo</span> <span class="n">ES</span><span class="p">:</span>
+</pre></div>
+</div>
+<p><strong>Open a remote store:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogrinfo</span> <span class="n">ES</span><span class="p">:</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="p">:</span><span class="mi">9200</span>
+</pre></div>
+</div>
+<p><strong>Filtering on a Elastic Search field:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogrinfo</span> <span class="o">-</span><span class="n">ro</span> <span class="n">ES</span><span class="p">:</span> <span class="n">my_type</span> <span class="o">-</span><span class="n">where</span> <span class="s1">&#39;{ &quot;post_filter&quot;: { &quot;term&quot;: { &quot;properties.EAS_ID&quot;: 168 } } }&#39;</span>
+</pre></div>
+</div>
+<p><strong>Using &quot;match&quot; query on Windows:</strong>
+On Windows the query must be between double quotes and double quotes
+inside the query must be escaped.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">C</span><span class="p">:</span>\<span class="n">GDAL_on_Windows</span><span class="o">&gt;</span><span class="n">ogrinfo</span> <span class="n">ES</span><span class="p">:</span> <span class="n">my_type</span> <span class="o">-</span><span class="n">where</span> <span class="s2">&quot;{</span><span class="se">\&quot;</span><span class="s2">query</span><span class="se">\&quot;</span><span class="s2">: { </span><span class="se">\&quot;</span><span class="s2">match</span><span class="se">\&quot;</span><span class="s2">: { </span><span class="se">\&quot;</span><span class="s2">properties.NAME</span><span class="se">\&quot;</span><span class="s2">: </span><span class="se">\&quot;</span><span class="s2">Helsinki</span><span class="se">\&quot;</span><span class="s2"> } } }&quot;</span>
+</pre></div>
+</div>
+<p><strong>Basic aggregation:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogrinfo</span> <span class="o">-</span><span class="n">ro</span> <span class="n">ES</span><span class="p">:</span> <span class="n">my_type</span> <span class="o">-</span><span class="n">oo</span> <span class="s2">&quot;AGGREGATION={</span><span class="se">\&quot;</span><span class="s2">index</span><span class="se">\&quot;</span><span class="s2">:</span><span class="se">\&quot;</span><span class="s2">my_points</span><span class="se">\&quot;</span><span class="s2">}&quot;</span>
+</pre></div>
+</div>
+<p><strong>Load an Elasticsearch index with a shapefile:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogr2ogr</span> <span class="o">-</span><span class="n">f</span> <span class="s2">&quot;Elasticsearch&quot;</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">9200</span> <span class="n">my_shapefile</span><span class="o">.</span><span class="n">shp</span>
+</pre></div>
+</div>
+<p><strong>Create a Mapping File:</strong> The mapping file allows you to modify the
+mapping according to the <a class="reference external" href="http://www.elasticsearch.org/guide/reference/mapping/core-types.html">Elasticsearch field-specific
+types</a>.
+There are many options to choose from, however, most of the
+functionality is based on all the different things you are able to do
+with text fields.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogr2ogr</span> <span class="o">-</span><span class="n">progress</span> <span class="o">--</span><span class="n">config</span> <span class="n">ES_WRITEMAP</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">file</span><span class="o">/</span><span class="nb">map</span><span class="o">.</span><span class="n">txt</span> <span class="o">-</span><span class="n">f</span> <span class="s2">&quot;Elasticsearch&quot;</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">9200</span> <span class="n">my_shapefile</span><span class="o">.</span><span class="n">shp</span>
+</pre></div>
+</div>
+<p>or (GDAL &gt;= 2.1):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogr2ogr</span> <span class="o">-</span><span class="n">progress</span> <span class="o">-</span><span class="n">lco</span> <span class="n">WRITE_MAPPING</span><span class="o">=/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">file</span><span class="o">/</span><span class="nb">map</span><span class="o">.</span><span class="n">txt</span> <span class="o">-</span><span class="n">f</span> <span class="s2">&quot;Elasticsearch&quot;</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">9200</span> <span class="n">my_shapefile</span><span class="o">.</span><span class="n">shp</span>
+</pre></div>
+</div>
+<p><strong>Read the Mapping File:</strong> Reads the mapping file during the
+transformation</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogr2ogr</span> <span class="o">-</span><span class="n">progress</span> <span class="o">--</span><span class="n">config</span> <span class="n">ES_META</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">file</span><span class="o">/</span><span class="nb">map</span><span class="o">.</span><span class="n">txt</span> <span class="o">-</span><span class="n">f</span> <span class="s2">&quot;Elasticsearch&quot;</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">9200</span> <span class="n">my_shapefile</span><span class="o">.</span><span class="n">shp</span>
+</pre></div>
+</div>
+<p>or (GDAL &gt;= 2.1):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogr2ogr</span> <span class="o">-</span><span class="n">progress</span> <span class="o">-</span><span class="n">lco</span> <span class="n">MAPPING</span><span class="o">=/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">file</span><span class="o">/</span><span class="nb">map</span><span class="o">.</span><span class="n">txt</span> <span class="o">-</span><span class="n">f</span> <span class="s2">&quot;Elasticsearch&quot;</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">9200</span> <span class="n">my_shapefile</span><span class="o">.</span><span class="n">shp</span>
+</pre></div>
+</div>
+<p><strong>Bulk Uploading (for larger datasets):</strong> Bulk loading helps when
+uploading a lot of data. The integer value is the number of bytes that
+are collected before being inserted. <a class="reference external" href="https://www.elastic.co/guide/en/elasticsearch/guide/current/bulk.html#_how_big_is_too_big">Bulk size
+considerations</a></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogr2ogr</span> <span class="o">-</span><span class="n">progress</span> <span class="o">--</span><span class="n">config</span> <span class="n">ES_BULK</span> <span class="mi">5000000</span> <span class="o">-</span><span class="n">f</span> <span class="s2">&quot;Elasticsearch&quot;</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">9200</span> <span class="n">PG</span><span class="p">:</span><span class="s2">&quot;host=localhost user=postgres dbname=my_db password=password&quot;</span> <span class="s2">&quot;my_table&quot;</span> <span class="o">-</span><span class="n">nln</span> <span class="n">thetable</span>
+</pre></div>
+</div>
+<p>or (GDAL &gt;= 2.1):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogr2ogr</span> <span class="o">-</span><span class="n">progress</span> <span class="o">-</span><span class="n">lco</span> <span class="n">BULK_SIZE</span><span class="o">=</span><span class="mi">5000000</span> <span class="o">-</span><span class="n">f</span> <span class="s2">&quot;Elasticsearch&quot;</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">9200</span> <span class="n">my_shapefile</span><span class="o">.</span><span class="n">shp</span>
+</pre></div>
+</div>
+<p><strong>Overwrite the current Index:</strong> If specified, this will overwrite the
+current index. Otherwise, the data will be appended.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogr2ogr</span> <span class="o">-</span><span class="n">progress</span> <span class="o">--</span><span class="n">config</span> <span class="n">ES_OVERWRITE</span> <span class="mi">1</span> <span class="o">-</span><span class="n">f</span> <span class="s2">&quot;Elasticsearch&quot;</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">9200</span> <span class="n">PG</span><span class="p">:</span><span class="s2">&quot;host=localhost user=postgres dbname=my_db password=password&quot;</span> <span class="s2">&quot;my_table&quot;</span> <span class="o">-</span><span class="n">nln</span> <span class="n">thetable</span>
+</pre></div>
+</div>
+<p>or (GDAL &gt;= 2.1):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogr2ogr</span> <span class="o">-</span><span class="n">progress</span> <span class="o">-</span><span class="n">overwrite</span> <span class="n">ES</span><span class="p">:</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">9200</span> <span class="n">PG</span><span class="p">:</span><span class="s2">&quot;host=localhost user=postgres dbname=my_db password=password&quot;</span> <span class="s2">&quot;my_table&quot;</span> <span class="o">-</span><span class="n">nln</span> <span class="n">thetable</span>
+</pre></div>
+</div>
+</section>
+<section id="see-also">
+<h2>See Also<a class="headerlink" href="#see-also" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="http://elasticsearch.org/">Home page for Elasticsearch</a></p></li>
+<li><p><a class="reference external" href="http://code.google.com/p/ogr2elasticsearch/w/list">Examples Wiki</a></p></li>
+<li><p><a class="reference external" href="http://groups.google.com/group/ogr2elasticsearch">Google Group</a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="esrijson.html" class="btn btn-neutral float-right" title="ESRIJSON / FeatureService driver" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="edigeo.html" class="btn btn-neutral float-left" title="EDIGEO" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2024 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+  </div>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

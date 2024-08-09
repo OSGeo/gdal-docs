@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Development practices &mdash; GDAL  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d10597a4" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/gdal.css?v=e152ac3b" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="canonical" href="https://gdal.org/development/dev_practices.html"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Automated testing" href="testing.html" />
+    <link rel="prev" title="Setting up a development environment" href="dev_environment.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Development</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="building_from_source.html">Building GDAL from source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dev_environment.html">Setting up a development environment</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Development practices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#making-changes-to-gdal">Making changes to GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#portability">Portability</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c-c-standards">C/C++ standards</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#variable-naming">Variable naming</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-and-class-naming">Function and class naming</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#file-naming-and-code-formatting">File naming and code formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#memory-allocation">Memory allocation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#adding-a-new-driver">Adding a new driver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#writing-tests">Writing tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#git-usage">Git usage</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#initiating-your-work-repository">Initiating your work repository</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#working-with-a-feature-branch">Working with a feature branch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#updating-your-local-master-against-upstream-master">Updating your local master against upstream master</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#commit-messages">Commit messages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#commit-hooks">Commit hooks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#blame-ignore-file">Blame ignore file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#backporting-bugfixes-from-master-to-a-stable-branch">Backporting bugfixes from master to a stable branch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#things-you-should-not-do">Things you should NOT do</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#source-tree-layout">Source tree layout</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html">Automated testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dev_documentation.html">Building documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cmake.html">Using GDAL in CMake projects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rfc/index.html">RFC list</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sponsors/index.html">Sponsors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Development</a> &raquo;</li>
+      
+      <li>Development practices</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit/master/doc/source/development/dev_practices.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="testing.html" class="btn btn-neutral float-right" title="Automated testing" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="dev_environment.html" class="btn btn-neutral float-left" title="Setting up a development environment" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="development-practices">
+<span id="id1"></span><h1>Development practices<a class="headerlink" href="#development-practices" title="Link to this heading"></a></h1>
+<section id="making-changes-to-gdal">
+<h2>Making changes to GDAL<a class="headerlink" href="#making-changes-to-gdal" title="Link to this heading"></a></h2>
+<p>Minor changes to GDAL, such as bug fixes, may be made by opening a GitHub pull request.</p>
+<p>Major changes should be discussed on the <a class="reference external" href="https://lists.osgeo.org/mailman/listinfo/gdal-dev">gdal-dev</a> listserv and may require the drafting
+of a RFC (request for comment) document.</p>
+<p>GDAL's policy on substantial code additions is documented at <a class="reference internal" href="rfc/rfc85_policy_code_additions.html#rfc-85"><span class="std std-ref">RFC 85: Policy regarding substantial code additions</span></a>.</p>
+</section>
+<section id="portability">
+<span id="cpl"></span><h2>Portability<a class="headerlink" href="#portability" title="Link to this heading"></a></h2>
+<p>GDAL strives to be widely portable to 32 bit and 64 bit computing
+environments, as well as little-endian and big-endian ordered CPUs.
+CPL functions in the port directory provide services to abstract platform
+specific operations.</p>
+<p>Generally speaking, where available CPL functions should be used in
+preference to operating system functions for operations like memory
+allocation, path parsing, filesystem I/O (using VSILFILE* / VSIVirtualFile*),
+ODBC access, etc.</p>
+</section>
+<section id="c-c-standards">
+<h2>C/C++ standards<a class="headerlink" href="#c-c-standards" title="Link to this heading"></a></h2>
+<p>The current C and C++ standards adopted by GDAL/OGR are C99 and C++17
+(last updated per <a class="reference internal" href="rfc/rfc98_build_requirements_gdal_3_9.html#rfc-98"><span class="std std-ref">RFC 98: Build requirements for GDAL 3.9</span></a>).</p>
+</section>
+<section id="variable-naming">
+<h2>Variable naming<a class="headerlink" href="#variable-naming" title="Link to this heading"></a></h2>
+<p>Much of the existing GDAL/OGR code uses an adapted Hungarian naming
+convention. Use of this convention is not mandatory, but when
+maintaining code using this convention it is desirable to continue
+adhering to it with changes. Most importantly, please avoiding using it
+improperly as that can be very confusing.</p>
+<p>In Hungarian prefixing the prefix tells something about about the type,
+and potentially semantics of a variable. The following are some prefixes
+used in GDAL/OGR.</p>
+<ul class="simple">
+<li><p><em>a</em>: array</p></li>
+<li><p><em>b</em>: C/C++ bool. In C code that pre-dates C99 adoption, it is also used for ints with only TRUE/FALSE values.</p></li>
+<li><p><em>by</em>: byte (GByte / unsigned char).</p></li>
+<li><p><em>df</em>: floating point value (double precision)</p></li>
+<li><p><em>e</em>: enumeration</p></li>
+<li><p><em>i</em>: integer number used as a zero based array or loop index.</p></li>
+<li><p><em>f</em>: floating point value (single precision)</p></li>
+<li><p><em>h</em>: an opaque handle (such as GDALDatasetH).</p></li>
+<li><p><em>n</em>: integer number (size unspecified)</p></li>
+<li><p><em>o</em>: C++ object</p></li>
+<li><p><em>os</em>: CPLString or std::string</p></li>
+<li><p><em>p</em>: pointer</p></li>
+<li><p><em>psz</em>: pointer to a null-terminated string. (eg. &quot;char *pszName;&quot;)</p></li>
+<li><p><em>sz</em>: null-terminated string (eg.&quot; char szName[100];&quot;)</p></li>
+<li><p><em>k</em>: compile-time constant</p></li>
+</ul>
+<p>Prefixes can be stacked. The following are some examples of meaningful
+variables.</p>
+<ul class="simple">
+<li><p>*char !*<em>papszTokens</em>: Pointer to an array of strings.</p></li>
+<li><p>*int <em>panBands</em>: Pointer to the first element of an array of
+numbers.</p></li>
+<li><p>*double <em>padfScanline</em>: Pointer to the first element of an array of
+doubles.</p></li>
+<li><p>*double <em>pdfMeanRet</em>: Pointer to a single double.</p></li>
+<li><p>*GDALRasterBand <em>poBand</em>: Pointer to a single object.</p></li>
+<li><p>*GByte <em>pabyHeader</em>: Pointer to an array of bytes.</p></li>
+</ul>
+<p>It may also be noted that the standard convention for variable names is
+to capitalize each word in a variable name.</p>
+</section>
+<section id="function-and-class-naming">
+<h2>Function and class naming<a class="headerlink" href="#function-and-class-naming" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Functions and classes should have a selective enough namespace (&quot;GDAL&quot; or &quot;OGR&quot; prefix, or use of C++ namespace) to avoid symbol collision.</p></li>
+</ul>
+</section>
+<section id="file-naming-and-code-formatting">
+<h2>File naming and code formatting<a class="headerlink" href="#file-naming-and-code-formatting" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>All source files (.h, .c, .cpp, .py, etc.) should have a header with copyright attribution and the text of the GDAL X/MIT license.</p></li>
+<li><p>Use lower case filenames.</p></li>
+<li><p>Use .cpp extension for C++ files (not .cc).</p></li>
+<li><p>C/C++ code formatting rules are defined in <a class="reference external" href="https://github.com/OSGeo/gdal/blob/master/.clang-format">.clang-format</a>. Python code formatting
+is enforced by Black. The pre-commit utility should be used to enforce them automatically. See <a class="reference internal" href="#commit-hooks"><span class="std std-ref">Commit hooks</span></a>.</p></li>
+</ul>
+</section>
+<section id="memory-allocation">
+<h2>Memory allocation<a class="headerlink" href="#memory-allocation" title="Link to this heading"></a></h2>
+<p>Large memory allocations should be performed using the <a class="reference internal" href="../api/cpl.html#_CPPv49VSIMalloc6size_t" title="VSIMalloc"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIMalloc()</span></code></a> family of functions, which will return <code class="docutils literal notranslate"><span class="pre">nullptr</span></code> on allocation failure.
+As per <a class="reference internal" href="rfc/rfc19_safememalloc.html#rfc-19"><span class="std std-ref">RFC 19: Safer memory allocation in GDAL</span></a>, you can use <code class="docutils literal notranslate"><span class="pre">VSIMalloc2(x,</span> <span class="pre">y)</span></code> instead of
+doing <code class="docutils literal notranslate"><span class="pre">CPLMalloc(x</span> <span class="pre">*</span> <span class="pre">y)</span></code> or <code class="docutils literal notranslate"><span class="pre">VSIMalloc(x</span> <span class="pre">*</span> <span class="pre">y)</span></code>. <a class="reference internal" href="../api/cpl.html#_CPPv410VSIMalloc26size_t6size_t" title="VSIMalloc2"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">VSIMalloc2()</span></code></a> will detect
+potential overflows in the multiplication and return a NULL pointer if
+it happens. This can be useful in GDAL raster drivers where x and y are
+related to the raster dimensions or raster block sizes. Similarly,
+<code class="docutils literal notranslate"><span class="pre">VSIMalloc3(x,</span> <span class="pre">y,</span> <span class="pre">z)</span></code> can be used as a replacement for <code class="docutils literal notranslate"><span class="pre">CPLMalloc(x</span> <span class="pre">*</span> <span class="pre">y</span> <span class="pre">*</span> <span class="pre">z)</span></code>.</p>
+<p>When working with standard library data structures such as <code class="docutils literal notranslate"><span class="pre">std::vector</span></code> that may throw <code class="docutils literal notranslate"><span class="pre">std::bad_alloc</span></code>, a try/catch block should be used around blocks that may allocate a large amount of memory.</p>
+</section>
+<section id="adding-a-new-driver">
+<h2>Adding a new driver<a class="headerlink" href="#adding-a-new-driver" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>If the driver depends on a third-party library, compilation of the driver must be made conditional on the presence of the library. Drivers should try to re-use existing library dependencies as much as possible, e.g. Expat for SAX XML parsing.</p></li>
+<li><p>For a vector driver, check that the Open() method of the driver (often delegated to a Open() method of the datasource) is selective enough (i.e. it will not accept data files that are not meant for the driver), and robust enough (it will not crash for small variations w.r.t content that it would recognize). Check that it can deal with unusual filenames. For a GDAL driver, similar checks, as well for the optional Identify() method.</p></li>
+<li><p>A set of tests covering the driver should be added to the Python test suite. If appropriate, small sample data files may be added to autotest/gdrivers/data or autotest/ogr/data. The <code class="docutils literal notranslate"><span class="pre">test_ogrsf</span></code> utility and <code class="docutils literal notranslate"><span class="pre">GDALTest</span></code> class may simplify testing of basic driver functionality.</p></li>
+<li><p>A documentation page should be created for the driver. Documentation should, at a minimum, briefly describe the format handled by the driver and, when relevant, describe the particular syntax for the connection string, creation options, configuration options, etc. The documentation should provide a link to a more detailed format description and mention needed third-party libraries.</p></li>
+</ul>
+</section>
+<section id="writing-tests">
+<h2>Writing tests<a class="headerlink" href="#writing-tests" title="Link to this heading"></a></h2>
+<p>See <a class="reference internal" href="testing.html#writing-tests"><span class="std std-ref">Recommendations on how to write new tests</span></a>.</p>
+</section>
+<section id="git-usage">
+<h2>Git usage<a class="headerlink" href="#git-usage" title="Link to this heading"></a></h2>
+<p>This section collects a few best practices for git usage for GDAL development.</p>
+<section id="initiating-your-work-repository">
+<h3>Initiating your work repository<a class="headerlink" href="#initiating-your-work-repository" title="Link to this heading"></a></h3>
+<p>Fork <a class="reference external" href="https://github.com/OSGeo/gdal">OSGeo/gdal</a> from the GitHub UI, and then run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/OSGeo/gdal
+<span class="nb">cd</span><span class="w"> </span>gdal
+git<span class="w"> </span>remote<span class="w"> </span>add<span class="w"> </span>my_user_name<span class="w"> </span>git@github.com:my_user_name/gdal.git
+</pre></div>
+</div>
+</section>
+<section id="working-with-a-feature-branch">
+<h3>Working with a feature branch<a class="headerlink" href="#working-with-a-feature-branch" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>checkout<span class="w"> </span>master
+<span class="c1"># potentially update your local master against upstream, as described above</span>
+git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>my_new_feature_branch
+
+<span class="c1"># do work. For example:</span>
+git<span class="w"> </span>add<span class="w"> </span>my_new_file
+git<span class="w"> </span>add<span class="w"> </span>my_modifid_message
+git<span class="w"> </span>rm<span class="w"> </span>old_file
+git<span class="w"> </span>commit<span class="w"> </span>-a
+
+<span class="c1"># you may need to resynchronize against master if you need some bugfix</span>
+<span class="c1"># or new capability that has been added since you created your branch</span>
+git<span class="w"> </span>fetch<span class="w"> </span>origin
+git<span class="w"> </span>rebase<span class="w"> </span>origin/master
+
+<span class="c1"># At end of your work, make sure history is reasonable by folding non</span>
+<span class="c1"># significant commits into a consistent set</span>
+git<span class="w"> </span>rebase<span class="w"> </span>-i<span class="w"> </span>master
+<span class="c1"># use &#39;fixup&#39; for example to merge several commits together,</span>
+<span class="c1"># and &#39;reword&#39; to modify commit messages</span>
+
+<span class="c1"># or alternatively, in case there is a big number of commits and marking</span>
+<span class="c1"># all them as &#39;fixup&#39; is tedious</span>
+git<span class="w"> </span>fetch<span class="w"> </span>origin
+git<span class="w"> </span>rebase<span class="w"> </span>origin/master
+git<span class="w"> </span>reset<span class="w"> </span>--soft<span class="w"> </span>origin/master
+git<span class="w"> </span>commit<span class="w"> </span>-a<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Put here the synthetic commit message&quot;</span>
+
+<span class="c1"># push your branch</span>
+git<span class="w"> </span>push<span class="w"> </span>my_user_name<span class="w"> </span>my_new_feature_branch
+</pre></div>
+</div>
+<p>From the GitHub UI, issue a pull request.</p>
+<p>If the pull request discussion or automated checks require changes, commit
+locally and push. To get a reasonable history, you may need to combine commits
+using <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">rebase</span> <span class="pre">-i</span> <span class="pre">master</span></code>, in which case you will have to force-push your
+branch with <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">push</span> <span class="pre">-f</span> <span class="pre">my_user_name</span> <span class="pre">my_new_feature_branch</span></code>.</p>
+</section>
+<section id="updating-your-local-master-against-upstream-master">
+<h3>Updating your local master against upstream master<a class="headerlink" href="#updating-your-local-master-against-upstream-master" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>checkout<span class="w"> </span>master
+git<span class="w"> </span>fetch<span class="w"> </span>origin
+
+<span class="c1"># Be careful: this will lose all local changes you might have done now</span>
+git<span class="w"> </span>reset<span class="w"> </span>--hard<span class="w"> </span>origin/master
+</pre></div>
+</div>
+</section>
+<section id="commit-messages">
+<h3>Commit messages<a class="headerlink" href="#commit-messages" title="Link to this heading"></a></h3>
+<p>Commit messages should indicate a component name (eg a driver name), a short
+description, and when relevant, a reference to a issue (with 'fixes #' if it
+actually fixes it)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">COMPONENT_NAME</span><span class="p">:</span> <span class="n">fix</span> <span class="n">bla</span> <span class="n">bla</span> <span class="p">(</span><span class="n">fixes</span> <span class="c1">#1234)</span>
+
+<span class="n">Details</span> <span class="n">here</span><span class="o">...</span>
+</pre></div>
+</div>
+</section>
+<section id="commit-hooks">
+<span id="id2"></span><h3>Commit hooks<a class="headerlink" href="#commit-hooks" title="Link to this heading"></a></h3>
+<p>GDAL provides pre-commit hooks to run code formatters and linters before a commit is made. The
+hooks are cloned with the repository and can be installed using
+<a class="reference external" href="https://pre-commit.com">pre-commit</a>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>pre-commit
+pre-commit<span class="w"> </span>install
+</pre></div>
+</div>
+<p>Once installed, the hooks can be run manually via <code class="docutils literal notranslate"><span class="pre">pre-commit</span> <span class="pre">run</span> <span class="pre">--all-files</span></code>.</p>
+</section>
+<section id="blame-ignore-file">
+<h3>Blame ignore file<a class="headerlink" href="#blame-ignore-file" title="Link to this heading"></a></h3>
+<p>Due to whole-tree code reformatting done during GDAL 3.7 development,
+<code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">blame</span></code> information might be misleading. To avoid that, you need
+to modify your git configuration as following to ignore the revision of
+the whole-tree reformatting:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>config<span class="w"> </span>blame.ignoreRevsFile<span class="w"> </span>.git-blame-ignore-revs
+</pre></div>
+</div>
+</section>
+<section id="backporting-bugfixes-from-master-to-a-stable-branch">
+<h3>Backporting bugfixes from master to a stable branch<a class="headerlink" href="#backporting-bugfixes-from-master-to-a-stable-branch" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>checkout<span class="w"> </span>master
+With<span class="w"> </span>git<span class="w"> </span>log,<span class="w"> </span>identify<span class="w"> </span>the<span class="w"> </span>sha1sum<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>commit<span class="w"> </span>you<span class="w"> </span>want<span class="w"> </span>to<span class="w"> </span>backport
+git<span class="w"> </span>checkout<span class="w"> </span><span class="m">2</span>.2<span class="w"> </span><span class="c1"># if you want to backport to 2.2</span>
+git<span class="w"> </span>pull<span class="w"> </span>origin<span class="w"> </span><span class="m">2</span>.2
+<span class="c1"># git checkout -b branch_name  # if you intend to submit the backport as a pull request</span>
+git<span class="w"> </span>cherry-pick<span class="w"> </span>the_sha1_sum
+git<span class="w"> </span>push<span class="w"> </span>...
+</pre></div>
+</div>
+<p>If changes are needed, do them and <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">commit</span> <span class="pre">-a</span> <span class="pre">--amend</span></code></p>
+</section>
+<section id="things-you-should-not-do">
+<h3>Things you should NOT do<a class="headerlink" href="#things-you-should-not-do" title="Link to this heading"></a></h3>
+<p>(For anyone with push rights to <a class="reference external" href="https://github.com/OSGeo/gdal">OSGeo/gdal</a>) Never modify a commit or
+the history of anything that has been
+committed to <a class="reference external" href="https://github.com/OSGeo/gdal">https://github.com/OSGeo/gdal</a></p>
+<p>Committing symbolic links is allowed only under the .github directory in order to
+avoid potential problems on Windows.</p>
+</section>
+</section>
+<section id="source-tree-layout">
+<h2>Source tree layout<a class="headerlink" href="#source-tree-layout" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">alg</span></code>: Algorithms: rasterization, polygonization, warper engine, etc.</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">apps</span></code>: C++ command line utilities</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">autotest</span></code>: Regression test suite (C++ and Python)</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">cmake</span></code>: CMake modules and helpers functions</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">doc</span></code>: Source code of GDAL documentation and scripts</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">docker</span></code>: Dockerfile's for <a class="reference external" href="https://github.com/OSGeo/gdal/blob/master/docker/README.md">GDAL Docker images</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">gcore</span></code>: Raster core functionality. Base classes: <a class="reference internal" href="../api/gdaldataset_cpp.html#_CPPv411GDALDataset" title="GDALDataset"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDataset</span></code></a>, <a class="reference internal" href="../api/gdalrasterband_cpp.html#_CPPv414GDALRasterBand" title="GDALRasterBand"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALRasterBand</span></code></a>, <a class="reference internal" href="../api/gdaldriver_cpp.html#_CPPv410GDALDriver" title="GDALDriver"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDriver</span></code></a>, overview building, etc.</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">frmts</span></code>: GDAL/raster drivers (mostly, with the exception of the GDAL GeoPackage raster support in ogr/ogrsf_frmts/gpkg)</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">fuzzer</span></code>: Source code and scripts for GDAL <a class="reference external" href="https://github.com/google/oss-fuzz">OSS-Fuzz integration</a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">gnm</span></code>: Source code for <a class="reference internal" href="../user/gnm_data_model.html#gnm-data-model"><span class="std std-ref">Geographic Networks Data Model</span></a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">ogr</span></code>: OGR vector core classes: <a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv412OGRFieldDefn" title="OGRFieldDefn"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRFieldDefn</span></code></a>, <a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv416OGRGeomFieldDefn" title="OGRGeomFieldDefn"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRGeomFieldDefn</span></code></a>, <a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv414OGRFeatureDefn" title="OGRFeatureDefn"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRFeatureDefn</span></code></a>, <a class="reference internal" href="../api/ogrgeometry_cpp.html#_CPPv411OGRGeometry" title="OGRGeometry"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRGeometry</span></code></a> and derived classes, OGR SQL, etc.</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">ogr/ogrsf_frmts</span></code>: OGR/vector drivers</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">ogr/ogrsf_frmts/generic</span></code>: OGR vector core class: <cite>OGRLayer</cite>, OGR SQL generic layer</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">port</span></code>: <a class="reference internal" href="#cpl"><span class="std std-ref">CPL (Common Portability Library)</span></a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">perftests</span></code>: C++ and Python scripts to check the speed/performance of various aspects of GDAL.</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">scripts</span></code>: various utility scripts used for Continuous Integration, release generation, and other auxiliary tasks. None of them are for end users.</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">swig/include</span></code>: definition of SWIG Python, Java, C# bindings</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">swig/python/gdal-utils/scripts</span></code>: Launcher scripts for installed/public GDAL Python utilities. No real functionality there</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">swig/python/gdal-utils/osgeo_utils</span></code>: Core code for GDAL Python utilities. Available in the PyPI gdal and gdal-utils packages.</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">swig/python/gdal-utils/samples</span></code>: Scripts that are not installed and generally not or very little documented. May serve as a staging area for future scripts that are going to be promoted as official.</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">swig/python/gdal-utils/auxiliary</span></code>: Helper methods and classes used by GDAL Python utilities. Available in the PyPI gdal and gdal-utils packages.</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">third_pary</span></code>: Third-party libraries used by libgdal. Other may be found in:</p>
+<ul>
+<li><p><code class="file docutils literal notranslate"><span class="pre">alg/internal_libqhull</span></code></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">apps/argparse</span></code></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">frmts/gtiff/libtiff</span></code></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">frmts/gtiff/libgeotiff</span></code></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">frmts/hdf4/hdf-eos</span></code></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">frmts/jpeg/libjpeg</span></code></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">frmts/jpeg/libjpeg12</span></code></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">frmts/grib/degrib/degrib</span></code></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">frmts/grib/degrib/g2clib</span></code></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">frmts/pcidsk/sdk</span></code></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">frmts/pcraster/libcsf</span></code></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">frmts/png/libpng</span></code></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">frmts/gif/giflib</span></code></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">frmts/zlib/</span></code></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">ogr/ogrsf_frmts/cad/libopencad</span></code></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">ogr/ogrsf_frmts/geojson/libjson</span></code></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">ogr/ogrsf_frmts/flatgeobuf/flatbuffers</span></code></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">ogr/ogrsf_frmts/pmtiles/pmtiles</span></code></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">ogr/ogrsf_frmts/sqlite/sqlite_rtree_bulk_load</span></code></p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="testing.html" class="btn btn-neutral float-right" title="Automated testing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="dev_environment.html" class="btn btn-neutral float-left" title="Setting up a development environment" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2024 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+  </div>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

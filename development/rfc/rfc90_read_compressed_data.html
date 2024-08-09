@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RFC 90: Direct access to compressed raster data &mdash; GDAL  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d10597a4" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/gdal.css?v=e152ac3b" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://gdal.org/development/rfc/rfc90_read_compressed_data.html"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="RFC 91: GDALDataset::Close() method" href="rfc91_dataset_close.html" />
+    <link rel="prev" title="RFC 89: SQL logging callback" href="rfc89_sql_logging_callback.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Development</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../building_from_source.html">Building GDAL from source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev_environment.html">Setting up a development environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev_practices.html">Development practices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../testing.html">Automated testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev_documentation.html">Building documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cmake.html">Using GDAL in CMake projects</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">RFC list</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rfc1_pmc.html">RFC 1: Project Management Committee Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc2_svn.html">RFC 2: Migration to OSGeo Subversion Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc3_commiters.html">RFC 3: GDAL Committer Guildlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc4_geolocate.html">RFC 4: Geolocation Arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc5_unicode.html">RFC 5: Unicode support in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc6_sqlgeom.html">RFC 6: Geometry and Feature Style as OGR Special Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc7_vsilapi.html">RFC 7: Use VSILFILE for VSI*L Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc8_devguide.html">RFC 8: Developer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc9_maintainer.html">RFC 9: GDAL Paid Maintainer Guidelines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc10_ogropen.html">RFC 10: OGR Open Parameters (not implemented)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc11_fastidentify.html">RFC 11: Fast Format Identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc12_filemanagement.html">RFC 12: Improved File Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc13_createfeatures.html">RFC 13: Improved Feature Insertion/Update/Delete Performance in Batch Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc14_imagestructure.html">RFC 14: Image Structure Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc15_nodatabitmask.html">RFC 15: Band Masks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc16_ogr_reentrancy.html">RFC 16: OGR Thread Safety</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc17_python_namespaces.html">RFC 17: Python Namespaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc18_ogr_styles_c_api.html">RFC 18: OGR Style Support in C API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc19_safememalloc.html">RFC 19: Safer memory allocation in GDAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc20_srs_axes.html">RFC 20: OGRSpatialReference Axis Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc21_ogrsqlcast.html">RFC 21: OGR SQL type cast and field name alias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc22_rpc.html">RFC 22: RPC Georeferencing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc23_ogr_unicode.html">RFC 23.1: Unicode support in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc24_progressive_data_support.html">RFC 24: GDAL Progressive Data Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc25_fast_open.html">RFC 25: Fast Open (withdrawn)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc26_blockcache.html">RFC 26: GDAL Block Cache Improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc27_supportdata.html">RFC 27: Improved Supporting Data File Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc28_sqlfunc.html">RFC 28: OGR SQL Generalized Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc29_desired_fields.html">RFC 29: OGR Set Ignored Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc30_utf8_filenames.html">RFC 30: Unicode Filenames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc31_ogr_64.html">RFC 31: OGR 64bit Integer Fields and FIDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc32_gdallocationinfo.html">RFC 32: gdallocationinfo utility</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc33_gtiff_pixelispoint.html">RFC 33: GTiff - Fixing PixelIsPoint Interpretation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc34_license_policy.html">RFC 34: License Policy Enforcement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc35_deletereorderalterfielddefn.html">RFC 35: Delete, reorder and alter field definitions of OGR layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc36_open_by_drivername.html">RFC 36: Allow specification of intended driver on GDALOpen (withdrawn)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc37_cplerror_userdata.html">RFC 37: User data callbacks in CPLError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc38_ogr_faster_open.html">RFC 38: OGR Faster Open (withdrawn)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc39_ogr_layer_algebra.html">RFC 39: OGR Layer Algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc40_enhanced_rat_support.html">RFC 40: Improving performance of Raster Attribute Table implementation for large tables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc41_multiple_geometry_fields.html">RFC 41 : Support for multiple geometry fields in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc42_find_laundered_fields.html">RFC 42: OGR Layer laundered field lookup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc43_getmetadatadomainlist.html">RFC 43: GDALMajorObject::GetMetadataDomainList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc44_gdalinfoxml.html">RFC 44: Add Parseable Output Formats for ogrinfo and gdalinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc45_virtualmem.html">RFC 45: GDAL datasets and raster bands as virtual memory mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc46_gdal_ogr_unification.html">RFC 46: GDAL/OGR unification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc47_dataset_caching.html">RFC 47: Per Dataset Caching and GDALRasterBand Multithreading (not implemented)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc48_geographical_networks_support.html">RFC 48: Geographical networks support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc49_curve_geometries.html">RFC 49: Curve geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc50_ogr_field_subtype.html">RFC 50: OGR field subtypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc51_rasterio_resampling_progress.html">RFC 51: RasterIO() improvements : resampling and progress callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc52_strict_sql_quoting.html">RFC 52: Strict OGR SQL quoting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc53_ogr_notnull_default.html">RFC 53: OGR not-null constraints and default values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc54_dataset_transactions.html">RFC 54: Dataset transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc55_refined_setfeature_deletefeature_semantics.html">RFC 55: Refined SetFeature() and DeleteFeature() semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc56_millisecond_precision.html">RFC 56: OFTTime/OFTDateTime millisecond accuracy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc57_histogram_64bit_count.html">RFC 57: 64-bit bucket counts for histograms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc58_removing_dataset_nodata_value.html">RFC 58: Removing Dataset Nodata Value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59.1_utilities_as_a_library.html">RFC 59.1 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc59_utilities_as_a_library.html">RFC 59 : GDAL/OGR utilities as a library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc60_improved_roundtripping_in_ogr.html">RFC 60 : Improved round-tripping in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc61_support_for_measured_geometries.html">RFC 61 : Support for measured geometries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc62_raster_algebra.html">RFC 62 : Raster algebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc63_sparse_datasets_improvements.html">RFC 63 : Sparse datasets improvements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc64_triangle_polyhedralsurface_tin.html">RFC 64: Triangle, Polyhedral surface and TIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc65_rfc7946_geojson.html">RFC 65: RFC 7946 GeoJSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc66_randomlayerreadwrite.html">RFC 66 : OGR random layer read/write capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc67_nullfieldvalues.html">RFC 67 : Null values in OGR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc68_cplusplus11.html">RFC 68: C++11 Compilation Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc69_cplusplus_formatting.html">RFC 69: C/C++ Code Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc70_output_format_guess.html">RFC 70: Guessing output format from output file name extension for utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc71_github_migration.html">RFC 71: Migration to GitHub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc72_pytest.html">RFC 72: Update autotest suite to use pytest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc73_proj6_wkt2_srsbarn.html">RFC 73: Integration of PROJ6 for WKT2, late binding capabilities, time-support and unified CRS database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc74_sphinx.html">RFC 74: Migrate gdal.org to RTD-style Sphinx infrastructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc75_multidimensional_arrays.html">RFC 75: Multidimensional arrays</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc76_ogrpythondrivers.html">RFC 76: OGR Python drivers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc77_drop_python2_support.html">RFC 77: Drop Python 2 support in favour of Python 3.6</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc78_gdal_utils_package.html">RFC 78: gdal-utils package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc79_listing_service_providers.html">RFC 79: Listing of Service Providers on GDAL website</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc80_numfocus_relationship.html">RFC 80: NumFOCUS relationship and sponsorship program</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc81_coordinate_epoch.html">RFC 81: Support for coordinate epochs in geospatial formats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc83_use_of_project_sponsorship.html">RFC 83: guidelines for the use of GDAL project sponsorship</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc84_cmake.html">RFC 84: Migrating build systems to CMake</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc85_policy_code_additions.html">RFC 85: Policy regarding substantial code additions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc86_column_oriented_api.html">RFC 86: Column-oriented read API for vector layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc87_signed_int8.html">RFC 87: Signed int8 data type for raster</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc88_googletest.html">RFC 88: Use GoogleTest framework for C/C++ unit tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc89_sql_logging_callback.html">RFC 89: SQL logging callback</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RFC 90: Direct access to compressed raster data</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#motivation">Motivation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#technical-details">Technical details</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#intended-use">Intended use</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#c-api">C API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#backward-compatibility">Backward compatibility</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#swig-bindings">SWIG Bindings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#testing">Testing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#issues-pull-requests">Issues / pull requests</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#voting-history">Voting history</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rfc91_dataset_close.html">RFC 91: GDALDataset::Close() method</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc92_wkb_only_geometries.html">RFC 92: WKB Only geometries (on hold)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc93_update_feature.html">RFC 93: OGRLayer::UpdateFeature() method</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc94_field_precision_width_metadata.html">RFC 94: Numeric fields width/precision metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc95_standard_int_types.html">RFC 95: Use standard C/C++ integer types (proposed, <em>NOT</em> adopted)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc96_deferred_plugin_loading.html">RFC 96: Deferred C++ plugin loading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc97_feature_and_fielddefn_sealing.html">RFC 97: OGRFeatureDefn, OGRFieldDefn and OGRGeomFieldDefn &quot;sealing&quot;</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc98_build_requirements_gdal_3_9.html">RFC 98: Build requirements for GDAL 3.9</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rfc99_geometry_coordinate_precision.html">RFC 99: Geometry coordinate precision</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sponsors/index.html">Sponsors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="../index.html">Development</a> &raquo;</li>
+      
+          <li><a href="index.html">RFC list</a> &raquo;</li>
+      
+      <li>RFC 90: Direct access to compressed raster data</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit/master/doc/source/development/rfc/rfc90_read_compressed_data.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="rfc91_dataset_close.html" class="btn btn-neutral float-right" title="RFC 91: GDALDataset::Close() method" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc89_sql_logging_callback.html" class="btn btn-neutral float-left" title="RFC 89: SQL logging callback" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="rfc-90-direct-access-to-compressed-raster-data">
+<span id="rfc-90"></span><h1>RFC 90: Direct access to compressed raster data<a class="headerlink" href="#rfc-90-direct-access-to-compressed-raster-data" title="Link to this heading"></a></h1>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Author:</p></td>
+<td><p>Even Rouault</p></td>
+</tr>
+<tr class="row-even"><td><p>Contact:</p></td>
+<td><p>even.rouault at spatialys.com</p></td>
+</tr>
+<tr class="row-odd"><td><p>Started:</p></td>
+<td><p>2023-Jan-03</p></td>
+</tr>
+<tr class="row-even"><td><p>Status:</p></td>
+<td><p>Adopted, implemented</p></td>
+</tr>
+<tr class="row-odd"><td><p>Target:</p></td>
+<td><p>GDAL 3.7</p></td>
+</tr>
+</tbody>
+</table>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading"></a></h2>
+<p>The document proposes 2 new methods to directly obtain the content of a window
+of interest of a raster dataset in its native compressed format. Those methods
+can be optionally implemented and used by drivers to perform:</p>
+<ul class="simple">
+<li><p>extraction of a compressed tile as a standalone file from a container format
+(GeoTIFF, GeoPackage, etc.)</p></li>
+<li><p>creation of mosaics from a set of tiles in individual files</p></li>
+<li><p>lossless conversion between container formats using the same
+compression method</p></li>
+</ul>
+</section>
+<section id="motivation">
+<h2>Motivation<a class="headerlink" href="#motivation" title="Link to this heading"></a></h2>
+<p>When converting data between formats, calls to RasterIO(GF_Read, ...) followed
+by RasterIO(GF_Write, ...) must be currently done. For compressed formats, this
+causes decompression and recompression of data.</p>
+<p>In some particular cases, we could avoid decompressing and recompressing when the
+underlying compression method is the same (or compatible), and when requesting
+data aligned on the boundaries of the encoded data (typically whole tiles).
+This would save execution time and would avoid extra quality loss due to
+recompression cycles for lossy compression methods.</p>
+<p>This RFC offers the framework to potentially address the following use cases
+(non exhaustive list):</p>
+<ul class="simple">
+<li><p>extraction of a JPEG (resp. WEBP, JPEGXL)-compressed whole tile from a GeoTIFF
+file to a standalone JPEG (resp. WEBP, JPEGXL) file.
+Typical scenario of tile servers using a GeoTIFF file as a tile backend.</p></li>
+<li><p>similarly as above, but with GeoPackage and JPEG/PNG/WEBP compression methods.</p></li>
+<li><p>extraction of a subset of whole tiles of a JPEG/WEBP/JPEGXL-compressed tiled
+GeoTIFF to a tiled GeoTIFF using the same compression method.</p></li>
+<li><p>similarly as above, but with GeoPackage and JPEG/PNG/WEBP compression methods.</p></li>
+<li><p>lossless conversion of a mosaic of JPEG, WEBP, etc. non-overlapping and
+contiguous tiles, each in a separate file, assembled as a VRT mosaic, to a
+tiled GeoTIFF using the same compression method, with the tile dimension being
+the one of each source file.</p></li>
+<li><p>lossless conversion of a JPEG-compressed (resp. WEBP-compressed) tiled GeoTIFF
+to a JPEG-compressed (resp. WEBP-compressed) GeoPackage file and vice-versa.
+Or a subset of the file, provided that the window of interest is aligned on
+tiles boundaries.</p></li>
+<li><p>lossless conversion of JPEG to JPEGXL
+(currently implemented in master in a rather ad-hoc way in the JPEGXL driver)</p></li>
+<li><p>lossless conversion of JPEGXL that has JPEG reconstruction box back to JPEG
+(currently implemented in master in a rather ad-hoc way in the JPEGXL and
+JPEGXL drivers)</p></li>
+<li><p>lossless conversion of JPEG-compressed tiled GeoTIFF to a JPEGXL-compressed
+tiled GeoTIFF (and the reverse if JPEG reconstruction box is included).
+Or a subset of the file, provided that the window of interest is aligned on
+tiles boundaries.</p></li>
+<li><p>extraction of a subset of a JPEG-compressed tiled GeoTIFF to a standalone JPEG
+file, with a window of interest not necessarily aligned on tile boundaries, but
+just on the JPEG MCU (Minimum Code Unit), which is equal to 8 pixels in the
+general case, and 16 for YCbCr data. And when intersecting several tiles,
+provided that they share the same quality settings (which is usually the case!)
+Or lossless retiling of JPEG-compressed tiled GeoTIFF (e.g 256x256 -&gt; 512x512)</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The proposed candidate implementation only covers a subset of those use cases
+(some of them would require significant implementation effort), but the
+proposed API addition makes them possible pending further developments.</p>
+</div>
+</section>
+<section id="technical-details">
+<h2>Technical details<a class="headerlink" href="#technical-details" title="Link to this heading"></a></h2>
+<p>The following 2 new methods are added at the <a class="reference internal" href="../../api/gdaldataset_cpp.html#_CPPv411GDALDataset" title="GDALDataset"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDataset</span></code></a> level:</p>
+<section id="getcompressionformats">
+<h3>GetCompressionFormats()<a class="headerlink" href="#getcompressionformats" title="Link to this heading"></a></h3>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cm">/** Return the compression formats that can be natively obtained for the</span>
+<span class="cm"> * window of interest and requested bands.</span>
+<span class="cm"> *</span>
+<span class="cm"> * For example, a tiled dataset may be able to return data in a compressed</span>
+<span class="cm"> * format if the window of interest matches exactly a tile. For some formats,</span>
+<span class="cm"> * drivers may also be able to merge several tiles together (not currently</span>
+<span class="cm"> * implemented though).</span>
+<span class="cm"> *</span>
+<span class="cm"> * Each format string is a pseudo MIME type, whose first part can be passed</span>
+<span class="cm"> * as the pszFormat argument of ReadCompressedData(), with additional</span>
+<span class="cm"> * parameters specified as key=value with a semi-colon separator.</span>
+<span class="cm"> *</span>
+<span class="cm"> * The amount and types of optional parameters passed after the MIME type is</span>
+<span class="cm"> * format dependent, and driver dependent (some drivers might not be able to</span>
+<span class="cm"> * return those extra information without doing a rather costly processing).</span>
+<span class="cm"> *</span>
+<span class="cm"> * For example, a driver might return &quot;JPEG;frame_type=SOF0_baseline;&quot;</span>
+<span class="cm"> * &quot;bit_depth=8;num_components=3;subsampling=4:2:0;colorspace=YCbCr&quot;, and</span>
+<span class="cm"> * consequently &quot;JPEG&quot; can be passed as the pszFormat argument of</span>
+<span class="cm"> * ReadCompressedData(). For JPEG, implementations can use the</span>
+<span class="cm"> * GDALGetCompressionFormatForJPEG() helper method to generate a string like</span>
+<span class="cm"> * above from a JPEG codestream.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Several values might be returned. For example,</span>
+<span class="cm"> * the JPEGXL driver will return &quot;JXL&quot;, but also potentially &quot;JPEG&quot;</span>
+<span class="cm"> * if the JPEGXL codestream includes a JPEG reconstruction box.</span>
+<span class="cm"> *</span>
+<span class="cm"> * In the general case this method will return an empty list.</span>
+<span class="cm"> *</span>
+<span class="cm"> * @param nXOff The pixel offset to the top left corner of the region</span>
+<span class="cm"> * of the band to be accessed.  This would be zero to start from the left side.</span>
+<span class="cm"> *</span>
+<span class="cm"> * @param nYOff The line offset to the top left corner of the region</span>
+<span class="cm"> * of the band to be accessed.  This would be zero to start from the top.</span>
+<span class="cm"> *</span>
+<span class="cm"> * @param nXSize The width of the region of the band to be accessed in pixels.</span>
+<span class="cm"> *</span>
+<span class="cm"> * @param nYSize The height of the region of the band to be accessed in lines.</span>
+<span class="cm"> *</span>
+<span class="cm"> * @param nBandCount the number of bands being requested.</span>
+<span class="cm"> *</span>
+<span class="cm"> * @param panBandList the list of nBandCount band numbers.</span>
+<span class="cm"> * Note band numbers are 1 based. This may be NULL to select the first</span>
+<span class="cm"> * nBandCount bands.</span>
+<span class="cm"> *</span>
+<span class="cm"> * @return a list of compatible formats (which may be empty)</span>
+<span class="cm"> *</span>
+<span class="cm"> * @since GDAL 3.7</span>
+<span class="cm"> */</span>
+<span class="n">CPLStringList</span>
+<span class="nf">GDALDataset::GetCompressionFormats</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">nXOff</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">nYOff</span><span class="p">,</span>
+<span class="w">                                   </span><span class="kt">int</span><span class="w"> </span><span class="n">nXSize</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">nYSize</span><span class="p">,</span>
+<span class="w">                                   </span><span class="kt">int</span><span class="w"> </span><span class="n">nBandCount</span><span class="p">,</span>
+<span class="w">                                   </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">panBandList</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>For example, to check if native compression format(s) are available on the
+whole image:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">const</span><span class="w"> </span><span class="n">CPLStringList</span><span class="w"> </span><span class="n">aosFormats</span><span class="w"> </span><span class="o">=</span>
+<span class="w">   </span><span class="n">poDataset</span><span class="o">-&gt;</span><span class="n">GetCompressionFormats</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">                                    </span><span class="n">poDataset</span><span class="o">-&gt;</span><span class="n">GetRasterXSize</span><span class="p">(),</span>
+<span class="w">                                    </span><span class="n">poDataset</span><span class="o">-&gt;</span><span class="n">GetRasterYSize</span><span class="p">(),</span>
+<span class="w">                                    </span><span class="n">poDataset</span><span class="o">-&gt;</span><span class="n">GetRasterCount</span><span class="p">(),</span>
+<span class="w">                                    </span><span class="k">nullptr</span><span class="p">);</span>
+<span class="k">for</span><span class="p">(</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">pszFormat</span><span class="o">:</span><span class="w"> </span><span class="n">aosFormats</span><span class="w"> </span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">   </span><span class="c1">// Remove optional parameters and just print out the MIME type.</span>
+<span class="w">   </span><span class="k">const</span><span class="w"> </span><span class="n">CPLStringList</span><span class="w"> </span><span class="n">aosTokens</span><span class="p">(</span><span class="n">CSLTokenizeString2</span><span class="p">(</span><span class="n">pszFormat</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;;&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">));</span>
+<span class="w">   </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Found format %s</span><span class="se">\n</span><span class="s">, aosTokens[0]);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="readcompresseddata">
+<h3>ReadCompressedData()<a class="headerlink" href="#readcompresseddata" title="Link to this heading"></a></h3>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cm">/** Return the compressed content that can be natively obtained for the</span>
+<span class="cm"> * window of interest and requested bands.</span>
+<span class="cm"> *</span>
+<span class="cm"> * For example, a tiled dataset may be able to return data in compressed format</span>
+<span class="cm"> * if the window of interest matches exactly a tile. For some formats, drivers</span>
+<span class="cm"> * may also be able to merge several tiles together (not currently</span>
+<span class="cm"> * implemented though).</span>
+<span class="cm"> *</span>
+<span class="cm"> * The implementation should make sure that the content returned forms a valid</span>
+<span class="cm"> * standalone file. For example, for the GeoTIFF implementation of this method,</span>
+<span class="cm"> * when extracting a JPEG tile, the method will automatically add the content</span>
+<span class="cm"> * of the JPEG Huffman and/or quantization tables that might be stored in the</span>
+<span class="cm"> * TIFF JpegTables tag, and not in tile data itself.</span>
+<span class="cm"> *</span>
+<span class="cm"> * In the general case this method will return CE_Failure.</span>
+<span class="cm"> *</span>
+<span class="cm"> * @param pszFormat Requested compression format (e.g. &quot;JPEG&quot;,</span>
+<span class="cm"> * &quot;WEBP&quot;, &quot;JXL&quot;). This is the MIME type of one of the values</span>
+<span class="cm"> * returned by GetCompressionFormats(). The format string is designed to</span>
+<span class="cm"> * potentially include at a later point key=value optional parameters separated</span>
+<span class="cm"> * by a semi-colon character. At time of writing, none are implemented.</span>
+<span class="cm"> * ReadCompressedData() implementations should verify optional parameters and</span>
+<span class="cm"> * return CE_Failure if they cannot support one of them.</span>
+<span class="cm"> *</span>
+<span class="cm"> * @param nXOff The pixel offset to the top left corner of the region</span>
+<span class="cm"> * of the band to be accessed.  This would be zero to start from the left side.</span>
+<span class="cm"> *</span>
+<span class="cm"> * @param nYOff The line offset to the top left corner of the region</span>
+<span class="cm"> * of the band to be accessed.  This would be zero to start from the top.</span>
+<span class="cm"> *</span>
+<span class="cm"> * @param nXSize The width of the region of the band to be accessed in pixels.</span>
+<span class="cm"> *</span>
+<span class="cm"> * @param nYSize The height of the region of the band to be accessed in lines.</span>
+<span class="cm"> *</span>
+<span class="cm"> * @param nBandCount the number of bands being requested.</span>
+<span class="cm"> *</span>
+<span class="cm"> * @param panBandList the list of nBandCount band numbers.</span>
+<span class="cm"> * Note band numbers are 1 based. This may be NULL to select the first</span>
+<span class="cm"> * nBandCount bands.</span>
+<span class="cm"> *</span>
+<span class="cm"> * @param ppBuffer Pointer to a buffer to store the compressed data or nullptr.</span>
+<span class="cm"> * If ppBuffer is not nullptr, then pnBufferSize should also not be nullptr.</span>
+<span class="cm"> * If ppBuffer is not nullptr, and *ppBuffer is not nullptr, then the provided</span>
+<span class="cm"> * buffer will be filled with the compressed data, provided that pnBufferSize</span>
+<span class="cm"> * and *pnBufferSize are not nullptr, and *pnBufferSize, indicating the size</span>
+<span class="cm"> * of *ppBuffer, is sufficiently large to hold the data.</span>
+<span class="cm"> * If ppBuffer is not nullptr, but *ppBuffer is nullptr, then the method will</span>
+<span class="cm"> * allocate *ppBuffer using VSIMalloc(), and thus the caller is responsible to</span>
+<span class="cm"> * free it with VSIFree().</span>
+<span class="cm"> * If ppBuffer is nullptr, then the compressed data itself will not be returned,</span>
+<span class="cm"> * but *pnBufferSize will be updated with an upper bound of the size that would</span>
+<span class="cm"> * be necessary to hold it (if pnBufferSize != nullptr).</span>
+<span class="cm"> *</span>
+<span class="cm"> * @param pnBufferSize Output buffer size, or nullptr.</span>
+<span class="cm"> * If ppBuffer != nullptr &amp;&amp; *ppBuffer != nullptr, then pnBufferSize should</span>
+<span class="cm"> * be != nullptr and *pnBufferSize contain the size of *ppBuffer. If the</span>
+<span class="cm"> * method is successful, *pnBufferSize will be updated with the actual size</span>
+<span class="cm"> * used.</span>
+<span class="cm"> *</span>
+<span class="cm"> * @param ppszDetailedFormat Pointer to an output string, or nullptr.</span>
+<span class="cm"> * If ppszDetailedFormat is not nullptr, then, on success, the method will</span>
+<span class="cm"> * allocate a new string in *ppszDetailedFormat (to be freed with VSIFree())</span>
+<span class="cm"> * *ppszDetailedFormat might contain strings like</span>
+<span class="cm"> * &quot;JPEG;frame_type=SOF0_baseline;bit_depth=8;num_components=3;&quot;</span>
+<span class="cm"> * &quot;subsampling=4:2:0;colorspace=YCbCr&quot; or simply the MIME type.</span>
+<span class="cm"> * The string will contain at least as much information as what</span>
+<span class="cm"> * GetCompressionFormats() returns, and potentially more when</span>
+<span class="cm"> * ppBuffer != nullptr.</span>
+<span class="cm"> *</span>
+<span class="cm"> * @return CE_None in case of success, CE_Failure otherwise.</span>
+<span class="cm"> * @since GDAL 3.7</span>
+<span class="cm"> */</span>
+<span class="n">CPLErr</span><span class="w"> </span><span class="nf">GDALDataset::ReadCompressedData</span><span class="p">(</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">pszFormat</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">nXOff</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">nYOff</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">nXSize</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">nYSize</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">nBandCount</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">panBandList</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="o">**</span><span class="n">ppBuffer</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="o">*</span><span class="n">pnBufferSize</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">char</span><span class="w"> </span><span class="o">**</span><span class="n">ppszDetailedFormat</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>For example, to request JPEG content on the whole image and let GDAL deal
+with the buffer allocation.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="n">pBuffer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+<span class="kt">size_t</span><span class="w"> </span><span class="n">nBufferSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="n">CPLErr</span><span class="w"> </span><span class="n">eErr</span><span class="w"> </span><span class="o">=</span>
+<span class="w">   </span><span class="n">poDataset</span><span class="o">-&gt;</span><span class="n">ReadCompressedData</span><span class="p">(</span><span class="s">&quot;JPEG&quot;</span><span class="p">,</span>
+<span class="w">                                 </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">                                 </span><span class="n">poDataset</span><span class="o">-&gt;</span><span class="n">GetRasterXSize</span><span class="p">(),</span>
+<span class="w">                                 </span><span class="n">poDataset</span><span class="o">-&gt;</span><span class="n">GetRasterYSize</span><span class="p">(),</span>
+<span class="w">                                 </span><span class="n">poDataset</span><span class="o">-&gt;</span><span class="n">GetRasterCount</span><span class="p">(),</span>
+<span class="w">                                 </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="c1">// panBandList</span>
+<span class="w">                                 </span><span class="o">&amp;</span><span class="n">pBuffer</span><span class="p">,</span>
+<span class="w">                                 </span><span class="o">&amp;</span><span class="n">nBufferSize</span><span class="p">,</span>
+<span class="w">                                 </span><span class="k">nullptr</span><span class="w"> </span><span class="c1">// ppszDetailedFormat</span>
+<span class="w">                                </span><span class="p">);</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">eErr</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">CE_None</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">CPLAssert</span><span class="p">(</span><span class="n">pBuffer</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span>
+<span class="w">    </span><span class="n">CPLAssert</span><span class="p">(</span><span class="n">nBufferSize</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">    </span><span class="n">VSILFILE</span><span class="o">*</span><span class="w"> </span><span class="n">fp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">VSIFOpenL</span><span class="p">(</span><span class="s">&quot;my.jpeg&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;wb&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">VSIFWriteL</span><span class="p">(</span><span class="n">pBuffer</span><span class="p">,</span><span class="w"> </span><span class="n">nBufferSize</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">fp</span><span class="p">);</span>
+<span class="w">        </span><span class="n">VSIFCloseL</span><span class="p">(</span><span class="n">fp</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">VSIFree</span><span class="p">(</span><span class="n">pBuffer</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Or to manage the buffer allocation on your side:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="kt">size_t</span><span class="w"> </span><span class="n">nUpperBoundBufferSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="n">CPLErr</span><span class="w"> </span><span class="n">eErr</span><span class="w"> </span><span class="o">=</span>
+<span class="w">   </span><span class="n">poDataset</span><span class="o">-&gt;</span><span class="n">ReadCompressedData</span><span class="p">(</span><span class="s">&quot;JPEG&quot;</span><span class="p">,</span>
+<span class="w">                                 </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">                                 </span><span class="n">poDataset</span><span class="o">-&gt;</span><span class="n">GetRasterXSize</span><span class="p">(),</span>
+<span class="w">                                 </span><span class="n">poDataset</span><span class="o">-&gt;</span><span class="n">GetRasterYSize</span><span class="p">(),</span>
+<span class="w">                                 </span><span class="n">poDataset</span><span class="o">-&gt;</span><span class="n">GetRasterCount</span><span class="p">(),</span>
+<span class="w">                                 </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="c1">// panBandList</span>
+<span class="w">                                 </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="c1">// ppBuffer,</span>
+<span class="w">                                 </span><span class="o">&amp;</span><span class="n">nUpperBoundBufferSize</span><span class="p">,</span>
+<span class="w">                                 </span><span class="k">nullptr</span><span class="w"> </span><span class="c1">// ppszDetailedFormat</span>
+<span class="w">                                </span><span class="p">);</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">eErr</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">CE_None</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">myBuffer</span><span class="p">;</span>
+<span class="w">    </span><span class="n">myBuffer</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">nUpperBoundBufferSize</span><span class="p">);</span>
+<span class="w">    </span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="n">pBuffer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">myBuffer</span><span class="p">.</span><span class="n">data</span><span class="p">();</span>
+<span class="w">    </span><span class="kt">size_t</span><span class="w"> </span><span class="n">nActualSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nUpperBoundBufferSize</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">pszDetailedFormat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// We also request detailed format, but we could have passed it to</span>
+<span class="w">    </span><span class="c1">// nullptr as well.</span>
+<span class="w">    </span><span class="n">eErr</span><span class="w"> </span><span class="o">=</span>
+<span class="w">      </span><span class="n">poDataset</span><span class="o">-&gt;</span><span class="n">ReadCompressedData</span><span class="p">(</span><span class="s">&quot;JPEG&quot;</span><span class="p">,</span>
+<span class="w">                                    </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">                                    </span><span class="n">poDataset</span><span class="o">-&gt;</span><span class="n">GetRasterXSize</span><span class="p">(),</span>
+<span class="w">                                    </span><span class="n">poDataset</span><span class="o">-&gt;</span><span class="n">GetRasterYSize</span><span class="p">(),</span>
+<span class="w">                                    </span><span class="n">poDataset</span><span class="o">-&gt;</span><span class="n">GetRasterCount</span><span class="p">(),</span>
+<span class="w">                                    </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="c1">// panBandList</span>
+<span class="w">                                    </span><span class="o">&amp;</span><span class="n">pBuffer</span><span class="p">,</span>
+<span class="w">                                    </span><span class="o">&amp;</span><span class="n">nActualSize</span><span class="p">,</span>
+<span class="w">                                    </span><span class="o">&amp;</span><span class="n">pszDetailedFormat</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">eErr</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">CE_None</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">       </span><span class="n">CPLAssert</span><span class="p">(</span><span class="n">pBuffer</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">myBuffer</span><span class="p">.</span><span class="n">data</span><span class="p">());</span><span class="w"> </span><span class="c1">// pointed value not modified</span>
+<span class="w">       </span><span class="n">CPLAssert</span><span class="p">(</span><span class="n">nActualSize</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">nUpperBoundBufferSize</span><span class="p">);</span>
+<span class="w">       </span><span class="n">myBuffer</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">nActualSize</span><span class="p">);</span>
+<span class="w">       </span><span class="c1">// do something useful</span>
+<span class="w">       </span><span class="n">VSIFree</span><span class="p">(</span><span class="n">pszDetailedFormat</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="lossless-copy-creation-option">
+<h3>LOSSLESS_COPY creation option<a class="headerlink" href="#lossless-copy-creation-option" title="Link to this heading"></a></h3>
+<p>Those methods are typically used by a GDALDriver::CreateCopy() implementation
+to short-circuit the nominal logic of acquiring pixels from the source and
+compressing them and use instead the compressed data if available in the desired
+target compression format.</p>
+<p>Drivers that implement such short-circuit should expose a LOSSLESS_COPY creation
+option, whose default value is AUTO, to mean that use of source compressed data
+should be done in priority, and fallback to the regular code path otherwise.
+Users might set it to YES to require the use of lossless copy, and, when it is
+not possible to use it, the driver should error out.
+Users might also set it to NO to ask for the regular code path to be taken.
+Setting it to NO should be uncommon. This is a provision in case the
+optimized code path would have bugs, or if for any other reason, the regular
+code path must be taken (if the source compressed data was not fully conformant
+for example).</p>
+</section>
+<section id="miscellaneous">
+<h3>Miscellaneous<a class="headerlink" href="#miscellaneous" title="Link to this heading"></a></h3>
+<p>A helper <code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">GDALDataset::IsAllBands(int</span> <span class="pre">nBandCount,</span> <span class="pre">const</span> <span class="pre">int</span> <span class="pre">*panBandList)</span> <span class="pre">const</span></code>
+method is also added to check if (nBandCount, panBandList) requests all the
+bands of the dataset.</p>
+</section>
+</section>
+<section id="intended-use">
+<h2>Intended use<a class="headerlink" href="#intended-use" title="Link to this heading"></a></h2>
+<p>This RFC does <em>not</em> deprecate the traditional RasterIO() usage by any means.
+Its main intended users are (some) CreateCopy() implementations.</p>
+<p>Clearly, the use of ReadCompressedData() is an advanced one, which often
+requires a good understanding of some low-level characteristics of the
+compression methods to be used properly (e.g. not all formulations of JPEG
+codestreams are usable as a JPEG-in-TIFF or supported by libjxl in JPEG lossless
+transcoding, which requires to examine the output of the new helper
+GDALGetCompressionFormatForJPEG() function).</p>
+</section>
+<section id="c-api">
+<h2>C API<a class="headerlink" href="#c-api" title="Link to this heading"></a></h2>
+<p>The 2 above C++ methods are available in the C API as
+<code class="docutils literal notranslate"><span class="pre">GDALDatasetGetCompressionFormats()</span></code> and <code class="docutils literal notranslate"><span class="pre">GDALDatasetReadCompressedData()</span></code>.
+The return of GDALDatasetGetCompressionFormats() should be freed with
+<a class="reference internal" href="../../api/cpl.html#_CPPv410CSLDestroyPPc" title="CSLDestroy"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">CSLDestroy()</span></code></a>.</p>
+</section>
+<section id="backward-compatibility">
+<h2>Backward compatibility<a class="headerlink" href="#backward-compatibility" title="Link to this heading"></a></h2>
+<p>No backward incompatibility. Only API addition.</p>
+<p>For driver using ReadCompressedData() in their CreateCopy() implementation,
+generated files might be changed, with more frequent lossless conversions.</p>
+</section>
+<section id="swig-bindings">
+<h2>SWIG Bindings<a class="headerlink" href="#swig-bindings" title="Link to this heading"></a></h2>
+<p>The new functions will <em>not</em> be exposed to bindings currently.</p>
+</section>
+<section id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Link to this heading"></a></h2>
+<p>The scenarios covered by the below proposed implementation will be tested
+by C++ unit tests (unit testing of GetCompressionFormats() and ReadCompressedData()
+implementations), and in Python autotest suite for end-to-end tests (e.g lossless
+JPEG -&gt; JPEGXL -&gt; JPEG)</p>
+</section>
+<section id="issues-pull-requests">
+<h2>Issues / pull requests<a class="headerlink" href="#issues-pull-requests" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/OSGeo/gdal/compare/master...rouault:gdal:ReadCompressedData?expand=1">https://github.com/OSGeo/gdal/compare/master...rouault:gdal:ReadCompressedData?expand=1</a> contains
+a candidate implementation with the following capabilities:</p>
+<ul class="simple">
+<li><p>core empty implementation of GetCompressionFormats() and ReadCompressedData()</p></li>
+<li><p>implement ReadCompressedData() in the GeoTIFF driver for JPEG/WEBP/JPEGXL compression
+(limited to extracting a single tile for now)</p></li>
+<li><p>implement ReadCompressedData() in the VRT driver (limited to a single source
+for now, which forwards the call to the source)</p></li>
+<li><p>implement ReadCompressedData() in the JPEG driver.</p></li>
+<li><p>use ReadCompressedData() in the JPEG driver (with pszFormat equal to &quot;JPEG&quot;)
+in its CreateCopy() implementation, and expose the LOSSLESS_COPY creation
+option</p></li>
+<li><p>implement ReadCompressedData() in the JPEGXL driver, returning both &quot;JXL&quot; of course,
+but also &quot;JPEG&quot; if the JPEGXL file includes a JPEG reconstruction box.</p></li>
+<li><p>use ReadCompressedData() in the JPEGXL driver, with pszFormat equal to &quot;JPEG&quot;
+or &quot;JXL&quot;, in its CreateCopy() implementation, and expose the LOSSLESS_COPY
+creation option</p></li>
+<li><p>implement ReadCompressedData() in the WEBP driver.</p></li>
+<li><p>use ReadCompressedData() in the WEBP driver (with pszFormat equal to &quot;WEBP&quot;)
+in its CreateCopy() implementation, and expose the LOSSLESS_COPY creation
+option</p></li>
+</ul>
+<p>Given the above, the following scenarios are for example covered:</p>
+<ul class="simple">
+<li><p>gdal_translate -srcwin of a tile of a JPEG (resp. JPEGXL, WEBP)-compressed tiled
+GeoTIFF to JPEG (resp. JPEGXL, WEBP).
+(involves the GTiff and VRT drivers as producers, the JPEG/JPEGXL/WEBP drivers as
+consumers)</p></li>
+<li><p>gdal_translate of a JPEGXL file with JPEG reconstruction box to JPEG
+(involves the JPEGXL driver as producer, the JPEG driver as consumer). And
+the reverse operation: lossless conversion of JPEG to JPEGXL with a JPEG
+reconstruction box.</p></li>
+</ul>
+</section>
+<section id="voting-history">
+<h2>Voting history<a class="headerlink" href="#voting-history" title="Link to this heading"></a></h2>
+<p>+1 from PSC members JukkaR, FrankW, SeanG, MateuzL and EvenR</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rfc91_dataset_close.html" class="btn btn-neutral float-right" title="RFC 91: GDALDataset::Close() method" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rfc89_sql_logging_callback.html" class="btn btn-neutral float-left" title="RFC 89: SQL logging callback" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2024 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+  </div>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
