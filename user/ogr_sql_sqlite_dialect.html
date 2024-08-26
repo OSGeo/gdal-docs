@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OGR SQL dialect and SQLITE SQL dialect &mdash; GDAL  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d10597a4" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/gdal.css?v=e152ac3b" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="canonical" href="https://gdal.org/user/ogr_sql_sqlite_dialect.html"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="OGR SQL dialect" href="ogr_sql_dialect.html" />
+    <link rel="prev" title="Multi-threading" href="multithreading.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">User</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="raster_data_model.html">Raster Data Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multidim_raster_data_model.html">Multidimensional Raster Data Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vector_data_model.html">Vector Data Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gnm_data_model.html">Geographic Networks Data Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multithreading.html">Multi-threading</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">OGR SQL dialect and SQLITE SQL dialect</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dialects">Dialects</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ogr_sql_dialect.html">OGR SQL dialect</a></li>
+<li class="toctree-l4"><a class="reference internal" href="sql_sqlite_dialect.html">SQL SQLite dialect</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#executesql">ExecuteSQL()</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="virtual_file_systems.html">GDAL Virtual File Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ogr_feature_style.html">Feature Style Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coordinate_epoch.html">Coordinate epoch support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configoptions.html">Configuration options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gdal_python_utilities.html">GDAL Python Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sponsors/index.html">Sponsors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">User oriented documentation</a> &raquo;</li>
+      
+      <li>OGR SQL dialect and SQLITE SQL dialect</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit/master/doc/source/user/ogr_sql_sqlite_dialect.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="ogr_sql_dialect.html" class="btn btn-neutral float-right" title="OGR SQL dialect" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="multithreading.html" class="btn btn-neutral float-left" title="Multi-threading" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="ogr-sql-dialect-and-sqlite-sql-dialect">
+<span id="ogr-sql-sqlite-dialect"></span><h1>OGR SQL dialect and SQLITE SQL dialect<a class="headerlink" href="#ogr-sql-dialect-and-sqlite-sql-dialect" title="Link to this heading"></a></h1>
+<p>The GDALDataset supports executing commands against a datasource via the
+<a class="reference internal" href="../api/gdaldataset_cpp.html#_CPPv4N11GDALDataset10ExecuteSQLEPKcP11OGRGeometryPKc" title="GDALDataset::ExecuteSQL"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDataset::ExecuteSQL()</span></code></a> method. How such commands are evaluated
+is dependent on the datasets.</p>
+<ul class="simple">
+<li><p>For most file formats (e.g. Shapefiles, GeoJSON, MapInfo files), the built-in
+<a class="reference internal" href="ogr_sql_dialect.html#ogr-sql-dialect"><span class="std std-ref">OGR SQL dialect</span></a> dialect will be used by defaults. It is also possible
+to request the <a class="reference internal" href="sql_sqlite_dialect.html#sql-sqlite-dialect"><span class="std std-ref">SQL SQLite dialect</span></a> alternate dialect to be used, which
+will use the SQLite engine to evaluate commands on GDAL datasets.</p></li>
+<li><p>All OGR drivers for database systems: <a class="reference internal" href="../drivers/vector/mysql.html#vector-mysql"><span class="std std-ref">MySQL</span></a>, <a class="reference internal" href="../drivers/vector/pg.html#vector-pg"><span class="std std-ref">PostgreSQL / PostGIS</span></a>,
+<a class="reference internal" href="../drivers/vector/oci.html#vector-oci"><span class="std std-ref">Oracle Spatial</span></a>, <a class="reference internal" href="../drivers/vector/sqlite.html#vector-sqlite"><span class="std std-ref">SQLite / Spatialite RDBMS</span></a>, <a class="reference internal" href="../drivers/vector/gpkg.html#vector-gpkg"><span class="std std-ref">GPKG -- GeoPackage vector</span></a>,
+<a class="reference internal" href="../drivers/vector/odbc.html#vector-odbc"><span class="std std-ref">ODBC RDBMS</span></a>, <a class="reference internal" href="../drivers/vector/pgeo.html#vector-pgeo"><span class="std std-ref">ESRI Personal GeoDatabase</span></a>, <a class="reference internal" href="../drivers/vector/hana.html#vector-hana"><span class="std std-ref">SAP HANA</span></a> and <a class="reference internal" href="../drivers/vector/mssqlspatial.html#vector-mssqlspatial"><span class="std std-ref">MSSQLSpatial - Microsoft SQL Server Spatial Database</span></a>,
+override the <a class="reference internal" href="../api/gdaldataset_cpp.html#_CPPv4N11GDALDataset10ExecuteSQLEPKcP11OGRGeometryPKc" title="GDALDataset::ExecuteSQL"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDataset::ExecuteSQL()</span></code></a> function with dedicated implementation
+and, by default, pass the SQL statements directly to the underlying RDBMS.
+In these cases the SQL syntax varies in some particulars from OGR SQL.
+Also, anything possible in SQL can then be accomplished for these particular
+databases. Generally, only the result of SELECT statements will be returned as
+layers. For those drivers, it is also possible to explicitly request the
+<code class="docutils literal notranslate"><span class="pre">OGRSQL</span></code> and <code class="docutils literal notranslate"><span class="pre">SQLITE</span></code> dialects, although performance will generally be
+much less as the native SQL engine of those database systems.</p></li>
+</ul>
+<section id="dialects">
+<h2>Dialects<a class="headerlink" href="#dialects" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ogr_sql_dialect.html">OGR SQL dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sql_sqlite_dialect.html">SQL SQLite dialect</a></li>
+</ul>
+</div>
+</section>
+<section id="executesql">
+<h2>ExecuteSQL()<a class="headerlink" href="#executesql" title="Link to this heading"></a></h2>
+<p>SQL is executed against an GDALDataset, not against a specific layer.  The
+call looks like this:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">OGRLayer</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nf">GDALDataset::ExecuteSQL</span><span class="p">(</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">pszSQLCommand</span><span class="p">,</span>
+<span class="w">                                    </span><span class="n">OGRGeometry</span><span class="w"> </span><span class="o">*</span><span class="n">poSpatialFilter</span><span class="p">,</span>
+<span class="w">                                    </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">pszDialect</span><span class="w"> </span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">pszDialect</span></code> argument is in theory intended to allow for support of
+different command languages against a provider, but for now applications
+should always pass an empty (not NULL) string to get the default dialect.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">poSpatialFilter</span></code> argument is a geometry used to select a bounding rectangle
+for features to be returned in a manner similar to the
+<a class="reference internal" href="../api/ogrlayer_cpp.html#_CPPv4N8OGRLayer16SetSpatialFilterEP11OGRGeometry" title="OGRLayer::SetSpatialFilter"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRLayer::SetSpatialFilter()</span></code></a> method.  It may be NULL for no special spatial
+restriction.</p>
+<p>The result of an ExecuteSQL() call is usually a temporary OGRLayer representing
+the results set from the statement.  This is the case for a SELECT statement
+for instance.  The returned temporary layer should be released with
+<code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDataset::ReleaseResultsSet()</span></code> method when no longer needed.  Failure
+to release it before the datasource is destroyed may result in a crash.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ogr_sql_dialect.html" class="btn btn-neutral float-right" title="OGR SQL dialect" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="multithreading.html" class="btn btn-neutral float-left" title="Multi-threading" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2024 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+  </div>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

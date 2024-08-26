@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Oracle Spatial &mdash; GDAL  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d10597a4" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/gdal.css?v=e152ac3b" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://gdal.org/drivers/vector/oci.html"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="ODBC RDBMS" href="odbc.html" />
+    <link rel="prev" title="OGC API - Features" href="oapif.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Vector drivers</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="amigocloud.html">AmigoCloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arrow.html">(Geo)Arrow IPC File Format / Stream</a></li>
+<li class="toctree-l2"><a class="reference internal" href="avcbin.html">Arc/Info Binary Coverage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="avce00.html">Arc/Info E00 (ASCII) Coverage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cad.html">CAD -- AutoCAD DWG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="carto.html">Carto</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csv.html">Comma Separated Value (.csv)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csw.html">CSW - OGC CSW (Catalog Service for the Web)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dgn.html">Microstation DGN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dgnv8.html">Microstation DGN v8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dwg.html">AutoCAD DWG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dxf.html">AutoCAD DXF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eeda.html">Google Earth Engine Data API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="edigeo.html">EDIGEO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elasticsearch.html">Elasticsearch: Geographically Encoded Objects for Elasticsearch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="esrijson.html">ESRIJSON / FeatureService driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filegdb.html">ESRI File Geodatabase (FileGDB)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flatgeobuf.html">FlatGeobuf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoconcept.html">GeoConcept text export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geojson.html">GeoJSON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geojsonseq.html">GeoJSONSeq: sequence of GeoJSON features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="georss.html">GeoRSS : Geographically Encoded Objects for RSS feeds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gml.html">GML - Geography Markup Language</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gmlas.html">GMLAS - Geography Markup Language (GML) driven by application schemas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gmt.html">GMT ASCII Vectors (.gmt)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpkg.html">GPKG -- GeoPackage vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpsbabel.html">GPSBabel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpx.html">GPX - GPS Exchange Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grass.html">GRASS Vector Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gtfs.html">GTFS - General Transit Feed Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hana.html">SAP HANA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="idb.html">IDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="idrisi.html">Idrisi Vector (.VCT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ili.html">&quot;INTERLIS 1&quot; and &quot;INTERLIS 2&quot; drivers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jml.html">JML: OpenJUMP JML format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jsonfg.html">JSONFG -- OGC Features and Geometries JSON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kml.html">KML - Keyhole Markup Language</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libkml.html">LIBKML Driver (.kml .kmz)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lvbag.html">Dutch Kadaster LV BAG 2.0 Extract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mapml.html">MapML</a></li>
+<li class="toctree-l2"><a class="reference internal" href="memory.html">Memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="miramon.html">MiraMon Vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mitab.html">MapInfo TAB and MIF/MID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mongodbv3.html">MongoDBv3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mssqlspatial.html">MSSQLSpatial - Microsoft SQL Server Spatial Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mvt.html">MVT: Mapbox Vector Tiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mysql.html">MySQL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nas.html">NAS - ALKIS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="netcdf.html">NetCDF: Network Common Data Form - Vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ngw.html">NGW -- NextGIS Web</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ntf.html">UK .NTF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="oapif.html">OGC API - Features</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Oracle Spatial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#driver-capabilities">Driver capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sql-issues">SQL Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#caveats">Caveats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#creation-issues">Creation Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configuration-options">Configuration options</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#layer-creation-options">Layer Creation Options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#layer-open-options">Layer Open Options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#example">Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#standalone-plugin-compilation">Standalone plugin compilation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#credits">Credits</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="odbc.html">ODBC RDBMS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ods.html">ODS - Open Document Spreadsheet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ogdi.html">OGDI Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="openfilegdb.html">ESRI File Geodatabase vector (OpenFileGDB)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="osm.html">OSM - OpenStreetMap XML and PBF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parquet.html">(Geo)Parquet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pdf.html">PDF -- Geospatial PDF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pds.html">PDS - Planetary Data Systems TABLE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pgdump.html">PostgreSQL SQL Dump</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pgeo.html">ESRI Personal GeoDatabase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pg.html">PostgreSQL / PostGIS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plscenes.html">PLScenes (Planet Labs Scenes/Catalog API)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pmtiles.html">PMTiles -- ProtoMaps Tiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s57.html">IHO S-57 (ENC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sdts.html">SDTS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="selafin.html">Selafin files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shapefile.html">ESRI Shapefile / DBF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sosi.html">Norwegian SOSI Standard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sqlite.html">SQLite / Spatialite RDBMS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="svg.html">SVG - Scalable Vector Graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sxf.html">Storage and eXchange Format - SXF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiger.html">U.S. Census TIGER/Line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.html">TileDB -- TileDB vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="topojson.html">TopoJSON driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vdv.html">VDV - VDV-451/VDV-452/INTREST Data Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vfk.html">VFK - Czech Cadastral Exchange Data Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vrt.html">VRT -- Virtual Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wasp.html">WAsP - WAsP .map format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wfs.html">WFS - OGC WFS service</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xls.html">XLS - MS Excel format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xlsx.html">XLSX - MS Office Open XML spreadsheet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xodr.html">XODR -- OpenDRIVE Road Description Format</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sponsors/index.html">Sponsors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Vector drivers</a> &raquo;</li>
+      
+      <li>Oracle Spatial</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit/master/doc/source/drivers/vector/oci.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="odbc.html" class="btn btn-neutral float-right" title="ODBC RDBMS" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="oapif.html" class="btn btn-neutral float-left" title="OGC API - Features" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="oracle-spatial">
+<span id="vector-oci"></span><h1>Oracle Spatial<a class="headerlink" href="#oracle-spatial" title="Link to this heading"></a></h1>
+<div class="admonition shortname" id="shortname-0">
+<p class="admonition-title">Driver short name</p>
+<p>OCI</p>
+</div>
+<div class="admonition build_dependencies" id="build_dependencies-0">
+<p class="admonition-title">Build dependencies</p>
+<p>OCI library</p>
+</div>
+<p>This driver supports reading and writing data in Oracle Spatial (8.1.7
+or later) Object-Relational format. The Oracle Spatial driver is not
+normally built into OGR, but may be built in on platforms where the
+Oracle client libraries are available.</p>
+<p>When opening a database, its name should be specified in the form
+&quot;OCI:userid/password&#64;database_instance:table,table&quot;. The list of tables
+is optional. The database_instance portion may be omitted when accessing
+the default local database instance. See the
+<a class="reference external" href="https://docs.oracle.com/search/?q=oci%20driver">Oracle Help Center</a>
+for more information about the OCI driver.</p>
+<p>If the list of tables is not provided, then all tables appearing in
+ALL_SDO_GEOM_METADATA will be treated by OGR as layers with the table
+names as the layer names. Non-spatial tables or spatial tables not
+listed in the ALL_SDO_GEOM_METADATA view <a class="footnote-reference brackets" href="#id2" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> are not accessible unless
+explicitly listed in the datasource name. Even in databases where all
+desired layers are in the ALL_SDO_GEOM_METADATA view, it may be
+desirable to list only the tables to be used as this can substantially
+reduce initialization time in databases with many tables.</p>
+<p>If the table has an integer column called OGR_FID it will be used as the
+feature id by OGR (and it will not appear as a regular attribute). When
+loading data into Oracle Spatial OGR will always create the OGR_FID
+field.</p>
+<p>When reading data from one or more views, the view names should be
+specified in the form
+&quot;OCI:userid/password&#64;database_instance:view,view&quot;. What is written
+above regarding tables, applies to views as well.</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id2" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>It is the database user that is responsible for updating the
+ALL_SDO_GEOM_METADATA view, by inserting an appropriate row into the
+USER_SDO_GEOM_METADATA view. This is why it is possible that the
+table you want to read from is not listed in the
+ALL_SDO_GEOM_METADATA.</p>
+</aside>
+</aside>
+<section id="driver-capabilities">
+<h2>Driver capabilities<a class="headerlink" href="#driver-capabilities" title="Link to this heading"></a></h2>
+<div class="admonition supports_create" id="supports_create-0">
+<p class="admonition-title">Supports Create()</p>
+<p>This driver supports the <a class="reference internal" href="../../api/gdaldriver_cpp.html#_CPPv4N10GDALDriver6CreateEPKciii12GDALDataType12CSLConstList" title="GDALDriver::Create"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDriver::Create()</span></code></a> operation</p>
+</div>
+<div class="admonition supports_georeferencing" id="supports_georeferencing-0">
+<p class="admonition-title">Supports Georeferencing</p>
+<p>This driver supports georeferencing</p>
+</div>
+</section>
+<section id="sql-issues">
+<h2>SQL Issues<a class="headerlink" href="#sql-issues" title="Link to this heading"></a></h2>
+<p>By default, the Oracle driver passes SQL statements directly to Oracle
+rather than evaluating them internally when using the ExecuteSQL() call
+on the OGRDataSource, or the -sql command option to ogr2ogr. Attribute
+query expressions are also passed through to Oracle.</p>
+<p>As well two special commands are supported via the ExecuteSQL()
+interface. These are &quot;<strong>DELLAYER:&lt;table_name&gt;</strong>&quot; to delete a layer, and
+&quot;<strong>VALLAYER:&lt;table_name&gt;</strong>&quot; to apply the SDO_GEOM.VALIDATE_GEOMETRY()
+check to a layer. Internally these pseudo-commands are translated into
+more complex SQL commands for Oracle.</p>
+<p>It is also possible to request the driver to handle SQL commands with
+<a class="reference internal" href="../../user/ogr_sql_dialect.html#ogr-sql-dialect"><span class="std std-ref">OGR SQL</span></a> engine, by passing <strong>&quot;OGRSQL&quot;</strong>
+string to the ExecuteSQL() method, as name of the SQL dialect.</p>
+</section>
+<section id="caveats">
+<h2>Caveats<a class="headerlink" href="#caveats" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>The type recognition logic is currently somewhat impoverished. No
+effort is made to preserve real width information for integer and
+real fields.</p></li>
+<li><p>Various types such as objects, and BLOBs in Oracle will be completely
+ignored by OGR.</p></li>
+<li><p>Currently the OGR transaction semantics are not properly mapped onto
+transaction semantics in Oracle.</p></li>
+<li><p>If an attribute called OGR_FID exists in the schema for tables being
+read, it will be used as the FID. Random (FID based) reads on tables
+without an identified (and indexed) FID field can be very slow. To
+force use of a particular field name the <a class="reference internal" href="#config-OCI_FID"><code class="docutils literal notranslate"><span class="pre">OCI_FID</span></code></a>
+configuration option (e.g. environment variable) can be set to the
+target field name.</p></li>
+<li><p>Curved geometry types are converted to linestrings or linear rings in
+six degree segments when reading. The driver has no support for
+writing curved geometries.</p></li>
+<li><p>There is no support for point cloud (SDO_PC), TIN (SDO_TIN) and
+annotation text data types in Oracle Spatial.</p></li>
+<li><p>It might be necessary to define the environment variable NLS_LANG to
+&quot;American_America.UTF8&quot; to avoid issues with floating point numbers
+being truncated to integer on non-English environments.</p></li>
+<li><p>For developers: when running the driver under the memory error
+detection tool Valgrind, specifying the database_instance, typically
+to localhost, or with the TWO_TASK environment variable seems to be
+compulsory, otherwise &quot;TNS:permission denied&quot; errors will be
+reported)</p></li>
+<li><p>The logic for finding the specified table or view first checks
+whether a table with the given name exists, then a view, and then
+tries again with quoted names. This may result in one or more errors
+of the following type written to the output: &quot;ORA-04043: object
+&lt;object_name&gt; does not exist&quot;, even if the object actually is found
+later on.</p></li>
+</ul>
+</section>
+<section id="creation-issues">
+<h2>Creation Issues<a class="headerlink" href="#creation-issues" title="Link to this heading"></a></h2>
+<p>The Oracle Spatial driver does not support creation of new datasets
+(database instances), but it does allow creation of new layers within an
+existing database.</p>
+<p>Upon closing the OGRDataSource newly created layers will have a spatial
+index automatically built. At this point the USER_SDO_GEOM_METADATA
+table will also be updated with bounds for the table based on the
+features that have actually been written. One consequence of this is
+that once a layer has been loaded it is generally not possible to load
+additional features outside the original extents without manually
+modifying the DIMINFO information in USER_SDO_GEOM_METADATA and
+rebuilding the spatial index.</p>
+</section>
+<section id="configuration-options">
+<h2>Configuration options<a class="headerlink" href="#configuration-options" title="Link to this heading"></a></h2>
+<p><a class="reference internal" href="../../user/configoptions.html#configoptions"><span class="std std-ref">Configuration options</span></a> can be specified in command-line tools using the syntax <code class="docutils literal notranslate"><span class="pre">--config</span> <span class="pre">&lt;NAME&gt;=&lt;VALUE&gt;</span></code> or using functions such as <a class="reference internal" href="../../api/cpl.html#_CPPv418CPLSetConfigOptionPKcPKc" title="CPLSetConfigOption"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">CPLSetConfigOption()</span></code></a> (C) or <a class="reference internal" href="../../api/python/general.html#osgeo.gdal.config_options" title="osgeo.gdal.config_options"><code class="xref py py-func docutils literal notranslate"><span class="pre">gdal.config_options</span></code></a> (Python).
+The following configuration options are available:</p>
+<ul class="simple">
+<li><p id="config-OCI_FID"><strong>OCI_FID=value: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">OGR_FID</span></code>. Sets the name of the field to be used as the FID.</p>
+</li>
+</ul>
+<section id="layer-creation-options">
+<h3>Layer Creation Options<a class="headerlink" href="#layer-creation-options" title="Link to this heading"></a></h3>
+<p>Layer creation options can be specified in command-line tools using the syntax <code class="docutils literal notranslate"><span class="pre">-lco</span> <span class="pre">&lt;NAME&gt;=&lt;VALUE&gt;</span></code> or by providing the appropriate arguments to <a class="reference internal" href="../../api/raster_c_api.html#_CPPv422GDALDatasetCreateLayer12GDALDatasetHPKc20OGRSpatialReferenceH18OGRwkbGeometryType12CSLConstList" title="GDALDatasetCreateLayer"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDatasetCreateLayer()</span></code></a> (C) or <a class="reference internal" href="../../api/python/raster_api.html#osgeo.gdal.Dataset.CreateLayer" title="osgeo.gdal.Dataset.CreateLayer"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Dataset.CreateLayer</span></code></a> (Python).
+The following layer creation options are supported:</p>
+<ul class="simple">
+<li><p id="drivers/vector/oci-lco-OVERWRITE"><strong>OVERWRITE=[YES/NO]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">NO</span></code>. This may be &quot;YES&quot; to force an existing layer (=table)
+of the same desired name to be destroyed before creating the
+requested layer.</p>
+</li>
+<li><p id="drivers/vector/oci-lco-TRUNCATE"><strong>TRUNCATE=[YES/NO]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">NO</span></code>. This may be &quot;YES&quot; to force the existing table to be
+reused, but to first truncate all records in the table, preserving
+indexes or dependencies.</p>
+</li>
+<li><p id="drivers/vector/oci-lco-LAUNDER"><strong>LAUNDER=[YES/NO]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">NO</span></code>. This may be &quot;YES&quot; to force new fields created on this
+layer to have their field names &quot;laundered&quot; into a form more
+compatible with Oracle. This converts to upper case and converts some
+special characters like &quot;-&quot; and &quot;#&quot; to &quot;_&quot;.</p>
+</li>
+<li><p id="drivers/vector/oci-lco-PRECISION"><strong>PRECISION=[YES/NO]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">YES</span></code>. This may be &quot;YES&quot; to force new fields created on this
+layer to try and represent the width and precision information, if
+available using NUMBER(width,precision) or VARCHAR2(width) types. If
+&quot;NO&quot; then the types NUMBER, INTEGER and VARCHAR2 will be used
+instead.</p>
+</li>
+<li><p id="drivers/vector/oci-lco-DIM"><strong>DIM=[2/3]: </strong>This may be set to 2 or 3 to force the dimension of the
+created layer. Prior to GDAL 2.2, 3 is used by default. Starting with
+GDAL 2.2, the dimension of the layer geometry type is used by
+default.</p>
+</li>
+<li><p id="drivers/vector/oci-lco-SPATIAL_INDEX"><strong>SPATIAL_INDEX=[YES/NO]: </strong>This may be set to NO to disable creation of a
+spatial index when a layer load is complete. By default an index is
+created if any of the layer features have valid geometries. The
+default is &quot;YES&quot;. Note: option was called INDEX in releases before
+GDAL 2</p>
+</li>
+<li><p id="drivers/vector/oci-lco-INDEX_PARAMETERS"><strong>INDEX_PARAMETERS=value: </strong>This may be set to pass creation parameters
+when the spatial index is created. For instance setting
+<a class="reference internal" href="#drivers/vector/oci-lco-INDEX_PARAMETERS"><code class="docutils literal notranslate"><span class="pre">INDEX_PARAMETERS</span></code></a> to <code class="docutils literal notranslate"><span class="pre">SDO_RTR_PCTFREE=0</span></code> would cause the rtree index to
+be created without any empty space. By default no parameters are
+passed causing a default R-Tree spatial index to be created.</p>
+</li>
+<li><p id="drivers/vector/oci-lco-ADD_LAYER_GTYPE"><strong>ADD_LAYER_GTYPE=[YES/NO]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">YES</span></code>. This may be
+set to NO to disable the constraints on the geometry type in the
+spatial index, through the layer_gtype keyword in the PARAMETERS
+clause of the CREATE INDEX. Layers of type MultiPoint,
+MultiLineString or MultiPolygon will also accept single geometry type
+(Point, LineString, Polygon).</p>
+</li>
+<li><p id="drivers/vector/oci-lco-DIMINFO_X"><strong>DIMINFO_X=value: </strong>This may be set to xmin,xmax,xres values to control
+the X dimension info written into the USER_SDO_GEOM_METADATA table.
+By default extents are collected from the actual data written.</p>
+</li>
+<li><p id="drivers/vector/oci-lco-DIMINFO_Y"><strong>DIMINFO_Y=value: </strong>This may be set to ymin,ymax,yres values to control
+the Y dimension info written into the USER_SDO_GEOM_METADATA table.
+By default extents are collected from the actual data written.</p>
+</li>
+<li><p id="drivers/vector/oci-lco-DIMINFO_Z"><strong>DIMINFO_Z=value: </strong>This may be set to zmin,zmax,zres values to control
+the Z dimension info written into the USER_SDO_GEOM_METADATA table.
+By default fixed values of -100000,100000,0.002 are used for layers
+with a third dimension.</p>
+</li>
+<li><p id="drivers/vector/oci-lco-SRID"><strong>SRID=value: </strong>By default this driver will attempt to find an existing row
+in the MDSYS.CS_SRS table with a well known text coordinate system
+exactly matching the one for this dataset. If one is not found, a new
+row will be added to this table. The SRID creation option allows the
+user to force use of an existing Oracle SRID item even it if does not
+exactly match the WKT the driver expects.</p>
+</li>
+<li><p id="drivers/vector/oci-lco-MULTI_LOAD"><strong>MULTI_LOAD=[YES/NO]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">YES</span></code>. If enabled new features will be created in groups of
+100 per SQL INSERT command, instead of each feature being a separate
+INSERT command. Having this enabled is the fastest way to load data
+quickly. Multi-load mode is enabled by default, and may be forced off
+for existing layers or for new layers by setting to NO. The number of
+rows in each group is defined by MULTI_LOAD_COUNT. To load one row at
+a time, set MULTI_LOAD to NO.</p>
+</li>
+<li><p id="drivers/vector/oci-lco-MULTI_LOAD_COUNT"><strong>MULTI_LOAD_COUNT=value: </strong>Define the number of features on each ARRAY
+INSERT command, instead of the default 100 item defined by
+<a class="reference internal" href="#drivers/vector/oci-lco-MULTI_LOAD"><code class="docutils literal notranslate"><span class="pre">MULTI_LOAD</span></code></a>. Since each array insert will commit a transaction, this
+options shouldn't be combined with ogr2ogr &quot;-gt N&quot;. Use &quot;-gt
+unlimited&quot; preferably when using MULTI_LOAD_COUNT. The default is
+100. If neither <a class="reference internal" href="#drivers/vector/oci-lco-MULTI_LOAD"><code class="docutils literal notranslate"><span class="pre">MULTI_LOAD</span></code></a> nor <a class="reference internal" href="#drivers/vector/oci-lco-MULTI_LOAD_COUNT"><code class="docutils literal notranslate"><span class="pre">MULTI_LOAD_COUNT</span></code></a> are specified, then
+the loading happens in groups of 100 rows.</p>
+</li>
+<li><p id="drivers/vector/oci-lco-FIRST_ID"><strong>FIRST_ID=value: </strong>Define the first numeric value of the id column on the
+first rows. It also works as a open option when used to append or
+update an existing dataset.</p>
+</li>
+<li><p id="drivers/vector/oci-lco-NO_LOGGING"><strong>NO_LOGGING=[YES/NO]: </strong>Define that the table and the geometry will be create
+with nologging attributes.</p>
+</li>
+<li><p id="drivers/vector/oci-lco-LOADER_FILE"><strong>LOADER_FILE=value: </strong>If this option is set, all feature information will
+be written to a file suitable for use with SQL*Loader instead of
+inserted directly in the database. The layer itself is still created
+in the database immediately. The SQL*Loader support is experimental,
+and generally <a class="reference internal" href="#drivers/vector/oci-lco-MULTI_LOAD"><code class="docutils literal notranslate"><span class="pre">MULTI_LOAD</span></code></a> enabled mode should be used instead when
+trying for optimal load performance.</p>
+</li>
+<li><p id="drivers/vector/oci-lco-GEOMETRY_NAME"><strong>GEOMETRY_NAME=value: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">ORA_GEOMETRY</span></code>. By default OGR creates new tables with the
+geometry column named ORA_GEOMETRY. If you wish to use a different
+name, it can be supplied with the GEOMETRY_NAME layer creation
+option.</p>
+</li>
+</ul>
+</section>
+<section id="layer-open-options">
+<h3>Layer Open Options<a class="headerlink" href="#layer-open-options" title="Link to this heading"></a></h3>
+<p>Open options can be specified in command-line tools using the syntax <code class="docutils literal notranslate"><span class="pre">-oo</span> <span class="pre">&lt;NAME&gt;=&lt;VALUE&gt;</span></code> or by providing the appropriate arguments to <a class="reference internal" href="../../api/raster_c_api.html#_CPPv410GDALOpenExPKcjPPCKcPPCKcPPCKc" title="GDALOpenEx"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALOpenEx()</span></code></a> (C) or <a class="reference internal" href="../../api/python/raster_api.html#osgeo.gdal.OpenEx" title="osgeo.gdal.OpenEx"><code class="xref py py-meth docutils literal notranslate"><span class="pre">gdal.OpenEx</span></code></a> (Python).
+The following open options are supported:</p>
+<ul class="simple">
+<li><p id="drivers/vector/oci-oo-FIRST_ID"><strong>FIRST_ID=value: </strong>See Layer Create Options comments on <a class="reference internal" href="#drivers/vector/oci-lco-FIRST_ID"><code class="docutils literal notranslate"><span class="pre">FIRST_ID</span></code></a>.</p>
+</li>
+<li><p id="drivers/vector/oci-oo-MULTI_LOAD"><strong>MULTI_LOAD=value: </strong>See Layer Create Options comments on <a class="reference internal" href="#drivers/vector/oci-lco-MULTI_LOAD"><code class="docutils literal notranslate"><span class="pre">MULTI_LOAD</span></code></a>.</p>
+</li>
+<li><p id="drivers/vector/oci-oo-MULTI_LOAD_COUNT"><strong>MULTI_LOAD_COUNT=value: </strong>See Layer Create Options comments on :lco:MULTI_LOAD_COUNT`.</p>
+</li>
+<li><p id="drivers/vector/oci-oo-WORKSPACE"><strong>WORKSPACE=value: </strong>Define what user workspace to use.</p>
+</li>
+</ul>
+</section>
+<section id="example">
+<h3>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h3>
+<p>Simple translation of a shapefile into Oracle. The table 'ABC' will be
+created with the features from abc.shp and attributes from abc.dbf.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">ogr2ogr</span> <span class="o">-</span><span class="n">f</span> <span class="n">OCI</span> <span class="n">OCI</span><span class="p">:</span><span class="n">warmerda</span><span class="o">/</span><span class="n">password</span><span class="nd">@gdal800</span><span class="o">.</span><span class="n">dreadfest</span><span class="o">.</span><span class="n">com</span> <span class="n">abc</span><span class="o">.</span><span class="n">shp</span>
+</pre></div>
+</div>
+<p>This second example loads a political boundaries layer from VPF (via the
+<a class="reference internal" href="ogdi.html#vector-ogdi"><span class="std std-ref">OGDI driver</span></a>), and renames the layer from the cryptic
+OGDI layer name to something more sensible. If an existing table of the
+desired name exists it is overwritten.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">ogr2ogr</span>  <span class="o">-</span><span class="n">f</span> <span class="n">OCI</span> <span class="n">OCI</span><span class="p">:</span><span class="n">warmerda</span><span class="o">/</span><span class="n">password</span> \
+        <span class="n">gltp</span><span class="p">:</span><span class="o">/</span><span class="n">vrf</span><span class="o">/</span><span class="n">usr4</span><span class="o">/</span><span class="n">mpp1</span><span class="o">/</span><span class="n">v0eur</span><span class="o">/</span><span class="n">vmaplv0</span><span class="o">/</span><span class="n">eurnasia</span> \
+        <span class="o">-</span><span class="n">lco</span> <span class="n">OVERWRITE</span><span class="o">=</span><span class="n">yes</span> <span class="o">-</span><span class="n">nln</span> <span class="n">polbndl_bnd</span> <span class="s1">&#39;polbndl@bnd(*)_line&#39;</span>
+</pre></div>
+</div>
+<p>This example shows using ogrinfo to evaluate an SQL query statement
+within Oracle. More sophisticated Oracle Spatial specific queries may
+also be used via the -sql commandline switch to ogrinfo.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogrinfo</span> <span class="o">-</span><span class="n">ro</span> <span class="n">OCI</span><span class="p">:</span><span class="n">warmerda</span><span class="o">/</span><span class="n">password</span> <span class="o">-</span><span class="n">sql</span> <span class="s2">&quot;SELECT pop_1994 from canada where province_name = &#39;Alberta&#39;&quot;</span>
+</pre></div>
+</div>
+<p>This example shows hows to list information about an Oracle view.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogrinfo</span> <span class="o">-</span><span class="n">ro</span> <span class="o">-</span><span class="n">so</span> <span class="n">OCI</span><span class="p">:</span><span class="n">username</span><span class="o">/</span><span class="n">password</span><span class="nd">@host_name</span><span class="p">:</span><span class="n">port_number</span><span class="o">/</span><span class="n">service_name</span><span class="p">:</span><span class="n">MY_SCHEMA</span><span class="o">.</span><span class="n">MY_VIEW</span> <span class="n">MY_SCHEMA</span><span class="o">.</span><span class="n">MY_VIEW</span>
+</pre></div>
+</div>
+<p>This example shows hows to convert certain columns from an Oracle view
+to a GeoPackage file, explicitly assigning the layer name and the
+coordinate reference system, and converting timestamps to UTC.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogr2ogr</span> <span class="o">-</span><span class="n">f</span> <span class="n">GPKG</span> <span class="n">output</span><span class="o">.</span><span class="n">gpkg</span> <span class="o">-</span><span class="n">nln</span> <span class="n">new_layer_name</span> <span class="o">-</span><span class="n">nlt</span> <span class="n">POLYGON</span> <span class="o">-</span><span class="n">s_srs</span> <span class="n">EPSG</span><span class="p">:</span><span class="mi">25832</span> <span class="o">-</span><span class="n">t_srs</span> <span class="n">EPSG</span><span class="p">:</span><span class="mi">25832</span> <span class="o">-</span><span class="n">dsco</span> <span class="n">DATETIME_FORMAT</span><span class="o">=</span><span class="n">UTC</span> <span class="n">OCI</span><span class="p">:</span><span class="n">username</span><span class="o">/</span><span class="n">password</span><span class="nd">@host_name</span><span class="p">:</span><span class="n">port_number</span><span class="o">/</span><span class="n">service_name</span><span class="p">:</span><span class="n">MY_SCHEMA</span><span class="o">.</span><span class="n">MY_VIEW</span> <span class="o">-</span><span class="n">sql</span> <span class="s2">&quot;SELECT COLUMN_A, COLUMN_B, GEOMETRY FROM MY_SCHEMA.MY_VIEW&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="standalone-plugin-compilation">
+<h3>Standalone plugin compilation<a class="headerlink" href="#standalone-plugin-compilation" title="Link to this heading"></a></h3>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 3.10.</span></p>
+</div>
+<p>While this driver may be built as part of a whole GDAL build, either in libgdal
+itself, or as a plugin, it is also possible to only build this driver as a plugin,
+against an already built libgdal.</p>
+<p>The version of the GDAL sources used to build the driver must match the version
+of the libgdal it is built against.</p>
+<p>For example, from a &quot;build_oci&quot; directory under the root of the GDAL source tree:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cmake</span> <span class="o">-</span><span class="n">S</span> <span class="o">../</span><span class="n">ogr</span><span class="o">/</span><span class="n">ogrsf_frmts</span><span class="o">/</span><span class="n">oci</span> <span class="o">-</span><span class="n">DCMAKE_PREFIX_PATH</span><span class="o">=/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">GDAL_installation_prefix</span> <span class="o">-</span><span class="n">DOracle_ROOT</span><span class="o">=/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">instantclient_sdk_root</span>
+<span class="n">cmake</span> <span class="o">--</span><span class="n">build</span> <span class="o">.</span>
+</pre></div>
+</div>
+<p>Note that such a plugin, when used against a libgdal not aware of it, will be
+systematically loaded at GDAL driver initialization time, and will not benefit from
+<cite>deferred plugin loading capabilities &lt;rfc-96&gt;</cite>. For that, libgdal itself must be built with the
+CMake variable OGR_REGISTER_DRIVER_OCI_FOR_LATER_PLUGIN=ON set.</p>
+</section>
+<section id="credits">
+<h3>Credits<a class="headerlink" href="#credits" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="http://www.extendthereach.com/">SRC, LLC</a> for its financial support of
+the initial development of this driver.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="odbc.html" class="btn btn-neutral float-right" title="ODBC RDBMS" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="oapif.html" class="btn btn-neutral float-left" title="OGC API - Features" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2024 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+  </div>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

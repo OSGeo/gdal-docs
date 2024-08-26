@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vector Data Model &mdash; GDAL  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d10597a4" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/gdal.css?v=e152ac3b" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="canonical" href="https://gdal.org/user/vector_data_model.html"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Geographic Networks Data Model" href="gnm_data_model.html" />
+    <link rel="prev" title="Multidimensional Raster Data Model" href="multidim_raster_data_model.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">User</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="raster_data_model.html">Raster Data Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multidim_raster_data_model.html">Multidimensional Raster Data Model</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Vector Data Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#class-overview">Class Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geometry">Geometry</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#compatibility-issues-with-non-linear-geometries">Compatibility issues with non-linear geometries</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#spatial-reference">Spatial Reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#feature-feature-definition">Feature / Feature Definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#field-definitions">Field Definitions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#field-domains">Field Domains</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#layer">Layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dataset">Dataset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#drivers">Drivers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gnm_data_model.html">Geographic Networks Data Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multithreading.html">Multi-threading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ogr_sql_sqlite_dialect.html">OGR SQL dialect and SQLITE SQL dialect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="virtual_file_systems.html">GDAL Virtual File Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ogr_feature_style.html">Feature Style Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coordinate_epoch.html">Coordinate epoch support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configoptions.html">Configuration options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gdal_python_utilities.html">GDAL Python Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sponsors/index.html">Sponsors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">User oriented documentation</a> &raquo;</li>
+      
+      <li>Vector Data Model</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit/master/doc/source/user/vector_data_model.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="gnm_data_model.html" class="btn btn-neutral float-right" title="Geographic Networks Data Model" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="multidim_raster_data_model.html" class="btn btn-neutral float-left" title="Multidimensional Raster Data Model" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="vector-data-model">
+<span id="id1"></span><h1>Vector Data Model<a class="headerlink" href="#vector-data-model" title="Link to this heading"></a></h1>
+<p>This page documents the classes used to handle vector data. Many data types and method names are based on the OGC Simple Features data model, so it may be helpful to review the <a class="reference external" href="https://www.ogc.org/standard/sfa/">specifications published by OGC</a>.
+For historical reasons, GDAL uses the &quot;OGR&quot; prefix to denote types and functions that apply only to vector data.</p>
+<section id="class-overview">
+<h2>Class Overview<a class="headerlink" href="#class-overview" title="Link to this heading"></a></h2>
+<p>The following classes form the core of the vector data model:</p>
+<ul class="simple">
+<li><p>Geometry (<a class="reference internal" href="../api/ogrgeometry_cpp.html#ogrgeometry-cpp"><span class="std std-ref">ogr_geometry.h</span></a>): The geometry classes (<a class="reference internal" href="../api/ogrgeometry_cpp.html#_CPPv411OGRGeometry" title="OGRGeometry"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRGeometry</span></code></a>, etc) encapsulate the OGC vector data types. They provide some geometry operations and translation to/from well known binary and text format. A geometry includes a spatial reference system (projection).</p></li>
+<li><p>Spatial Reference (<a class="reference internal" href="../api/ogrspatialref.html#ogrspatialref"><span class="std std-ref">ogr_spatialref.h</span></a>): An <a class="reference internal" href="../api/ogrspatialref.html#_CPPv419OGRSpatialReference" title="OGRSpatialReference"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRSpatialReference</span></code></a> encapsulates the definition of a projection and datum.</p></li>
+<li><p>Feature (<a class="reference internal" href="../api/ogrfeature_cpp.html#ogrfeature-cpp"><span class="std std-ref">ogr_feature.h</span></a>): The <a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv410OGRFeature" title="OGRFeature"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRFeature</span></code></a> encapsulates the definition of a whole feature, that is a set of geometries and attributes relating to a single entity.</p></li>
+<li><p>Feature Class Definition (<a class="reference internal" href="../api/ogrfeature_cpp.html#ogrfeature-cpp"><span class="std std-ref">ogr_feature.h</span></a>): The <a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv414OGRFeatureDefn" title="OGRFeatureDefn"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRFeatureDefn</span></code></a> class captures the schema (set of field definitions) for a group of related features (normally a whole layer).</p></li>
+<li><p>Layer (<a class="reference internal" href="../api/ogrlayer_cpp.html#ogrlayer-cpp"><span class="std std-ref">ogrsf_frmts.h</span></a>): <a class="reference internal" href="../api/ogrlayer_cpp.html#_CPPv48OGRLayer" title="OGRLayer"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRLayer</span></code></a> is an abstract class representing a layer of features in a <a class="reference internal" href="../api/gdaldataset_cpp.html#_CPPv411GDALDataset" title="GDALDataset"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDataset</span></code></a>.</p></li>
+<li><p>Dataset (<a class="reference internal" href="../api/gdaldataset_cpp.html#gdaldataset-cpp"><span class="std std-ref">gdal_priv.h</span></a>): A <a class="reference internal" href="../api/gdaldataset_cpp.html#_CPPv411GDALDataset" title="GDALDataset"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDataset</span></code></a> is an abstract base class representing a file or database containing one or more <a class="reference internal" href="../api/ogrlayer_cpp.html#_CPPv48OGRLayer" title="OGRLayer"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRLayer</span></code></a> objects.</p></li>
+<li><p>Drivers (<a class="reference internal" href="../api/gdaldriver_cpp.html#gdaldriver-cpp"><span class="std std-ref">gdal_priv.h</span></a>): A <a class="reference internal" href="../api/gdaldriver_cpp.html#_CPPv410GDALDriver" title="GDALDriver"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDriver</span></code></a> represents a translator for a specific format, capable of opening and possibly writing <a class="reference internal" href="../api/gdaldataset_cpp.html#_CPPv411GDALDataset" title="GDALDataset"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDataset</span></code></a> objects. All available drivers are managed by the <a class="reference internal" href="../api/gdaldriver_cpp.html#_CPPv417GDALDriverManager" title="GDALDriverManager"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDriverManager</span></code></a>.</p></li>
+</ul>
+</section>
+<section id="geometry">
+<h2>Geometry<a class="headerlink" href="#geometry" title="Link to this heading"></a></h2>
+<p>Individual geometry classes are used to represent the different types of vector geometry. All the geometry classes derive from <a class="reference internal" href="../api/ogrgeometry_cpp.html#_CPPv411OGRGeometry" title="OGRGeometry"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRGeometry</span></code></a> which defines the common functionality of all geometries. Geometry types include <a class="reference internal" href="../api/ogrgeometry_cpp.html#_CPPv48OGRPoint" title="OGRPoint"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRPoint</span></code></a>, <a class="reference internal" href="../api/ogrgeometry_cpp.html#_CPPv413OGRLineString" title="OGRLineString"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRLineString</span></code></a>, <a class="reference internal" href="../api/ogrgeometry_cpp.html#_CPPv410OGRPolygon" title="OGRPolygon"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRPolygon</span></code></a>, <a class="reference internal" href="../api/ogrgeometry_cpp.html#_CPPv421OGRGeometryCollection" title="OGRGeometryCollection"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRGeometryCollection</span></code></a>, <a class="reference internal" href="../api/ogrgeometry_cpp.html#_CPPv413OGRMultiPoint" title="OGRMultiPoint"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRMultiPoint</span></code></a>, <a class="reference internal" href="../api/ogrgeometry_cpp.html#_CPPv418OGRMultiLineString" title="OGRMultiLineString"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRMultiLineString</span></code></a>, <a class="reference internal" href="../api/ogrgeometry_cpp.html#_CPPv415OGRMultiPolygon" title="OGRMultiPolygon"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRMultiPolygon</span></code></a>, and <a class="reference internal" href="../api/ogrgeometry_cpp.html#_CPPv420OGRPolyhedralSurface" title="OGRPolyhedralSurface"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRPolyhedralSurface</span></code></a>.
+The special case of a triangular polygon can be represented as a <a class="reference internal" href="../api/ogrgeometry_cpp.html#_CPPv411OGRTriangle" title="OGRTriangle"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRTriangle</span></code></a>, a non-overlapping collection of which can be represented by an <a class="reference internal" href="../api/ogrgeometry_cpp.html#_CPPv422OGRTriangulatedSurface" title="OGRTriangulatedSurface"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRTriangulatedSurface</span></code></a>.
+An additional set of types is used to store non-linear geometries: <a class="reference internal" href="../api/ogrgeometry_cpp.html#_CPPv417OGRCircularString" title="OGRCircularString"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRCircularString</span></code></a>, <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRCompoundCurve</span></code>, <a class="reference internal" href="../api/ogrgeometry_cpp.html#_CPPv415OGRCurvePolygon" title="OGRCurvePolygon"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRCurvePolygon</span></code></a>, <a class="reference internal" href="../api/ogrgeometry_cpp.html#_CPPv413OGRMultiCurve" title="OGRMultiCurve"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRMultiCurve</span></code></a> and <a class="reference internal" href="../api/ogrgeometry_cpp.html#_CPPv415OGRMultiSurface" title="OGRMultiSurface"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRMultiSurface</span></code></a>.</p>
+<p>Any of the above geometry classes can store coordinates in two (XY), three (XYZ or XYM), or four (XYZM) dimensions.</p>
+<p>Additional intermediate classes contain functionality that is used by multiple geometry types. These include <a class="reference internal" href="../api/ogrgeometry_cpp.html#_CPPv48OGRCurve" title="OGRCurve"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRCurve</span></code></a> (base class for <a class="reference internal" href="../api/ogrgeometry_cpp.html#_CPPv413OGRLineString" title="OGRLineString"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRLineString</span></code></a>) and <a class="reference internal" href="../api/ogrgeometry_cpp.html#_CPPv410OGRSurface" title="OGRSurface"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRSurface</span></code></a> (base class for <a class="reference internal" href="../api/ogrgeometry_cpp.html#_CPPv410OGRPolygon" title="OGRPolygon"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRPolygon</span></code></a>). Some intermediate interfaces modeled in the simple features abstract model and SFCOM are not modeled in OGR at this time. In most cases the methods are aggregated into other classes.</p>
+<img alt="Diagram of OGRGeometry and subclasses" src="../_images/classOGRGeometry_RFC64.png" />
+<p>The <a class="reference internal" href="../api/ogrgeometry_cpp.html#_CPPv418OGRGeometryFactory" title="OGRGeometryFactory"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRGeometryFactory</span></code></a> is used to convert well known text (WKT) and well known binary (WKB) format data into the appropriate <a class="reference internal" href="../api/ogrgeometry_cpp.html#_CPPv411OGRGeometry" title="OGRGeometry"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRGeometry</span></code></a> subclass. These are predefined ASCII and binary formats for representing all the types of simple features geometries.</p>
+<p>The <a class="reference internal" href="../api/ogrgeometry_cpp.html#_CPPv411OGRGeometry" title="OGRGeometry"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRGeometry</span></code></a> includes a reference to an <a class="reference internal" href="../api/ogrspatialref.html#_CPPv419OGRSpatialReference" title="OGRSpatialReference"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRSpatialReference</span></code></a> object, defining the spatial reference system of that geometry. This is normally a reference to a shared spatial reference object with reference counting for each of the <a class="reference internal" href="../api/ogrgeometry_cpp.html#_CPPv411OGRGeometry" title="OGRGeometry"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRGeometry</span></code></a> objects using it.</p>
+<p>While it is theoretically possible to derive other or more specific geometry classes from the existing <a class="reference internal" href="../api/ogrgeometry_cpp.html#_CPPv411OGRGeometry" title="OGRGeometry"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRGeometry</span></code></a> classes, this isn't an aspect that has been well thought out. In particular, it would be possible to create specialized classes using the <a class="reference internal" href="../api/ogrgeometry_cpp.html#_CPPv418OGRGeometryFactory" title="OGRGeometryFactory"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRGeometryFactory</span></code></a> without modifying it.</p>
+<section id="compatibility-issues-with-non-linear-geometries">
+<h3>Compatibility issues with non-linear geometries<a class="headerlink" href="#compatibility-issues-with-non-linear-geometries" title="Link to this heading"></a></h3>
+<p>Generic mechanisms have been introduced so that creating or modifying a feature with a non-linear geometry in a layer of a driver that does not support it will transform that geometry in the closest matching linear geometry. This linearization can be controlled using <a class="reference internal" href="configoptions.html#configoptions-vector"><span class="std std-ref">Vector related options</span></a>.</p>
+<p>On the other side, when retrieving data from the OGR C API, the <a class="reference internal" href="../api/vector_c_api.html#_CPPv436OGRSetNonLinearGeometriesEnabledFlagi" title="OGRSetNonLinearGeometriesEnabledFlag"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRSetNonLinearGeometriesEnabledFlag()</span></code></a> function can be used, so that geometries and layer geometry type returned are also converted to their linear approximation if necessary.</p>
+</section>
+</section>
+<section id="spatial-reference">
+<h2>Spatial Reference<a class="headerlink" href="#spatial-reference" title="Link to this heading"></a></h2>
+<p>The <a class="reference internal" href="../api/ogrspatialref.html#_CPPv419OGRSpatialReference" title="OGRSpatialReference"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRSpatialReference</span></code></a> class is intended to store an OpenGIS Spatial Reference System definition. Currently local, geographic and projected coordinate systems are supported. Vertical coordinate systems, geocentric coordinate systems, and compound (horizontal + vertical) coordinate systems are as well supported in recent GDAL versions.</p>
+<p>The spatial coordinate system data model is inherited from the OpenGIS Well Known Text format. A simple form of this is defined in the Simple Features specifications. A more sophisticated form is found in the Coordinate Transformation specification. The <a class="reference internal" href="../api/ogrspatialref.html#_CPPv419OGRSpatialReference" title="OGRSpatialReference"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRSpatialReference</span></code></a> is built on the features of the Coordinate Transformation specification but is intended to be compatible with the earlier simple features form.</p>
+<p>There is also an associated <a class="reference internal" href="../api/ogrspatialref.html#_CPPv427OGRCoordinateTransformation" title="OGRCoordinateTransformation"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRCoordinateTransformation</span></code></a> class that encapsulates use of <a class="reference external" href="http://proj.org">PROJ</a> for converting between different coordinate systems.</p>
+</section>
+<section id="feature-feature-definition">
+<h2>Feature / Feature Definition<a class="headerlink" href="#feature-feature-definition" title="Link to this heading"></a></h2>
+<p>The <a class="reference internal" href="../api/ogrgeometry_cpp.html#_CPPv411OGRGeometry" title="OGRGeometry"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRGeometry</span></code></a> captures the geometry of a vector feature. The <a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv410OGRFeature" title="OGRFeature"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRFeature</span></code></a> contains geometry, and adds feature attributes, feature id, and a feature class identifier. It may also contain styling information. Several geometries can be associated with an <a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv410OGRFeature" title="OGRFeature"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRFeature</span></code></a>.</p>
+<p>The set of attributes (<a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv412OGRFieldDefn" title="OGRFieldDefn"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRFieldDefn</span></code></a>), their types, names and so forth is represented via the <a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv414OGRFeatureDefn" title="OGRFeatureDefn"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRFeatureDefn</span></code></a> class. One <a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv414OGRFeatureDefn" title="OGRFeatureDefn"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRFeatureDefn</span></code></a> normally exists for a layer of features. The same definition is shared in a reference counted manner by the feature of that type (or feature class).</p>
+<p>The feature id (FID) of a feature is intended to be a unique identifier for the feature within the layer it is a member of. Freestanding features, or features not yet written to a layer may have a null (OGRNullFID) feature id. The feature ids are modeled in OGR as a 64-bit integer; however, this is not sufficiently expressive to model the natural feature ids in some formats. For instance, the GML feature id is a string.</p>
+<p>The <a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv414OGRFeatureDefn" title="OGRFeatureDefn"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRFeatureDefn</span></code></a> also contains an indicator of the types of geometry allowed for that feature class (returned as an <a class="reference internal" href="../api/vector_c_api.html#_CPPv418OGRwkbGeometryType" title="OGRwkbGeometryType"><code class="xref cpp cpp-enum docutils literal notranslate"><span class="pre">OGRwkbGeometryType</span></code></a> from <a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv4NK14OGRFeatureDefn11GetGeomTypeEv" title="OGRFeatureDefn::GetGeomType"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRFeatureDefn::GetGeomType()</span></code></a>). If this is <a class="reference internal" href="../api/vector_c_api.html#_CPPv4N18OGRwkbGeometryType10wkbUnknownE" title="OGRwkbGeometryType::wkbUnknown"><code class="xref cpp cpp-enumerator docutils literal notranslate"><span class="pre">OGRwkbGeometryType::wkbUnknown</span></code></a> then any type of geometry is allowed. This implies that features in a given layer can potentially be of different geometry types though they will always share a common attribute schema.</p>
+<p>Several geometry fields (<a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv416OGRGeomFieldDefn" title="OGRGeomFieldDefn"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRGeomFieldDefn</span></code></a>) can be associated with an <a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv414OGRFeatureDefn" title="OGRFeatureDefn"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRFeatureDefn</span></code></a>. Each geometry field has its own indicator of geometry type allowed, returned by <a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv4NK16OGRGeomFieldDefn7GetTypeEv" title="OGRGeomFieldDefn::GetType"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRGeomFieldDefn::GetType()</span></code></a>, and its spatial reference system, returned by <a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv4NK16OGRGeomFieldDefn13GetSpatialRefEv" title="OGRGeomFieldDefn::GetSpatialRef"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRGeomFieldDefn::GetSpatialRef()</span></code></a>.</p>
+<p>The <a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv414OGRFeatureDefn" title="OGRFeatureDefn"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRFeatureDefn</span></code></a> also contains a feature class name (normally used as a layer name).</p>
+</section>
+<section id="field-definitions">
+<h2>Field Definitions<a class="headerlink" href="#field-definitions" title="Link to this heading"></a></h2>
+<p>The behavior of each field in a feature class is defined by a shared <a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv412OGRFieldDefn" title="OGRFieldDefn"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRFieldDefn</span></code></a>.
+The <a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv412OGRFieldDefn" title="OGRFieldDefn"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRFieldDefn</span></code></a> specifies the field type from the values of <a class="reference internal" href="../api/vector_c_api.html#_CPPv412OGRFieldType" title="OGRFieldType"><code class="xref cpp cpp-enum docutils literal notranslate"><span class="pre">OGRFieldType</span></code></a>.
+Values stored in this field may be further restricted according to a <a class="reference internal" href="../api/vector_c_api.html#_CPPv415OGRFieldSubType" title="OGRFieldSubType"><code class="xref cpp cpp-enum docutils literal notranslate"><span class="pre">OGRFieldSubType</span></code></a>.
+For example, a field may have a type of <a class="reference internal" href="../api/vector_c_api.html#_CPPv4N12OGRFieldType10OFTIntegerE" title="OGRFieldType::OFTInteger"><code class="xref cpp cpp-enumerator docutils literal notranslate"><span class="pre">OGRFieldType::OFTInteger</span></code></a> with a subtype of <a class="reference internal" href="../api/vector_c_api.html#_CPPv4N15OGRFieldSubType11OFSTBooleanE" title="OGRFieldSubType::OFSTBoolean"><code class="xref cpp cpp-enumerator docutils literal notranslate"><span class="pre">OGRFieldSubType::OFSTBoolean</span></code></a>.</p>
+<p>The <a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv412OGRFieldDefn" title="OGRFieldDefn"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRFieldDefn</span></code></a> can also track whether a field is allowed to be null (<a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv4NK12OGRFieldDefn10IsNullableEv" title="OGRFieldDefn::IsNullable"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRFieldDefn::IsNullable()</span></code></a>), whether its value must be unique (<a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv4NK12OGRFieldDefn8IsUniqueEv" title="OGRFieldDefn::IsUnique"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRFieldDefn::IsUnique()</span></code></a>), and formatting information such as the number of decimal digits, width, and justification. It may also define a default value in case one is not manually specified.</p>
+<section id="field-domains">
+<h3>Field Domains<a class="headerlink" href="#field-domains" title="Link to this heading"></a></h3>
+<p>Some formats support the use of field domains that describe the values that can be stored in a given attribute field. An <a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv412OGRFieldDefn" title="OGRFieldDefn"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRFieldDefn</span></code></a> may reference a single <a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv414OGRFieldDomain" title="OGRFieldDomain"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRFieldDomain</span></code></a> that is associated with a <a class="reference internal" href="../api/gdaldataset_cpp.html#_CPPv411GDALDataset" title="GDALDataset"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDataset</span></code></a>.
+Programs using GDAL may use the <a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv414OGRFieldDomain" title="OGRFieldDomain"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRFieldDomain</span></code></a> to appropriately constrain user input. GDAL does not perform validation itself and will allow the storage of values that violate a field's associated <a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv414OGRFieldDomain" title="OGRFieldDomain"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRFieldDomain</span></code></a>.</p>
+<p>Available types of <a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv414OGRFieldDomain" title="OGRFieldDomain"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRFieldDomain</span></code></a> include:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv419OGRCodedFieldDomain" title="OGRCodedFieldDomain"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRCodedFieldDomain</span></code></a>, which constrains values those present in a specified enumeration</p></li>
+<li><p><a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv419OGRRangeFieldDomain" title="OGRRangeFieldDomain"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRRangeFieldDomain</span></code></a>, which constrains values to a specified range</p></li>
+<li><p><a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv418OGRGlobFieldDomain" title="OGRGlobFieldDomain"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRGlobFieldDomain</span></code></a>, which constrains values to those matching a specified pattern</p></li>
+</ul>
+<p>Additionally, an <a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv414OGRFieldDomain" title="OGRFieldDomain"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRFieldDomain</span></code></a> may define policies describing the values that should be assigned to domain-controlled fields when features are split or merged.</p>
+</section>
+</section>
+<section id="layer">
+<h2>Layer<a class="headerlink" href="#layer" title="Link to this heading"></a></h2>
+<p>An <a class="reference internal" href="../api/ogrlayer_cpp.html#_CPPv48OGRLayer" title="OGRLayer"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRLayer</span></code></a> represents a layer of features within a data source. All features in an <a class="reference internal" href="../api/ogrlayer_cpp.html#_CPPv48OGRLayer" title="OGRLayer"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRLayer</span></code></a> share a common schema and are of the same <a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv414OGRFeatureDefn" title="OGRFeatureDefn"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRFeatureDefn</span></code></a>. An <a class="reference internal" href="../api/ogrlayer_cpp.html#_CPPv48OGRLayer" title="OGRLayer"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRLayer</span></code></a> class also contains methods for reading features from the data source. The <a class="reference internal" href="../api/ogrlayer_cpp.html#_CPPv48OGRLayer" title="OGRLayer"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRLayer</span></code></a> can be thought of as a gateway for reading and writing features from an underlying data source such as a file on disk, or the result of a database query.</p>
+<p>The <a class="reference internal" href="../api/ogrlayer_cpp.html#_CPPv48OGRLayer" title="OGRLayer"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRLayer</span></code></a> includes methods for sequential and random reading and writing. Read access (via the <a class="reference internal" href="../api/ogrlayer_cpp.html#_CPPv4N8OGRLayer14GetNextFeatureEv" title="OGRLayer::GetNextFeature"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRLayer::GetNextFeature()</span></code></a> method) normally reads all features, one at a time sequentially; however, it can be limited to return features intersecting a particular geographic region by installing a spatial filter on the <a class="reference internal" href="../api/ogrlayer_cpp.html#_CPPv48OGRLayer" title="OGRLayer"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRLayer</span></code></a> (via the <a class="reference internal" href="../api/ogrlayer_cpp.html#_CPPv4N8OGRLayer16SetSpatialFilterEP11OGRGeometry" title="OGRLayer::SetSpatialFilter"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRLayer::SetSpatialFilter()</span></code></a> method). A filter on attributes can only be set with the <a class="reference internal" href="../api/ogrlayer_cpp.html#_CPPv4N8OGRLayer18SetAttributeFilterEPKc" title="OGRLayer::SetAttributeFilter"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRLayer::SetAttributeFilter()</span></code></a> method. By default, all available attributes and geometries are read but this can be controlled by flagging fields as ignored (<a class="reference internal" href="../api/ogrlayer_cpp.html#_CPPv4N8OGRLayer16SetIgnoredFieldsE12CSLConstList" title="OGRLayer::SetIgnoredFields"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRLayer::SetIgnoredFields()</span></code></a>).</p>
+<p>Starting with GDAL 3.6, as an alternative to getting features through <code class="docutils literal notranslate"><span class="pre">GetNextFeature</span></code>, it is possible to retrieve them by batches, with a column-oriented memory layout, using the <a class="reference internal" href="../api/ogrlayer_cpp.html#_CPPv4N8OGRLayer14GetArrowStreamEP16ArrowArrayStream12CSLConstList" title="OGRLayer::GetArrowStream"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">OGRLayer::GetArrowStream()</span></code></a> method (cf <a class="reference internal" href="../tutorials/vector_api_tut.html#vector-api-tut-arrow-stream"><span class="std std-ref">Reading From OGR using the Arrow C Stream data interface</span></a>).</p>
+<p>An <a class="reference internal" href="../api/ogrlayer_cpp.html#_CPPv48OGRLayer" title="OGRLayer"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRLayer</span></code></a> may also store an <a class="reference internal" href="../api/ogrfeaturestyle_cpp.html#_CPPv413OGRStyleTable" title="OGRStyleTable"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRStyleTable</span></code></a> that provides a set of styles that may be used by features in the layer. More information on GDAL's handling of feature styles can be found in the <a class="reference internal" href="ogr_feature_style.html#ogr-feature-style"><span class="std std-ref">Feature Style Specification</span></a>.</p>
+<p>One flaw in the current OGR architecture is that the spatial and attribute filters are set directly on the <a class="reference internal" href="../api/ogrlayer_cpp.html#_CPPv48OGRLayer" title="OGRLayer"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRLayer</span></code></a> which is intended to be the only representative of a given layer in a data source. This means it isn't possible to have multiple read operations active at one time with different spatial filters on each.</p>
+<p>Another question that might arise is why the <a class="reference internal" href="../api/ogrlayer_cpp.html#_CPPv48OGRLayer" title="OGRLayer"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRLayer</span></code></a> and <a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv414OGRFeatureDefn" title="OGRFeatureDefn"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRFeatureDefn</span></code></a> classes are distinct. An <a class="reference internal" href="../api/ogrlayer_cpp.html#_CPPv48OGRLayer" title="OGRLayer"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRLayer</span></code></a> always has a one-to-one relationship to an <a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv414OGRFeatureDefn" title="OGRFeatureDefn"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRFeatureDefn</span></code></a>, so why not amalgamate the classes? There are two reasons:</p>
+<ul class="simple">
+<li><p>As defined now <a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv410OGRFeature" title="OGRFeature"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRFeature</span></code></a> and <a class="reference internal" href="../api/ogrfeature_cpp.html#_CPPv414OGRFeatureDefn" title="OGRFeatureDefn"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRFeatureDefn</span></code></a> don't depend on <a class="reference internal" href="../api/ogrlayer_cpp.html#_CPPv48OGRLayer" title="OGRLayer"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRLayer</span></code></a>, so they can exist independently in memory without regard to a particular layer in a data store.</p></li>
+<li><p>The SF CORBA model does not have a concept of a layer with a single fixed schema the way that the SFCOM and SFSQL models do. The fact that features belong to a feature collection that is potentially not directly related to their current feature grouping may be important to implementing SFCORBA support using OGR.</p></li>
+</ul>
+<p>The <a class="reference internal" href="../api/ogrlayer_cpp.html#_CPPv48OGRLayer" title="OGRLayer"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRLayer</span></code></a> class is an abstract base class. An implementation is expected to be subclassed for each file format driver implemented. OGRLayers are normally owned directly by their <a class="reference internal" href="../api/gdaldataset_cpp.html#_CPPv411GDALDataset" title="GDALDataset"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDataset</span></code></a>, and aren't instantiated or destroyed directly.</p>
+</section>
+<section id="dataset">
+<h2>Dataset<a class="headerlink" href="#dataset" title="Link to this heading"></a></h2>
+<p>A <a class="reference internal" href="../api/gdaldataset_cpp.html#_CPPv411GDALDataset" title="GDALDataset"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDataset</span></code></a> represents a set of <a class="reference internal" href="../api/ogrlayer_cpp.html#_CPPv48OGRLayer" title="OGRLayer"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRLayer</span></code></a> objects. This usually represents a single file, set of files, database or gateway. A <a class="reference internal" href="../api/gdaldataset_cpp.html#_CPPv411GDALDataset" title="GDALDataset"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDataset</span></code></a> has a list of <a class="reference internal" href="../api/ogrlayer_cpp.html#_CPPv48OGRLayer" title="OGRLayer"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRLayer</span></code></a> which it owns but can return references to.</p>
+<p><a class="reference internal" href="../api/gdaldataset_cpp.html#_CPPv411GDALDataset" title="GDALDataset"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDataset</span></code></a> is an abstract base class. An implementation is expected to be subclassed for each file format driver implemented. <a class="reference internal" href="../api/gdaldataset_cpp.html#_CPPv411GDALDataset" title="GDALDataset"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDataset</span></code></a> objects are not normally instantiated directly but rather with the assistance of an <a class="reference internal" href="../api/gdaldriver_cpp.html#_CPPv410GDALDriver" title="GDALDriver"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDriver</span></code></a>. Deleting an <a class="reference internal" href="../api/gdaldataset_cpp.html#_CPPv411GDALDataset" title="GDALDataset"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDataset</span></code></a> closes access to the underlying persistent data source, but does not normally result in deletion of that file.</p>
+<p>A <a class="reference internal" href="../api/gdaldataset_cpp.html#_CPPv411GDALDataset" title="GDALDataset"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDataset</span></code></a> has a name (usually a filename or database connection string) that can be used to reopen the data source with a <a class="reference internal" href="../api/gdaldriver_cpp.html#_CPPv410GDALDriver" title="GDALDriver"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDriver</span></code></a>.</p>
+<p>The <a class="reference internal" href="../api/gdaldataset_cpp.html#_CPPv411GDALDataset" title="GDALDataset"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDataset</span></code></a> also has support for executing a datasource specific command, normally a form of SQL. This is accomplished via the <a class="reference internal" href="../api/gdaldataset_cpp.html#_CPPv4N11GDALDataset10ExecuteSQLEPKcP11OGRGeometryPKc" title="GDALDataset::ExecuteSQL"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDataset::ExecuteSQL()</span></code></a> method. While some datasources (such as PostGIS and Oracle) pass the SQL through to an underlying database, OGR also includes support for evaluating a subset of the SQL SELECT statement against any datasource (see <a class="reference internal" href="ogr_sql_sqlite_dialect.html#ogr-sql-sqlite-dialect"><span class="std std-ref">OGR SQL dialect and SQLITE SQL dialect</span></a>.)</p>
+<p>When using some drivers, the <a class="reference internal" href="../api/gdaldataset_cpp.html#_CPPv411GDALDataset" title="GDALDataset"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDataset</span></code></a> also offers a mechanism for to start, commit, and rollback transactions when interacting with the underlying data store.</p>
+<p>A <a class="reference internal" href="../api/gdaldataset_cpp.html#_CPPv411GDALDataset" title="GDALDataset"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDataset</span></code></a> may also be aware of relationships between layers (e.g., a foreign key relationship between database tables). Information about these relationships is stored in a <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALRelationshp</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Earlier versions of GDAL represented vector datasets using the <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRDataSource</span></code> class. This class has been maintained for backwards compatibility but is functionally equivalent to a <a class="reference internal" href="../api/gdaldataset_cpp.html#_CPPv411GDALDataset" title="GDALDataset"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDataset</span></code></a> for vector data.</p>
+</div>
+</section>
+<section id="drivers">
+<h2>Drivers<a class="headerlink" href="#drivers" title="Link to this heading"></a></h2>
+<p>A <a class="reference internal" href="../api/gdaldriver_cpp.html#_CPPv410GDALDriver" title="GDALDriver"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDriver</span></code></a> object is instantiated for each file format supported. The <a class="reference internal" href="../api/gdaldriver_cpp.html#_CPPv410GDALDriver" title="GDALDriver"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDriver</span></code></a> objects are registered with the <a class="reference internal" href="../api/gdaldriver_cpp.html#_CPPv417GDALDriverManager" title="GDALDriverManager"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDriverManager</span></code></a>, a singleton class that is normally used to open new datasets.</p>
+<p>It is intended that a new <a class="reference internal" href="../api/gdaldriver_cpp.html#_CPPv410GDALDriver" title="GDALDriver"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDriver</span></code></a> object is instantiated and define function pointers for operations like Identify(), Open() for each file format to be supported (along with a file format specific <a class="reference internal" href="../api/gdaldataset_cpp.html#_CPPv411GDALDataset" title="GDALDataset"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDataset</span></code></a>, and <a class="reference internal" href="../api/ogrlayer_cpp.html#_CPPv48OGRLayer" title="OGRLayer"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">OGRLayer</span></code></a> classes).</p>
+<p>On application startup registration functions are normally called for each desired file format. These functions instantiate the appropriate <a class="reference internal" href="../api/gdaldriver_cpp.html#_CPPv410GDALDriver" title="GDALDriver"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDriver</span></code></a> objects, and register them with the <a class="reference internal" href="../api/gdaldriver_cpp.html#_CPPv417GDALDriverManager" title="GDALDriverManager"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDriverManager</span></code></a>. When a dataset is to be opened, the driver manager will normally try each <a class="reference internal" href="../api/gdaldataset_cpp.html#_CPPv411GDALDataset" title="GDALDataset"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDataset</span></code></a> in turn, until one succeeds, returning a <a class="reference internal" href="../api/gdaldataset_cpp.html#_CPPv411GDALDataset" title="GDALDataset"><code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">GDALDataset</span></code></a> object.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="gnm_data_model.html" class="btn btn-neutral float-right" title="Geographic Networks Data Model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="multidim_raster_data_model.html" class="btn btn-neutral float-left" title="Multidimensional Raster Data Model" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2024 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+  </div>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

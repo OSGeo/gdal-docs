@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Automated testing &mdash; GDAL  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d10597a4" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/gdal.css?v=e152ac3b" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="canonical" href="https://gdal.org/development/testing.html"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Building documentation" href="dev_documentation.html" />
+    <link rel="prev" title="Development practices" href="dev_practices.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/gdalicon.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/vector/index.html">Vector drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Development</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="building_from_source.html">Building GDAL from source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dev_environment.html">Setting up a development environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dev_practices.html">Development practices</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Automated testing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#running-a-subset-of-tests-using-ctest">Running a subset of tests using <code class="docutils literal notranslate"><span class="pre">ctest</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-a-subset-of-tests-using-pytest">Running a subset of tests using <code class="docutils literal notranslate"><span class="pre">pytest</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#checking-for-memory-leaks-and-access-errors-using-valgrind">Checking for memory leaks and access errors using Valgrind</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#recommendations-on-how-to-write-new-tests">Recommendations on how to write new tests</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#python-tests">Python tests</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#c-tests">C++ tests</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#test-coverage-reports">Test coverage reports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#post-commit-testing">Post-commit testing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="dev_documentation.html">Building documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cmake.html">Using GDAL in CMake projects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rfc/index.html">RFC list</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sponsors/index.html">Sponsors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">GDAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Development</a> &raquo;</li>
+      
+      <li>Automated testing</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit/master/doc/source/development/testing.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="dev_documentation.html" class="btn btn-neutral float-right" title="Building documentation" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="dev_practices.html" class="btn btn-neutral float-left" title="Development practices" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="automated-testing">
+<span id="testing"></span><h1>Automated testing<a class="headerlink" href="#automated-testing" title="Link to this heading"></a></h1>
+<p>GDAL includes a comprehensive test suite, implemented using a combination of Python (via pytest) and C++ (via gtest).</p>
+<p>After building GDAL using CMake, the complete test suite can be run using <code class="docutils literal notranslate"><span class="pre">ctest</span> <span class="pre">-v</span> <span class="pre">--output-on-failure</span></code>. This will automatically set environment variables so that tests are run on the
+the built version of GDAL, rather than an installed system copy.</p>
+<section id="running-a-subset-of-tests-using-ctest">
+<h2>Running a subset of tests using <code class="docutils literal notranslate"><span class="pre">ctest</span></code><a class="headerlink" href="#running-a-subset-of-tests-using-ctest" title="Link to this heading"></a></h2>
+<p>The complete set of test suites known to <code class="docutils literal notranslate"><span class="pre">ctest</span></code> can be viewed running <code class="docutils literal notranslate"><span class="pre">ctest</span> <span class="pre">-N</span></code>.</p>
+<p>A subset of tests can be run using the <code class="docutils literal notranslate"><span class="pre">-R</span></code> argument to <code class="docutils literal notranslate"><span class="pre">ctest</span></code>, which selects tests using a provided regular expression.
+For example, <code class="docutils literal notranslate"><span class="pre">ctest</span> <span class="pre">-R</span> <span class="pre">autotest</span></code> would run the Python-based tests.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">-E</span></code> argument can be used to exclude tests using a regular expression. For example, <code class="docutils literal notranslate"><span class="pre">ctest</span> <span class="pre">-E</span> <span class="pre">gdrivers</span></code> would exclude the suite of driver tests.</p>
+</section>
+<section id="running-a-subset-of-tests-using-pytest">
+<h2>Running a subset of tests using <code class="docutils literal notranslate"><span class="pre">pytest</span></code><a class="headerlink" href="#running-a-subset-of-tests-using-pytest" title="Link to this heading"></a></h2>
+<p>The test subsets exposed by <code class="docutils literal notranslate"><span class="pre">ctest</span></code> are still rather large and some may take several minutes to run.
+If a higher level of specificity is needed, <code class="docutils literal notranslate"><span class="pre">pytest</span></code> can be called directly to run groups of tests or individual tests.
+Before running <code class="docutils literal notranslate"><span class="pre">pytest</span></code>, it is important to set <a class="reference internal" href="dev_environment.html#setting-dev-environment-variables"><span class="std std-ref">development environment variables</span></a> so that the development build of GDAL is tested, rather than a system version.</p>
+<p>Tests can then be run by calling <code class="docutils literal notranslate"><span class="pre">pytest</span></code>, for example on an individual file.
+On Linux and MacOS builds, the tests are symlinked into the build directory, so this
+can be done by running the following from the build directory:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>autotest/gcore/vrt_read.py
+</pre></div>
+</div>
+<p>On Windows, the test files remain in the source tree, but the pytest configuration file <code class="docutils literal notranslate"><span class="pre">pytest.ini</span></code> is only available in the build directory. To accommodate this, the above command would be modified as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>-c<span class="w"> </span>pytest.ini<span class="w"> </span>../autotest/gcore/vrt_read.py
+</pre></div>
+</div>
+<p>A subset of tests within an individual test file can be run by providing a regular expression to the <code class="docutils literal notranslate"><span class="pre">-k</span></code> argument to <code class="docutils literal notranslate"><span class="pre">pytest</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>autotest/gcore/vrt_read.py<span class="w"> </span>-k<span class="w"> </span>test_vrt_read_non_existing_source
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">pytest</span></code> can also report information on the tests without running them. For
+example, to list tests containing &quot;tiff&quot; in the name:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>--collect-only<span class="w"> </span>autotest<span class="w"> </span>-k<span class="w"> </span>tiff
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Not all Python tests can be run independently; some tests depend on state set by a previous tests in the same file.</p>
+</div>
+</section>
+<section id="checking-for-memory-leaks-and-access-errors-using-valgrind">
+<h2>Checking for memory leaks and access errors using Valgrind<a class="headerlink" href="#checking-for-memory-leaks-and-access-errors-using-valgrind" title="Link to this heading"></a></h2>
+<p>The GDAL unit test suite can be run using the Valgrind tool to detect memory
+errors such as leaks and incorrect reads/writes.</p>
+<p>The test suite will run considerably slower under Valgrind (perhaps by a factor
+of ten) so it is generally advisable to run a subset of the tests using the
+methods described above.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Calling <code class="docutils literal notranslate"><span class="pre">valgrind</span> <span class="pre">ctest</span></code> will _not_ run the tests under
+<code class="docutils literal notranslate"><span class="pre">valgrind</span></code>. Although it is possible to use Valgrind with ctest, it is
+simpler to call <code class="docutils literal notranslate"><span class="pre">pytest</span></code> or <code class="docutils literal notranslate"><span class="pre">gdal_unit_test</span></code> directly.</p>
+</div>
+<p>The following preparatory steps are necessary to avoid numerous false-positive
+errors from Valgrind:</p>
+<ol class="arabic simple">
+<li><p>Many false-positive errors are generated by Python itself. Most of these can be
+removed by obtaining a suppression file that corresponds to the version of
+the Python interpreter used to run the tests. This file can be located in a
+source distribution of Python, or downloaded directly from GitHub (for
+example, at
+<a class="reference external" href="https://raw.githubusercontent.com/python/cpython/3.11/Misc/valgrind-python.supp">https://raw.githubusercontent.com/python/cpython/3.11/Misc/valgrind-python.supp</a>)</p></li>
+<li><p>A few false-positive errors are generated by the GDAL test suite or
+libraries that it uses (e.g., SWIG, numpy). These can be removed by
+<code class="docutils literal notranslate"><span class="pre">autotest/valgrind-gdal.supp</span></code> file in the GDAL repository.</p></li>
+<li><p>When running Python unit tests, the default system memory allocator should
+be used instead of Python's internal memory allocator. This can be done by
+setting the <code class="docutils literal notranslate"><span class="pre">PYTHONMALLOC</span></code> environment variable to <code class="docutils literal notranslate"><span class="pre">malloc</span></code>.</p></li>
+<li><p>When running Python unit tests, Valgrind will report numerous &quot;Invalid file
+descriptor&quot; warnings that cannot currently be suppressed. These can be
+removed from the output using <code class="docutils literal notranslate"><span class="pre">grep</span> <span class="pre">-v</span> <span class="pre">&quot;invalid</span> <span class="pre">file</span>
+<span class="pre">descriptor\|alternative</span> <span class="pre">log</span> <span class="pre">fd&quot;</span></code>.</p></li>
+</ol>
+<p>Combining the following, we can run valgrind for a subset of Python tests as
+follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">PYTHONMALLOC</span><span class="o">=</span>malloc<span class="w"> </span>valgrind<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--leak-check<span class="o">=</span>full<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--suppressions<span class="o">=</span>/home/dan/dev/valgrind-python.supp<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--suppressions<span class="o">=</span>/home/dan/dev/gdal/autotest/valgrind-gdal.supp<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>pytest<span class="w"> </span>-v<span class="w"> </span>autotest/utilities<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="o">(</span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;invalid file descriptor\|alternative log fd&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span><span class="o">)</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>valgrind-out
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To avoid verbose commands such as the one above, it may be useful to
+reference the suppression files and other common arguments in a
+<code class="docutils literal notranslate"><span class="pre">~/.valgrindrc</span></code> file.</p>
+</div>
+</section>
+<section id="recommendations-on-how-to-write-new-tests">
+<span id="writing-tests"></span><h2>Recommendations on how to write new tests<a class="headerlink" href="#recommendations-on-how-to-write-new-tests" title="Link to this heading"></a></h2>
+<p>Python-based tests should be preferred when possible, as productivity is higher
+in Python and there is no associated compilation time (compilation time affects
+feedback received from continuous integration).</p>
+<p>C/C++-based test should be reserved for C++-specific aspects that cannot be tested
+with the SWIG Python bindings, which use the C interface. For example testing
+of C++ operators (copy/move constructors/assignment operators, iterator interfaces,
+etc.) or C/C++ functionality not mapped to SWIG (e.g. CPL utility functions/classes)</p>
+<section id="python-tests">
+<h3>Python tests<a class="headerlink" href="#python-tests" title="Link to this heading"></a></h3>
+<p>Python tests use the <a class="reference external" href="https://docs.pytest.org/en/latest/">pytest</a>
+framework since <a class="reference internal" href="rfc/rfc72_pytest.html#rfc-72"><span class="std std-ref">RFC 72: Update autotest suite to use pytest</span></a>.</p>
+<p>Test cases should be written in a way where they are independent from other
+ones, so they can potentially be run in a isolated way or in parallel of other
+test cases. In particular temporary files should be created with a name that
+cannot conflict with other tests: preferably use pytest's <code class="docutils literal notranslate"><span class="pre">`tmp_path</span></code> fixture &lt;<a class="reference external" href="https://docs.pytest.org/en/7.1.x/how-to/tmp_path.html#the-tmp-path-fixture">https://docs.pytest.org/en/7.1.x/how-to/tmp_path.html#the-tmp-path-fixture</a>&gt;`__.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">&#64;pytest.mark.require_driver(driver_name)</span></code> as an annotation for a test
+case that requires an optional driver to be present.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">pytestmark</span> <span class="pre">=</span> <span class="pre">pytest.mark.require_driver(&quot;driver_name&quot;)</span></code> towards the
+beginning of a test file that requires a given driver to be available for
+all its test cases. This is typically when writing tests for a particular
+driver.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">&#64;pytest.mark.require_run_on_demand</span></code> as an annotation to signal a test
+that should not be run by default, typically because it requires special
+pre-conditions, use a lot of RAM, etc. and is thus not appropriate to be
+automatically run by continuous integration.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">&#64;pytest.mark.parametrize(...)</span></code> as an annotation for test functions
+that test for variations, instead of for() constructs.
+More details at <a class="reference external" href="https://docs.pytest.org/en/latest/parametrize.html">https://docs.pytest.org/en/latest/parametrize.html</a></p>
+<p>e.g.:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">&quot;dt,expected_size&quot;</span><span class="p">,</span> <span class="p">[(</span><span class="n">gdal</span><span class="o">.</span><span class="n">GDT_Byte</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                                              <span class="p">(</span><span class="n">gdal</span><span class="o">.</span><span class="n">GDT_UInt16</span><span class="p">,</span> <span class="mi">2</span><span class="p">)]</span>
+<span class="k">def</span> <span class="nf">test_datatypesize</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span><span class="n">expected_size</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GetDataTypeSizeBytes</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span> <span class="o">==</span> <span class="n">expected_size</span>
+</pre></div>
+</div>
+<p>instead of</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_datatypesize_DO_NOT_DO_THAT</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">dt</span><span class="p">,</span> <span class="n">expected_size</span> <span class="ow">in</span> <span class="p">[(</span><span class="n">gdal</span><span class="o">.</span><span class="n">GDT_Byte</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="n">gdal</span><span class="o">.</span><span class="n">GDT_UInt16</span><span class="p">,</span> <span class="mi">2</span><span class="p">)]:</span>
+        <span class="k">assert</span> <span class="n">gdal</span><span class="o">.</span><span class="n">GetDataTypeSizeBytes</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span> <span class="o">==</span> <span class="n">expected_size</span>
+</pre></div>
+</div>
+<p><a class="reference external" href="https://docs.pytest.org/en/latest/how-to/fixtures.html">Fixtures</a> can
+be used to share set-up and tear-down code between test cases.</p>
+<p>e.g. a fixture automatically loaded for all test cases of a test file, that
+takes care to unregister a given driver before the test case is run, and
+re-register it afterwards:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;module&quot;</span><span class="p">,</span> <span class="n">autouse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">without_filegdb_driver</span><span class="p">():</span>
+<span class="c1"># remove FileGDB driver before running tests</span>
+<span class="n">filegdb_driver</span> <span class="o">=</span> <span class="n">ogr</span><span class="o">.</span><span class="n">GetDriverByName</span><span class="p">(</span><span class="s2">&quot;FileGDB&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">filegdb_driver</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">filegdb_driver</span><span class="o">.</span><span class="n">Deregister</span><span class="p">()</span>
+
+<span class="k">yield</span>
+
+<span class="k">if</span> <span class="n">filegdb_driver</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reregistering FileGDB driver&quot;</span><span class="p">)</span>
+    <span class="n">filegdb_driver</span><span class="o">.</span><span class="n">Register</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>or a fixture that runs preliminary checks to discover if a driver has
+some optional capabilities, and skip a test case if not:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">require_auto_load_extension</span><span class="p">():</span>
+<span class="k">if</span> <span class="n">ogr</span><span class="o">.</span><span class="n">GetDriverByName</span><span class="p">(</span><span class="s2">&quot;SQLite&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">pytest</span><span class="o">.</span><span class="n">skip</span><span class="p">()</span>
+
+<span class="n">ds</span> <span class="o">=</span> <span class="n">ogr</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="s2">&quot;:memory:&quot;</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">gdaltest</span><span class="o">.</span><span class="n">error_handler</span><span class="p">():</span>
+    <span class="n">sql_lyr</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">ExecuteSQL</span><span class="p">(</span><span class="s2">&quot;PRAGMA compile_options&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">sql_lyr</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">sql_lyr</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">GetField</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;OMIT_LOAD_EXTENSION&quot;</span><span class="p">:</span>
+            <span class="n">ds</span><span class="o">.</span><span class="n">ReleaseResultSet</span><span class="p">(</span><span class="n">sql_lyr</span><span class="p">)</span>
+            <span class="n">pytest</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="s2">&quot;SQLite3 built with OMIT_LOAD_EXTENSION&quot;</span><span class="p">)</span>
+    <span class="n">ds</span><span class="o">.</span><span class="n">ReleaseResultSet</span><span class="p">(</span><span class="n">sql_lyr</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">test_ogr_virtualogr_1</span><span class="p">(</span><span class="n">require_auto_load_extension</span><span class="p">):</span>
+    <span class="c1"># Invalid syntax</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">ogr_virtualogr_run_sql</span><span class="p">(</span><span class="s2">&quot;CREATE VIRTUAL TABLE poly USING VirtualOGR()&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="c-tests">
+<h3>C++ tests<a class="headerlink" href="#c-tests" title="Link to this heading"></a></h3>
+<p>GDAL C++ tests use the <a class="reference external" href="https://github.com/google/googletest">GoogleTest</a>
+framework since <a class="reference internal" href="rfc/rfc88_googletest.html#rfc-88"><span class="std std-ref">RFC 88: Use GoogleTest framework for C/C++ unit tests</span></a>.</p>
+<p>Common non-failing assertions are: <code class="docutils literal notranslate"><span class="pre">EXPECT_TRUE(cond)</span></code>, <code class="docutils literal notranslate"><span class="pre">EXPECT_FALSE(cond)</span></code>,
+<code class="docutils literal notranslate"><span class="pre">EXPECT_EQ(a,</span> <span class="pre">b)</span></code>, <code class="docutils literal notranslate"><span class="pre">EXPECT_NE(a,</span> <span class="pre">b)</span></code>, <code class="docutils literal notranslate"><span class="pre">EXPECT_STREQ(a,</span> <span class="pre">b)</span></code>, <code class="docutils literal notranslate"><span class="pre">EXPECT_LE(a,</span> <span class="pre">b)</span></code>,
+<code class="docutils literal notranslate"><span class="pre">EXPECT_LT(a,</span> <span class="pre">b)</span></code>, <code class="docutils literal notranslate"><span class="pre">EXPECT_GE(a,</span> <span class="pre">b)</span></code>, <code class="docutils literal notranslate"><span class="pre">EXPECT_GT(a,</span> <span class="pre">b)</span></code>, <code class="docutils literal notranslate"><span class="pre">EXPECT_NEAR(a,</span> <span class="pre">b,</span> <span class="pre">tolerance)</span></code>
+If one of those assertions fail, the execution of the rest of the test cases
+continues, hence they should not typically be used if testing a pointer against
+NULL and dereferencing it unconditionally afterwards. The ASSERT_xxxx family
+of assertions should be used for such cases where early exit of the test case
+is desired.</p>
+<p>GoogleTest also offers capabilities for parametrized tests. For example:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">DataTypeTupleFixture</span><span class="o">:</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">test_gdal</span><span class="p">,</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="o">::</span><span class="n">testing</span><span class="o">::</span><span class="n">WithParamInterface</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">GDALDataType</span><span class="p">,</span><span class="w"> </span><span class="n">GDALDataType</span><span class="o">&gt;&gt;</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">GDALDataType</span><span class="p">,</span><span class="w"> </span><span class="n">GDALDataType</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">GetTupleValues</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="n">GDALDataType</span><span class="p">,</span><span class="w"> </span><span class="n">GDALDataType</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="w"> </span><span class="n">GDALDataType</span><span class="w"> </span><span class="n">eIn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GDT_Byte</span><span class="p">;</span><span class="w"> </span><span class="n">eIn</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">GDT_TypeCount</span><span class="p">;</span><span class="w"> </span><span class="n">eIn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">GDALDataType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">eIn</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">for</span><span class="p">(</span><span class="w"> </span><span class="n">GDALDataType</span><span class="w"> </span><span class="n">eOut</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GDT_Byte</span><span class="p">;</span><span class="w"> </span><span class="n">eOut</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">GDT_TypeCount</span><span class="p">;</span><span class="w"> </span><span class="n">eOut</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">GDALDataType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">eOut</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">ret</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_tuple</span><span class="p">(</span><span class="n">eIn</span><span class="p">,</span><span class="w"> </span><span class="n">eOut</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="c1">// Test GDALDataTypeUnion() on all (GDALDataType, GDALDataType) combinations</span>
+<span class="n">TEST_P</span><span class="p">(</span><span class="n">DataTypeTupleFixture</span><span class="p">,</span><span class="w"> </span><span class="n">GDALDataTypeUnion_generic</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">GDALDataType</span><span class="w"> </span><span class="n">eDT1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">(</span><span class="n">GetParam</span><span class="p">());</span>
+<span class="w">    </span><span class="n">GDALDataType</span><span class="w"> </span><span class="n">eDT2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">(</span><span class="n">GetParam</span><span class="p">());</span>
+<span class="w">    </span><span class="n">GDALDataType</span><span class="w"> </span><span class="n">eDT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GDALDataTypeUnion</span><span class="p">(</span><span class="n">eDT1</span><span class="p">,</span><span class="n">eDT2</span><span class="w"> </span><span class="p">);</span>
+<span class="w">    </span><span class="n">EXPECT_EQ</span><span class="p">(</span><span class="w"> </span><span class="n">eDT</span><span class="p">,</span><span class="w"> </span><span class="n">GDALDataTypeUnion</span><span class="p">(</span><span class="n">eDT2</span><span class="p">,</span><span class="n">eDT1</span><span class="p">)</span><span class="w"> </span><span class="p">);</span>
+<span class="w">    </span><span class="n">EXPECT_GE</span><span class="p">(</span><span class="w"> </span><span class="n">GDALGetDataTypeSize</span><span class="p">(</span><span class="n">eDT</span><span class="p">),</span><span class="w"> </span><span class="n">GDALGetDataTypeSize</span><span class="p">(</span><span class="n">eDT1</span><span class="p">)</span><span class="w"> </span><span class="p">);</span>
+<span class="w">    </span><span class="n">EXPECT_GE</span><span class="p">(</span><span class="w"> </span><span class="n">GDALGetDataTypeSize</span><span class="p">(</span><span class="n">eDT</span><span class="p">),</span><span class="w"> </span><span class="n">GDALGetDataTypeSize</span><span class="p">(</span><span class="n">eDT2</span><span class="p">)</span><span class="w"> </span><span class="p">);</span>
+<span class="w">    </span><span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="w"> </span><span class="p">(</span><span class="n">GDALDataTypeIsComplex</span><span class="p">(</span><span class="n">eDT</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">GDALDataTypeIsComplex</span><span class="p">(</span><span class="n">eDT1</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">GDALDataTypeIsComplex</span><span class="p">(</span><span class="n">eDT2</span><span class="p">)))</span><span class="w"> </span><span class="o">||</span>
+<span class="w">            </span><span class="p">(</span><span class="o">!</span><span class="n">GDALDataTypeIsComplex</span><span class="p">(</span><span class="n">eDT</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">GDALDataTypeIsComplex</span><span class="p">(</span><span class="n">eDT1</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">GDALDataTypeIsComplex</span><span class="p">(</span><span class="n">eDT2</span><span class="p">))</span><span class="w"> </span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="w"> </span><span class="o">!</span><span class="p">(</span><span class="n">GDALDataTypeIsFloating</span><span class="p">(</span><span class="n">eDT1</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">GDALDataTypeIsFloating</span><span class="p">(</span><span class="n">eDT2</span><span class="p">))</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">GDALDataTypeIsFloating</span><span class="p">(</span><span class="n">eDT</span><span class="p">));</span>
+<span class="w">    </span><span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="w"> </span><span class="o">!</span><span class="p">(</span><span class="n">GDALDataTypeIsSigned</span><span class="p">(</span><span class="n">eDT1</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">GDALDataTypeIsSigned</span><span class="p">(</span><span class="n">eDT2</span><span class="p">))</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">GDALDataTypeIsSigned</span><span class="p">(</span><span class="n">eDT</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="n">INSTANTIATE_TEST_SUITE_P</span><span class="p">(</span>
+<span class="w">        </span><span class="n">test_gdal</span><span class="p">,</span>
+<span class="w">        </span><span class="n">DataTypeTupleFixture</span><span class="p">,</span>
+<span class="w">        </span><span class="o">::</span><span class="n">testing</span><span class="o">::</span><span class="n">ValuesIn</span><span class="p">(</span><span class="n">DataTypeTupleFixture</span><span class="o">::</span><span class="n">GetTupleValues</span><span class="p">()),</span>
+<span class="w">        </span><span class="p">[](</span><span class="k">const</span><span class="w"> </span><span class="o">::</span><span class="n">testing</span><span class="o">::</span><span class="n">TestParamInfo</span><span class="o">&lt;</span><span class="n">DataTypeTupleFixture</span><span class="o">::</span><span class="n">ParamType</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">l_info</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">GDALDataType</span><span class="w"> </span><span class="n">eDT1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">(</span><span class="n">l_info</span><span class="p">.</span><span class="n">param</span><span class="p">);</span>
+<span class="w">            </span><span class="n">GDALDataType</span><span class="w"> </span><span class="n">eDT2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">(</span><span class="n">l_info</span><span class="p">.</span><span class="n">param</span><span class="p">);</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">GDALGetDataTypeName</span><span class="p">(</span><span class="n">eDT1</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;_&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">GDALGetDataTypeName</span><span class="p">(</span><span class="n">eDT2</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="test-coverage-reports">
+<h2>Test coverage reports<a class="headerlink" href="#test-coverage-reports" title="Link to this heading"></a></h2>
+<p>GDAL continuous integration has a <code class="docutils literal notranslate"><span class="pre">coverage</span></code> configuration that builds
+GDAL with the <code class="docutils literal notranslate"><span class="pre">gcov</span></code> GCC module to get the line coverage of running Python
+and C++ autotest tests.</p>
+<p>This is used by the <a class="reference external" href="https://github.com/marketplace/actions/coveralls-github-action">Coveralls GitHub Action</a>
+to upload results to <a class="reference external" href="https://coveralls.io/github/OSGeo/gdal">https://coveralls.io/github/OSGeo/gdal</a>, for both push
+and pull requests events.</p>
+<p>A somewhat nicer looking output of line coverage results for the latest master
+build, generated by <code class="docutils literal notranslate"><span class="pre">lcov</span></code>, is also available at
+<a class="reference external" href="https://gdalautotest-coverage-results.github.io/coverage_html/index.html">https://gdalautotest-coverage-results.github.io/coverage_html/index.html</a></p>
+</section>
+<section id="post-commit-testing">
+<h2>Post-commit testing<a class="headerlink" href="#post-commit-testing" title="Link to this heading"></a></h2>
+<p>A weekly static analysis is run by <a class="reference external" href="https://scan.coverity.com">Coverity</a>. Developers/maintainers can request access on the <a class="reference external" href="https://scan.coverity.com/projects/749">GDAL project page</a>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="dev_documentation.html" class="btn btn-neutral float-right" title="Building documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="dev_practices.html" class="btn btn-neutral float-left" title="Development practices" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2024 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+  </div>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

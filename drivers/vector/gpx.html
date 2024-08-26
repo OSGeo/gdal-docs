@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GPX - GPS Exchange Format &mdash; GDAL  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d10597a4" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/gdal.css?v=e152ac3b" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://gdal.org/drivers/vector/gpx.html"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="GRASS Vector Format" href="grass.html" />
+    <link rel="prev" title="GPSBabel" href="gpsbabel.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/gdalicon.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../programs/index.html">Programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../raster/index.html">Raster drivers</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Vector drivers</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="amigocloud.html">AmigoCloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arrow.html">(Geo)Arrow IPC File Format / Stream</a></li>
+<li class="toctree-l2"><a class="reference internal" href="avcbin.html">Arc/Info Binary Coverage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="avce00.html">Arc/Info E00 (ASCII) Coverage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cad.html">CAD -- AutoCAD DWG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="carto.html">Carto</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csv.html">Comma Separated Value (.csv)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csw.html">CSW - OGC CSW (Catalog Service for the Web)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dgn.html">Microstation DGN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dgnv8.html">Microstation DGN v8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dwg.html">AutoCAD DWG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dxf.html">AutoCAD DXF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eeda.html">Google Earth Engine Data API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="edigeo.html">EDIGEO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elasticsearch.html">Elasticsearch: Geographically Encoded Objects for Elasticsearch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="esrijson.html">ESRIJSON / FeatureService driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filegdb.html">ESRI File Geodatabase (FileGDB)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flatgeobuf.html">FlatGeobuf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoconcept.html">GeoConcept text export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geojson.html">GeoJSON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geojsonseq.html">GeoJSONSeq: sequence of GeoJSON features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="georss.html">GeoRSS : Geographically Encoded Objects for RSS feeds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gml.html">GML - Geography Markup Language</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gmlas.html">GMLAS - Geography Markup Language (GML) driven by application schemas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gmt.html">GMT ASCII Vectors (.gmt)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpkg.html">GPKG -- GeoPackage vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gpsbabel.html">GPSBabel</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">GPX - GPS Exchange Format</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#driver-capabilities">Driver capabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configuration-options">Configuration options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#open-options">Open options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#encoding-issues">Encoding issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#extensions-element-reading">Extensions element reading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#creation-issues">Creation Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#layer-creation-options">Layer creation options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dataset-creation-options">Dataset creation options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#issues-when-translating-to-shapefile">Issues when translating to Shapefile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vsi-virtual-file-system-api-support">VSI Virtual File System API support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example">Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#faq">FAQ</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#see-also">See Also</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="grass.html">GRASS Vector Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gtfs.html">GTFS - General Transit Feed Specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hana.html">SAP HANA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="idb.html">IDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="idrisi.html">Idrisi Vector (.VCT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ili.html">&quot;INTERLIS 1&quot; and &quot;INTERLIS 2&quot; drivers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jml.html">JML: OpenJUMP JML format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jsonfg.html">JSONFG -- OGC Features and Geometries JSON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kml.html">KML - Keyhole Markup Language</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libkml.html">LIBKML Driver (.kml .kmz)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lvbag.html">Dutch Kadaster LV BAG 2.0 Extract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mapml.html">MapML</a></li>
+<li class="toctree-l2"><a class="reference internal" href="memory.html">Memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="miramon.html">MiraMon Vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mitab.html">MapInfo TAB and MIF/MID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mongodbv3.html">MongoDBv3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mssqlspatial.html">MSSQLSpatial - Microsoft SQL Server Spatial Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mvt.html">MVT: Mapbox Vector Tiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mysql.html">MySQL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nas.html">NAS - ALKIS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="netcdf.html">NetCDF: Network Common Data Form - Vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ngw.html">NGW -- NextGIS Web</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ntf.html">UK .NTF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="oapif.html">OGC API - Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="oci.html">Oracle Spatial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="odbc.html">ODBC RDBMS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ods.html">ODS - Open Document Spreadsheet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ogdi.html">OGDI Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="openfilegdb.html">ESRI File Geodatabase vector (OpenFileGDB)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="osm.html">OSM - OpenStreetMap XML and PBF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parquet.html">(Geo)Parquet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pdf.html">PDF -- Geospatial PDF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pds.html">PDS - Planetary Data Systems TABLE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pgdump.html">PostgreSQL SQL Dump</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pgeo.html">ESRI Personal GeoDatabase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pg.html">PostgreSQL / PostGIS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plscenes.html">PLScenes (Planet Labs Scenes/Catalog API)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pmtiles.html">PMTiles -- ProtoMaps Tiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s57.html">IHO S-57 (ENC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sdts.html">SDTS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="selafin.html">Selafin files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shapefile.html">ESRI Shapefile / DBF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sosi.html">Norwegian SOSI Standard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sqlite.html">SQLite / Spatialite RDBMS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="svg.html">SVG - Scalable Vector Graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sxf.html">Storage and eXchange Format - SXF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiger.html">U.S. Census TIGER/Line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tiledb.html">TileDB -- TileDB vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="topojson.html">TopoJSON driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vdv.html">VDV - VDV-451/VDV-452/INTREST Data Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vfk.html">VFK - Czech Cadastral Exchange Data Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vrt.html">VRT -- Virtual Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wasp.html">WAsP - WAsP .map format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wfs.html">WFS - OGC WFS service</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xls.html">XLS - MS Excel format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xlsx.html">XLSX - MS Office Open XML spreadsheet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xodr.html">XODR -- OpenDRIVE Road Description Format</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../user/index.html">User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sponsors/index.html">Sponsors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">How to contribute?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">GDAL</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html"> GDAL  documentation </a> &raquo;</li>
+      
+          <li><a href="index.html">Vector drivers</a> &raquo;</li>
+      
+      <li>GPX - GPS Exchange Format</li>
+    
+
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/OSGeo/gdal/edit/master/doc/source/drivers/vector/gpx.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="grass.html" class="btn btn-neutral float-right" title="GRASS Vector Format" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gpsbabel.html" class="btn btn-neutral float-left" title="GPSBabel" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gpx-gps-exchange-format">
+<span id="vector-gpx"></span><h1>GPX - GPS Exchange Format<a class="headerlink" href="#gpx-gps-exchange-format" title="Link to this heading"></a></h1>
+<div class="admonition shortname" id="shortname-0">
+<p class="admonition-title">Driver short name</p>
+<p>GPX</p>
+</div>
+<div class="admonition build_dependencies" id="build_dependencies-0">
+<p class="admonition-title">Build dependencies</p>
+<p>(read support needs libexpat)</p>
+</div>
+<p>GPX (the GPS Exchange Format) is a light-weight XML data format for the
+interchange of GPS data (waypoints, routes, and tracks) between
+applications and Web services on the Internet.</p>
+<p>OGR has support for GPX reading (if GDAL is build with <em>expat</em> library
+support) and writing.</p>
+<p>Version supported are GPX 1.0 and 1.1 for reading, GPX 1.1 for writing.</p>
+<p>The OGR driver supports reading and writing of all the GPX feature types:</p>
+<ul class="simple">
+<li><p><em>waypoints</em> : layer of features of OGR type wkbPoint</p></li>
+<li><p><em>routes</em> : layer of features of OGR type wkbLineString</p></li>
+<li><p><em>tracks</em> : layer of features of OGR type wkbMultiLineString</p></li>
+</ul>
+<p>It also supports reading of route points and track points in standalone
+layers (<em>route_points</em> and <em>track_points</em>), so that their own attributes
+can be used by OGR.</p>
+<div class="line-block">
+<div class="line">In addition to its GPX attributes, each route point of a route has a
+<em>route_fid</em> (foreign key to the FID of its belonging route) and a
+<em>route_point_id</em> which is its sequence number in the route.</div>
+<div class="line">The same applies for track points with <em>track_fid</em>, <em>track_seg_id</em> and
+<em>track_seg_point_id</em>. All coordinates are relative to the WGS84 datum
+(EPSG:4326).</div>
+</div>
+<p>The OGR GPX driver reads and writes the GPX attributes for the waypoints,
+routes and tracks.</p>
+<p>Starting with GDAL 3.7, metadata from the top &lt;metadata&gt; element is reported
+at dataset level.</p>
+<section id="driver-capabilities">
+<h2>Driver capabilities<a class="headerlink" href="#driver-capabilities" title="Link to this heading"></a></h2>
+<div class="admonition supports_create" id="supports_create-0">
+<p class="admonition-title">Supports Create()</p>
+<p>This driver supports the <a class="reference internal" href="../../api/gdaldriver_cpp.html#_CPPv4N10GDALDriver6CreateEPKciii12GDALDataType12CSLConstList" title="GDALDriver::Create"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDriver::Create()</span></code></a> operation</p>
+</div>
+<div class="admonition supports_georeferencing" id="supports_georeferencing-0">
+<p class="admonition-title">Supports Georeferencing</p>
+<p>This driver supports georeferencing</p>
+</div>
+<div class="admonition supports_virtualio" id="supports_virtualio-0">
+<p class="admonition-title">Supports VirtualIO</p>
+<p>This driver supports <a class="reference internal" href="../../user/virtual_file_systems.html#virtual-file-systems"><span class="std std-ref">virtual I/O operations (/vsimem/, etc.)</span></a></p>
+</div>
+</section>
+<section id="configuration-options">
+<h2>Configuration options<a class="headerlink" href="#configuration-options" title="Link to this heading"></a></h2>
+<p><a class="reference internal" href="../../user/configoptions.html#configoptions"><span class="std std-ref">Configuration options</span></a> can be specified in command-line tools using the syntax <code class="docutils literal notranslate"><span class="pre">--config</span> <span class="pre">&lt;NAME&gt;=&lt;VALUE&gt;</span></code> or using functions such as <a class="reference internal" href="../../api/cpl.html#_CPPv418CPLSetConfigOptionPKcPKc" title="CPLSetConfigOption"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">CPLSetConfigOption()</span></code></a> (C) or <a class="reference internal" href="../../api/python/general.html#osgeo.gdal.config_options" title="osgeo.gdal.config_options"><code class="xref py py-func docutils literal notranslate"><span class="pre">gdal.config_options</span></code></a> (Python).
+The following configuration options are available:</p>
+<ul class="simple">
+<li><p id="config-GPX_USE_EXTENSIONS"><strong>GPX_USE_EXTENSIONS=value: </strong>See <a class="reference internal" href="#extensions-element-reading">Extensions element reading</a>.</p>
+</li>
+<li><p id="config-GPX_SHORT_NAMES"><strong>GPX_SHORT_NAMES=[TRUE/FALSE]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">FALSE</span></code>. If <code class="docutils literal notranslate"><span class="pre">TRUE</span></code>, the following fields will be renamed:<ul>
+<li><p>&quot;track_seg_id&quot; to &quot;trksegid&quot;</p></li>
+<li><p>&quot;track_seg_point_id&quot; to  &quot;trksegptid&quot;</p></li>
+<li><p>&quot;route_point_id&quot; to &quot;rteptid&quot;</p></li>
+</ul>
+<p>But note that
+no particular processing will be done for any extension field names.</p>
+</p>
+</li>
+<li><p id="config-GPX_ELE_AS_25D"><strong>GPX_ELE_AS_25D=[YES/NO]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">NO</span></code>. If <code class="docutils literal notranslate"><span class="pre">YES</span></code>, the elevation
+element will be used to set the Z coordinates of waypoints, route points
+and track points.</p>
+</li>
+<li><p id="config-GPX_N_MAX_LINKS"><strong>GPX_N_MAX_LINKS=value: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">2</span></code>. Determines the number of <em>&lt;link&gt;</em> elements can be taken into account by
+feature.</p>
+</li>
+</ul>
+</section>
+<section id="open-options">
+<h2>Open options<a class="headerlink" href="#open-options" title="Link to this heading"></a></h2>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 3.9.</span></p>
+</div>
+<p>Open options can be specified in command-line tools using the syntax <code class="docutils literal notranslate"><span class="pre">-oo</span> <span class="pre">&lt;NAME&gt;=&lt;VALUE&gt;</span></code> or by providing the appropriate arguments to <a class="reference internal" href="../../api/raster_c_api.html#_CPPv410GDALOpenExPKcjPPCKcPPCKcPPCKc" title="GDALOpenEx"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALOpenEx()</span></code></a> (C) or <a class="reference internal" href="../../api/python/raster_api.html#osgeo.gdal.OpenEx" title="osgeo.gdal.OpenEx"><code class="xref py py-meth docutils literal notranslate"><span class="pre">gdal.OpenEx</span></code></a> (Python).
+The following open options are available:</p>
+<ul class="simple">
+<li><p id="drivers/vector/gpx-oo-SHORT_NAMES"><strong>SHORT_NAMES=[YES/NO]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">FALSE</span></code>. If <code class="docutils literal notranslate"><span class="pre">YES</span></code>, the following fields will be renamed:<ul>
+<li><p>&quot;track_seg_id&quot; to &quot;trksegid&quot;</p></li>
+<li><p>&quot;track_seg_point_id&quot; to  &quot;trksegptid&quot;</p></li>
+<li><p>&quot;route_point_id&quot; to &quot;rteptid&quot;</p></li>
+</ul>
+<p>But note that
+no particular processing will be done for any extension field names.</p>
+</p>
+</li>
+<li><p id="drivers/vector/gpx-oo-ELE_AS_25D"><strong>ELE_AS_25D=[YES/NO]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">NO</span></code>. If <code class="docutils literal notranslate"><span class="pre">YES</span></code>, the elevation
+element will be used to set the Z coordinates of waypoints, route points
+and track points.</p>
+</li>
+<li><p id="drivers/vector/gpx-oo-N_MAX_LINKS"><strong>N_MAX_LINKS=value: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">2</span></code>. Determines the number of <em>&lt;link&gt;</em> elements can be taken into account by
+feature.</p>
+</li>
+</ul>
+</section>
+<section id="encoding-issues">
+<h2>Encoding issues<a class="headerlink" href="#encoding-issues" title="Link to this heading"></a></h2>
+<p>Expat library supports reading the following built-in encodings :</p>
+<ul class="simple">
+<li><p>US-ASCII</p></li>
+<li><p>UTF-8</p></li>
+<li><p>UTF-16</p></li>
+<li><p>ISO-8859-1</p></li>
+<li><p>Windows-1252</p></li>
+</ul>
+<p>The content returned by OGR will be encoded in UTF-8, after the
+conversion from the encoding mentioned in the file header is.</p>
+<div class="line-block">
+<div class="line">If your GPX file is not encoded in one of the previous encodings, it
+will not be parsed by the GPX driver. You may convert it into one of
+the supported encoding with the <em>iconv</em> utility for example and change
+accordingly the <em>encoding</em> parameter value in the XML header.</div>
+</div>
+<p>When writing a GPX file, the driver expects UTF-8 content to be passed
+in.</p>
+</section>
+<section id="extensions-element-reading">
+<h2>Extensions element reading<a class="headerlink" href="#extensions-element-reading" title="Link to this heading"></a></h2>
+<p>If the <em>&lt;extensions&gt;</em> element is detected in a GPX file, OGR will expose
+the content of its sub elements as fields. Complex content of sub
+elements will be exposed as an XML blob.</p>
+<p>The following sequence GPX content :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">extensions</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">navaid</span><span class="p">:</span><span class="n">name</span><span class="o">&gt;</span><span class="n">TOTAL</span> <span class="n">RF</span><span class="o">&lt;/</span><span class="n">navaid</span><span class="p">:</span><span class="n">name</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">navaid</span><span class="p">:</span><span class="n">address</span><span class="o">&gt;</span><span class="n">BENSALEM</span><span class="o">&lt;/</span><span class="n">navaid</span><span class="p">:</span><span class="n">address</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">navaid</span><span class="p">:</span><span class="n">state</span><span class="o">&gt;</span><span class="n">PA</span><span class="o">&lt;/</span><span class="n">navaid</span><span class="p">:</span><span class="n">state</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">navaid</span><span class="p">:</span><span class="n">country</span><span class="o">&gt;</span><span class="n">US</span><span class="o">&lt;/</span><span class="n">navaid</span><span class="p">:</span><span class="n">country</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">navaid</span><span class="p">:</span><span class="n">frequencies</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">navaid</span><span class="p">:</span><span class="n">frequency</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;CTAF&quot;</span> <span class="n">frequency</span><span class="o">=</span><span class="s2">&quot;122.900&quot;</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;CTAF&quot;</span><span class="o">/&gt;</span>
+    <span class="o">&lt;/</span><span class="n">navaid</span><span class="p">:</span><span class="n">frequencies</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">navaid</span><span class="p">:</span><span class="n">runways</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">navaid</span><span class="p">:</span><span class="n">runway</span> <span class="n">designation</span><span class="o">=</span><span class="s2">&quot;H1&quot;</span> <span class="n">length</span><span class="o">=</span><span class="s2">&quot;80&quot;</span> <span class="n">width</span><span class="o">=</span><span class="s2">&quot;80&quot;</span> <span class="n">surface</span><span class="o">=</span><span class="s2">&quot;ASPH-G&quot;</span><span class="o">&gt;</span>
+    <span class="o">&lt;/</span><span class="n">navaid</span><span class="p">:</span><span class="n">runway</span><span class="o">&gt;</span>
+    <span class="o">&lt;/</span><span class="n">navaid</span><span class="p">:</span><span class="n">runways</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">navaid</span><span class="p">:</span><span class="n">magvar</span><span class="o">&gt;</span><span class="mi">12</span><span class="o">&lt;/</span><span class="n">navaid</span><span class="p">:</span><span class="n">magvar</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">extensions</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>will be interpreted in the OGR SF model as :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">navaid_name</span> <span class="p">(</span><span class="n">String</span><span class="p">)</span> <span class="o">=</span> <span class="n">TOTAL</span> <span class="n">RF</span>
+<span class="n">navaid_address</span> <span class="p">(</span><span class="n">String</span><span class="p">)</span> <span class="o">=</span> <span class="n">BENSALEM</span>
+<span class="n">navaid_state</span> <span class="p">(</span><span class="n">String</span><span class="p">)</span> <span class="o">=</span> <span class="n">PA</span>
+<span class="n">navaid_country</span> <span class="p">(</span><span class="n">String</span><span class="p">)</span> <span class="o">=</span> <span class="n">US</span>
+<span class="n">navaid_frequencies</span> <span class="p">(</span><span class="n">String</span><span class="p">)</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">navaid</span><span class="p">:</span><span class="n">frequency</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;CTAF&quot;</span> <span class="n">frequency</span><span class="o">=</span><span class="s2">&quot;122.900&quot;</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;CTAF&quot;</span> <span class="o">&gt;&lt;/</span><span class="n">navaid</span><span class="p">:</span><span class="n">frequency</span><span class="o">&gt;</span>
+<span class="n">navaid_runways</span> <span class="p">(</span><span class="n">String</span><span class="p">)</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">navaid</span><span class="p">:</span><span class="n">runway</span> <span class="n">designation</span><span class="o">=</span><span class="s2">&quot;H1&quot;</span> <span class="n">length</span><span class="o">=</span><span class="s2">&quot;80&quot;</span> <span class="n">width</span><span class="o">=</span><span class="s2">&quot;80&quot;</span> <span class="n">surface</span><span class="o">=</span><span class="s2">&quot;ASPH-G&quot;</span> <span class="o">&gt;&lt;/</span><span class="n">navaid</span><span class="p">:</span><span class="n">runway</span><span class="o">&gt;</span>
+<span class="n">navaid_magvar</span> <span class="p">(</span><span class="n">Integer</span><span class="p">)</span> <span class="o">=</span> <span class="mi">12</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line">Note : the GPX driver will output content of the extensions element
+only if it is found in the first records of the GPX file. If
+extensions appear later, you can force an explicit parsing of the
+whole file with the <a class="reference internal" href="#config-GPX_USE_EXTENSIONS"><code class="docutils literal notranslate"><span class="pre">GPX_USE_EXTENSIONS</span></code></a> configuration
+option.</div>
+</div>
+</section>
+<section id="creation-issues">
+<h2>Creation Issues<a class="headerlink" href="#creation-issues" title="Link to this heading"></a></h2>
+<p>On export all layers are written to a single GPX file. Update of
+existing files is not currently supported.</p>
+<p>If the output file already exits, the writing will not occur. You have
+to delete the existing file first.</p>
+<p>Supported geometries :</p>
+<ul class="simple">
+<li><p>Features of type wkbPoint/wkbPoint25D are written in the <em>wpt</em>
+element.</p></li>
+<li><p>Features of type wkbLineString/wkbLineString25D are written in the
+<em>rte</em> element.</p></li>
+<li><p>Features of type wkbMultiLineString/wkbMultiLineString25D are written
+in the <em>trk</em> element.</p></li>
+<li><p>Other type of geometries are not supported.</p></li>
+</ul>
+<p>For route points and tracks points, if there is a Z coordinate, it is
+used to fill the elevation element of the corresponding points.</p>
+<p>If a layer is named &quot;track_points&quot; with
+wkbPoint/wkbPoint25D geometries, the tracks in the GPX file will be
+built from the sequence of features in that layer. This is the way of
+setting GPX attributes for each track point, in addition to the raw
+coordinates. Points belonging to the same track are identified thanks to
+the same value of the 'track_fid' field (and it will be broken into
+track segments according to the value of the 'track_seg_id' field). They
+must be written in sequence so that track objects are properly
+reconstructed. The 'track_name' field can be set on the first track
+point to fill the &lt;name&gt; element of the track. Similarly, if a layer is
+named &quot;route_points&quot; with wkbPoint/wkbPoint25D geometries, the routes in
+the GPX file will be built from the sequence of points with the same
+value of the 'route_fid' field. The 'route_name' field can be set on the
+first track point to fill the &lt;name&gt; element of the route.</p>
+</section>
+<section id="layer-creation-options">
+<h2>Layer creation options<a class="headerlink" href="#layer-creation-options" title="Link to this heading"></a></h2>
+<p>Layer creation options can be specified in command-line tools using the syntax <code class="docutils literal notranslate"><span class="pre">-lco</span> <span class="pre">&lt;NAME&gt;=&lt;VALUE&gt;</span></code> or by providing the appropriate arguments to <a class="reference internal" href="../../api/raster_c_api.html#_CPPv422GDALDatasetCreateLayer12GDALDatasetHPKc20OGRSpatialReferenceH18OGRwkbGeometryType12CSLConstList" title="GDALDatasetCreateLayer"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALDatasetCreateLayer()</span></code></a> (C) or <a class="reference internal" href="../../api/python/raster_api.html#osgeo.gdal.Dataset.CreateLayer" title="osgeo.gdal.Dataset.CreateLayer"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Dataset.CreateLayer</span></code></a> (Python).
+The following layer creation options are supported:</p>
+<ul class="simple">
+<li><p id="drivers/vector/gpx-lco-FORCE_GPX_TRACK"><strong>FORCE_GPX_TRACK=[YES/NO]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">NO</span></code>. By default when writing a layer whose features
+are of type wkbLineString, the GPX driver chooses to write them as
+routes. If YES is specified, they will be written as tracks.</p>
+</li>
+<li><p id="drivers/vector/gpx-lco-FORCE_GPX_ROUTE"><strong>FORCE_GPX_ROUTE=[YES/NO]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">NO</span></code>. By default when writing a layer whose features
+are of type wkbMultiLineString, the GPX driver chooses to write them
+as tracks.
+If YES is specified, they will be written as routes,
+provided that the multilines are composed of only one single line.</p>
+</li>
+</ul>
+</section>
+<section id="dataset-creation-options">
+<h2>Dataset creation options<a class="headerlink" href="#dataset-creation-options" title="Link to this heading"></a></h2>
+<p>Dataset creation options can be specified in command-line tools using the syntax <code class="docutils literal notranslate"><span class="pre">-dsco</span> <span class="pre">&lt;NAME&gt;=&lt;VALUE&gt;</span></code> or by providing the appropriate arguments to <a class="reference internal" href="../../api/raster_c_api.html#_CPPv410GDALCreate11GDALDriverHPKciii12GDALDataType12CSLConstList" title="GDALCreate"><code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">GDALCreate()</span></code></a> (C) or <a class="reference internal" href="../../api/python/raster_api.html#osgeo.gdal.Driver.Create" title="osgeo.gdal.Driver.Create"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Driver.Create</span></code></a> (Python).
+The following dataset creation options are supported:</p>
+<ul class="simple">
+<li><p id="drivers/vector/gpx-dsco-GPX_USE_EXTENSIONS"><strong>GPX_USE_EXTENSIONS=[YES/NO]: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">NO</span></code>. By default, the GPX driver will discard
+attribute fields that do not match the GPX XML definition (name, cmt,
+etc...).
+If <a class="reference internal" href="#drivers/vector/gpx-dsco-GPX_USE_EXTENSIONS"><code class="docutils literal notranslate"><span class="pre">GPX_USE_EXTENSIONS=YES</span></code></a> is specified, extra fields will be written
+inside the<em>&lt;extensions&gt;</em> tag.</p>
+</li>
+<li><p id="drivers/vector/gpx-dsco-GPX_EXTENSIONS_NS"><strong>GPX_EXTENSIONS_NS=value: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">ogr</span></code>. The namespace value used for extension tags.
+Only used if <a class="reference internal" href="#drivers/vector/gpx-dsco-GPX_USE_EXTENSIONS"><code class="docutils literal notranslate"><span class="pre">GPX_USE_EXTENSIONS=YES</span></code></a> and
+<a class="reference internal" href="#drivers/vector/gpx-dsco-GPX_EXTENSIONS_NS_URL"><code class="docutils literal notranslate"><span class="pre">GPX_EXTENSIONS_NS_URL</span></code></a> is set.</p>
+</li>
+<li><p id="drivers/vector/gpx-dsco-GPX_EXTENSIONS_NS_URL"><strong>GPX_EXTENSIONS_NS_URL=value: </strong> Defaults to <code class="docutils literal notranslate"><span class="pre">&quot;http://osgeo.org/gdal&quot;</span></code>. The namespace URI.
+Only used if <a class="reference internal" href="#drivers/vector/gpx-dsco-GPX_USE_EXTENSIONS"><code class="docutils literal notranslate"><span class="pre">GPX_USE_EXTENSIONS=YES</span></code></a> and
+<a class="reference internal" href="#drivers/vector/gpx-dsco-GPX_EXTENSIONS_NS"><code class="docutils literal notranslate"><span class="pre">GPX_EXTENSIONS_NS</span></code></a> is set.</p>
+</li>
+<li><p id="drivers/vector/gpx-dsco-LINEFORMAT"><strong>LINEFORMAT=[CRLF/LF]: </strong>By default files are created with
+the line termination conventions of the local platform (CR/LF on
+win32 or LF on all other systems). This may be overridden through use
+of this option.</p>
+</li>
+<li><p id="drivers/vector/gpx-dsco-CREATOR"><strong>CREATOR=value: </strong> (GDAL &gt;= 3.8) Name of creating application. Defaults to <code class="docutils literal notranslate"><span class="pre">GDAL</span> <span class="pre">`</span></code> followed by its
+version number.</p>
+</li>
+</ul>
+<p>Dataset creation options to fill the top &lt;metadata&gt; element have been added in
+GDAL 3.7:</p>
+<ul class="simple">
+<li><p id="drivers/vector/gpx-dsco-METADATA_AUTHOR_EMAIL"><strong>METADATA_AUTHOR_EMAIL=value: </strong> (GDAL &gt;= 3.7) </p>
+</li>
+<li><p id="drivers/vector/gpx-dsco-METADATA_AUTHOR_NAME"><strong>METADATA_AUTHOR_NAME=value: </strong> (GDAL &gt;= 3.7) </p>
+</li>
+<li><p id="drivers/vector/gpx-dsco-METADATA_AUTHOR_LINK_HREF"><strong>METADATA_AUTHOR_LINK_HREF=value: </strong> (GDAL &gt;= 3.7) </p>
+</li>
+<li><p id="drivers/vector/gpx-dsco-METADATA_AUTHOR_LINK_TEXT"><strong>METADATA_AUTHOR_LINK_TEXT=value: </strong> (GDAL &gt;= 3.7) </p>
+</li>
+<li><p id="drivers/vector/gpx-dsco-METADATA_AUTHOR_LINK_TYPE"><strong>METADATA_AUTHOR_LINK_TYPE=value: </strong> (GDAL &gt;= 3.7) </p>
+</li>
+<li><p id="drivers/vector/gpx-dsco-METADATA_COPYRIGHT_AUTHOR"><strong>METADATA_COPYRIGHT_AUTHOR=value: </strong> (GDAL &gt;= 3.7) </p>
+</li>
+<li><p id="drivers/vector/gpx-dsco-METADATA_COPYRIGHT_LICENSE"><strong>METADATA_COPYRIGHT_LICENSE=value: </strong> (GDAL &gt;= 3.7) </p>
+</li>
+<li><p id="drivers/vector/gpx-dsco-METADATA_COPYRIGHT_YEAR"><strong>METADATA_COPYRIGHT_YEAR=value: </strong> (GDAL &gt;= 3.7) </p>
+</li>
+<li><p id="drivers/vector/gpx-dsco-METADATA_DESCRIPTION"><strong>METADATA_DESCRIPTION=value: </strong> (GDAL &gt;= 3.7) </p>
+</li>
+<li><p id="drivers/vector/gpx-dsco-METADATA_KEYWORDS"><strong>METADATA_KEYWORDS=value: </strong> (GDAL &gt;= 3.7) </p>
+</li>
+<li><p id="drivers/vector/gpx-dsco-METADATA_LINK_{N}_HREF"><strong>METADATA_LINK_{N}_HREF=value: </strong> (GDAL &gt;= 3.7) where {N} should be substituted with a serial number (1, 2, ...)</p>
+</li>
+<li><p id="drivers/vector/gpx-dsco-METADATA_LINK_{N}_TEXT"><strong>METADATA_LINK_{N}_TEXT=value: </strong> (GDAL &gt;= 3.7) where {N} should be substituted with a serial number (1, 2, ...)</p>
+</li>
+<li><p id="drivers/vector/gpx-dsco-METADATA_LINK_{N}_TYPE"><strong>METADATA_LINK_{N}_TYPE=value: </strong> (GDAL &gt;= 3.7) where {N} should be substituted with a serial number (1, 2, ...)</p>
+</li>
+<li><p id="drivers/vector/gpx-dsco-METADATA_NAME"><strong>METADATA_NAME=value: </strong> (GDAL &gt;= 3.7) </p>
+</li>
+<li><p id="drivers/vector/gpx-dsco-METADATA_TIME"><strong>METADATA_TIME=value: </strong> (GDAL &gt;= 3.7) </p>
+</li>
+</ul>
+<p>Waypoints, routes and tracks must be written into that order to be valid
+against the XML Schema.</p>
+<p>When translating from a source dataset, it may be necessary to rename
+the field names from the source dataset to the expected GPX attribute
+names, such as &lt;name&gt;, &lt;desc&gt;, etc... This can be done with a <a class="reference internal" href="vrt.html#vector-vrt"><span class="std std-ref">OGR
+VRT</span></a> dataset, or by using the &quot;-sql&quot; option of the
+ogr2ogr utility.</p>
+</section>
+<section id="issues-when-translating-to-shapefile">
+<h2>Issues when translating to Shapefile<a class="headerlink" href="#issues-when-translating-to-shapefile" title="Link to this heading"></a></h2>
+<ul>
+<li><p>When translating the <em>track_points</em> layer to a Shapefile, the field
+names &quot;track_seg_id&quot; and &quot;track_seg_point_id&quot; are truncated to 10
+characters in the .DBF file, thus leading to duplicate names.</p>
+<p>To avoid this, you can define the
+<a class="reference internal" href="#config-GPX_SHORT_NAMES"><code class="docutils literal notranslate"><span class="pre">GPX_SHORT_NAMES</span></code></a> configuration option to TRUE.</p>
+<p>To translate the track_points layer of a GPX file to a set of
+shapefiles :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogr2ogr</span> <span class="o">--</span><span class="n">config</span> <span class="n">GPX_SHORT_NAMES</span> <span class="n">YES</span> <span class="n">out</span> <span class="nb">input</span><span class="o">.</span><span class="n">gpx</span> <span class="n">track_points</span>
+</pre></div>
+</div>
+</li>
+<li><p>Shapefile does not support fields of type DateTime. It only supports
+fields of type Date. So by default, you will lose the
+hour:minute:second part of the <em>Time</em> elements of a GPX file.</p>
+<p>You can use the OGR SQL CAST operator to
+convert the <em>time</em> field to a string :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogr2ogr</span> <span class="n">out</span> <span class="nb">input</span><span class="o">.</span><span class="n">gpx</span> <span class="o">-</span><span class="n">sql</span> <span class="s2">&quot;SELECT ele, CAST(time AS character(32)) FROM waypoints&quot;</span>
+</pre></div>
+</div>
+<p>There is a more convenient way to select
+all fields and ask for the conversion of the ones of a given type to
+strings:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogr2ogr</span> <span class="n">out</span> <span class="nb">input</span><span class="o">.</span><span class="n">gpx</span> <span class="o">-</span><span class="n">fieldTypeToString</span> <span class="n">DateTime</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="vsi-virtual-file-system-api-support">
+<h2>VSI Virtual File System API support<a class="headerlink" href="#vsi-virtual-file-system-api-support" title="Link to this heading"></a></h2>
+<p>The driver supports reading and writing to files managed by VSI Virtual
+File System API, which include &quot;regular&quot; files, as well as files in the
+/vsizip/ (read-write) , /vsigzip/ (read-write) , /vsicurl/ (read-only)
+domains.</p>
+<p>Writing to /dev/stdout or /vsistdout/ is also supported.</p>
+</section>
+<section id="example">
+<h2>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h2>
+<p>The ogrinfo utility can be used to dump the content of a GPX datafile :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogrinfo</span> <span class="o">-</span><span class="n">ro</span> <span class="o">-</span><span class="n">al</span> <span class="nb">input</span><span class="o">.</span><span class="n">gpx</span>
+</pre></div>
+</div>
+<p>The ogr2ogr utility can be used to do GPX to GPX translation :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogr2ogr</span> <span class="o">-</span><span class="n">f</span> <span class="n">GPX</span> <span class="n">output</span><span class="o">.</span><span class="n">gpx</span> <span class="nb">input</span><span class="o">.</span><span class="n">gpx</span> <span class="n">waypoints</span> <span class="n">routes</span> <span class="n">tracks</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line">Note : in the case of GPX to GPX translation, you need to specify the
+layer names, in order to discard the route_points and track_points
+layers.</div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>Use of the <em>&lt;extensions&gt;</em> tag for output :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogr2ogr</span> <span class="o">-</span><span class="n">f</span> <span class="n">GPX</span>  <span class="o">-</span><span class="n">dsco</span> <span class="n">GPX_USE_EXTENSIONS</span><span class="o">=</span><span class="n">YES</span> <span class="n">output</span><span class="o">.</span><span class="n">gpx</span> <span class="nb">input</span>
+</pre></div>
+</div>
+<p>which will give an output like the following one :</p>
+<div class="highlight-XML notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot;?&gt;</span>
+<span class="nt">&lt;gpx</span><span class="w"> </span><span class="na">version=</span><span class="s">&quot;1.1&quot;</span><span class="w"> </span><span class="na">creator=</span><span class="s">&quot;GDAL 1.5dev&quot;</span>
+<span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
+<span class="na">xmlns:ogr=</span><span class="s">&quot;http://osgeo.org/gdal&quot;</span>
+<span class="na">xmlns=</span><span class="s">&quot;http://www.topografix.com/GPX/1/1&quot;</span>
+<span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;wpt</span><span class="w"> </span><span class="na">lat=</span><span class="s">&quot;1&quot;</span><span class="w"> </span><span class="na">lon=</span><span class="s">&quot;2&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;extensions&gt;</span>
+<span class="w">    </span><span class="nt">&lt;ogr:Primary_ID&gt;</span>PID5<span class="nt">&lt;/ogr:Primary_ID&gt;</span>
+<span class="w">    </span><span class="nt">&lt;ogr:Secondary_ID&gt;</span>SID5<span class="nt">&lt;/ogr:Secondary_ID&gt;</span>
+<span class="nt">&lt;/extensions&gt;</span>
+<span class="nt">&lt;/wpt&gt;</span>
+<span class="nt">&lt;wpt</span><span class="w"> </span><span class="na">lat=</span><span class="s">&quot;3&quot;</span><span class="w"> </span><span class="na">lon=</span><span class="s">&quot;4&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;extensions&gt;</span>
+<span class="w">    </span><span class="nt">&lt;ogr:Primary_ID&gt;</span>PID4<span class="nt">&lt;/ogr:Primary_ID&gt;</span>
+<span class="w">    </span><span class="nt">&lt;ogr:Secondary_ID&gt;</span>SID4<span class="nt">&lt;/ogr:Secondary_ID&gt;</span>
+<span class="nt">&lt;/extensions&gt;</span>
+<span class="nt">&lt;/wpt&gt;</span>
+<span class="nt">&lt;/gpx&gt;</span>
+</pre></div>
+</div>
+<p>Use of -sql option to remap field names to the ones allowed by the GPX
+schema:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ogr2ogr</span> <span class="o">-</span><span class="n">f</span> <span class="n">GPX</span> <span class="n">output</span><span class="o">.</span><span class="n">gpx</span> <span class="nb">input</span><span class="o">.</span><span class="n">shp</span> <span class="o">-</span><span class="n">sql</span> <span class="s2">&quot;SELECT field1 AS name, field2 AS desc FROM input&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="faq">
+<h2>FAQ<a class="headerlink" href="#faq" title="Link to this heading"></a></h2>
+<p>How to solve &quot;ERROR 6: Cannot create GPX layer XXXXXX with unknown
+geometry type&quot; ?</p>
+<p>This error happens when the layer to create does not expose a precise
+geometry type, but just a generic wkbUnknown type. This is for example
+the case when using ogr2ogr with a SQL request to a PostgreSQL
+datasource. You must then explicitly specify -nlt POINT (or LINESTRING
+or MULTILINESTRING).</p>
+</section>
+<section id="see-also">
+<h2>See Also<a class="headerlink" href="#see-also" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="http://www.topografix.com/gpx.asp">Home page for GPX format</a></p></li>
+<li><p><a class="reference external" href="http://www.topografix.com/GPX/1/1/">GPX 1.1 format documentation</a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="grass.html" class="btn btn-neutral float-right" title="GRASS Vector Format" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gpsbabel.html" class="btn btn-neutral float-left" title="GPSBabel" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="info">
+      <a class="logo-link" href="https://osgeo.org">
+        <div class="osgeo-logo"></div>
+      </a>
+      <div class="copyright">
+      
+
+      &copy; 1998-2024 <a href="https://github.com/warmerdam">Frank Warmerdam</a>,
+      <a href="https://github.com/rouault">Even Rouault</a>, and
+      <a href="https://github.com/OSGeo/gdal/graphs/contributors">others</a>
+
+
+      
+      </div>
+    </div>
+  </div>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
